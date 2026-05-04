@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>383121081031-b6nhni14to8j4uvqug53icm7sau5kbop.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBCCzrQFDBWHtwsn7fq44dKpL8tsbXzgKg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>383121081031</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.stackone.pharmaaid</string>
+	<key>PROJECT_ID</key>
+	<string>pharmacy-system-2fb27</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pharmacy-system-2fb27.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:383121081031:ios:4fb372d3bef8368634b4e2</string>
+</dict>
+</plist>

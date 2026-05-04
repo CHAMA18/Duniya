@@ -1,0 +1,238 @@
+{
+  "project_info": {
+    "project_number": "383121081031",
+    "project_id": "pharmacy-system-2fb27",
+    "storage_bucket": "pharmacy-system-2fb27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383121081031:android:134b03f4ce7aacc734b4e2",
+        "android_client_info": {
+          "package_name": "com.mycompany.dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA92RpBCCjQsEeMpk0XySpX4GwWAVgk0Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stackone.pharmaaid"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383121081031:android:da037244adcde99534b4e2",
+        "android_client_info": {
+          "package_name": "com.mycompany.meditrackerpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383121081031-cqcgl1hd21tmatnnrgsc333jhptbofud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.meditrackerpro",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA92RpBCCjQsEeMpk0XySpX4GwWAVgk0Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stackone.pharmaaid"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383121081031:android:a9a2a0890b183fd334b4e2",
+        "android_client_info": {
+          "package_name": "com.pcy.appharma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383121081031-i7t9d1ru9jrbaftsfp9bpfdoq0e94a2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pcy.appharma",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA92RpBCCjQsEeMpk0XySpX4GwWAVgk0Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stackone.pharmaaid"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383121081031:android:663028bafbcb7aa334b4e2",
+        "android_client_info": {
+          "package_name": "com.pharmacy.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383121081031-b6nhni14to8j4uvqug53icm7sau5kbop.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pharmacy.app",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "383121081031-q5hqn03mnu812f9u6721an369o5illgu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pharmacy.app",
+            "certificate_hash": "99745d63144b9fe2c8a68f97d6eb030d96414b64"
+          }
+        },
+        {
+          "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA92RpBCCjQsEeMpk0XySpX4GwWAVgk0Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stackone.pharmaaid"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383121081031:android:ea5b376c4810c9c334b4e2",
+        "android_client_info": {
+          "package_name": "com.stackone.pharmaaid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383121081031-gtqofk0b79990lp84s2veuggm8pg6nks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stackone.pharmaaid",
+            "certificate_hash": "99745d63144b9fe2c8a68f97d6eb030d96414b64"
+          }
+        },
+        {
+          "client_id": "383121081031-hmjhlg97bp9pqdtufi4tj0cj9fp5uo1j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stackone.pharmaaid",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA92RpBCCjQsEeMpk0XySpX4GwWAVgk0Zg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383121081031-h1ibqjnmo9cdkjaqksd5drp6gfrscgvq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "383121081031-654urdmo3tdmfbcqsuun73jtqfq61ah4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.stackone.pharmaaid"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
