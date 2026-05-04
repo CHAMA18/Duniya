@@ -1101,7 +1101,7 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                         child: Container(
                                           width: double.infinity,
                                           constraints: BoxConstraints(
-                                            maxWidth: 1170.0,
+                                            maxWidth: double.infinity,
                                           ),
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
@@ -1469,7 +1469,7 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                     Container(
                                       width: double.infinity,
                                       constraints: BoxConstraints(
-                                        maxWidth: 1200.0,
+                                        maxWidth: double.infinity,
                                       ),
                                       decoration: BoxDecoration(
                                         color: FlutterFlowTheme.of(context)

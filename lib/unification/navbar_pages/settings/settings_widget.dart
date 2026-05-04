@@ -266,19 +266,11 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                         'ljaumbn3' /* Terms  & Conditions */,
                                                       ),
                                                     ),
-                                                    Tab(
-                                                      text: FFLocalizations.of(
-                                                              context)
-                                                          .getText(
-                                                        'urnlnxo4' /* Subscription */,
-                                                      ),
-                                                    ),
                                                   ],
                                                   controller:
                                                       _model.tabBarController,
                                                   onTap: (i) async {
                                                     [
-                                                      () async {},
                                                       () async {},
                                                       () async {},
                                                       () async {}
@@ -1385,13 +1377,14 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                         ),
                                                       ),
                                                     ),
-                                                    Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
+                                                    if (false)
+                                                      Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional

@@ -10,52 +10,24 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+class Offlinecode extends StatefulWidget {
+  const Offlinecode({
+    Key? key,
+    this.width,
+    this.height,
+  }) : super(key: key);
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      persistenceEnabled: true, // Enable offline persistence
-    ),
-  );
-  runApp(MyApp());
+  final double? width;
+  final double? height;
+
+  @override
+  _OfflinecodeState createState() => _OfflinecodeState();
 }
 
-class MyApp extends StatelessWidget {
+class _OfflinecodeState extends State<Offlinecode> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Firebase Offline Persistence',
-      home: MyHomePage(),
-    );
+    return Container();
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Firebase Offline Persistence'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            // Example: Query documents from a collection
-            QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                .collection('your_collection')
-                .get();
-
-            // Access the documents
-            querySnapshot.docs.forEach((doc) {
-              print(doc.data());
-            });
-          },
-          child: Text('Fetch Data'),
-        ),
-      ),
-    );
-  }
-}

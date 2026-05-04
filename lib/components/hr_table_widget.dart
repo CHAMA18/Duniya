@@ -50,7 +50,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
     return Container(
       width: double.infinity,
       constraints: BoxConstraints(
-        maxWidth: 1200.0,
+        maxWidth: double.infinity,
       ),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,

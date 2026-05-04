@@ -598,7 +598,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                           child: Container(
                                             width: double.infinity,
                                             constraints: BoxConstraints(
-                                              maxWidth: 1170.0,
+                                              maxWidth: double.infinity,
                                             ),
                                             decoration: BoxDecoration(
                                               color:

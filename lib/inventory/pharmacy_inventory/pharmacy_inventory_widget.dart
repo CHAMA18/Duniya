@@ -737,7 +737,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                               child: Container(
                                                 width: double.infinity,
                                                 constraints: BoxConstraints(
-                                                  maxWidth: 1170.0,
+                                                  maxWidth: double.infinity,
                                                 ),
                                                 decoration: BoxDecoration(
                                                   color: FlutterFlowTheme.of(
