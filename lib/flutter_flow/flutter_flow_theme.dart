@@ -1,7 +1,6 @@
 // ignore_for_file: overridden_fields, annotate_overrides
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -240,112 +239,162 @@ abstract class Typography {
   TextStyle get bodySmall;
 }
 
+/// Helper to build Satoshi TextStyle consistently
+TextStyle _satoshi({
+  required Color color,
+  FontWeight fontWeight = FontWeight.normal,
+  double fontSize = 14.0,
+  FontStyle fontStyle = FontStyle.normal,
+  double? letterSpacing,
+  double? height,
+}) {
+  return TextStyle(
+    fontFamily: 'Satoshi',
+    color: color,
+    fontWeight: fontWeight,
+    fontSize: fontSize,
+    fontStyle: fontStyle,
+    letterSpacing: letterSpacing,
+    height: height,
+  );
+}
+
 class MobileTypography extends Typography {
   MobileTypography(this.theme);
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'Outfit';
-  bool get displayLargeIsCustom => false;
-  TextStyle get displayLarge => GoogleFonts.outfit(
+  String get displayLargeFamily => 'Satoshi';
+  bool get displayLargeIsCustom => true;
+  TextStyle get displayLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w300,
         fontSize: 57.0,
-        fontStyle: FontStyle.normal,
+        height: 1.12,
+        letterSpacing: -0.02,
       );
-  String get displayMediumFamily => 'Outfit';
-  bool get displayMediumIsCustom => false;
-  TextStyle get displayMedium => GoogleFonts.outfit(
+  String get displayMediumFamily => 'Satoshi';
+  bool get displayMediumIsCustom => true;
+  TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w400,
         fontSize: 45.0,
+        height: 1.16,
+        letterSpacing: -0.02,
       );
-  String get displaySmallFamily => 'Outfit';
-  bool get displaySmallIsCustom => false;
-  TextStyle get displaySmall => GoogleFonts.outfit(
+  String get displaySmallFamily => 'Satoshi';
+  bool get displaySmallIsCustom => true;
+  TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
+        height: 1.25,
+        letterSpacing: -0.01,
       );
-  String get headlineLargeFamily => 'Outfit';
-  bool get headlineLargeIsCustom => false;
-  TextStyle get headlineLarge => GoogleFonts.outfit(
+  String get headlineLargeFamily => 'Satoshi';
+  bool get headlineLargeIsCustom => true;
+  TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w500,
         fontSize: 32.0,
+        height: 1.25,
+        letterSpacing: -0.02,
       );
-  String get headlineMediumFamily => 'Outfit';
-  bool get headlineMediumIsCustom => false;
-  TextStyle get headlineMedium => GoogleFonts.outfit(
+  String get headlineMediumFamily => 'Satoshi';
+  bool get headlineMediumIsCustom => true;
+  TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 22.0,
+        height: 1.27,
+        letterSpacing: -0.01,
       );
-  String get headlineSmallFamily => 'Outfit';
-  bool get headlineSmallIsCustom => false;
-  TextStyle get headlineSmall => GoogleFonts.outfit(
+  String get headlineSmallFamily => 'Satoshi';
+  bool get headlineSmallIsCustom => true;
+  TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
+        height: 1.3,
+        letterSpacing: -0.01,
       );
-  String get titleLargeFamily => 'Outfit';
-  bool get titleLargeIsCustom => false;
-  TextStyle get titleLarge => GoogleFonts.outfit(
+  String get titleLargeFamily => 'Satoshi';
+  bool get titleLargeIsCustom => true;
+  TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 22.0,
+        height: 1.27,
+        letterSpacing: -0.01,
       );
-  String get titleMediumFamily => 'Outfit';
-  bool get titleMediumIsCustom => false;
-  TextStyle get titleMedium => GoogleFonts.outfit(
+  String get titleMediumFamily => 'Satoshi';
+  bool get titleMediumIsCustom => true;
+  TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
+        height: 1.33,
+        letterSpacing: -0.005,
       );
-  String get titleSmallFamily => 'Outfit';
-  bool get titleSmallIsCustom => false;
-  TextStyle get titleSmall => GoogleFonts.outfit(
+  String get titleSmallFamily => 'Satoshi';
+  bool get titleSmallIsCustom => true;
+  TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
+        height: 1.38,
+        letterSpacing: -0.005,
       );
-  String get labelLargeFamily => 'Outfit';
-  bool get labelLargeIsCustom => false;
-  TextStyle get labelLarge => GoogleFonts.outfit(
+  String get labelLargeFamily => 'Satoshi';
+  bool get labelLargeIsCustom => true;
+  TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.43,
+        letterSpacing: 0.02,
       );
-  String get labelMediumFamily => 'Outfit';
-  bool get labelMediumIsCustom => false;
-  TextStyle get labelMedium => GoogleFonts.outfit(
+  String get labelMediumFamily => 'Satoshi';
+  bool get labelMediumIsCustom => true;
+  TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 12.0,
+        height: 1.5,
+        letterSpacing: 0.04,
       );
-  String get labelSmallFamily => 'Outfit';
-  bool get labelSmallIsCustom => false;
-  TextStyle get labelSmall => GoogleFonts.outfit(
+  String get labelSmallFamily => 'Satoshi';
+  bool get labelSmallIsCustom => true;
+  TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 11.0,
+        height: 1.45,
+        letterSpacing: 0.06,
       );
-  String get bodyLargeFamily => 'Outfit';
-  bool get bodyLargeIsCustom => false;
-  TextStyle get bodyLarge => GoogleFonts.outfit();
-  String get bodyMediumFamily => 'Outfit';
-  bool get bodyMediumIsCustom => false;
-  TextStyle get bodyMedium => GoogleFonts.outfit(
+  String get bodyLargeFamily => 'Satoshi';
+  bool get bodyLargeIsCustom => true;
+  TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
-        fontSize: 14.0,
+        fontWeight: FontWeight.w400,
+        fontSize: 16.0,
+        height: 1.5,
       );
-  String get bodySmallFamily => 'Outfit';
-  bool get bodySmallIsCustom => false;
-  TextStyle get bodySmall => GoogleFonts.outfit(
-        color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+  String get bodyMediumFamily => 'Satoshi';
+  bool get bodyMediumIsCustom => true;
+  TextStyle get bodyMedium => _satoshi(
+        color: theme.primaryText,
+        fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.5,
+      );
+  String get bodySmallFamily => 'Satoshi';
+  bool get bodySmallIsCustom => true;
+  TextStyle get bodySmall => _satoshi(
+        color: theme.secondaryText,
+        fontWeight: FontWeight.w500,
+        fontSize: 14.0,
+        height: 1.5,
       );
 }
 
@@ -354,110 +403,137 @@ class TabletTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'Outfit';
-  bool get displayLargeIsCustom => false;
-  TextStyle get displayLarge => GoogleFonts.outfit(
+  String get displayLargeFamily => 'Satoshi';
+  bool get displayLargeIsCustom => true;
+  TextStyle get displayLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w300,
         fontSize: 57.0,
+        height: 1.12,
+        letterSpacing: -0.02,
       );
-  String get displayMediumFamily => 'Outfit';
-  bool get displayMediumIsCustom => false;
-  TextStyle get displayMedium => GoogleFonts.outfit(
+  String get displayMediumFamily => 'Satoshi';
+  bool get displayMediumIsCustom => true;
+  TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w400,
         fontSize: 45.0,
+        height: 1.16,
+        letterSpacing: -0.02,
       );
-  String get displaySmallFamily => 'Outfit';
-  bool get displaySmallIsCustom => false;
-  TextStyle get displaySmall => GoogleFonts.outfit(
+  String get displaySmallFamily => 'Satoshi';
+  bool get displaySmallIsCustom => true;
+  TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
+        height: 1.25,
+        letterSpacing: -0.01,
       );
-  String get headlineLargeFamily => 'Outfit';
-  bool get headlineLargeIsCustom => false;
-  TextStyle get headlineLarge => GoogleFonts.outfit(
+  String get headlineLargeFamily => 'Satoshi';
+  bool get headlineLargeIsCustom => true;
+  TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w500,
         fontSize: 32.0,
+        height: 1.25,
+        letterSpacing: -0.02,
       );
-  String get headlineMediumFamily => 'Outfit';
-  bool get headlineMediumIsCustom => false;
-  TextStyle get headlineMedium => GoogleFonts.outfit(
+  String get headlineMediumFamily => 'Satoshi';
+  bool get headlineMediumIsCustom => true;
+  TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 22.0,
+        height: 1.27,
+        letterSpacing: -0.01,
       );
-  String get headlineSmallFamily => 'Outfit';
-  bool get headlineSmallIsCustom => false;
-  TextStyle get headlineSmall => GoogleFonts.outfit(
+  String get headlineSmallFamily => 'Satoshi';
+  bool get headlineSmallIsCustom => true;
+  TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
+        height: 1.3,
+        letterSpacing: -0.01,
       );
-  String get titleLargeFamily => 'Outfit';
-  bool get titleLargeIsCustom => false;
-  TextStyle get titleLarge => GoogleFonts.outfit(
+  String get titleLargeFamily => 'Satoshi';
+  bool get titleLargeIsCustom => true;
+  TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 22.0,
+        height: 1.27,
+        letterSpacing: -0.01,
       );
-  String get titleMediumFamily => 'Outfit';
-  bool get titleMediumIsCustom => false;
-  TextStyle get titleMedium => GoogleFonts.outfit(
+  String get titleMediumFamily => 'Satoshi';
+  bool get titleMediumIsCustom => true;
+  TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
+        height: 1.33,
+        letterSpacing: -0.005,
       );
-  String get titleSmallFamily => 'Outfit';
-  bool get titleSmallIsCustom => false;
-  TextStyle get titleSmall => GoogleFonts.outfit(
+  String get titleSmallFamily => 'Satoshi';
+  bool get titleSmallIsCustom => true;
+  TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
+        height: 1.38,
+        letterSpacing: -0.005,
       );
-  String get labelLargeFamily => 'Outfit';
-  bool get labelLargeIsCustom => false;
-  TextStyle get labelLarge => GoogleFonts.outfit(
+  String get labelLargeFamily => 'Satoshi';
+  bool get labelLargeIsCustom => true;
+  TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.43,
+        letterSpacing: 0.02,
       );
-  String get labelMediumFamily => 'Outfit';
-  bool get labelMediumIsCustom => false;
-  TextStyle get labelMedium => GoogleFonts.outfit(
+  String get labelMediumFamily => 'Satoshi';
+  bool get labelMediumIsCustom => true;
+  TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 12.0,
+        height: 1.5,
+        letterSpacing: 0.04,
       );
-  String get labelSmallFamily => 'Outfit';
-  bool get labelSmallIsCustom => false;
-  TextStyle get labelSmall => GoogleFonts.outfit(
+  String get labelSmallFamily => 'Satoshi';
+  bool get labelSmallIsCustom => true;
+  TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 11.0,
+        height: 1.45,
+        letterSpacing: 0.06,
       );
-  String get bodyLargeFamily => 'Outfit';
-  bool get bodyLargeIsCustom => false;
-  TextStyle get bodyLarge => GoogleFonts.outfit(
+  String get bodyLargeFamily => 'Satoshi';
+  bool get bodyLargeIsCustom => true;
+  TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w400,
         fontSize: 16.0,
+        height: 1.5,
       );
-  String get bodyMediumFamily => 'Outfit';
-  bool get bodyMediumIsCustom => false;
-  TextStyle get bodyMedium => GoogleFonts.outfit(
+  String get bodyMediumFamily => 'Satoshi';
+  bool get bodyMediumIsCustom => true;
+  TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.5,
       );
-  String get bodySmallFamily => 'Outfit';
-  bool get bodySmallIsCustom => false;
-  TextStyle get bodySmall => GoogleFonts.outfit(
+  String get bodySmallFamily => 'Satoshi';
+  bool get bodySmallIsCustom => true;
+  TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.5,
       );
 }
 
@@ -466,110 +542,137 @@ class DesktopTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'Outfit';
-  bool get displayLargeIsCustom => false;
-  TextStyle get displayLarge => GoogleFonts.outfit(
+  String get displayLargeFamily => 'Satoshi';
+  bool get displayLargeIsCustom => true;
+  TextStyle get displayLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w300,
         fontSize: 57.0,
+        height: 1.12,
+        letterSpacing: -0.02,
       );
-  String get displayMediumFamily => 'Outfit';
-  bool get displayMediumIsCustom => false;
-  TextStyle get displayMedium => GoogleFonts.outfit(
+  String get displayMediumFamily => 'Satoshi';
+  bool get displayMediumIsCustom => true;
+  TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w400,
         fontSize: 45.0,
+        height: 1.16,
+        letterSpacing: -0.02,
       );
-  String get displaySmallFamily => 'Outfit';
-  bool get displaySmallIsCustom => false;
-  TextStyle get displaySmall => GoogleFonts.outfit(
+  String get displaySmallFamily => 'Satoshi';
+  bool get displaySmallIsCustom => true;
+  TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24.0,
+        height: 1.25,
+        letterSpacing: -0.01,
       );
-  String get headlineLargeFamily => 'Outfit';
-  bool get headlineLargeIsCustom => false;
-  TextStyle get headlineLarge => GoogleFonts.outfit(
+  String get headlineLargeFamily => 'Satoshi';
+  bool get headlineLargeIsCustom => true;
+  TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w500,
         fontSize: 32.0,
+        height: 1.25,
+        letterSpacing: -0.02,
       );
-  String get headlineMediumFamily => 'Outfit';
-  bool get headlineMediumIsCustom => false;
-  TextStyle get headlineMedium => GoogleFonts.outfit(
+  String get headlineMediumFamily => 'Satoshi';
+  bool get headlineMediumIsCustom => true;
+  TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 22.0,
+        height: 1.27,
+        letterSpacing: -0.01,
       );
-  String get headlineSmallFamily => 'Outfit';
-  bool get headlineSmallIsCustom => false;
-  TextStyle get headlineSmall => GoogleFonts.outfit(
+  String get headlineSmallFamily => 'Satoshi';
+  bool get headlineSmallIsCustom => true;
+  TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20.0,
+        height: 1.3,
+        letterSpacing: -0.01,
       );
-  String get titleLargeFamily => 'Outfit';
-  bool get titleLargeIsCustom => false;
-  TextStyle get titleLarge => GoogleFonts.outfit(
+  String get titleLargeFamily => 'Satoshi';
+  bool get titleLargeIsCustom => true;
+  TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 22.0,
+        height: 1.27,
+        letterSpacing: -0.01,
       );
-  String get titleMediumFamily => 'Outfit';
-  bool get titleMediumIsCustom => false;
-  TextStyle get titleMedium => GoogleFonts.outfit(
+  String get titleMediumFamily => 'Satoshi';
+  bool get titleMediumIsCustom => true;
+  TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18.0,
+        height: 1.33,
+        letterSpacing: -0.005,
       );
-  String get titleSmallFamily => 'Outfit';
-  bool get titleSmallIsCustom => false;
-  TextStyle get titleSmall => GoogleFonts.outfit(
+  String get titleSmallFamily => 'Satoshi';
+  bool get titleSmallIsCustom => true;
+  TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
+        height: 1.38,
+        letterSpacing: -0.005,
       );
-  String get labelLargeFamily => 'Outfit';
-  bool get labelLargeIsCustom => false;
-  TextStyle get labelLarge => GoogleFonts.outfit(
+  String get labelLargeFamily => 'Satoshi';
+  bool get labelLargeIsCustom => true;
+  TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.43,
+        letterSpacing: 0.02,
       );
-  String get labelMediumFamily => 'Outfit';
-  bool get labelMediumIsCustom => false;
-  TextStyle get labelMedium => GoogleFonts.outfit(
+  String get labelMediumFamily => 'Satoshi';
+  bool get labelMediumIsCustom => true;
+  TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 12.0,
+        height: 1.5,
+        letterSpacing: 0.04,
       );
-  String get labelSmallFamily => 'Outfit';
-  bool get labelSmallIsCustom => false;
-  TextStyle get labelSmall => GoogleFonts.outfit(
+  String get labelSmallFamily => 'Satoshi';
+  bool get labelSmallIsCustom => true;
+  TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
         fontWeight: FontWeight.w500,
         fontSize: 11.0,
+        height: 1.45,
+        letterSpacing: 0.06,
       );
-  String get bodyLargeFamily => 'Outfit';
-  bool get bodyLargeIsCustom => false;
-  TextStyle get bodyLarge => GoogleFonts.outfit(
+  String get bodyLargeFamily => 'Satoshi';
+  bool get bodyLargeIsCustom => true;
+  TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w400,
         fontSize: 16.0,
+        height: 1.5,
       );
-  String get bodyMediumFamily => 'Outfit';
-  bool get bodyMediumIsCustom => false;
-  TextStyle get bodyMedium => GoogleFonts.outfit(
+  String get bodyMediumFamily => 'Satoshi';
+  bool get bodyMediumIsCustom => true;
+  TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.5,
       );
-  String get bodySmallFamily => 'Outfit';
-  bool get bodySmallIsCustom => false;
-  TextStyle get bodySmall => GoogleFonts.outfit(
+  String get bodySmallFamily => 'Satoshi';
+  bool get bodySmallIsCustom => true;
+  TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         fontSize: 14.0,
+        height: 1.5,
       );
 }
 
@@ -667,10 +770,36 @@ extension TextStyleHelper on TextStyle {
     List<Shadow>? shadows,
     String? package,
   }) {
+    // When a custom font family is specified, create a TextStyle with it
+    if (fontFamily != null && !useGoogleFonts) {
+      return TextStyle(
+        fontFamily: fontFamily,
+        package: package,
+        color: color ?? this.color,
+        fontSize: fontSize ?? this.fontSize,
+        letterSpacing: letterSpacing ?? this.letterSpacing,
+        fontWeight: fontWeight ?? this.fontWeight,
+        fontStyle: fontStyle ?? this.fontStyle,
+        decoration: decoration,
+        height: lineHeight,
+        shadows: shadows,
+      );
+    }
+
+    // For backward compatibility with useGoogleFonts
     if (useGoogleFonts && fontFamily != null) {
-      font = GoogleFonts.getFont(fontFamily,
-          fontWeight: fontWeight ?? this.fontWeight,
-          fontStyle: fontStyle ?? this.fontStyle);
+      // Fallback to the custom Satoshi font instead of Google Fonts
+      return TextStyle(
+        fontFamily: 'Satoshi',
+        color: color ?? this.color,
+        fontSize: fontSize ?? this.fontSize,
+        letterSpacing: letterSpacing ?? this.letterSpacing,
+        fontWeight: fontWeight ?? this.fontWeight,
+        fontStyle: fontStyle ?? this.fontStyle,
+        decoration: decoration,
+        height: lineHeight,
+        shadows: shadows,
+      );
     }
 
     return font != null

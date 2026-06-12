@@ -153,6 +153,7 @@ class _MyAppState extends State<MyApp> {
       ],
       theme: ThemeData(
         brightness: Brightness.light,
+        fontFamily: 'Satoshi',
         scrollbarTheme: ScrollbarThemeData(
           thumbVisibility: WidgetStateProperty.all(false),
           trackVisibility: WidgetStateProperty.all(true),
@@ -163,6 +164,7 @@ class _MyAppState extends State<MyApp> {
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
+        fontFamily: 'Satoshi',
         scrollbarTheme: ScrollbarThemeData(
           thumbVisibility: WidgetStateProperty.all(false),
           trackVisibility: WidgetStateProperty.all(true),

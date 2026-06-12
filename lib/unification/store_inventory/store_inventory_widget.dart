@@ -414,7 +414,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             Text(
               'Store Inventory',
               style: TextStyle(
-                fontFamily: 'Geist',
+                fontFamily: 'Satoshi',
                 fontSize: 32.0,
                 fontWeight: FontWeight.w600,
                 color: onSurface,
@@ -426,7 +426,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             Text(
               'Manage and track your primary pharmacy stock.',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
                 color: onSurfaceVariant,
@@ -455,7 +455,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Text(
                         'Add Product',
                         style: TextStyle(
-                          fontFamily: 'Geist',
+                          fontFamily: 'Satoshi',
                           fontSize: 14.0,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -488,7 +488,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Text(
                         'Export',
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                           color: onSurface,
@@ -558,7 +558,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Total Stock Value',
                           style: TextStyle(
-                            fontFamily: 'Geist',
+                            fontFamily: 'Satoshi',
                             fontSize: 14.0,
                             fontWeight: FontWeight.w600,
                             color: onSurfaceVariant,
@@ -570,7 +570,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       '\$${_formatNumber(totalStockValue)}',
                       style: TextStyle(
-                        fontFamily: 'Geist',
+                        fontFamily: 'Satoshi',
                         fontSize: 28.0,
                         fontWeight: FontWeight.w600,
                         color: onSurface,
@@ -595,7 +595,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                               Text(
                                 '+2.4%',
                                 style: TextStyle(
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Satoshi',
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.w500,
                                   color: secondaryTeal,
@@ -608,7 +608,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'vs last month',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                             fontSize: 12.0,
                             fontWeight: FontWeight.w400,
                             color: outline,
@@ -646,7 +646,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Items Near Expiry',
                           style: TextStyle(
-                            fontFamily: 'Geist',
+                            fontFamily: 'Satoshi',
                             fontSize: 14.0,
                             fontWeight: FontWeight.w600,
                             color: onSurfaceVariant,
@@ -661,7 +661,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           '$nearExpiryCount',
                           style: TextStyle(
-                            fontFamily: 'Geist',
+                            fontFamily: 'Satoshi',
                             fontSize: 28.0,
                             fontWeight: FontWeight.w600,
                             color: onSurface,
@@ -674,7 +674,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                           child: Text(
                             'SKUs',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                               color: outline,
@@ -687,7 +687,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'Requires Action',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: primaryBlue,
@@ -723,7 +723,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Next 30 Days',
                           style: TextStyle(
-                            fontFamily: 'JetBrains Mono',
+                            fontFamily: 'Satoshi',
                             fontSize: 12.0,
                             fontWeight: FontWeight.w500,
                             color: outline,
@@ -760,7 +760,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Active Stock Items',
                           style: TextStyle(
-                            fontFamily: 'Geist',
+                            fontFamily: 'Satoshi',
                             fontSize: 14.0,
                             fontWeight: FontWeight.w600,
                             color: onSurfaceVariant,
@@ -772,7 +772,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       '$totalSKUs',
                       style: TextStyle(
-                        fontFamily: 'Geist',
+                        fontFamily: 'Satoshi',
                         fontSize: 28.0,
                         fontWeight: FontWeight.w600,
                         color: onSurface,
@@ -783,7 +783,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       '$lowStockCount low stock alerts',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                         color: outline,
@@ -860,7 +860,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                   decoration: InputDecoration(
                     hintText: 'Search inventory, SKU, or batch...',
                     hintStyle: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Satoshi',
                       fontSize: 13.0,
                       color: outline,
                     ),
@@ -882,7 +882,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     ),
                   ),
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                     fontSize: 13.0,
                     color: onSurface,
                   ),
@@ -915,7 +915,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         cat,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Satoshi',
                           fontSize: 13.0,
                           fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                           color: isSelected ? primaryBlue : onSurfaceVariant,
@@ -946,7 +946,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Filters',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                             fontSize: 13.0,
                             fontWeight: FontWeight.w400,
                             color: onSurfaceVariant,
@@ -966,7 +966,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
               Text(
                 'Sort by:',
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Satoshi',
                   fontSize: 12.0,
                   fontWeight: FontWeight.w400,
                   color: outline,
@@ -985,7 +985,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                   isDense: true,
                   icon: Icon(Icons.expand_more, size: 16.0),
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Satoshi',
                     fontSize: 13.0,
                     fontWeight: FontWeight.w500,
                     color: onSurface,
@@ -1064,7 +1064,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Product & Manufacturer',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1080,7 +1080,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'SKU / Batch',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1096,7 +1096,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Stock Level',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1112,7 +1112,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Unit Price',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1129,7 +1129,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Status',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1146,7 +1146,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Actions',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1170,7 +1170,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'No stock items found',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                         color: onSurfaceVariant,
@@ -1180,7 +1180,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'Try adjusting your search or filter criteria',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                         color: outline,
@@ -1295,7 +1295,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                           Text(
                             stock.name.isNotEmpty ? stock.name : 'Unknown Product',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                               fontSize: 14.0,
                               fontWeight: FontWeight.w500,
                               color: onSurface.withOpacity(isOutOfStock ? 0.6 : 1.0),
@@ -1307,7 +1307,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                           Text(
                             '${stock.manufacturer.isNotEmpty ? stock.manufacturer : "Unknown"} • ${stock.category.isNotEmpty ? stock.category : "Uncategorized"}',
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Satoshi',
                               fontSize: 12.0,
                               fontWeight: FontWeight.w400,
                               color: outline,
@@ -1333,7 +1333,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       stock.batchNumber.isNotEmpty ? stock.batchNumber : 'N/A',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: onSurface,
@@ -1344,7 +1344,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Text(
                         'B-${stock.batchNumber.hashCode.abs().toRadixString(16).toUpperCase().padLeft(5, '0').substring(0, 5)}',
                         style: TextStyle(
-                          fontFamily: 'JetBrains Mono',
+                          fontFamily: 'Satoshi',
                           fontSize: 12.0,
                           fontWeight: FontWeight.w400,
                           color: outline,
@@ -1368,7 +1368,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           '${stock.quantity} units',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                             fontSize: 12.0,
                             fontWeight: FontWeight.w500,
                             color: isLowStock || isOutOfStock ? primaryBlue : onSurface,
@@ -1377,7 +1377,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Max: ${stock.initialQuantity.toInt()}',
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                             fontSize: 12.0,
                             fontWeight: FontWeight.w400,
                             color: outline,
@@ -1410,7 +1410,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       '\$${stock.price.toStringAsFixed(2)}',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: onSurface,
@@ -1420,7 +1420,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'Val: \$${(stock.price * stock.quantity.toDouble()).toStringAsFixed(2)}',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Satoshi',
                         fontSize: 12.0,
                         fontWeight: FontWeight.w400,
                         color: outline,
@@ -1455,7 +1455,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           status,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Satoshi',
                             fontSize: 11.0,
                             fontWeight: FontWeight.w600,
                             color: statusColor,
@@ -1488,7 +1488,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                             child: Text(
                               'Reorder',
                               style: TextStyle(
-                                fontFamily: 'Geist',
+                                fontFamily: 'Satoshi',
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
@@ -1570,7 +1570,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                 ? 'Showing $startItem to $endItem of $totalFiltered entries'
                 : 'No entries to show',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Satoshi',
               fontSize: 12.0,
               fontWeight: FontWeight.w400,
               color: outline,
@@ -1659,7 +1659,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             child: Text(
               '$i',
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Satoshi',
                 fontSize: 12.0,
                 fontWeight: isCurrent ? FontWeight.w500 : FontWeight.w400,
                 color: isCurrent ? Colors.white : onSurfaceVariant,
@@ -1673,7 +1673,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     if (end < totalPages) {
       pages.add(Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text('...', style: TextStyle(fontFamily: 'Inter', fontSize: 12.0, color: onSurfaceVariant)),
+        child: Text('...', style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, color: onSurfaceVariant)),
       ));
     }
 

@@ -65,8 +65,8 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
             title: Text(
               label,
               textAlign: TextAlign.center,
-              style: GoogleFonts.getFont(
-                pickerFontFamily,
+              style: TextStyle(
+                fontFamily: 'Satoshi',
                 color: textColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
@@ -93,8 +93,8 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
                   title: Text(
                     'Choose Source',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.getFont(
-                      pickerFontFamily,
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
                       color: textColor.applyAlpha(0.65),
                       fontWeight: FontWeight.w500,
                       fontSize: 20,

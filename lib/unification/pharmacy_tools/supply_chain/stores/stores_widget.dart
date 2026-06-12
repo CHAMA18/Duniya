@@ -448,7 +448,7 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodySmall
                                                                               .override(
-                                                                                font: GoogleFonts.poppins(
+                                                                                font: TextStyle(fontFamily: 'Satoshi', 
                                                                                   fontWeight: FontWeight.normal,
                                                                                   fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                                                                 ),
@@ -476,7 +476,7 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .titleMedium
                                                                             .override(
-                                                                              font: GoogleFonts.poppins(
+                                                                              font: TextStyle(fontFamily: 'Satoshi', 
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).titleMedium.fontStyle,
                                                                               ),
@@ -503,7 +503,7 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodySmall
                                                                             .override(
-                                                                              font: GoogleFonts.poppins(
+                                                                              font: TextStyle(fontFamily: 'Satoshi', 
                                                                                 fontWeight: FontWeight.normal,
                                                                                 fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                                                               ),

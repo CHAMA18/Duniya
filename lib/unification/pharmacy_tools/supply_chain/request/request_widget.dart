@@ -341,7 +341,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           .bodyMedium
                                                                           .override(
                                                                             font:
-                                                                                GoogleFonts.plusJakartaSans(
+                                                                                TextStyle(fontFamily: 'Satoshi', 
                                                                               fontWeight: FontWeight.bold,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
@@ -419,7 +419,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           .bodyMedium
                                                                           .override(
                                                                             font:
-                                                                                GoogleFonts.plusJakartaSans(
+                                                                                TextStyle(fontFamily: 'Satoshi', 
                                                                               fontWeight: FontWeight.bold,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
@@ -499,7 +499,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyMedium
                                                                             .override(
-                                                                              font: GoogleFonts.plusJakartaSans(
+                                                                              font: TextStyle(fontFamily: 'Satoshi', 
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                               ),
@@ -659,7 +659,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .headlineSmall
                                                                               .override(
-                                                                                font: GoogleFonts.outfit(
+                                                                                font: TextStyle(fontFamily: 'Satoshi', 
                                                                                   fontWeight: FontWeight.w500,
                                                                                   fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                                                                                 ),
@@ -682,7 +682,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                               '3z4l2fiy' /* Total Amount */,
                                                                             ),
                                                                             style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                  font: GoogleFonts.plusJakartaSans(
+                                                                                  font: TextStyle(fontFamily: 'Satoshi', 
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
                                                                                   ),
@@ -706,7 +706,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                               '2vjt21k9' /* k500.20 */,
                                                                             ),
                                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
-                                                                                  font: GoogleFonts.outfit(
+                                                                                  font: TextStyle(fontFamily: 'Satoshi', 
                                                                                     fontWeight: FontWeight.w600,
                                                                                     fontStyle: FlutterFlowTheme.of(context).displaySmall.fontStyle,
                                                                                   ),
@@ -773,7 +773,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           .bodyMedium
                                                                           .override(
                                                                             font:
-                                                                                GoogleFonts.plusJakartaSans(
+                                                                                TextStyle(fontFamily: 'Satoshi', 
                                                                               fontWeight: FontWeight.w500,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),

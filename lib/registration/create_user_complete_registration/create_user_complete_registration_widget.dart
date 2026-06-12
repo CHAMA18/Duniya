@@ -229,7 +229,7 @@ class _CreateUserCompleteRegistrationWidgetState
                                                                     context)
                                                                 .primaryText,
                                                         pickerFontFamily:
-                                                            'Outfit',
+                                                            'Satoshi',
                                                       );
                                                       if (selectedMedia !=
                                                               null &&
