@@ -154,6 +154,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         fontFamily: 'Satoshi',
+        primaryColor: const Color(0xFF8A2BE2),
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF8A2BE2),
+          secondary: Color(0xFFA855F7),
+          surface: Color(0xFFFAF5FF),
+          onPrimary: Color(0xFFFFFFFF),
+          onSecondary: Color(0xFFFFFFFF),
+          onSurface: Color(0xFF1E0A3C),
+        ),
         scrollbarTheme: ScrollbarThemeData(
           thumbVisibility: WidgetStateProperty.all(false),
           trackVisibility: WidgetStateProperty.all(true),
@@ -165,6 +174,15 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: 'Satoshi',
+        primaryColor: const Color(0xFFA855F7),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFFA855F7),
+          secondary: Color(0xFFC084FC),
+          surface: Color(0xFF0F0520),
+          onPrimary: Color(0xFFFFFFFF),
+          onSecondary: Color(0xFFFFFFFF),
+          onSurface: Color(0xFFF5F3FF),
+        ),
         scrollbarTheme: ScrollbarThemeData(
           thumbVisibility: WidgetStateProperty.all(false),
           trackVisibility: WidgetStateProperty.all(true),

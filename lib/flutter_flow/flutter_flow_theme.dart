@@ -170,25 +170,28 @@ class LightModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF2563EB); // Tailwind Blue 600
-  late Color secondary = const Color(0xFF3B82F6); // Tailwind Blue 500
-  late Color tertiary = const Color(0xFFF43F5E); // Tailwind Rose 500
-  late Color alternate = const Color(0xFFE2E8F0); // Slate 200
-  late Color primaryText = const Color(0xFF0F172A); // Slate 900
-  late Color secondaryText = const Color(0xFF64748B); // Slate 500
-  late Color primaryBackground = const Color(0xFFF8FAFC); // Slate 50
-  late Color secondaryBackground = const Color(0xFFFFFFFF);
-  late Color accent1 = const Color(0x4C2563EB);
-  late Color accent2 = const Color(0x4C3B82F6);
-  late Color accent3 = const Color(0x4CF43F5E);
-  late Color accent4 = const Color(0x4CE2E8F0);
-  late Color success = const Color(0xFF10B981);
-  late Color warning = const Color(0xFFF59E0B);
-  late Color error = const Color(0xFFEF4444);
-  late Color info = const Color(0xFF3B82F6);
+  // ═══════════════════════════════════════════════════════════
+  // DUNIYA BRAND THEME — Derived from Duniya Logo (#8A2BE2)
+  // ═══════════════════════════════════════════════════════════
+  late Color primary = const Color(0xFF8A2BE2); // Duniya Vivid Purple
+  late Color secondary = const Color(0xFFA855F7); // Purple 400
+  late Color tertiary = const Color(0xFFF59E0B); // Amber 500 — warm accent
+  late Color alternate = const Color(0xFFE9D5FF); // Purple 200 — borders
+  late Color primaryText = const Color(0xFF1E0A3C); // Deep purple-black
+  late Color secondaryText = const Color(0xFF7C3AED); // Purple 600
+  late Color primaryBackground = const Color(0xFFFAF5FF); // Purple 50 — subtle lavender
+  late Color secondaryBackground = const Color(0xFFFFFFFF); // White
+  late Color accent1 = const Color(0x4D8A2BE2); // Duniya Purple @ 30%
+  late Color accent2 = const Color(0x4DA855F7); // Purple 400 @ 30%
+  late Color accent3 = const Color(0x4DF59E0B); // Amber @ 30%
+  late Color accent4 = const Color(0x4DE9D5FF); // Purple 200 @ 30%
+  late Color success = const Color(0xFF10B981); // Emerald 500
+  late Color warning = const Color(0xFFF59E0B); // Amber 500
+  late Color error = const Color(0xFFEF4444); // Red 500
+  late Color info = const Color(0xFF8B5CF6); // Violet 500
 
-  late Color primaryBtnText = const Color(0xFFFFFFFF);
-  late Color lineColor = const Color(0xFFE2E8F0);
+  late Color primaryBtnText = const Color(0xFFFFFFFF); // White on purple
+  late Color lineColor = const Color(0xFFE9D5FF); // Purple 200 — dividers
 }
 
 abstract class Typography {
@@ -684,25 +687,28 @@ class DarkModeTheme extends FlutterFlowTheme {
   @Deprecated('Use tertiary instead')
   Color get tertiaryColor => tertiary;
 
-  late Color primary = const Color(0xFF3B82F6); // Tailwind Blue 500
-  late Color secondary = const Color(0xFF60A5FA); // Tailwind Blue 400
-  late Color tertiary = const Color(0xFFFB7185); // Tailwind Rose 400
-  late Color alternate = const Color(0xFF334155); // Slate 700
-  late Color primaryText = const Color(0xFFF8FAFC); // Slate 50
-  late Color secondaryText = const Color(0xFF94A3B8); // Slate 400
-  late Color primaryBackground = const Color(0xFF0F172A); // Slate 900
-  late Color secondaryBackground = const Color(0xFF1E293B); // Slate 800
-  late Color accent1 = const Color(0x4C3B82F6);
-  late Color accent2 = const Color(0x4C60A5FA);
-  late Color accent3 = const Color(0x4CFB7185);
-  late Color accent4 = const Color(0x4C334155);
-  late Color success = const Color(0xFF10B981);
-  late Color warning = const Color(0xFFF59E0B);
-  late Color error = const Color(0xFFEF4444);
-  late Color info = const Color(0xFF3B82F6);
+  // ═══════════════════════════════════════════════════════════
+  // DUNIYA BRAND DARK THEME — Derived from Duniya Logo (#8A2BE2)
+  // ═══════════════════════════════════════════════════════════
+  late Color primary = const Color(0xFFA855F7); // Purple 400 — brighter for dark
+  late Color secondary = const Color(0xFFC084FC); // Purple 300
+  late Color tertiary = const Color(0xFFFBBF24); // Amber 400
+  late Color alternate = const Color(0xFF3B0764); // Purple 950
+  late Color primaryText = const Color(0xFFF5F3FF); // Purple 50
+  late Color secondaryText = const Color(0xFFA78BFA); // Violet 400
+  late Color primaryBackground = const Color(0xFF0F0520); // Deep purple-black
+  late Color secondaryBackground = const Color(0xFF1E0A3C); // Dark purple
+  late Color accent1 = const Color(0x4DA855F7); // Purple 400 @ 30%
+  late Color accent2 = const Color(0x4DC084FC); // Purple 300 @ 30%
+  late Color accent3 = const Color(0x4DFBBF24); // Amber 400 @ 30%
+  late Color accent4 = const Color(0x4D3B0764); // Purple 950 @ 30%
+  late Color success = const Color(0xFF10B981); // Emerald 500
+  late Color warning = const Color(0xFFF59E0B); // Amber 500
+  late Color error = const Color(0xFFEF4444); // Red 500
+  late Color info = const Color(0xFF8B5CF6); // Violet 500
 
-  late Color primaryBtnText = const Color(0xFFFFFFFF);
-  late Color lineColor = const Color(0xFF334155);
+  late Color primaryBtnText = const Color(0xFFFFFFFF); // White on purple
+  late Color lineColor = const Color(0xFF3B0764); // Purple 950 — dividers
 }
 
 class FFDesignTokens {

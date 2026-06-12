@@ -147,19 +147,19 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     final theme = FlutterFlowTheme.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Design tokens
-    final primaryBlue = theme.primary;
-    final primaryContainer = theme.primary.withOpacity(0.1);
-    final secondaryTeal = theme.secondary;
-    final surfaceBg = isDark ? const Color(0xFF1A1C2C) : const Color(0xFFF8F9FF);
-    final onSurface = isDark ? const Color(0xFFEAF1FF) : const Color(0xFF0B1C30);
-    final onSurfaceVariant = isDark ? const Color(0xFFC3C5D9) : const Color(0xFF434656);
-    final outline = isDark ? const Color(0xFF8E90A0) : const Color(0xFF737688);
-    final outlineVariant = isDark ? const Color(0xFF444656) : const Color(0xFFC3C5D9);
-    final surfaceContainerLow = isDark ? const Color(0xFF252738) : const Color(0xFFEFF4FF);
-    final surfaceContainerHighest = isDark ? const Color(0xFF333550) : const Color(0xFFD3E4FE);
-    final glassBg = isDark ? const Color(0xFF252738).withOpacity(0.8) : Colors.white.withOpacity(0.8);
-    final surfaceDim = isDark ? const Color(0xFF111328) : const Color(0xFFCBDBF5);
+    // Design tokens — Duniya Brand
+    final primaryBlue = theme.primary; // Now Duniya purple #8A2BE2
+    final primaryContainer = theme.primary.withValues(alpha: 0.1);
+    final secondaryTeal = theme.secondary; // Purple 400
+    final surfaceBg = isDark ? const Color(0xFF0F0520) : const Color(0xFFFAF5FF);
+    final onSurface = isDark ? const Color(0xFFF5F3FF) : const Color(0xFF1E0A3C);
+    final onSurfaceVariant = isDark ? const Color(0xFFC4B5FD) : const Color(0xFF6B21A8);
+    final outline = isDark ? const Color(0xFF8B5CF6) : const Color(0xFF9333EA);
+    final outlineVariant = isDark ? const Color(0xFF3B0764) : const Color(0xFFE9D5FF);
+    final surfaceContainerLow = isDark ? const Color(0xFF2E1065) : const Color(0xFFF5F3FF);
+    final surfaceContainerHighest = isDark ? const Color(0xFF3B0764) : const Color(0xFFDDD6FE);
+    final glassBg = isDark ? const Color(0xFF2E1065).withValues(alpha: 0.8) : Colors.white.withValues(alpha: 0.8);
+    final surfaceDim = isDark ? const Color(0xFF0F0520) : const Color(0xFFE9D5FF);
 
     return Title(
       title: 'Store Inventory',
@@ -526,285 +526,300 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final cardSpacing = 16.0;
         int columns = 3;
         if (constraints.maxWidth < 900) columns = 2;
         if (constraints.maxWidth < 600) columns = 1;
 
-        return Wrap(
-          spacing: 24.0,
-          runSpacing: 24.0,
-          children: [
-            // Card 1: Total Stock Value
-            SizedBox(
-              width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-              child: _buildGlassCard(
-                glassBg: glassBg,
-                outlineVariant: outlineVariant,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        final cards = [
+          // Card 1: Total Stock Value
+          _buildGlassCard(
+            glassBg: glassBg,
+            outlineVariant: outlineVariant,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 32.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: primaryContainer,
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Icon(Icons.payments_outlined, color: primaryBlue, size: 20.0),
-                        ),
-                        SizedBox(width: 12.0),
-                        Text(
-                          'Total Stock Value',
-                          style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                            color: onSurfaceVariant,
-                          ),
-                        ),
-                      ],
+                    Container(
+                      width: 32.0,
+                      height: 32.0,
+                      decoration: BoxDecoration(
+                        color: primaryContainer,
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child: Icon(Icons.payments_outlined, color: primaryBlue, size: 20.0),
                     ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      '\$${_formatNumber(totalStockValue)}',
+                    SizedBox(width: 12.0),
+                    Flexible(child: Text(
+                      'Total Stock Value',
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: 'Satoshi',
-                        fontSize: 28.0,
+                        fontSize: 14.0,
                         fontWeight: FontWeight.w600,
-                        color: onSurface,
-                        height: 1.2,
-                        letterSpacing: -0.02,
+                        color: onSurfaceVariant,
                       ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFC2E8FF).withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.trending_up, color: secondaryTeal, size: 14.0),
-                              SizedBox(width: 2.0),
-                              Text(
-                                '+2.4%',
-                                style: TextStyle(
-                                  fontFamily: 'Satoshi',
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: secondaryTeal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 8.0),
-                        Text(
-                          'vs last month',
-                          style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w400,
-                            color: outline,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
-                    _buildSparkline(primaryBlue),
+                    )),
                   ],
                 ),
-              ),
-            ),
-            // Card 2: Items Near Expiry
-            SizedBox(
-              width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-              child: _buildGlassCard(
-                glassBg: glassBg,
-                outlineVariant: outlineVariant,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: 16.0),
+                Text(
+                  '\$${_formatNumber(totalStockValue)}',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi',
+                    fontSize: 28.0,
+                    fontWeight: FontWeight.w600,
+                    color: onSurface,
+                    height: 1.2,
+                    letterSpacing: -0.02,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 32.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: primaryContainer,
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Icon(Icons.warning_amber_rounded, color: primaryBlue, size: 20.0),
-                        ),
-                        SizedBox(width: 12.0),
-                        Text(
-                          'Items Near Expiry',
-                          style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                            color: onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '$nearExpiryCount',
-                          style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            fontSize: 28.0,
-                            fontWeight: FontWeight.w600,
-                            color: onSurface,
-                            height: 1.2,
-                          ),
-                        ),
-                        SizedBox(width: 4.0),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 4.0),
-                          child: Text(
-                            'SKUs',
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE9D5FF).withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.trending_up, color: secondaryTeal, size: 14.0),
+                          SizedBox(width: 2.0),
+                          Text(
+                            '+2.4%',
                             style: TextStyle(
                               fontFamily: 'Satoshi',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w400,
-                              color: outline,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                              color: secondaryTeal,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      'Requires Action',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w500,
-                        color: primaryBlue,
+                        ],
                       ),
                     ),
-                    SizedBox(height: 16.0),
-                    Row(
-                      children: [
-                        Container(
-                          width: 8.0,
-                          height: 8.0,
-                          decoration: BoxDecoration(color: primaryBlue, shape: BoxShape.circle),
-                        ),
-                        SizedBox(width: 8.0),
-                        Container(
-                          width: 8.0,
-                          height: 8.0,
-                          decoration: BoxDecoration(color: primaryBlue.withOpacity(0.5), shape: BoxShape.circle),
-                        ),
-                        SizedBox(width: 8.0),
-                        Container(
-                          width: 8.0,
-                          height: 8.0,
-                          decoration: BoxDecoration(color: outlineVariant.withOpacity(0.3), shape: BoxShape.circle),
-                        ),
-                        SizedBox(width: 8.0),
-                        Container(
-                          width: 8.0,
-                          height: 8.0,
-                          decoration: BoxDecoration(color: outlineVariant.withOpacity(0.3), shape: BoxShape.circle),
-                        ),
-                        SizedBox(width: 12.0),
-                        Text(
-                          'Next 30 Days',
-                          style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500,
-                            color: outline,
-                            letterSpacing: 0.08,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // Card 3: Active Stock Items
-            SizedBox(
-              width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-              child: _buildGlassCard(
-                glassBg: glassBg,
-                outlineVariant: outlineVariant,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 32.0,
-                          height: 32.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF00C1FD).withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Icon(Icons.inventory_outlined, color: secondaryTeal, size: 20.0),
-                        ),
-                        SizedBox(width: 12.0),
-                        Text(
-                          'Active Stock Items',
-                          style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                            color: onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      '$totalSKUs',
+                    SizedBox(width: 8.0),
+                    Flexible(child: Text(
+                      'vs last month',
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: 'Satoshi',
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.w600,
-                        color: onSurface,
-                        height: 1.2,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      '$lowStockCount low stock alerts',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                         fontWeight: FontWeight.w400,
                         color: outline,
                       ),
+                    )),
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                _buildSparkline(primaryBlue),
+              ],
+            ),
+          ),
+          // Card 2: Items Near Expiry
+          _buildGlassCard(
+            glassBg: glassBg,
+            outlineVariant: outlineVariant,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 32.0,
+                      height: 32.0,
+                      decoration: BoxDecoration(
+                        color: primaryContainer,
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child: Icon(Icons.warning_amber_rounded, color: primaryBlue, size: 20.0),
                     ),
-                    SizedBox(height: 16.0),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: LinearProgressIndicator(
-                        value: totalSKUs > 0 ? (totalSKUs - lowStockCount) / totalSKUs : 0.0,
-                        backgroundColor: surfaceContainerHighest,
-                        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF00C1FD)),
-                        minHeight: 6.0,
+                    SizedBox(width: 12.0),
+                    Flexible(child: Text(
+                      'Items Near Expiry',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                        color: onSurfaceVariant,
+                      ),
+                    )),
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '$nearExpiryCount',
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: 28.0,
+                        fontWeight: FontWeight.w600,
+                        color: onSurface,
+                        height: 1.2,
+                      ),
+                    ),
+                    SizedBox(width: 4.0),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 4.0),
+                      child: Text(
+                        'SKUs',
+                        style: TextStyle(
+                          fontFamily: 'Satoshi',
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w400,
+                          color: outline,
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
+                SizedBox(height: 8.0),
+                Text(
+                  'Requires Action',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi',
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500,
+                    color: primaryBlue,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    Container(
+                      width: 8.0,
+                      height: 8.0,
+                      decoration: BoxDecoration(color: primaryBlue, shape: BoxShape.circle),
+                    ),
+                    SizedBox(width: 8.0),
+                    Container(
+                      width: 8.0,
+                      height: 8.0,
+                      decoration: BoxDecoration(color: primaryBlue.withValues(alpha: 0.5), shape: BoxShape.circle),
+                    ),
+                    SizedBox(width: 8.0),
+                    Container(
+                      width: 8.0,
+                      height: 8.0,
+                      decoration: BoxDecoration(color: outlineVariant.withValues(alpha: 0.3), shape: BoxShape.circle),
+                    ),
+                    SizedBox(width: 8.0),
+                    Container(
+                      width: 8.0,
+                      height: 8.0,
+                      decoration: BoxDecoration(color: outlineVariant.withValues(alpha: 0.3), shape: BoxShape.circle),
+                    ),
+                    SizedBox(width: 12.0),
+                    Text(
+                      'Next 30 Days',
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
+                        color: outline,
+                        letterSpacing: 0.08,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        );
+          ),
+          // Card 3: Active Stock Items
+          _buildGlassCard(
+            glassBg: glassBg,
+            outlineVariant: outlineVariant,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 32.0,
+                      height: 32.0,
+                      decoration: BoxDecoration(
+                        color: secondaryTeal.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child: Icon(Icons.inventory_outlined, color: secondaryTeal, size: 20.0),
+                    ),
+                    SizedBox(width: 12.0),
+                    Flexible(child: Text(
+                      'Active Stock Items',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                        color: onSurfaceVariant,
+                      ),
+                    )),
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  '$totalSKUs',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi',
+                    fontSize: 28.0,
+                    fontWeight: FontWeight.w600,
+                    color: onSurface,
+                    height: 1.2,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  '$lowStockCount low stock alerts',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Satoshi',
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: outline,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4.0),
+                  child: LinearProgressIndicator(
+                    value: totalSKUs > 0 ? (totalSKUs - lowStockCount) / totalSKUs : 0.0,
+                    backgroundColor: surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation<Color>(secondaryTeal),
+                    minHeight: 6.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ];
+
+        // Responsive grid using rows
+        final rows = <Widget>[];
+        for (int i = 0; i < cards.length; i += columns) {
+          final rowChildren = <Widget>[];
+          for (int j = 0; j < columns && i + j < cards.length; j++) {
+            if (j > 0) rowChildren.add(SizedBox(width: cardSpacing));
+            rowChildren.add(Expanded(child: cards[i + j]));
+          }
+          while (rowChildren.length < columns * 2 - 1) {
+            rowChildren.add(SizedBox(width: cardSpacing));
+            rowChildren.add(Expanded(child: Container()));
+          }
+          rows.add(Row(children: rowChildren));
+          if (i + columns < cards.length) {
+            rows.add(SizedBox(height: cardSpacing));
+          }
+        }
+        return Column(children: rows);
       },
     );
   }

@@ -53,52 +53,77 @@ class _SideNavWidgetState extends State<SideNavWidget> {
           maxWidth: 300.0,
         ),
         decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          boxShadow: [
-            BoxShadow(
+          color: FlutterFlowTheme.of(context).primaryBackground,
+          border: Border(
+            right: BorderSide(
               color: FlutterFlowTheme.of(context).lineColor,
-              offset: Offset(
-                1.0,
-                0.0,
-              ),
-            )
-          ],
+              width: 1.0,
+            ),
+          ),
         ),
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // App Logo & Title
+                // ─── Duniya Logo & Brand ───
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Image.asset(
-                        'assets/images/Vector.png',
-                        width: 100.0,
-                        height: 50.0,
-                        fit: BoxFit.scaleDown,
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 4.0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          FlutterFlowTheme.of(context).primary,
+                          FlutterFlowTheme.of(context).secondary,
+                        ],
+                        begin: AlignmentDirectional(-1.0, -0.5),
+                        end: AlignmentDirectional(1.0, 0.5),
                       ),
-                      Text(
-                        FFLocalizations.of(context).getText(
-                          'xzjjeekv' /* MediTracker */,
-                        ),
-                        style:
-                            FlutterFlowTheme.of(context).headlineLarge.override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .headlineLargeFamily,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context)
-                                      .headlineLargeIsCustom,
-                                ),
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Image.asset(
+                            'assets/images/duniya_logo.png',
+                            width: 64.0,
+                            height: 64.0,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Duniya',
+                            style: FlutterFlowTheme.of(context).headlineLarge.override(
+                              fontFamily: FlutterFlowTheme.of(context)
+                                  .headlineLargeFamily,
+                              color: Colors.white,
+                              letterSpacing: -0.02,
+                              fontWeight: FontWeight.w700,
+                              useGoogleFonts: !FlutterFlowTheme.of(context)
+                                  .headlineLargeIsCustom,
+                            ),
+                          ),
+                          Text(
+                            'Pharmacy Management',
+                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                              fontFamily: FlutterFlowTheme.of(context)
+                                  .labelSmallFamily,
+                              color: Colors.white.withValues(alpha: 0.85),
+                              letterSpacing: 0.5,
+                              fontWeight: FontWeight.w400,
+                              useGoogleFonts: !FlutterFlowTheme.of(context)
+                                  .labelSmallIsCustom,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
 

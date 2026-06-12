@@ -117,22 +117,23 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     final theme = FlutterFlowTheme.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Design tokens
-    final primaryBlue = theme.primary;
-    final primaryContainer = theme.primary.withOpacity(0.1);
-    final onSurface = isDark ? const Color(0xFFEAF1FF) : const Color(0xFF0B1C30);
-    final onSurfaceVariant = isDark ? const Color(0xFFC3C5D9) : const Color(0xFF434656);
-    final outline = isDark ? const Color(0xFF8E90A0) : const Color(0xFF737688);
-    final outlineVariant = isDark ? const Color(0xFF444656) : const Color(0xFFC3C5D9);
-    final surfaceContainerLow = isDark ? const Color(0xFF252738) : const Color(0xFFEFF4FF);
-    final surfaceContainerHigh = isDark ? const Color(0xFF333550) : const Color(0xFFDCE9FF);
-    final surfaceContainerHighest = isDark ? const Color(0xFF333550) : const Color(0xFFD3E4FE);
-    final glassBg = isDark ? const Color(0xFF252738).withOpacity(0.9) : Colors.white.withOpacity(0.9);
-    final surfaceBg = isDark ? const Color(0xFF1A1C2C) : const Color(0xFFF8F9FF);
-    final surfaceBright = isDark ? const Color(0xFF252738) : const Color(0xFFF8F9FF);
-    final surfaceDim = isDark ? const Color(0xFF111328) : const Color(0xFFCBDBF5);
-    final rowHoverBg = isDark ? const Color(0xFF1E2038) : const Color(0xFFF0F7FF);
-    final headerBg = isDark ? const Color(0xFF1E2038) : const Color(0xFFF1F5F9);
+    // Design tokens — Duniya Brand
+    final primaryBlue = theme.primary; // Now Duniya purple #8A2BE2
+    final primaryContainer = theme.primary.withValues(alpha: 0.1);
+    final secondaryAccent = theme.secondary; // Purple 400
+    final onSurface = isDark ? const Color(0xFFF5F3FF) : const Color(0xFF1E0A3C);
+    final onSurfaceVariant = isDark ? const Color(0xFFC4B5FD) : const Color(0xFF6B21A8);
+    final outline = isDark ? const Color(0xFF8B5CF6) : const Color(0xFF9333EA);
+    final outlineVariant = isDark ? const Color(0xFF3B0764) : const Color(0xFFE9D5FF);
+    final surfaceContainerLow = isDark ? const Color(0xFF2E1065) : const Color(0xFFF5F3FF);
+    final surfaceContainerHigh = isDark ? const Color(0xFF3B0764) : const Color(0xFFEDE9FE);
+    final surfaceContainerHighest = isDark ? const Color(0xFF3B0764) : const Color(0xFFDDD6FE);
+    final glassBg = isDark ? const Color(0xFF2E1065).withValues(alpha: 0.9) : Colors.white.withValues(alpha: 0.9);
+    final surfaceBg = isDark ? const Color(0xFF0F0520) : const Color(0xFFFAF5FF);
+    final surfaceBright = isDark ? const Color(0xFF2E1065) : const Color(0xFFFAF5FF);
+    final surfaceDim = isDark ? const Color(0xFF0F0520) : const Color(0xFFE9D5FF);
+    final rowHoverBg = isDark ? const Color(0xFF1E0A3C) : const Color(0xFFF5F3FF);
+    final headerBg = isDark ? const Color(0xFF1E0A3C) : const Color(0xFFF5F3FF);
 
     return Title(
       title: 'Replenishment',
@@ -424,142 +425,160 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
 
         return LayoutBuilder(
           builder: (context, constraints) {
+            final cardSpacing = 16.0;
             int columns = 4;
             if (constraints.maxWidth < 1100) columns = 2;
             if (constraints.maxWidth < 600) columns = 1;
 
-            return Wrap(
-              spacing: 24.0,
-              runSpacing: 24.0,
-              children: [
-                // Card 1: Pending Orders
-                SizedBox(
-                  width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-                  child: _buildGlassCard(
-                    glassBg: glassBg,
-                    outlineVariant: outlineVariant,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            // Build card list
+            final cards = [
+              // Card 1: Pending Orders
+              _buildGlassCard(
+                glassBg: glassBg,
+                outlineVariant: outlineVariant,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Pending Orders',
-                                style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08)),
-                            Container(
-                              width: 32.0, height: 32.0,
-                              decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                              child: Icon(Icons.shopping_cart_outlined, color: primaryBlue, size: 18.0),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.0),
-                        Text('$pendingOrders', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
-                        SizedBox(height: 4.0),
-                        Text('Est. Value: \$${_formatNumber(estValue)}',
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
-                      ],
-                    ),
-                  ),
-                ),
-                // Card 2: Auto-Replen Health
-                SizedBox(
-                  width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-                  child: _buildGlassCard(
-                    glassBg: glassBg,
-                    outlineVariant: outlineVariant,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Auto-Replen Health',
-                                style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08)),
-                            Container(
-                              width: 32.0, height: 32.0,
-                              decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                              child: Icon(Icons.health_and_safety_outlined, color: primaryBlue, size: 18.0),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.0),
-                        Text('${healthPercent.toStringAsFixed(1)}%', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
-                        SizedBox(height: 4.0),
-                        Row(
-                          children: [
-                            Icon(Icons.trending_up, color: primaryBlue, size: 14.0),
-                            SizedBox(width: 4.0),
-                            Text('+2.1% from last month',
-                                style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w500, color: primaryBlue)),
-                          ],
+                        Flexible(child: Text('Pending Orders',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Container(
+                          width: 32.0, height: 32.0,
+                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.shopping_cart_outlined, color: primaryBlue, size: 18.0),
                         ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 12.0),
+                    Text('$pendingOrders', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    SizedBox(height: 4.0),
+                    Text('Est. Value: \$${_formatNumber(estValue)}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                  ],
                 ),
-                // Card 3: Inventory Coverage
-                SizedBox(
-                  width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-                  child: _buildGlassCard(
-                    glassBg: glassBg,
-                    outlineVariant: outlineVariant,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              // Card 2: Auto-Replen Health
+              _buildGlassCard(
+                glassBg: glassBg,
+                outlineVariant: outlineVariant,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Inventory Coverage',
-                                style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08)),
-                            Container(
-                              width: 32.0, height: 32.0,
-                              decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                              child: Icon(Icons.calendar_month_outlined, color: primaryBlue, size: 18.0),
-                            ),
-                          ],
+                        Flexible(child: Text('Auto-Replen Health',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Container(
+                          width: 32.0, height: 32.0,
+                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.health_and_safety_outlined, color: primaryBlue, size: 18.0),
                         ),
-                        SizedBox(height: 12.0),
-                        Text('$coverageDays Days', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
-                        SizedBox(height: 4.0),
-                        Text('Avg. across essential lines',
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
                       ],
                     ),
-                  ),
-                ),
-                // Card 4: Forecasted Spend
-                SizedBox(
-                  width: (constraints.maxWidth - (columns - 1) * 24.0) / columns,
-                  child: _buildGlassCard(
-                    glassBg: glassBg,
-                    outlineVariant: outlineVariant,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(height: 12.0),
+                    Text('${healthPercent.toStringAsFixed(1)}%', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    SizedBox(height: 4.0),
+                    Row(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Forecasted Spend',
-                                style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08)),
-                            Container(
-                              width: 32.0, height: 32.0,
-                              decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                              child: Icon(Icons.payments_outlined, color: primaryBlue, size: 18.0),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.0),
-                        Text('\$${_formatNumber(forecastedSpend)}', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
-                        SizedBox(height: 4.0),
-                        Text('Projected for this month',
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        Icon(Icons.trending_up, color: primaryBlue, size: 14.0),
+                        SizedBox(width: 4.0),
+                        Flexible(child: Text('+2.1% from last month',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w500, color: primaryBlue))),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            );
+              ),
+              // Card 3: Inventory Coverage
+              _buildGlassCard(
+                glassBg: glassBg,
+                outlineVariant: outlineVariant,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(child: Text('Inventory Coverage',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Container(
+                          width: 32.0, height: 32.0,
+                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.calendar_month_outlined, color: primaryBlue, size: 18.0),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.0),
+                    Text('$coverageDays Days', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    SizedBox(height: 4.0),
+                    Text('Avg. across essential lines',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                  ],
+                ),
+              ),
+              // Card 4: Forecasted Spend
+              _buildGlassCard(
+                glassBg: glassBg,
+                outlineVariant: outlineVariant,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(child: Text('Forecasted Spend',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Container(
+                          width: 32.0, height: 32.0,
+                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.payments_outlined, color: primaryBlue, size: 18.0),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.0),
+                    Text('\$${_formatNumber(forecastedSpend)}', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    SizedBox(height: 4.0),
+                    Text('Projected for this month',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                  ],
+                ),
+              ),
+            ];
+
+            // Responsive grid using rows
+            final rows = <Widget>[];
+            for (int i = 0; i < cards.length; i += columns) {
+              final rowChildren = <Widget>[];
+              for (int j = 0; j < columns && i + j < cards.length; j++) {
+                if (j > 0) rowChildren.add(SizedBox(width: cardSpacing));
+                rowChildren.add(Expanded(child: cards[i + j]));
+              }
+              // If last row has fewer items than columns, fill with spacers
+              while (rowChildren.length < columns * 2 - 1) {
+                rowChildren.add(SizedBox(width: cardSpacing));
+                rowChildren.add(Expanded(child: Container()));
+              }
+              rows.add(Row(children: rowChildren));
+              if (i + columns < cards.length) {
+                rows.add(SizedBox(height: cardSpacing));
+              }
+            }
+            return Column(children: rows);
           },
         );
       },
