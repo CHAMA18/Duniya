@@ -901,55 +901,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Pharmacy Tools
-                InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () async {
-                    logFirebaseEvent(
-                        'SIDE_NAV_COMP_Container_h8nxhb88_ON_TAP');
-                    logFirebaseEvent('SidebarLink_navigate_to');
-
-                    context.goNamed(
-                      PharmacyToolsWidget.routeName,
-                      extra: <String, dynamic>{
-                        '__transition_info__': TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 0),
-                        ),
-                      },
-                    );
-
-                    logFirebaseEvent('SidebarLink_update_app_state');
-                    FFAppState().SelectedPage = 'Pharmacy Tools';
-                  },
-                  child: wrapWithModel(
-                    model: _model.sidebarLinkModel6,
-                    updateCallback: () => safeSetState(() {}),
-                    child: SidebarLinkWidget(
-                      linkText: FFLocalizations.of(context).getText(
-                        '67w31bpw' /* Pharmacy Tools */,
-                      ),
-                      activeIcon: Icon(
-                        Icons.build,
-                        color: FlutterFlowTheme.of(context).primary,
-                      ),
-                      inactiveIcon: Icon(
-                        Icons.build_outlined,
-                        color:
-                            FlutterFlowTheme.of(context).secondaryText,
-                      ),
-                      isActive:
-                          FFAppState().SelectedPage == 'Pharmacy Tools',
-                    ),
-                  ),
-                ),
-                // VMI Dashboard (indented sub-item under Pharmacy Tools)
+                // VMI Dashboard
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(44.0, 2.0, 20.0, 2.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 2.0, 20.0, 2.0),
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
