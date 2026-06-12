@@ -92,3 +92,18 @@ export '/inventory/inventory_details/inventory_details_widget.dart'
     show InventoryDetailsWidget;
 export '/inventory/staff_details/staff_details_widget.dart'
     show StaffDetailsWidget;
+
+// VMI Pages
+export '/vmi/dashboard/vmi_dashboard_widget.dart' show VMIDashboardWidget;
+export '/vmi/stock_balances/stock_balances_widget.dart' show StockBalancesWidget;
+export '/vmi/stock_movements/stock_movements_widget.dart' show StockMovementsWidget;
+export '/vmi/product_master/product_master_widget.dart' show ProductMasterWidget;
+export '/vmi/goods_received/goods_received_widget.dart' show GoodsReceivedWidget;
+export '/vmi/goods_received_detail/goods_received_detail_widget.dart' show GoodsReceivedDetailWidget;
+export '/vmi/sales_vmi/sales_vmi_widget.dart' show SalesVMIWidget;
+export '/vmi/stock_counts/stock_counts_widget.dart' show StockCountsWidget;
+export '/vmi/stock_count_detail/stock_count_detail_widget.dart' show StockCountDetailWidget;
+export '/vmi/batches/batches_widget.dart' show BatchesWidget;
+export '/vmi/alerts/low_stock_alerts_widget.dart' show LowStockAlertsWidget;
+export '/vmi/replenishment/replenishment_widget.dart' show ReplenishmentWidget;
+export '/vmi/outlets/outlets_widget.dart' show OutletsWidget;

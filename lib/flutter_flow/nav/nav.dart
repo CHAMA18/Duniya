@@ -14,6 +14,20 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 import '/index.dart';
 
+import '/vmi/dashboard/vmi_dashboard_widget.dart';
+import '/vmi/stock_balances/stock_balances_widget.dart';
+import '/vmi/stock_movements/stock_movements_widget.dart';
+import '/vmi/product_master/product_master_widget.dart';
+import '/vmi/goods_received/goods_received_widget.dart';
+import '/vmi/goods_received_detail/goods_received_detail_widget.dart';
+import '/vmi/sales_vmi/sales_vmi_widget.dart';
+import '/vmi/stock_counts/stock_counts_widget.dart';
+import '/vmi/stock_count_detail/stock_count_detail_widget.dart';
+import '/vmi/batches/batches_widget.dart';
+import '/vmi/alerts/low_stock_alerts_widget.dart';
+import '/vmi/replenishment/replenishment_widget.dart';
+import '/vmi/outlets/outlets_widget.dart';
+
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
 export '/backend/firebase_dynamic_links/firebase_dynamic_links.dart'
@@ -462,6 +476,99 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               collectionNamePath: ['Staff'],
             ),
           ),
+        ),
+        // VMI Routes
+        FFRoute(
+          name: VMIDashboardWidget.routeName,
+          path: VMIDashboardWidget.routePath,
+          builder: (context, params) => VMIDashboardWidget(),
+        ),
+        FFRoute(
+          name: StockBalancesWidget.routeName,
+          path: StockBalancesWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => StockBalancesWidget(
+            pharmacy: params.getParam(
+              'pharmacy',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: StockMovementsWidget.routeName,
+          path: StockMovementsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => StockMovementsWidget(),
+        ),
+        FFRoute(
+          name: ProductMasterWidget.routeName,
+          path: ProductMasterWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => ProductMasterWidget(),
+        ),
+        FFRoute(
+          name: GoodsReceivedWidget.routeName,
+          path: GoodsReceivedWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => GoodsReceivedWidget(),
+        ),
+        FFRoute(
+          name: GoodsReceivedDetailWidget.routeName,
+          path: GoodsReceivedDetailWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => GoodsReceivedDetailWidget(
+            docRef: params.getParam(
+              'docRef',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: SalesVMIWidget.routeName,
+          path: SalesVMIWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => SalesVMIWidget(),
+        ),
+        FFRoute(
+          name: StockCountsWidget.routeName,
+          path: StockCountsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => StockCountsWidget(),
+        ),
+        FFRoute(
+          name: StockCountDetailWidget.routeName,
+          path: StockCountDetailWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => StockCountDetailWidget(
+            docRef: params.getParam(
+              'docRef',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: BatchesWidget.routeName,
+          path: BatchesWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => BatchesWidget(),
+        ),
+        FFRoute(
+          name: LowStockAlertsWidget.routeName,
+          path: LowStockAlertsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => LowStockAlertsWidget(),
+        ),
+        FFRoute(
+          name: ReplenishmentWidget.routeName,
+          path: ReplenishmentWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => ReplenishmentWidget(),
+        ),
+        FFRoute(
+          name: OutletsWidget.routeName,
+          path: OutletsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => OutletsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

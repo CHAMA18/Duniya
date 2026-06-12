@@ -246,6 +246,41 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.dashboard_customize_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'VMI Dashboard'
+                          ? FlutterFlowTheme.of(context).primary
+                          : Color(0xFF9299A1),
+                      Color(0xFF9299A1),
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_vmi_dashboard_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'VMI Dashboard';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      VMIDashboardWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),

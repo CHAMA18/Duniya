@@ -51,58 +51,64 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    final bool isActive = widget.isActive ?? false;
+    final bool isSelected = FFAppState().SelectedPage == widget.linkText;
+
     return Container(
       width: double.infinity,
-      height: 50.0,
+      constraints: BoxConstraints(
+        minHeight: 44.0,
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
+        color: isSelected
+            ? FlutterFlowTheme.of(context).primary.withOpacity(0.08)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(30.0, 0.0, 0.0, 0.0),
+        padding: EdgeInsetsDirectional.fromSTEB(20.0, 6.0, 4.0, 6.0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Stack(
-                  children: [
-                    if (!widget.isActive!) widget.inactiveIcon!,
-                    if (widget.isActive ?? true) widget.activeIcon!,
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
-                  child: Text(
-                    widget.linkText!,
-                    style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).titleMediumFamily,
-                          color: valueOrDefault<Color>(
-                            FFAppState().SelectedPage == widget.linkText
-                                ? FlutterFlowTheme.of(context).primary
-                                : FlutterFlowTheme.of(context).secondaryText,
-                            FlutterFlowTheme.of(context).secondaryText,
-                          ),
-                          letterSpacing: 0.0,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).titleMediumIsCustom,
-                        ),
-                  ),
-                ),
-              ],
+            // Icon
+            SizedBox(
+              width: 24.0,
+              height: 24.0,
+              child: isActive
+                  ? widget.activeIcon!
+                  : widget.inactiveIcon!,
             ),
+            SizedBox(width: 12.0),
+            // Link Text
+            Expanded(
+              child: Text(
+                widget.linkText!,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily:
+                          FlutterFlowTheme.of(context).bodyMediumFamily,
+                      color: isSelected
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      letterSpacing: 0.0,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                    ),
+              ),
+            ),
+            // Active indicator bar
             Container(
-              width: 4.0,
-              height: double.infinity,
+              width: 3.0,
+              height: 20.0,
               decoration: BoxDecoration(
-                color: valueOrDefault<Color>(
-                  FFAppState().SelectedPage == widget.linkText
-                      ? FlutterFlowTheme.of(context).primary
-                      : FlutterFlowTheme.of(context).secondaryBackground,
-                  FlutterFlowTheme.of(context).secondaryBackground,
-                ),
+                color: isSelected
+                    ? FlutterFlowTheme.of(context).primary
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(4.0),
               ),
             ),
           ],
