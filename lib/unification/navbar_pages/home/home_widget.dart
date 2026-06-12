@@ -214,7 +214,7 @@ class _HomeWidgetState extends State<HomeWidget>
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            constraints: const BoxConstraints(minHeight: 170),
+            constraints: const BoxConstraints(minHeight: 140),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.7),
@@ -1319,27 +1319,25 @@ class _HomeWidgetState extends State<HomeWidget>
                                               _buildRightColumn(context),
                                             ],
                                           )
-                                        : IntrinsicHeight(
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                // Left 2/3
-                                                Expanded(
-                                                  flex: 2,
-                                                  child:
-                                                      _buildLeftColumn(),
-                                                ),
-                                                const SizedBox(width: 24),
-                                                // Right 1/3
-                                                Expanded(
-                                                  flex: 1,
-                                                  child:
-                                                      _buildRightColumn(
-                                                          context),
-                                                ),
-                                              ],
-                                            ),
+                                        : Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Left 2/3
+                                              Expanded(
+                                                flex: 2,
+                                                child:
+                                                    _buildLeftColumn(),
+                                              ),
+                                              const SizedBox(width: 24),
+                                              // Right 1/3
+                                              Expanded(
+                                                flex: 1,
+                                                child:
+                                                    _buildRightColumn(
+                                                        context),
+                                              ),
+                                            ],
                                           ),
 
                                     const SizedBox(height: 32),
@@ -1534,16 +1532,22 @@ class _HomeWidgetState extends State<HomeWidget>
         ),
         const SizedBox(height: 16),
         // 2x2 grid
-        GridView.count(
-          crossAxisCount: MediaQuery.sizeOf(context).width > 600 ? 2 : 1,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 2.8,
-          children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > 500;
+            final cardWidth = isWide
+                ? (constraints.maxWidth - 12) / 2
+                : constraints.maxWidth;
+            final cardHeight = 88.0; // Fixed card height for consistency
+
+            return Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
             // Point of Sale
-            _buildQuickActionCard(
+            SizedBox(
+              width: isWide ? cardWidth : null,
+              child: _buildQuickActionCard(
               icon: Icon(Icons.point_of_sale_rounded, color: FlutterFlowTheme.of(context).primary, size: 22),
               title: 'Point of Sale',
               subtitle: 'Process transactions & billing',
@@ -1586,11 +1590,14 @@ class _HomeWidgetState extends State<HomeWidget>
                 );
                 if (_shouldSetState) safeSetState(() {});
               },
+              ),
             ),
             // HR Portal (Owner only)
             if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
               AuthUserStreamWidget(
-                builder: (context) => _buildQuickActionCard(
+                builder: (context) => SizedBox(
+                  width: isWide ? cardWidth : null,
+                  child: _buildQuickActionCard(
                   icon: Icon(Icons.people_alt_rounded, color: FlutterFlowTheme.of(context).secondary, size: 22),
                   title: 'HR Portal',
                   subtitle: 'Manage staff & resources',
@@ -1603,9 +1610,12 @@ class _HomeWidgetState extends State<HomeWidget>
                         HumanResourceUniWidget.routeName);
                   },
                 ),
+                ),
               ),
             // AI Assistant
-            _buildQuickActionCard(
+            SizedBox(
+              width: isWide ? cardWidth : null,
+              child: _buildQuickActionCard(
               icon: FaIcon(FontAwesomeIcons.robot, color: const Color(0xFF8B5CF6), size: 22),
               title: 'AI Assistant',
               subtitle: 'Smart pharmacy insights',
@@ -1632,9 +1642,12 @@ class _HomeWidgetState extends State<HomeWidget>
                 logFirebaseEvent('QuickAction_AI_navigate_to');
                 context.goNamed(AiAssistantWidget.routeName);
               },
+              ),
             ),
             // Calculators
-            _buildQuickActionCard(
+            SizedBox(
+              width: isWide ? cardWidth : null,
+              child: _buildQuickActionCard(
               icon: const Icon(Icons.calculate_rounded, color: Color(0xFFF59E0B), size: 22),
               title: 'Calculators',
               subtitle: 'BMI & health calculators',
@@ -1645,8 +1658,11 @@ class _HomeWidgetState extends State<HomeWidget>
                 logFirebaseEvent('QuickAction_Calc_navigate_to');
                 context.goNamed(BMICalcWidget.routeName);
               },
+              ),
             ),
-          ],
+            ],
+            );
+          },
         ),
       ],
     );
