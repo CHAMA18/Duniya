@@ -1,5 +1,4 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -16,9 +15,8 @@ class ReplenishmentModel extends FlutterFlowModel<ReplenishmentWidget> {
   // Model for MobileNavbar component.
   late MobileNavbarModel mobileNavbarModel;
 
-  // State field(s) for Pharmacy dropdown.
-  String? pharmacyValue;
-  FormFieldController<String>? pharmacyValueController;
+  // Selected row indices for the restock queue table
+  Set<int> selectedRows = {};
 
   @override
   void initState(BuildContext context) {
