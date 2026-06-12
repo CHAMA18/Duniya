@@ -50,21 +50,18 @@ class _TopNavWidgetState extends State<TopNavWidget> {
       children: [
         Expanded(
           child: Container(
-            height: 60.0,
+            height: 64.0,
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).secondaryBackground,
-              boxShadow: [
-                BoxShadow(
-                  color: FlutterFlowTheme.of(context).alternate,
-                  offset: Offset(
-                    0.0,
-                    1.0,
-                  ),
-                )
-              ],
+              border: Border(
+                bottom: BorderSide(
+                  color: FlutterFlowTheme.of(context).lineColor,
+                  width: 1.0,
+                ),
+              ),
             ),
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+              padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,9 +75,9 @@ class _TopNavWidgetState extends State<TopNavWidget> {
                         desktop: false,
                       ))
                         FlutterFlowIconButton(
-                          borderRadius: 50.0,
-                          borderWidth: 1.0,
-                          buttonSize: 50.0,
+                          borderRadius: 12.0,
+                          borderWidth: 0.0,
+                          buttonSize: 44.0,
                           icon: Icon(
                             Icons.menu_rounded,
                             color: FlutterFlowTheme.of(context).primaryText,
@@ -93,44 +90,62 @@ class _TopNavWidgetState extends State<TopNavWidget> {
                             await widget.openDrawer?.call();
                           },
                         ),
-                      Container(
-                        width: 1.0,
-                        height: 1.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                        ),
-                      ),
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
+                      // Search button
                       FlutterFlowIconButton(
-                        borderColor: FlutterFlowTheme.of(context).primary,
-                        borderRadius: 60.0,
-                        borderWidth: 1.0,
-                        buttonSize: 45.0,
-                        fillColor:
-                            FlutterFlowTheme.of(context).secondaryBackground,
+                        borderColor: Colors.transparent,
+                        borderRadius: 12.0,
+                        borderWidth: 0.0,
+                        buttonSize: 40.0,
+                        fillColor: FlutterFlowTheme.of(context).primaryBackground,
                         icon: Icon(
-                          Icons.notifications_active,
-                          color: FlutterFlowTheme.of(context).primary,
-                          size: 24.0,
+                          Icons.search_rounded,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 20.0,
                         ),
                         onPressed: () async {
-                          logFirebaseEvent(
-                              'TOP_NAV_notifications_active_ICN_ON_TAP');
-                          logFirebaseEvent('IconButton_navigate_to');
-
-                          context.pushNamed(NotificationsWidget.routeName);
+                          logFirebaseEvent('TOP_NAV_search_ICN_ON_TAP');
                         },
                       ),
+                      SizedBox(width: 8.0),
+                      // Notification bell with purple accent
+                      Container(
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: FlutterFlowIconButton(
+                          borderColor: Colors.transparent,
+                          borderRadius: 12.0,
+                          borderWidth: 0.0,
+                          buttonSize: 40.0,
+                          fillColor: Colors.transparent,
+                          icon: Icon(
+                            Icons.notifications_none_rounded,
+                            color: FlutterFlowTheme.of(context).primary,
+                            size: 20.0,
+                          ),
+                          onPressed: () async {
+                            logFirebaseEvent(
+                                'TOP_NAV_notifications_active_ICN_ON_TAP');
+                            logFirebaseEvent('IconButton_navigate_to');
+
+                            context.pushNamed(NotificationsWidget.routeName);
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 8.0),
+                      // Profile
                       InkWell(
                         splashColor: Colors.transparent,
                         focusColor: Colors.transparent,
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(20.0),
                         onTap: () async {
                           logFirebaseEvent(
                               'TOP_NAV_COMP_Container_f28jowjh_ON_TAP');
@@ -142,11 +157,11 @@ class _TopNavWidgetState extends State<TopNavWidget> {
                           model: _model.profileImageModel,
                           updateCallback: () => safeSetState(() {}),
                           child: ProfileImageWidget(
-                            radius: 45.0,
+                            radius: 40.0,
                           ),
                         ),
                       ),
-                    ].divide(SizedBox(width: 20.0)),
+                    ],
                   ),
                 ],
               ),

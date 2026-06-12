@@ -434,8 +434,8 @@ class _OutletsWidgetState extends State<OutletsWidget> {
                                                                           fontFamily:
                                                                               FlutterFlowTheme.of(context).bodySmallFamily,
                                                                           color: outlet.isActive
-                                                                              ? Color(0xFF22543D)
-                                                                              : Color(0xFF822727),
+                                                                              ? Color(0xFF065F46)
+                                                                              : Color(0xFF991B1B),
                                                                           fontSize:
                                                                               11.0,
                                                                           fontWeight:

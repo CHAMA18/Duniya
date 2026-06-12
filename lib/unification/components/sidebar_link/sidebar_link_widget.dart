@@ -61,22 +61,34 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
       ),
       decoration: BoxDecoration(
         color: isSelected
-            ? FlutterFlowTheme.of(context).primary.withOpacity(0.08)
+            ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1)
             : Colors.transparent,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(20.0, 6.0, 4.0, 6.0),
+        padding: EdgeInsetsDirectional.fromSTEB(20.0, 8.0, 12.0, 8.0),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            // Icon
-            SizedBox(
-              width: 24.0,
-              height: 24.0,
-              child: isActive
-                  ? widget.activeIcon!
-                  : widget.inactiveIcon!,
+            // Icon with background circle when active
+            Container(
+              width: 32.0,
+              height: 32.0,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.15)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Center(
+                child: SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: isSelected
+                      ? widget.activeIcon!
+                      : widget.inactiveIcon!,
+                ),
+              ),
             ),
             SizedBox(width: 12.0),
             // Link Text
@@ -92,7 +104,7 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                       color: isSelected
                           ? FlutterFlowTheme.of(context).primary
                           : FlutterFlowTheme.of(context).secondaryText,
-                      letterSpacing: 0.0,
+                      letterSpacing: isSelected ? -0.01 : 0.0,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.w500,
                       useGoogleFonts:
@@ -100,17 +112,16 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                     ),
               ),
             ),
-            // Active indicator bar
-            Container(
-              width: 3.0,
-              height: 20.0,
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? FlutterFlowTheme.of(context).primary
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(4.0),
+            // Active indicator bar — Duniya purple accent
+            if (isSelected)
+              Container(
+                width: 3.0,
+                height: 20.0,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).primary,
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
               ),
-            ),
           ],
         ),
       ),

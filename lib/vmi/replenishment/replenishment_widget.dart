@@ -318,7 +318,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   decoration: BoxDecoration(
                     color: surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(color: outlineVariant.withOpacity(0.3)),
+                    border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -356,7 +356,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     borderRadius: BorderRadius.circular(8.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         offset: const Offset(0, 1),
                         blurRadius: 0,
                       ),
@@ -673,9 +673,9 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
       decoration: BoxDecoration(
         color: glassBg,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withOpacity(0.3)),
+        border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
         ],
       ),
       child: ClipRRect(
@@ -688,7 +688,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               decoration: BoxDecoration(
                 color: surfaceBright,
-                border: Border(bottom: BorderSide(color: outlineVariant.withOpacity(0.3))),
+                border: Border(bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.3))),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -830,7 +830,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       decoration: BoxDecoration(
         color: headerBg,
-        border: Border(bottom: BorderSide(color: outlineVariant.withOpacity(0.3))),
+        border: Border(bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.3))),
       ),
       child: Row(
         children: [
@@ -893,7 +893,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
         padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
         decoration: BoxDecoration(
           color: isSelected ? rowHoverBg : Colors.transparent,
-          border: Border(bottom: BorderSide(color: outlineVariant.withOpacity(0.2))),
+          border: Border(bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.2))),
         ),
         child: Row(
           children: [
@@ -983,7 +983,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
-                    color: isCritical ? primaryBlue.withOpacity(0.1) : surfaceContainerHigh,
+                    color: isCritical ? primaryBlue.withValues(alpha: 0.1) : surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Text(
@@ -1047,9 +1047,9 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
       decoration: BoxDecoration(
         color: glassBg,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withOpacity(0.3)),
+        border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
         ],
       ),
       child: Padding(
@@ -1201,7 +1201,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   decoration: BoxDecoration(
                     color: isArriving ? surfaceContainerHighest : surfaceContainerLow,
                     shape: BoxShape.circle,
-                    border: !isArriving ? Border.all(color: outlineVariant.withOpacity(0.3)) : null,
+                    border: !isArriving ? Border.all(color: outlineVariant.withValues(alpha: 0.3)) : null,
                   ),
                   child: Icon(
                     isArriving ? Icons.local_shipping_outlined : Icons.inventory_2_outlined,
@@ -1213,7 +1213,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   Expanded(
                     child: Container(
                       width: 1.0,
-                      color: outlineVariant.withOpacity(0.3),
+                      color: outlineVariant.withValues(alpha: 0.3),
                     ),
                   ),
               ],
@@ -1310,7 +1310,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   decoration: BoxDecoration(
                     color: isArriving ? surfaceContainerHighest : surfaceContainerLow,
                     shape: BoxShape.circle,
-                    border: !isArriving ? Border.all(color: outlineVariant.withOpacity(0.3)) : null,
+                    border: !isArriving ? Border.all(color: outlineVariant.withValues(alpha: 0.3)) : null,
                   ),
                   child: Icon(
                     isArriving ? Icons.local_shipping_outlined : Icons.inventory_2_outlined,
@@ -1319,7 +1319,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   ),
                 ),
                 if (!isLast)
-                  Expanded(child: Container(width: 1.0, color: outlineVariant.withOpacity(0.3))),
+                  Expanded(child: Container(width: 1.0, color: outlineVariant.withValues(alpha: 0.3))),
               ],
             ),
           ),
@@ -1357,9 +1357,9 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
       decoration: BoxDecoration(
         color: glassBg,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withOpacity(0.3)),
+        border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
         ],
       ),
       child: child,

@@ -559,20 +559,20 @@ class _LowStockAlertsWidgetState extends State<LowStockAlertsWidget> {
     Color textColor;
     switch (status) {
       case 'ACTIVE':
-        bgColor = Color(0xFFFED7D7);
-        textColor = Color(0xFF822727);
+        bgColor = Color(0xFFFEE2E2);
+        textColor = Color(0xFF991B1B);
         break;
       case 'ACKNOWLEDGED':
-        bgColor = Color(0xFFFEFCBF);
-        textColor = Color(0xFF744210);
+        bgColor = Color(0xFFFEF3C7);
+        textColor = Color(0xFF92400E);
         break;
       case 'ORDERED':
-        bgColor = Color(0xFFC6F6D5);
-        textColor = Color(0xFF22543D);
+        bgColor = Color(0xFFD1FAE5);
+        textColor = Color(0xFF065F46);
         break;
       default:
-        bgColor = Color(0xFFE2E8F0);
-        textColor = Color(0xFF2D3748);
+        bgColor = Color(0xFFE9D5FF);
+        textColor = Color(0xFF6B21A8);
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),

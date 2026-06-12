@@ -478,7 +478,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(color: outlineVariant.withOpacity(0.5)),
+                    border: Border.all(color: outlineVariant.withValues(alpha: 0.5)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -840,10 +840,10 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
       decoration: BoxDecoration(
         color: glassBg,
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: outlineVariant.withOpacity(0.8)),
+        border: Border.all(color: outlineVariant.withValues(alpha: 0.8)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -885,15 +885,15 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6.0),
-                      borderSide: BorderSide(color: outlineVariant.withOpacity(0.5)),
+                      borderSide: BorderSide(color: outlineVariant.withValues(alpha: 0.5)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6.0),
-                      borderSide: BorderSide(color: outlineVariant.withOpacity(0.5)),
+                      borderSide: BorderSide(color: outlineVariant.withValues(alpha: 0.5)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6.0),
-                      borderSide: BorderSide(color: primaryBlue.withOpacity(0.5)),
+                      borderSide: BorderSide(color: primaryBlue.withValues(alpha: 0.5)),
                     ),
                   ),
                   style: TextStyle(
@@ -922,9 +922,9 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                       decoration: isSelected
                           ? BoxDecoration(
-                              color: primaryBlue.withOpacity(0.1),
+                              color: primaryBlue.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6.0),
-                              border: Border.all(color: primaryBlue.withOpacity(0.2)),
+                              border: Border.all(color: primaryBlue.withValues(alpha: 0.2)),
                             )
                           : null,
                       child: Text(
@@ -951,7 +951,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
-                      border: Border.all(color: outlineVariant.withOpacity(0.3)),
+                      border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -992,7 +992,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.0),
-                  border: Border.all(color: outlineVariant.withOpacity(0.3)),
+                  border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
                 ),
                 child: DropdownButton<String>(
                   value: _model.sortBy,
@@ -1048,10 +1048,10 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
       decoration: BoxDecoration(
         color: glassBg,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withOpacity(0.3)),
+        border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -1065,9 +1065,9 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 12.0),
               decoration: BoxDecoration(
-                color: surfaceContainerLow.withOpacity(0.5),
+                color: surfaceContainerLow.withValues(alpha: 0.5),
                 border: Border(
-                  bottom: BorderSide(color: outlineVariant.withOpacity(0.3)),
+                  bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.3)),
                 ),
               ),
               child: Row(
@@ -1250,13 +1250,13 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     Color statusBgColor;
     if (isOutOfStock) {
       statusColor = primaryBlue;
-      statusBgColor = primaryBlue.withOpacity(0.1);
+      statusBgColor = primaryBlue.withValues(alpha: 0.1);
     } else if (isLowStock) {
       statusColor = primaryBlue;
-      statusBgColor = primaryBlue.withOpacity(0.1);
+      statusBgColor = primaryBlue.withValues(alpha: 0.1);
     } else {
       statusColor = secondaryTeal;
-      statusBgColor = const Color(0xFF00C1FD).withOpacity(0.2);
+      statusBgColor = const Color(0xFF8A2BE2).withValues(alpha: 0.2);
     }
 
     // Progress bar color
@@ -1266,7 +1266,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     } else if (stockPercent < 0.3) {
       progressColor = primaryBlue;
     } else {
-      progressColor = const Color(0xFF00C1FD);
+      progressColor = const Color(0xFF8A2BE2);
     }
 
     return MouseRegion(
@@ -1274,9 +1274,9 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16.0),
         decoration: BoxDecoration(
-          color: isOutOfStock ? primaryBlue.withOpacity(0.03) : Colors.white.withOpacity(0.95),
+          color: isOutOfStock ? primaryBlue.withValues(alpha: 0.03) : Colors.white.withValues(alpha: 0.95),
           border: Border(
-            bottom: BorderSide(color: outlineVariant.withOpacity(0.2)),
+            bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.2)),
           ),
         ),
         child: Row(
@@ -1292,9 +1292,9 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       width: 40.0,
                       height: 40.0,
                       decoration: BoxDecoration(
-                        color: surfaceDim.withOpacity(0.4),
+                        color: surfaceDim.withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(6.0),
-                        border: Border.all(color: outlineVariant.withOpacity(0.3)),
+                        border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
                       ),
                       child: Icon(
                         _getCategoryIcon(stock.category),
@@ -1313,7 +1313,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                               fontFamily: 'Satoshi',
                               fontSize: 14.0,
                               fontWeight: FontWeight.w500,
-                              color: onSurface.withOpacity(isOutOfStock ? 0.6 : 1.0),
+                              color: onSurface.withValues(alpha: isOutOfStock ? 0.6 : 1.0),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -1405,7 +1405,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       borderRadius: BorderRadius.circular(4.0),
                       child: LinearProgressIndicator(
                         value: stockPercent,
-                        backgroundColor: surfaceDim.withOpacity(0.3),
+                        backgroundColor: surfaceDim.withValues(alpha: 0.3),
                         valueColor: AlwaysStoppedAnimation<Color>(progressColor),
                         minHeight: 6.0,
                       ),
@@ -1456,7 +1456,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     decoration: BoxDecoration(
                       color: statusBgColor,
                       borderRadius: BorderRadius.circular(6.0),
-                      border: isOutOfStock ? Border.all(color: primaryBlue.withOpacity(0.2)) : null,
+                      border: isOutOfStock ? Border.all(color: primaryBlue.withValues(alpha: 0.2)) : null,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -1573,9 +1573,9 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
-        color: surfaceContainerLow.withOpacity(0.5),
+        color: surfaceContainerLow.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8.0),
-        border: Border(top: BorderSide(color: outlineVariant.withOpacity(0.3))),
+        border: Border(top: BorderSide(color: outlineVariant.withValues(alpha: 0.3))),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1608,7 +1608,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(color: outlineVariant.withOpacity(0.5)),
+                        border: Border.all(color: outlineVariant.withValues(alpha: 0.5)),
                       ),
                       child: Icon(
                         Icons.chevron_left,
@@ -1634,7 +1634,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(color: outlineVariant.withOpacity(0.5)),
+                        border: Border.all(color: outlineVariant.withValues(alpha: 0.5)),
                       ),
                       child: Icon(
                         Icons.chevron_right,
@@ -1702,10 +1702,10 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
       decoration: BoxDecoration(
         color: glassBg,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withOpacity(0.8)),
+        border: Border.all(color: outlineVariant.withValues(alpha: 0.8)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -1725,7 +1725,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             height: 40.0 * h,
             margin: EdgeInsets.symmetric(horizontal: 1.0),
             decoration: BoxDecoration(
-              color: primaryBlue.withOpacity(h),
+              color: primaryBlue.withValues(alpha: h),
               borderRadius: BorderRadius.vertical(top: Radius.circular(2.0)),
             ),
           ),

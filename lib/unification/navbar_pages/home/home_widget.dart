@@ -145,7 +145,7 @@ class _HomeWidgetState extends State<HomeWidget>
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primary.withOpacity(0.1),
+            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Icon(
@@ -217,15 +217,15 @@ class _HomeWidgetState extends State<HomeWidget>
             constraints: const BoxConstraints(minHeight: 140),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -244,8 +244,8 @@ class _HomeWidgetState extends State<HomeWidget>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          gradientColor.withOpacity(0.3),
-                          gradientColor.withOpacity(0.05),
+                          gradientColor.withValues(alpha: 0.3),
+                          gradientColor.withValues(alpha: 0.05),
                         ],
                       ),
                     ),
@@ -261,7 +261,7 @@ class _HomeWidgetState extends State<HomeWidget>
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: iconBgColor.withOpacity(0.12),
+                            color: iconBgColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -340,7 +340,7 @@ class _HomeWidgetState extends State<HomeWidget>
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 12,
               offset: const Offset(0, 2),
             ),
@@ -352,7 +352,7 @@ class _HomeWidgetState extends State<HomeWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: accentColor.withOpacity(0.1),
+                color: accentColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: icon,
@@ -423,7 +423,7 @@ class _HomeWidgetState extends State<HomeWidget>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -631,7 +631,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                         decoration: BoxDecoration(
                                                             color: const Color(
                                                                     0xFF10B981)
-                                                                .withOpacity(
+                                                                .withValues(alpha: 
                                                                     0.12),
                                                             borderRadius:
                                                                 BorderRadius
@@ -752,7 +752,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                               color: FlutterFlowTheme
                                                                       .of(context)
                                                                   .secondary
-                                                                  .withOpacity(
+                                                                  .withValues(alpha: 
                                                                       0.12),
                                                               borderRadius:
                                                                   BorderRadius
@@ -864,7 +864,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .error
-                                                                      .withOpacity(
+                                                                      .withValues(alpha: 
                                                                           0.12),
                                                                   borderRadius:
                                                                       BorderRadius.circular(
@@ -892,7 +892,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                           fontFamily:
                                                                               FlutterFlowTheme.of(context).bodySmallFamily,
                                                                           color:
-                                                                              const Color(0xFFEF4444),
+                                                                              Color(0xFFEF4444),
                                                                           fontWeight:
                                                                               FontWeight.w700,
                                                                           fontSize:
@@ -989,7 +989,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                           decoration: BoxDecoration(
                                                               color: const Color(
                                                                       0xFF10B981)
-                                                                  .withOpacity(
+                                                                  .withValues(alpha: 
                                                                       0.12),
                                                               borderRadius:
                                                                   BorderRadius
@@ -1117,7 +1117,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
                                                                     .secondary
-                                                                    .withOpacity(
+                                                                    .withValues(alpha: 
                                                                         0.12),
                                                                 borderRadius:
                                                                     BorderRadius
@@ -1232,7 +1232,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                     color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .error
-                                                                        .withOpacity(
+                                                                        .withValues(alpha: 
                                                                             0.12),
                                                                     borderRadius:
                                                                         BorderRadius.circular(20)),
@@ -1261,7 +1261,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                             fontFamily:
                                                                                 FlutterFlowTheme.of(context).bodySmallFamily,
                                                                             color:
-                                                                                const Color(0xFFEF4444),
+                                                                                Color(0xFFEF4444),
                                                                             fontWeight:
                                                                                 FontWeight.w700,
                                                                             fontSize:
@@ -1488,9 +1488,9 @@ class _HomeWidgetState extends State<HomeWidget>
                     lineColor: FlutterFlowTheme.of(context).primary,
                     gradientTop: FlutterFlowTheme.of(context)
                         .primary
-                        .withOpacity(0.2),
+                        .withValues(alpha: 0.2),
                     gradientBottom:
-                        FlutterFlowTheme.of(context).primary.withOpacity(0.0),
+                        FlutterFlowTheme.of(context).primary.withValues(alpha: 0.0),
                   ),
                 ),
               ),
@@ -1616,10 +1616,10 @@ class _HomeWidgetState extends State<HomeWidget>
             SizedBox(
               width: isWide ? cardWidth : null,
               child: _buildQuickActionCard(
-              icon: FaIcon(FontAwesomeIcons.robot, color: const Color(0xFF8B5CF6), size: 22),
+              icon: FaIcon(FontAwesomeIcons.robot, color: Color(0xFF8A2BE2), size: 22),
               title: 'AI Assistant',
               subtitle: 'Smart pharmacy insights',
-              accentColor: const Color(0xFF8B5CF6),
+              accentColor: Color(0xFF8A2BE2),
               trailing: AnimatedBuilder(
                 animation: _aiDotAnimation,
                 builder: (context, child) {
@@ -1651,7 +1651,7 @@ class _HomeWidgetState extends State<HomeWidget>
               icon: const Icon(Icons.calculate_rounded, color: Color(0xFFF59E0B), size: 22),
               title: 'Calculators',
               subtitle: 'BMI & health calculators',
-              accentColor: const Color(0xFFF59E0B),
+              accentColor: Color(0xFFF59E0B),
               onTap: () async {
                 logFirebaseEvent(
                     'HOME_PAGE_QuickAction_Calc_ON_TAP');
@@ -1759,19 +1759,19 @@ class _HomeWidgetState extends State<HomeWidget>
               _buildLegendItem(
                 'Prescription Rx',
                 '55%',
-                const Color(0xFF3B82F6),
+                Color(0xFF8A2BE2),
               ),
               const SizedBox(height: 10),
               _buildLegendItem(
                 'Over-The-Counter',
                 '30%',
-                const Color(0xFF06B6D4),
+                Color(0xFFA855F7),
               ),
               const SizedBox(height: 10),
               _buildLegendItem(
                 'Supplements & Other',
                 '15%',
-                const Color(0xFF93C5FD),
+                Color(0xFFC084FC),
               ),
             ],
           ),
@@ -1931,7 +1931,7 @@ class _DonutChartPainter extends CustomPainter {
 
     // Prescription Rx: 55% (blue)
     final rxPaint = Paint()
-      ..color = const Color(0xFF3B82F6)
+      ..color = Color(0xFF8A2BE2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = outerRadius - innerRadius
       ..strokeCap = StrokeCap.round;
@@ -1946,7 +1946,7 @@ class _DonutChartPainter extends CustomPainter {
 
     // OTC: 30% (cyan)
     final otcPaint = Paint()
-      ..color = const Color(0xFF06B6D4)
+      ..color = Color(0xFFA855F7)
       ..style = PaintingStyle.stroke
       ..strokeWidth = outerRadius - innerRadius
       ..strokeCap = StrokeCap.round;
@@ -1961,7 +1961,7 @@ class _DonutChartPainter extends CustomPainter {
 
     // Supplements & Other: 15% (light blue)
     final suppPaint = Paint()
-      ..color = const Color(0xFF93C5FD)
+      ..color = Color(0xFFC084FC)
       ..style = PaintingStyle.stroke
       ..strokeWidth = outerRadius - innerRadius
       ..strokeCap = StrokeCap.round;

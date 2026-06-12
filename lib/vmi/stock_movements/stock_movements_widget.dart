@@ -452,24 +452,24 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     Color textColor;
     switch (type) {
       case 'RECEIVED':
-        bgColor = Color(0xFFC6F6D5);
-        textColor = Color(0xFF22543D);
+        bgColor = Color(0xFFD1FAE5);
+        textColor = Color(0xFF065F46);
         break;
       case 'SOLD':
-        bgColor = Color(0xFFBEE3F8);
-        textColor = Color(0xFF2A4365);
+        bgColor = Color(0xFFEDE9FE);
+        textColor = Color(0xFF6D28D9);
         break;
       case 'TRANSFERRED':
-        bgColor = Color(0xFFE9D8FD);
-        textColor = Color(0xFF44337A);
+        bgColor = Color(0xFFEDE9FE);
+        textColor = Color(0xFF6D28D9);
         break;
       case 'ADJUSTMENT':
-        bgColor = Color(0xFFFEFCBF);
-        textColor = Color(0xFF744210);
+        bgColor = Color(0xFFFEF3C7);
+        textColor = Color(0xFF92400E);
         break;
       default:
-        bgColor = Color(0xFFE2E8F0);
-        textColor = Color(0xFF2D3748);
+        bgColor = Color(0xFFE9D5FF);
+        textColor = Color(0xFF6B21A8);
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),

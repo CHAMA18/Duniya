@@ -48,23 +48,23 @@ class _BatchesWidgetState extends State<BatchesWidget> {
   }
 
   Color _getExpiryColor(DateTime? expiryDate) {
-    if (expiryDate == null) return Color(0xFFE2E8F0);
+    if (expiryDate == null) return Color(0xFFE9D5FF);
     final now = DateTime.now();
     final diff = expiryDate.difference(now).inDays;
-    if (diff < 0) return Color(0xFFFED7D7); // Expired - RED
-    if (diff < 90) return Color(0xFFFEEBC8); // < 3 months - ORANGE
-    if (diff < 180) return Color(0xFFFEFCBF); // < 6 months - YELLOW
-    return Color(0xFFC6F6D5); // Green
+    if (diff < 0) return Color(0xFFFEE2E2); // Expired - RED
+    if (diff < 90) return Color(0xFFFEF3C7); // < 3 months - ORANGE
+    if (diff < 180) return Color(0xFFFEF3C7); // < 6 months - YELLOW
+    return Color(0xFFD1FAE5); // Green
   }
 
   Color _getExpiryTextColor(DateTime? expiryDate) {
-    if (expiryDate == null) return Color(0xFF2D3748);
+    if (expiryDate == null) return Color(0xFF6B21A8);
     final now = DateTime.now();
     final diff = expiryDate.difference(now).inDays;
-    if (diff < 0) return Color(0xFF822727);
-    if (diff < 90) return Color(0xFF7B341E);
-    if (diff < 180) return Color(0xFF744210);
-    return Color(0xFF22543D);
+    if (diff < 0) return Color(0xFF991B1B);
+    if (diff < 90) return Color(0xFF92400E);
+    if (diff < 180) return Color(0xFF92400E);
+    return Color(0xFF065F46);
   }
 
   @override

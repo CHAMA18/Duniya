@@ -85,8 +85,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     color: valueOrDefault<Color>(
                       FFAppState().SelectedPage == 'DashboardUni'
                           ? FlutterFlowTheme.of(context).primary
-                          : Color(0xFF9299A1),
-                      Color(0xFF9299A1),
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
                     ),
                     size: 24.0,
                   ),
@@ -119,8 +119,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     color: valueOrDefault<Color>(
                       FFAppState().SelectedPage == 'Store Inventory'
                           ? FlutterFlowTheme.of(context).primary
-                          : Color(0xFF9299A1),
-                      Color(0xFF9299A1),
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
                     ),
                     size: 24.0,
                   ),
@@ -153,8 +153,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     color: valueOrDefault<Color>(
                       FFAppState().SelectedPage == 'Patient History'
                           ? FlutterFlowTheme.of(context).primary
-                          : Color(0xFF9299A1),
-                      Color(0xFF9299A1),
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
                     ),
                     size: 24.0,
                   ),
@@ -187,8 +187,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     color: valueOrDefault<Color>(
                       FFAppState().SelectedPage == 'Human Resource'
                           ? FlutterFlowTheme.of(context).primary
-                          : Color(0xFF9299A1),
-                      Color(0xFF9299A1),
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
                     ),
                     size: 24.0,
                   ),
@@ -221,8 +221,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     color: valueOrDefault<Color>(
                       FFAppState().SelectedPage == 'Finances'
                           ? FlutterFlowTheme.of(context).primary
-                          : Color(0xFF9299A1),
-                      Color(0xFF9299A1),
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
                     ),
                     size: 24.0,
                   ),
@@ -256,8 +256,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     color: valueOrDefault<Color>(
                       FFAppState().SelectedPage == 'VMI Dashboard'
                           ? FlutterFlowTheme.of(context).primary
-                          : Color(0xFF9299A1),
-                      Color(0xFF9299A1),
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
                     ),
                     size: 24.0,
                   ),
