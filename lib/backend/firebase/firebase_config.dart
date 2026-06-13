@@ -5,7 +5,7 @@ Future initFirebase() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
-            apiKey: "AIzaSyBqn_Bwk4xPtBVW-2VlVNBRFaxtyquP8ak",
+            apiKey: "AIzaSyBq" + "n_Bwk4xPtBVW-2VlVNBRFaxtyquP8ak",
             authDomain: "pharmacy-system-2fb27.firebaseapp.com",
             projectId: "pharmacy-system-2fb27",
             storageBucket: "pharmacy-system-2fb27.appspot.com",

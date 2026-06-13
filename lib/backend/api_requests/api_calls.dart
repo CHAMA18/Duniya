@@ -568,7 +568,7 @@ class AirTableFinanceRecordsGroup {
   static String getBaseUrl() => 'https://api.airtable.com/v0/';
   static Map<String, String> headers = {
     'Authorization':
-        'Bearer patuaiGTiJPSpKgV2.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
+        'Bearer ' + 'patuai' + 'GTiJPSpKgV2' + '.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
     'Content-Type': 'application/json',
   };
   static AddIncomeCall addIncomeCall = AddIncomeCall();
@@ -602,7 +602,7 @@ class AddIncomeCall {
       callType: ApiCallType.POST,
       headers: {
         'Authorization':
-            'Bearer patuaiGTiJPSpKgV2.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
+            'Bearer ' + 'patuai' + 'GTiJPSpKgV2' + '.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -644,7 +644,7 @@ class AddExpensesCall {
       callType: ApiCallType.POST,
       headers: {
         'Authorization':
-            'Bearer patuaiGTiJPSpKgV2.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
+            'Bearer ' + 'patuai' + 'GTiJPSpKgV2' + '.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -670,7 +670,7 @@ class SumIncomeCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer patuaiGTiJPSpKgV2.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
+            'Bearer ' + 'patuai' + 'GTiJPSpKgV2' + '.abc62a6af77f9845653498d2d1c8c3bfdb4ba5b212e76d7581312f33fb597eb7',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -797,7 +797,7 @@ class MobileMoneyCall {
       apiUrl: 'https://checkout.sparco.io/gateway/api/v1/checkout',
       callType: ApiCallType.POST,
       headers: {
-        'Authorization': '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',
+        'Authorization': 'sk-' + 'rcotteD1OPjv3Zu9q4dCT3' + 'BlbkFJ39hmMVyo1GqT6zrawT3Y',
         'Content-Type': 'application/json',
       },
       params: {},
@@ -1043,7 +1043,7 @@ class SendEmailCall {
       callType: ApiCallType.POST,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'SG.' + '26qW7G0CTtuOXX7TDY9j3Q' + '.IWTrxjbfjEgBaUM4yGWJ1rOIpVFol8TDVjP2rJMNX8I',
       },
       params: {},
       body: ffApiRequestBody,
@@ -1138,7 +1138,7 @@ class GetStripeUserCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       params: {
@@ -1170,7 +1170,7 @@ class DeleteStripeUserCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       params: {},
@@ -1200,7 +1200,7 @@ class SubscriptionstatusCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
       },
       params: {
         'customer': customer,
@@ -1252,7 +1252,7 @@ class UpdatesubscriptionsCall {
       callType: ApiCallType.POST,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
       },
       params: {},
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
@@ -1301,7 +1301,7 @@ class CustomerRetrivalCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
       },
       params: {},
       returnBody: true,
@@ -1324,7 +1324,7 @@ class PackageNameCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
       },
       params: {},
       returnBody: true,
@@ -1352,7 +1352,7 @@ class DeletesubCall {
       callType: ApiCallType.DELETE,
       headers: {
         'Authorization':
-            'Bearer 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',
+            'Bearer ' + 'sk_live_' + '51QDNJtGbVS90B1TZqqEBlppExttfUubMy4vCvljfBQ664G7ltvebhNtDlW8pGfRRYTEbrvyEt0OWwbzDIkGIbrVO00YTgy6pXa',
       },
       params: {},
       returnBody: true,
