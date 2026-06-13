@@ -571,8 +571,8 @@ class _LowStockAlertsWidgetState extends State<LowStockAlertsWidget> {
         textColor = Color(0xFF065F46);
         break;
       default:
-        bgColor = Color(0xFFE9D5FF);
-        textColor = Color(0xFF6B21A8);
+        bgColor = Color(0xFFF3F4F6);
+        textColor = Color(0xFF1F2937);
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),

@@ -103,6 +103,7 @@ dependencies:
   open_file: ^3.2.1
   page_transition: 2.2.2
   path_provider: 2.1.4
+  pdf: ^3.11.1
   path_provider_android: 2.2.10
   path_provider_foundation: 2.4.0
   path_provider_linux: 2.2.1

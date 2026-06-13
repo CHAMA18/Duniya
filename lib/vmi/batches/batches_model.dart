@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 class BatchesModel extends FlutterFlowModel<BatchesWidget> {
   ///  State fields for stateful widgets in this page.
 
-  // Model for SideNav component.
-  late SideNavModel sideNavModel;
+  // Model for SideNav component (desktop/tablet).
+  late SideNavModel sideNavModel1;
+  // Model for SideNav component (drawer/mobile).
+  late SideNavModel sideNavModel2;
   // Model for TopNav component.
   late TopNavModel topNavModel;
   // Model for MobileNavbar component.
@@ -42,14 +44,16 @@ class BatchesModel extends FlutterFlowModel<BatchesWidget> {
 
   @override
   void initState(BuildContext context) {
-    sideNavModel = createModel(context, () => SideNavModel());
+    sideNavModel1 = createModel(context, () => SideNavModel());
+    sideNavModel2 = createModel(context, () => SideNavModel());
     topNavModel = createModel(context, () => TopNavModel());
     mobileNavbarModel = createModel(context, () => MobileNavbarModel());
   }
 
   @override
   void dispose() {
-    sideNavModel.dispose();
+    sideNavModel1.dispose();
+    sideNavModel2.dispose();
     topNavModel.dispose();
     mobileNavbarModel.dispose();
     searchFocusNode?.dispose();

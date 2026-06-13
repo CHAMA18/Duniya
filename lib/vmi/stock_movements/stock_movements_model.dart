@@ -28,6 +28,9 @@ class StockMovementsModel extends FlutterFlowModel<StockMovementsWidget> {
   DateTime? startDate;
   DateTime? endDate;
 
+  // State field(s) for pagination.
+  int? currentPage;
+
   // State field(s) for Add Movement dialog.
   String? dialogProductValue;
   FormFieldController<String>? dialogProductValueController;

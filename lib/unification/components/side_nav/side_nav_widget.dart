@@ -72,58 +72,16 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                 // ─── Duniya Logo & Brand ───
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 4.0),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          FlutterFlowTheme.of(context).primary,
-                          FlutterFlowTheme.of(context).secondary,
-                        ],
-                        begin: AlignmentDirectional(-1.0, -0.5),
-                        end: AlignmentDirectional(1.0, 0.5),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Image.asset(
+                        'assets/images/duniya_logo.png',
+                        width: 80.0,
+                        height: 80.0,
+                        fit: BoxFit.contain,
                       ),
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Image.asset(
-                            'assets/images/duniya_logo.png',
-                            width: 64.0,
-                            height: 64.0,
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Duniya',
-                            style: FlutterFlowTheme.of(context).headlineLarge.override(
-                              fontFamily: FlutterFlowTheme.of(context)
-                                  .headlineLargeFamily,
-                              color: Colors.white,
-                              letterSpacing: -0.02,
-                              fontWeight: FontWeight.w700,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .headlineLargeIsCustom,
-                            ),
-                          ),
-                          Text(
-                            'Pharmacy Management',
-                            style: FlutterFlowTheme.of(context).labelSmall.override(
-                              fontFamily: FlutterFlowTheme.of(context)
-                                  .labelSmallFamily,
-                              color: Colors.white.withValues(alpha: 0.85),
-                              letterSpacing: 0.5,
-                              fontWeight: FontWeight.w400,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .labelSmallIsCustom,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
                 ),
 
@@ -384,6 +342,54 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
+                // Pending Approvals (Owner only)
+                if (valueOrDefault(currentUserDocument?.role, '') ==
+                    'Owner')
+                  AuthUserStreamWidget(
+                    builder: (context) => InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        logFirebaseEvent(
+                            'SIDE_NAV_COMP_PendingApprovals_ON_TAP');
+                        logFirebaseEvent('SidebarLink_navigate_to');
+
+                        context.goNamed(
+                          PendingApprovalsWidget.routeName,
+                          extra: <String, dynamic>{
+                            '__transition_info__': TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 0),
+                            ),
+                          },
+                        );
+
+                        logFirebaseEvent('SidebarLink_update_app_state');
+                        FFAppState().SelectedPage = 'PendingApprovals';
+                      },
+                      child: wrapWithModel(
+                        model: _model.sidebarLinkModel19,
+                        updateCallback: () => safeSetState(() {}),
+                        child: SidebarLinkWidget(
+                          linkText: 'Pending Approvals',
+                          activeIcon: Icon(
+                            Icons.pending_actions,
+                            color: FlutterFlowTheme.of(context).primary,
+                          ),
+                          inactiveIcon: Icon(
+                            Icons.pending_actions_outlined,
+                            color:
+                                FlutterFlowTheme.of(context).secondaryText,
+                          ),
+                          isActive: FFAppState().SelectedPage ==
+                              'PendingApprovals',
+                        ),
+                      ),
+                    ),
+                  ),
 
                 // ============================================================
                 // INVENTORY SECTION
@@ -901,75 +907,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                       isActive: FFAppState().SelectedPage ==
                           'Replenishment',
-                    ),
-                  ),
-                ),
-
-                // ============================================================
-                // TOOLS SECTION
-                // ============================================================
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 4.0),
-                  child: Align(
-                    alignment: AlignmentDirectional(-1.0, 0.0),
-                    child: Text(
-                      'TOOLS',
-                      style: FlutterFlowTheme.of(context).labelSmall.override(
-                        fontFamily: FlutterFlowTheme.of(context)
-                            .labelSmallFamily,
-                        color: FlutterFlowTheme.of(context).alternate,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w600,
-                        useGoogleFonts: !FlutterFlowTheme.of(context)
-                            .labelSmallIsCustom,
-                      ),
-                    ),
-                  ),
-                ),
-                // VMI Dashboard
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 2.0, 20.0, 2.0),
-                  child: InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      logFirebaseEvent(
-                          'SIDE_NAV_COMP_VMI_Dashboard_ON_TAP');
-                      logFirebaseEvent('SidebarLink_navigate_to');
-
-                      context.goNamed(
-                        VMIDashboardWidget.routeName,
-                        extra: <String, dynamic>{
-                          '__transition_info__': TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 0),
-                          ),
-                        },
-                      );
-
-                      logFirebaseEvent('SidebarLink_update_app_state');
-                      FFAppState().SelectedPage = 'VMI Dashboard';
-                    },
-                    child: wrapWithModel(
-                      model: _model.sidebarLinkModel8,
-                      updateCallback: () => safeSetState(() {}),
-                      child: SidebarLinkWidget(
-                        linkText: 'VMI Dashboard',
-                        activeIcon: Icon(
-                          Icons.dashboard_customize,
-                          color: FlutterFlowTheme.of(context).primary,
-                        ),
-                        inactiveIcon: Icon(
-                          Icons.dashboard_customize_outlined,
-                          color:
-                              FlutterFlowTheme.of(context).secondaryText,
-                        ),
-                        isActive: FFAppState().SelectedPage ==
-                            'VMI Dashboard',
-                      ),
                     ),
                   ),
                 ),

@@ -147,19 +147,19 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     final theme = FlutterFlowTheme.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Design tokens — Duniya Brand
-    final primaryBlue = theme.primary; // Now Duniya purple #8A2BE2
-    final primaryContainer = theme.primary.withValues(alpha: 0.1);
-    final secondaryTeal = theme.secondary; // Purple 400
-    final surfaceBg = isDark ? const Color(0xFF0F0520) : const Color(0xFFFAF5FF);
-    final onSurface = isDark ? const Color(0xFFF5F3FF) : const Color(0xFF1E0A3C);
-    final onSurfaceVariant = isDark ? const Color(0xFFC4B5FD) : const Color(0xFF6B21A8);
-    final outline = isDark ? const Color(0xFF8B5CF6) : const Color(0xFF9333EA);
-    final outlineVariant = isDark ? const Color(0xFF3B0764) : const Color(0xFFE9D5FF);
-    final surfaceContainerLow = isDark ? const Color(0xFF2E1065) : const Color(0xFFF5F3FF);
-    final surfaceContainerHighest = isDark ? const Color(0xFF3B0764) : const Color(0xFFDDD6FE);
-    final glassBg = isDark ? const Color(0xFF2E1065).withValues(alpha: 0.8) : Colors.white.withValues(alpha: 0.8);
-    final surfaceDim = isDark ? const Color(0xFF0F0520) : const Color(0xFFE9D5FF);
+    // Design tokens — Black + White theme
+    final primaryBlue = theme.primary; // Black
+    final primaryContainer = theme.primary.withValues(alpha: 0.08);
+    final secondaryTeal = theme.secondary; // Gray 700
+    final surfaceBg = theme.primaryBackground; // White in light, gray-900 in dark
+    final onSurface = theme.primaryText;
+    final onSurfaceVariant = isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151);
+    final outline = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF374151);
+    final outlineVariant = theme.lineColor;
+    final surfaceContainerLow = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
+    final surfaceContainerHighest = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
+    final cardBg = theme.secondaryBackground; // White cards
+    final surfaceDim = isDark ? const Color(0xFF111827) : const Color(0xFFF3F4F6);
 
     return Title(
       title: 'Store Inventory',
@@ -324,7 +324,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                       outlineVariant,
                                       surfaceContainerLow,
                                       surfaceContainerHighest,
-                                      glassBg,
+                                      cardBg,
                                       surfaceDim,
                                     ),
                                     const SizedBox(height: 24.0),
@@ -338,7 +338,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                       outline,
                                       outlineVariant,
                                       surfaceContainerLow,
-                                      glassBg,
+                                      cardBg,
                                     ),
                                     const SizedBox(height: 24.0),
 
@@ -356,7 +356,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                       outlineVariant,
                                       surfaceContainerLow,
                                       surfaceContainerHighest,
-                                      glassBg,
+                                      cardBg,
                                       surfaceDim,
                                     ),
                                     const SizedBox(height: 16.0),
@@ -372,7 +372,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                       outline,
                                       outlineVariant,
                                       surfaceContainerLow,
-                                      glassBg,
+                                      cardBg,
                                     ),
                                     const SizedBox(height: 32.0),
                                   ],
@@ -521,7 +521,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     Color outlineVariant,
     Color surfaceContainerLow,
     Color surfaceContainerHighest,
-    Color glassBg,
+    Color cardBg,
     Color surfaceDim,
   ) {
     return LayoutBuilder(
@@ -534,7 +534,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
         final cards = [
           // Card 1: Total Stock Value
           _buildGlassCard(
-            glassBg: glassBg,
+            cardBg: cardBg,
             outlineVariant: outlineVariant,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -582,7 +582,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE9D5FF).withValues(alpha: 0.5),
+                        color: const Color(0xFFF3F4F6).withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(4.0),
                       ),
                       child: Row(
@@ -622,7 +622,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
           ),
           // Card 2: Items Near Expiry
           _buildGlassCard(
-            glassBg: glassBg,
+            cardBg: cardBg,
             outlineVariant: outlineVariant,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -735,7 +735,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
           ),
           // Card 3: Active Stock Items
           _buildGlassCard(
-            glassBg: glassBg,
+            cardBg: cardBg,
             outlineVariant: outlineVariant,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -833,12 +833,12 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     Color outline,
     Color outlineVariant,
     Color surfaceContainerLow,
-    Color glassBg,
+    Color cardBg,
   ) {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: glassBg,
+        color: cardBg,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(color: outlineVariant.withValues(alpha: 0.8)),
         boxShadow: [
@@ -1041,12 +1041,12 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     Color outlineVariant,
     Color surfaceContainerLow,
     Color surfaceContainerHighest,
-    Color glassBg,
+    Color cardBg,
     Color surfaceDim,
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: glassBg,
+        color: cardBg,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
@@ -1256,7 +1256,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
       statusBgColor = primaryBlue.withValues(alpha: 0.1);
     } else {
       statusColor = secondaryTeal;
-      statusBgColor = const Color(0xFF8A2BE2).withValues(alpha: 0.2);
+      statusBgColor = primaryBlue.withValues(alpha: 0.08);
     }
 
     // Progress bar color
@@ -1266,7 +1266,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     } else if (stockPercent < 0.3) {
       progressColor = primaryBlue;
     } else {
-      progressColor = const Color(0xFF8A2BE2);
+      progressColor = primaryBlue;
     }
 
     return MouseRegion(
@@ -1565,7 +1565,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     Color outline,
     Color outlineVariant,
     Color surfaceContainerLow,
-    Color glassBg,
+    Color cardBg,
   ) {
     final startItem = ((_model.currentPage - 1) * _model.itemsPerPage) + 1;
     final endItem = (startItem + _model.itemsPerPage - 1).clamp(0, totalFiltered);
@@ -1695,23 +1695,21 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     return pages;
   }
 
-  // ===== GLASS CARD =====
-  Widget _buildGlassCard({required Widget child, required Color glassBg, required Color outlineVariant}) {
-    return Container(
-      padding: EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: glassBg,
+  // ===== CARD =====
+  Widget _buildGlassCard({required Widget child, required Color cardBg, required Color outlineVariant}) {
+    return Card(
+      elevation: 2.0,
+      color: cardBg,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withValues(alpha: 0.8)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8.0,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        side: BorderSide(color: outlineVariant.withValues(alpha: 0.5), width: 0.5),
       ),
-      child: child,
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: EdgeInsets.all(24.0),
+        child: child,
+      ),
     );
   }
 

@@ -239,7 +239,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                               return _buildKPICard(
                                                 context,
                                                 icon: Icons.warning_amber_outlined,
-                                                iconColor: Color(0xFFE53E3E),
+                                                iconColor: FlutterFlowTheme.of(context).error,
                                                 title: 'Low Stock Alerts',
                                                 value: count.toString(),
                                               );
@@ -274,7 +274,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                 context,
                                                 icon: Icons.local_shipping_outlined,
                                                 iconColor:
-                                                    Color(0xFFDD6B20),
+                                                    FlutterFlowTheme.of(context).warning,
                                                 title: 'Pending Deliveries',
                                                 value: count.toString(),
                                               );
@@ -504,7 +504,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                     Icon(
                                                       Icons
                                                           .warning_amber_rounded,
-                                                      color: Color(0xFFE53E3E),
+                                                      color: FlutterFlowTheme.of(context).error,
                                                       size: 20.0,
                                                     ),
                                                   ],
@@ -625,7 +625,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                                                 '${alert.currentStock} / ${alert.reorderLevel}',
                                                                                 style: FlutterFlowTheme.of(context).bodySmall.override(
                                                                                       fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
-                                                                                      color: Color(0xFFE53E3E),
+                                                                                      color: FlutterFlowTheme.of(context).error,
                                                                                       letterSpacing: 0.0,
                                                                                       useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
                                                                                     ),
@@ -974,20 +974,20 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
         textColor = Color(0xFF065F46);
         break;
       case 'SOLD':
-        bgColor = Color(0xFFEDE9FE);
-        textColor = Color(0xFF6D28D9);
+        bgColor = Color(0xFFF9FAFB);
+        textColor = Color(0xFF374151);
         break;
       case 'TRANSFERRED':
-        bgColor = Color(0xFFEDE9FE);
-        textColor = Color(0xFF6D28D9);
+        bgColor = Color(0xFFF9FAFB);
+        textColor = Color(0xFF374151);
         break;
       case 'ADJUSTMENT':
         bgColor = Color(0xFFFEF3C7);
         textColor = Color(0xFF92400E);
         break;
       default:
-        bgColor = Color(0xFFE9D5FF);
-        textColor = Color(0xFF6B21A8);
+        bgColor = FlutterFlowTheme.of(context).alternate;
+        textColor = Color(0xFF1F2937);
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),

@@ -892,7 +892,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                           fontFamily:
                                                                               FlutterFlowTheme.of(context).bodySmallFamily,
                                                                           color:
-                                                                              Color(0xFFEF4444),
+                                                                              FlutterFlowTheme.of(context).error,
                                                                           fontWeight:
                                                                               FontWeight.w700,
                                                                           fontSize:
@@ -1261,7 +1261,7 @@ class _HomeWidgetState extends State<HomeWidget>
                                                                             fontFamily:
                                                                                 FlutterFlowTheme.of(context).bodySmallFamily,
                                                                             color:
-                                                                                Color(0xFFEF4444),
+                                                                                FlutterFlowTheme.of(context).error,
                                                                             fontWeight:
                                                                                 FontWeight.w700,
                                                                             fontSize:
@@ -1616,10 +1616,10 @@ class _HomeWidgetState extends State<HomeWidget>
             SizedBox(
               width: isWide ? cardWidth : null,
               child: _buildQuickActionCard(
-              icon: FaIcon(FontAwesomeIcons.robot, color: Color(0xFF8A2BE2), size: 22),
+              icon: FaIcon(FontAwesomeIcons.robot, color: FlutterFlowTheme.of(context).primary, size: 22),
               title: 'AI Assistant',
               subtitle: 'Smart pharmacy insights',
-              accentColor: Color(0xFF8A2BE2),
+              accentColor: FlutterFlowTheme.of(context).primary,
               trailing: AnimatedBuilder(
                 animation: _aiDotAnimation,
                 builder: (context, child) {
@@ -1628,8 +1628,8 @@ class _HomeWidgetState extends State<HomeWidget>
                     child: Container(
                       width: 8,
                       height: 8,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF10B981),
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).success,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -1648,10 +1648,10 @@ class _HomeWidgetState extends State<HomeWidget>
             SizedBox(
               width: isWide ? cardWidth : null,
               child: _buildQuickActionCard(
-              icon: const Icon(Icons.calculate_rounded, color: Color(0xFFF59E0B), size: 22),
+              icon: Icon(Icons.calculate_rounded, color: FlutterFlowTheme.of(context).warning, size: 22),
               title: 'Calculators',
               subtitle: 'BMI & health calculators',
-              accentColor: Color(0xFFF59E0B),
+              accentColor: FlutterFlowTheme.of(context).warning,
               onTap: () async {
                 logFirebaseEvent(
                     'HOME_PAGE_QuickAction_Calc_ON_TAP');
@@ -1691,7 +1691,10 @@ class _HomeWidgetState extends State<HomeWidget>
                     // Custom painted donut
                     CustomPaint(
                       size: const Size(180, 180),
-                      painter: _DonutChartPainter(),
+                      painter: _DonutChartPainter(
+                        primaryColor: FlutterFlowTheme.of(context).primary,
+                        secondaryColor: FlutterFlowTheme.of(context).secondary,
+                      ),
                     ),
                     // Center text
                     AuthUserStreamWidget(
@@ -1759,19 +1762,19 @@ class _HomeWidgetState extends State<HomeWidget>
               _buildLegendItem(
                 'Prescription Rx',
                 '55%',
-                Color(0xFF8A2BE2),
+                FlutterFlowTheme.of(context).primary,
               ),
               const SizedBox(height: 10),
               _buildLegendItem(
                 'Over-The-Counter',
                 '30%',
-                Color(0xFFA855F7),
+                FlutterFlowTheme.of(context).secondary,
               ),
               const SizedBox(height: 10),
               _buildLegendItem(
                 'Supplements & Other',
                 '15%',
-                Color(0xFFC084FC),
+                FlutterFlowTheme.of(context).secondary,
               ),
             ],
           ),
@@ -1923,6 +1926,14 @@ class _ChartPlaceholderPainter extends CustomPainter {
 // Custom painter: Donut chart placeholder
 // ─────────────────────────────────────────────────────────────────────────────
 class _DonutChartPainter extends CustomPainter {
+  final Color primaryColor;
+  final Color secondaryColor;
+
+  _DonutChartPainter({
+    required this.primaryColor,
+    required this.secondaryColor,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -1931,7 +1942,7 @@ class _DonutChartPainter extends CustomPainter {
 
     // Prescription Rx: 55% (blue)
     final rxPaint = Paint()
-      ..color = Color(0xFF8A2BE2)
+      ..color = primaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = outerRadius - innerRadius
       ..strokeCap = StrokeCap.round;
@@ -1946,7 +1957,7 @@ class _DonutChartPainter extends CustomPainter {
 
     // OTC: 30% (cyan)
     final otcPaint = Paint()
-      ..color = Color(0xFFA855F7)
+      ..color = secondaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = outerRadius - innerRadius
       ..strokeCap = StrokeCap.round;
@@ -1961,7 +1972,7 @@ class _DonutChartPainter extends CustomPainter {
 
     // Supplements & Other: 15% (light blue)
     final suppPaint = Paint()
-      ..color = Color(0xFFC084FC)
+      ..color = secondaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = outerRadius - innerRadius
       ..strokeCap = StrokeCap.round;

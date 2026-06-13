@@ -713,12 +713,12 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
     Color textColor;
     switch (status) {
       case 'DRAFT':
-        bgColor = Color(0xFFE9D5FF);
-        textColor = Color(0xFF6B21A8);
+        bgColor = Color(0xFFF3F4F6);
+        textColor = Color(0xFF1F2937);
         break;
       case 'SUBMITTED':
-        bgColor = Color(0xFFEDE9FE);
-        textColor = Color(0xFF6D28D9);
+        bgColor = Color(0xFFF9FAFB);
+        textColor = Color(0xFF374151);
         break;
       case 'APPROVED':
         bgColor = Color(0xFFD1FAE5);
@@ -729,8 +729,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
         textColor = Color(0xFF991B1B);
         break;
       default:
-        bgColor = Color(0xFFE9D5FF);
-        textColor = Color(0xFF6B21A8);
+        bgColor = Color(0xFFF3F4F6);
+        textColor = Color(0xFF1F2937);
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),

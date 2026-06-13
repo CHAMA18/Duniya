@@ -408,7 +408,7 @@ class _BMIResultWidgetState extends State<BMIResultWidget> {
                                                                             ),
                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                  color: Color(0xFF828282),
+                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
                                                                                   fontSize: 12.0,
                                                                                   letterSpacing: 0.0,
                                                                                   useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,

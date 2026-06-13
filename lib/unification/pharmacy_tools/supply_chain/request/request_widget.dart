@@ -345,8 +345,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                               fontWeight: FontWeight.bold,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
-                                                                            color:
-                                                                                Color(0xFF14181B),
+                                                                            color: FlutterFlowTheme.of(context).primaryText,
                                                                             fontSize:
                                                                                 14.0,
                                                                             letterSpacing:
@@ -365,8 +364,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                         ),
                                                         Divider(
                                                           thickness: 1.0,
-                                                          color:
-                                                              Color(0xFFE0E3E7),
+                                                          color: FlutterFlowTheme.of(context).lineColor,
                                                         ),
                                                         Padding(
                                                           padding:
@@ -423,8 +421,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                               fontWeight: FontWeight.bold,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
-                                                                            color:
-                                                                                Color(0xFF14181B),
+                                                                            color: FlutterFlowTheme.of(context).primaryText,
                                                                             fontSize:
                                                                                 14.0,
                                                                             letterSpacing:
@@ -443,8 +440,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                         ),
                                                         Divider(
                                                           thickness: 1.0,
-                                                          color:
-                                                              Color(0xFFE0E3E7),
+                                                          color: FlutterFlowTheme.of(context).lineColor,
                                                         ),
                                                         MouseRegion(
                                                           opaque: false,
@@ -503,7 +499,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                               ),
-                                                                              color: Color(0xFF14181B),
+                                                                              color: FlutterFlowTheme.of(context).primaryText,
                                                                               fontSize: 14.0,
                                                                               letterSpacing: 0.0,
                                                                               fontWeight: FontWeight.w500,
@@ -663,7 +659,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                                   fontWeight: FontWeight.w500,
                                                                                   fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                                                                                 ),
-                                                                                color: Color(0xFF14181B),
+                                                                                color: FlutterFlowTheme.of(context).primaryText,
                                                                                 fontSize: 24.0,
                                                                                 letterSpacing: 0.0,
                                                                                 fontWeight: FontWeight.w500,
@@ -686,7 +682,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                                     fontWeight: FontWeight.w500,
                                                                                     fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
                                                                                   ),
-                                                                                  color: Color(0xFF57636C),
+                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
                                                                                   fontSize: 14.0,
                                                                                   letterSpacing: 0.0,
                                                                                   fontWeight: FontWeight.w500,
@@ -710,7 +706,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                                     fontWeight: FontWeight.w600,
                                                                                     fontStyle: FlutterFlowTheme.of(context).displaySmall.fontStyle,
                                                                                   ),
-                                                                                  color: Color(0xFF14181B),
+                                                                                  color: FlutterFlowTheme.of(context).primaryText,
                                                                                   fontSize: 36.0,
                                                                                   letterSpacing: 0.0,
                                                                                   fontWeight: FontWeight.w600,
@@ -777,8 +773,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                               fontWeight: FontWeight.w500,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
-                                                                            color:
-                                                                                Color(0xFF15161E),
+                                                                            color: FlutterFlowTheme.of(context).primaryText,
                                                                             fontSize:
                                                                                 14.0,
                                                                             letterSpacing:

@@ -135,7 +135,7 @@ class _Action3SelectListWidgetState extends State<Action3SelectListWidget> {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: Color(0xFF7C8791),
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 24.0,
                             ),
                           ],
@@ -180,7 +180,7 @@ class _Action3SelectListWidgetState extends State<Action3SelectListWidget> {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: Color(0xFF7C8791),
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 24.0,
                             ),
                           ],
@@ -225,7 +225,7 @@ class _Action3SelectListWidgetState extends State<Action3SelectListWidget> {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: Color(0xFF7C8791),
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 24.0,
                             ),
                           ],
@@ -270,7 +270,7 @@ class _Action3SelectListWidgetState extends State<Action3SelectListWidget> {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: Color(0xFF7C8791),
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 24.0,
                             ),
                           ],
@@ -315,7 +315,7 @@ class _Action3SelectListWidgetState extends State<Action3SelectListWidget> {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: Color(0xFF7C8791),
+                              color: FlutterFlowTheme.of(context).secondaryText,
                               size: 24.0,
                             ),
                           ],

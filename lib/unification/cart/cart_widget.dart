@@ -600,7 +600,7 @@ class _CartWidgetState extends State<CartWidget> {
                                     ),
                                   ),
                                   duration: Duration(milliseconds: 4000),
-                                  backgroundColor: Color(0xFF36AC7D),
+                                  backgroundColor: FlutterFlowTheme.of(context).success,
                                 ),
                               );
 

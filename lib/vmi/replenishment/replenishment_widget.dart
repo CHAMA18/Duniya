@@ -117,23 +117,23 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     final theme = FlutterFlowTheme.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Design tokens — Duniya Brand
-    final primaryBlue = theme.primary; // Now Duniya purple #8A2BE2
-    final primaryContainer = theme.primary.withValues(alpha: 0.1);
-    final secondaryAccent = theme.secondary; // Purple 400
-    final onSurface = isDark ? const Color(0xFFF5F3FF) : const Color(0xFF1E0A3C);
-    final onSurfaceVariant = isDark ? const Color(0xFFC4B5FD) : const Color(0xFF6B21A8);
-    final outline = isDark ? const Color(0xFF8B5CF6) : const Color(0xFF9333EA);
-    final outlineVariant = isDark ? const Color(0xFF3B0764) : const Color(0xFFE9D5FF);
-    final surfaceContainerLow = isDark ? const Color(0xFF2E1065) : const Color(0xFFF5F3FF);
-    final surfaceContainerHigh = isDark ? const Color(0xFF3B0764) : const Color(0xFFEDE9FE);
-    final surfaceContainerHighest = isDark ? const Color(0xFF3B0764) : const Color(0xFFDDD6FE);
-    final glassBg = isDark ? const Color(0xFF2E1065).withValues(alpha: 0.9) : Colors.white.withValues(alpha: 0.9);
-    final surfaceBg = isDark ? const Color(0xFF0F0520) : const Color(0xFFFAF5FF);
-    final surfaceBright = isDark ? const Color(0xFF2E1065) : const Color(0xFFFAF5FF);
-    final surfaceDim = isDark ? const Color(0xFF0F0520) : const Color(0xFFE9D5FF);
-    final rowHoverBg = isDark ? const Color(0xFF1E0A3C) : const Color(0xFFF5F3FF);
-    final headerBg = isDark ? const Color(0xFF1E0A3C) : const Color(0xFFF5F3FF);
+    // Design tokens — Black + White theme
+    final primaryBlue = theme.primary; // Black
+    final primaryContainer = theme.primary.withValues(alpha: 0.08);
+    final secondaryAccent = theme.secondary; // Gray 700
+    final onSurface = theme.primaryText;
+    final onSurfaceVariant = isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151);
+    final outline = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF374151);
+    final outlineVariant = theme.lineColor;
+    final surfaceContainerLow = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
+    final surfaceContainerHigh = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
+    final surfaceContainerHighest = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
+    final cardBg = theme.secondaryBackground; // White cards
+    final surfaceBg = theme.primaryBackground; // White in light, gray-900 in dark
+    final surfaceBright = isDark ? const Color(0xFF1F2937) : const Color(0xFFFFFFFF);
+    final surfaceDim = isDark ? const Color(0xFF111827) : const Color(0xFFF3F4F6);
+    final rowHoverBg = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
+    final headerBg = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
 
     return Title(
       title: 'Replenishment',
@@ -211,7 +211,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                                 onSurfaceVariant,
                                 outline,
                                 outlineVariant,
-                                glassBg,
+                                cardBg,
                               ),
                               const SizedBox(height: 24.0),
 
@@ -227,7 +227,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                                 surfaceContainerLow,
                                 surfaceContainerHigh,
                                 surfaceContainerHighest,
-                                glassBg,
+                                cardBg,
                                 surfaceBright,
                                 surfaceDim,
                                 headerBg,
@@ -396,7 +396,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     Color onSurfaceVariant,
     Color outline,
     Color outlineVariant,
-    Color glassBg,
+    Color cardBg,
   ) {
     return StreamBuilder<List<ReplenishmentRecord>>(
       stream: queryReplenishmentRecord(),
@@ -434,7 +434,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
             final cards = [
               // Card 1: Pending Orders
               _buildGlassCard(
-                glassBg: glassBg,
+                cardBg: cardBg,
                 outlineVariant: outlineVariant,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -464,7 +464,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               ),
               // Card 2: Auto-Replen Health
               _buildGlassCard(
-                glassBg: glassBg,
+                cardBg: cardBg,
                 outlineVariant: outlineVariant,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -500,7 +500,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               ),
               // Card 3: Inventory Coverage
               _buildGlassCard(
-                glassBg: glassBg,
+                cardBg: cardBg,
                 outlineVariant: outlineVariant,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +530,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               ),
               // Card 4: Forecasted Spend
               _buildGlassCard(
-                glassBg: glassBg,
+                cardBg: cardBg,
                 outlineVariant: outlineVariant,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -597,7 +597,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     Color surfaceContainerLow,
     Color surfaceContainerHigh,
     Color surfaceContainerHighest,
-    Color glassBg,
+    Color cardBg,
     Color surfaceBright,
     Color surfaceDim,
     Color headerBg,
@@ -625,7 +625,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 outlineVariant,
                 surfaceContainerLow,
                 surfaceContainerHigh,
-                glassBg,
+                cardBg,
                 surfaceBright,
                 headerBg,
                 rowHoverBg,
@@ -643,7 +643,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 outline,
                 outlineVariant,
                 surfaceContainerHighest,
-                glassBg,
+                cardBg,
                 surfaceContainerLow,
               ),
             ),
@@ -664,14 +664,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     Color outlineVariant,
     Color surfaceContainerLow,
     Color surfaceContainerHigh,
-    Color glassBg,
+    Color cardBg,
     Color surfaceBright,
     Color headerBg,
     Color rowHoverBg,
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: glassBg,
+        color: cardBg,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
@@ -1038,14 +1038,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     Color outline,
     Color outlineVariant,
     Color surfaceContainerHighest,
-    Color glassBg,
+    Color cardBg,
     Color surfaceContainerLow,
   ) {
     final parentRef = _getParentRef();
 
     return Container(
       decoration: BoxDecoration(
-        color: glassBg,
+        color: cardBg,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
@@ -1350,19 +1350,21 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     );
   }
 
-  // ===== GLASS CARD =====
-  Widget _buildGlassCard({required Widget child, required Color glassBg, required Color outlineVariant}) {
-    return Container(
-      padding: const EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: glassBg,
+  // ===== CARD =====
+  Widget _buildGlassCard({required Widget child, required Color cardBg, required Color outlineVariant}) {
+    return Card(
+      elevation: 2.0,
+      color: cardBg,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
-        ],
+        side: BorderSide(color: outlineVariant.withValues(alpha: 0.5), width: 0.5),
       ),
-      child: child,
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: child,
+      ),
     );
   }
 

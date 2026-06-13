@@ -154,14 +154,23 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         fontFamily: 'Satoshi',
-        primaryColor: const Color(0xFF8A2BE2),
+        primaryColor: const Color(0xFF9900FF),
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFF8A2BE2),
-          secondary: Color(0xFFA855F7),
-          surface: Color(0xFFFAF5FF),
+          primary: Color(0xFF9900FF),
+          secondary: Color(0xFF7C3AED),
+          surface: Color(0xFFFFFFFF),
           onPrimary: Color(0xFFFFFFFF),
           onSecondary: Color(0xFFFFFFFF),
-          onSurface: Color(0xFF1E0A3C),
+          onSurface: Color(0xFF111827),
+        ),
+        cardTheme: const CardThemeData(
+          elevation: 2.0,
+          color: Color(0xFFFFFFFF),
+          surfaceTintColor: Colors.transparent,
+          shadowColor: Color(0x0A000000),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          ),
         ),
         scrollbarTheme: ScrollbarThemeData(
           thumbVisibility: WidgetStateProperty.all(false),
@@ -174,14 +183,23 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: 'Satoshi',
-        primaryColor: const Color(0xFFA855F7),
+        primaryColor: const Color(0xFF9900FF),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFFA855F7),
-          secondary: Color(0xFFC084FC),
-          surface: Color(0xFF0F0520),
+          primary: Color(0xFF9900FF),
+          secondary: Color(0xFFA78BFA),
+          surface: Color(0xFF111827),
           onPrimary: Color(0xFFFFFFFF),
-          onSecondary: Color(0xFFFFFFFF),
-          onSurface: Color(0xFFF5F3FF),
+          onSecondary: Color(0xFF000000),
+          onSurface: Color(0xFFF9FAFB),
+        ),
+        cardTheme: const CardThemeData(
+          elevation: 2.0,
+          color: Color(0xFF1F2937),
+          surfaceTintColor: Colors.transparent,
+          shadowColor: Color(0x0F000000),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          ),
         ),
         scrollbarTheme: ScrollbarThemeData(
           thumbVisibility: WidgetStateProperty.all(false),

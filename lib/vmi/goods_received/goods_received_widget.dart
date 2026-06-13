@@ -489,8 +489,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
         textColor = Color(0xFF991B1B);
         break;
       default:
-        bgColor = Color(0xFFE9D5FF);
-        textColor = Color(0xFF6B21A8);
+        bgColor = Color(0xFFF3F4F6);
+        textColor = Color(0xFF1F2937);
     }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),

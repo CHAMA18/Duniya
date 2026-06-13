@@ -60,6 +60,21 @@ class UserRecord extends FirestoreRecord {
   String get stripeId => _stripeId ?? '';
   bool hasStripeId() => _stripeId != null;
 
+  // "pharmacy_name" field.
+  String? _pharmacyName;
+  String get pharmacyName => _pharmacyName ?? '';
+  bool hasPharmacyName() => _pharmacyName != null;
+
+  // "account_type" field.
+  String? _accountType;
+  String get accountType => _accountType ?? '';
+  bool hasAccountType() => _accountType != null;
+
+  // "approved_by_duniya" field.
+  bool? _approvedByDuniya;
+  bool get approvedByDuniya => _approvedByDuniya ?? false;
+  bool hasApprovedByDuniya() => _approvedByDuniya != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -70,6 +85,9 @@ class UserRecord extends FirestoreRecord {
     _role = snapshotData['role'] as String?;
     _ownerRef = snapshotData['OwnerRef'] as DocumentReference?;
     _stripeId = snapshotData['StripeId'] as String?;
+    _pharmacyName = snapshotData['pharmacy_name'] as String?;
+    _accountType = snapshotData['account_type'] as String?;
+    _approvedByDuniya = snapshotData['approved_by_duniya'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -115,6 +133,9 @@ Map<String, dynamic> createUserRecordData({
   String? role,
   DocumentReference? ownerRef,
   String? stripeId,
+  String? pharmacyName,
+  String? accountType,
+  bool? approvedByDuniya,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -127,6 +148,9 @@ Map<String, dynamic> createUserRecordData({
       'role': role,
       'OwnerRef': ownerRef,
       'StripeId': stripeId,
+      'pharmacy_name': pharmacyName,
+      'account_type': accountType,
+      'approved_by_duniya': approvedByDuniya,
     }.withoutNulls,
   );
 
@@ -146,7 +170,10 @@ class UserRecordDocumentEquality implements Equality<UserRecord> {
         e1?.phoneNumber == e2?.phoneNumber &&
         e1?.role == e2?.role &&
         e1?.ownerRef == e2?.ownerRef &&
-        e1?.stripeId == e2?.stripeId;
+        e1?.stripeId == e2?.stripeId &&
+        e1?.pharmacyName == e2?.pharmacyName &&
+        e1?.accountType == e2?.accountType &&
+        e1?.approvedByDuniya == e2?.approvedByDuniya;
   }
 
   @override
@@ -159,7 +186,10 @@ class UserRecordDocumentEquality implements Equality<UserRecord> {
         e?.phoneNumber,
         e?.role,
         e?.ownerRef,
-        e?.stripeId
+        e?.stripeId,
+        e?.pharmacyName,
+        e?.accountType,
+        e?.approvedByDuniya,
       ]);
 
   @override
