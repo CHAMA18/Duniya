@@ -1,0 +1,3 @@
+NSCameraUsageDescription = "To upload an event, you will need to upload some images. This app will require your permission to use your camera.";
+NSPhotoLibraryUsageDescription = "To upload an event, you will need to upload some images. This app will require your permission to use your camera.";
+PermissionGroupNotification = "In order to access notifications please grant us permission to send them";
