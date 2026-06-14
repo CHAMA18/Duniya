@@ -538,7 +538,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             outlineVariant: outlineVariant,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Row(
                   children: [
@@ -615,7 +615,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     )),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                Spacer(),
                 _buildSparkline(primaryBlue),
               ],
             ),
@@ -626,7 +626,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             outlineVariant: outlineVariant,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Row(
                   children: [
@@ -683,15 +683,15 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  'Requires Action',
+                  'All items within range',
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
-                    color: primaryBlue,
+                    fontWeight: FontWeight.w400,
+                    color: outline,
                   ),
                 ),
-                SizedBox(height: 16.0),
+                Spacer(),
                 Row(
                   children: [
                     Container(
@@ -739,7 +739,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             outlineVariant: outlineVariant,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Row(
                   children: [
@@ -787,15 +787,30 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     color: outline,
                   ),
                 ),
-                SizedBox(height: 16.0),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: LinearProgressIndicator(
-                    value: totalSKUs > 0 ? (totalSKUs - lowStockCount) / totalSKUs : 0.0,
-                    backgroundColor: surfaceContainerHighest,
-                    valueColor: AlwaysStoppedAnimation<Color>(secondaryTeal),
-                    minHeight: 6.0,
-                  ),
+                Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4.0),
+                      child: LinearProgressIndicator(
+                        value: totalSKUs > 0 ? (totalSKUs - lowStockCount) / totalSKUs : 0.0,
+                        backgroundColor: surfaceContainerHighest,
+                        valueColor: AlwaysStoppedAnimation<Color>(secondaryTeal),
+                        minHeight: 6.0,
+                      ),
+                    ),
+                    SizedBox(height: 6.0),
+                    Text(
+                      totalSKUs > 0 ? '${((totalSKUs - lowStockCount) / totalSKUs * 100).round()}% in stock' : 'No data',
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: 11.0,
+                        fontWeight: FontWeight.w500,
+                        color: outline,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -814,7 +829,10 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             rowChildren.add(SizedBox(width: cardSpacing));
             rowChildren.add(Expanded(child: Container()));
           }
-          rows.add(Row(children: rowChildren));
+          rows.add(IntrinsicHeight(child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: rowChildren,
+          )));
           if (i + columns < cards.length) {
             rows.add(SizedBox(height: cardSpacing));
           }
