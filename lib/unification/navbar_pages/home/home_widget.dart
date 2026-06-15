@@ -315,8 +315,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }) {
     return Container(
       width: width,
-      height: 250,
+      constraints: const BoxConstraints(minHeight: 250),
       padding: const EdgeInsets.all(22),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(18),
@@ -333,6 +334,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3627,6 +3629,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   }
 
                   return SizedBox(
+                    width: double.infinity,
                     height: 248,
                     child: CustomPaint(
                       painter: _RealLineChartPainter(
@@ -4035,7 +4038,7 @@ class _RealLineChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (values.length < 2) {
+    if (values.length < 2 || size.width <= 0 || size.height <= 0) {
       final textPainter = TextPainter(
         text: TextSpan(
           text: 'No revenue data available yet',
@@ -4056,9 +4059,15 @@ class _RealLineChartPainter extends CustomPainter {
       return;
     }
 
-    final chartPadding = const EdgeInsets.fromLTRB(52, 16, 16, 36);
-    final chartWidth = size.width - chartPadding.left - chartPadding.right;
-    final chartHeight = size.height - chartPadding.top - chartPadding.bottom;
+    final chartPadding = const EdgeInsets.fromLTRB(52, 16, 20, 44);
+    final chartWidth = math.max(
+      size.width - chartPadding.left - chartPadding.right,
+      1.0,
+    );
+    final chartHeight = math.max(
+      size.height - chartPadding.top - chartPadding.bottom,
+      1.0,
+    );
     final maxVal = values.reduce((a, b) => a > b ? a : b);
     final minVal = values.reduce((a, b) => a < b ? a : b);
     final range = (maxVal - minVal).abs();
@@ -4138,7 +4147,13 @@ class _RealLineChartPainter extends CustomPainter {
       fontSize: 10.0,
       fontWeight: FontWeight.w500,
     );
+    final maxLabelCount = math.max(2, (chartWidth / 72).floor());
+    final labelStep = math.max(1, (labels.length / maxLabelCount).ceil());
     for (int i = 0; i < labels.length; i++) {
+      final isLast = i == labels.length - 1;
+      if (i % labelStep != 0 && !isLast) {
+        continue;
+      }
       final textPainter = TextPainter(
         text: TextSpan(
           text: labels[i],
@@ -4148,11 +4163,15 @@ class _RealLineChartPainter extends CustomPainter {
       )..layout();
       final x = chartPadding.left +
           (chartWidth * i / (labels.length - 1).clamp(1, labels.length));
+      final labelY = size.height - chartPadding.bottom + 8;
+      if (labelY + textPainter.height > size.height) {
+        continue;
+      }
       textPainter.paint(
         canvas,
         Offset(
           x - textPainter.width / 2,
-          size.height - chartPadding.bottom + 8,
+          labelY,
         ),
       );
     }

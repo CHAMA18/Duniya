@@ -86,59 +86,18 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     isCollapsed ? 8.0 : 16.0,
                     8.0,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: isCollapsed
-                              ? Alignment.center
-                              : Alignment.centerLeft,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 220),
-                            width: isCollapsed ? 52.0 : 128.0,
-                            height: isCollapsed ? 52.0 : 128.0,
-                            child: Image.asset(
-                              'assets/images/duniya_logo.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
+                  child: Align(
+                    alignment:
+                        isCollapsed ? Alignment.center : Alignment.centerLeft,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      width: isCollapsed ? 52.0 : 128.0,
+                      height: isCollapsed ? 52.0 : 128.0,
+                      child: Image.asset(
+                        'assets/images/duniya_logo.png',
+                        fit: BoxFit.contain,
                       ),
-                      if (!isCollapsed)
-                        InkWell(
-                          onTap: () {
-                            FFAppState().SidebarCollapsed = true;
-                            safeSetState(() {});
-                          },
-                          borderRadius: BorderRadius.circular(16),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Icon(
-                              Icons.chevron_left_rounded,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 24,
-                            ),
-                          ),
-                        ),
-                      if (isCollapsed)
-                        InkWell(
-                          onTap: () {
-                            FFAppState().SidebarCollapsed = false;
-                            safeSetState(() {});
-                          },
-                          borderRadius: BorderRadius.circular(16),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Icon(
-                              Icons.chevron_right_rounded,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 24,
-                            ),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                 ),
 
@@ -1132,6 +1091,71 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   ),
                                 ],
                               ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      Align(
+                        alignment: Alignment.center,
+                        child: InkWell(
+                          onTap: () {
+                            FFAppState().SidebarCollapsed = !isCollapsed;
+                            safeSetState(() {});
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(minHeight: 44.0),
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                color: FlutterFlowTheme.of(context).alternate,
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                isCollapsed ? 12.0 : 16.0,
+                                10.0,
+                                isCollapsed ? 12.0 : 16.0,
+                                10.0,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    isCollapsed
+                                        ? Icons.chevron_right_rounded
+                                        : Icons.chevron_left_rounded,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 24.0,
+                                  ),
+                                  if (!isCollapsed) ...[
+                                    const SizedBox(width: 12.0),
+                                    Text(
+                                      'Collapse Sidebar',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMediumFamily,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 0.0,
+                                            useGoogleFonts:
+                                                !FlutterFlowTheme.of(context)
+                                                    .bodyMediumIsCustom,
+                                          ),
+                                    ),
+                                  ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

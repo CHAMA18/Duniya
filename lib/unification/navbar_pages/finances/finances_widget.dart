@@ -696,11 +696,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                       const SizedBox(height: 24.0),
 
                                       // ── Revenue Analytics Chart ──
-                                      SizedBox(
-                                        height: 350.0,
-                                        child: _buildRevenueChart(
-                                            financesFinanceRecord),
-                                      ),
+                                      _buildRevenueChart(financesFinanceRecord),
 
                                       const SizedBox(height: 24.0),
 

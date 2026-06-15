@@ -420,6 +420,32 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                               ),
                             ];
 
+                            Widget cardsLayout(double maxWidth) {
+                              final isWide = maxWidth >= 1100;
+                              final cardGap = 14.0;
+                              if (!isWide) {
+                                return Column(
+                                  children: [
+                                    for (var i = 0; i < cards.length; i++) ...[
+                                      cards[i],
+                                      if (i != cards.length - 1)
+                                        const SizedBox(height: 14),
+                                    ],
+                                  ],
+                                );
+                              }
+
+                              return Row(
+                                children: [
+                                  for (var i = 0; i < cards.length; i++) ...[
+                                    Expanded(child: cards[i]),
+                                    if (i != cards.length - 1)
+                                      SizedBox(width: cardGap),
+                                  ],
+                                ],
+                              );
+                            }
+
                             return SingleChildScrollView(
                               padding: EdgeInsets.fromLTRB(
                                 isPhone ? 16 : 24,
@@ -431,16 +457,9 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _buildPageChrome(isPhone: isPhone),
-                                  Column(
-                                    children: [
-                                      for (var i = 0;
-                                          i < cards.length;
-                                          i++) ...[
-                                        cards[i],
-                                        if (i != cards.length - 1)
-                                          const SizedBox(height: 14),
-                                      ],
-                                    ],
+                                  LayoutBuilder(
+                                    builder: (context, constraints) =>
+                                        cardsLayout(constraints.maxWidth),
                                   ),
                                   const SizedBox(height: 18),
                                   _buildSearchBar(),
