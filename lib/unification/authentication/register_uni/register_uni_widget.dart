@@ -83,13 +83,16 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
     super.dispose();
   }
 
-  /// Builds the Google logo as a custom painter widget
+  /// Builds the Google logo from the uploaded asset
   Widget _buildGoogleLogo() {
     return SizedBox(
       width: 20.0,
       height: 20.0,
-      child: CustomPaint(
-        painter: _GoogleLogoPainter(),
+      child: Image.asset(
+        'assets/images/google_icon.png',
+        width: 20.0,
+        height: 20.0,
+        fit: BoxFit.contain,
       ),
     );
   }
@@ -1025,64 +1028,4 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
       ),
     );
   }
-}
-
-/// Custom painter for the Google "G" logo
-class _GoogleLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-
-    // Blue segment (top-right)
-    final bluePaint = Paint()..color = const Color(0xFF4285F4);
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -0.15, // start angle (≈ -8.6°)
-      1.45, // sweep angle (≈ 83°)
-      false,
-      bluePaint
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = radius * 0.38,
-    );
-
-    // Red segment (top-left)
-    final redPaint = Paint()..color = const Color(0xFFEA4335);
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      2.99, // start angle (≈ 171°)
-      0.75, // sweep
-      false,
-      redPaint
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = radius * 0.38,
-    );
-
-    // Yellow segment (left)
-    final yellowPaint = Paint()..color = const Color(0xFFFBBC05);
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      2.2, // start angle
-      0.8, // sweep
-      false,
-      yellowPaint
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = radius * 0.38,
-    );
-
-    // Green segment (bottom)
-    final greenPaint = Paint()..color = const Color(0xFF34A853);
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      0.82, // start angle
-      1.38, // sweep
-      false,
-      greenPaint
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = radius * 0.38,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

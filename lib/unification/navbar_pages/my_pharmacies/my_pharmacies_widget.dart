@@ -245,6 +245,12 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                 const SizedBox(width: 10),
                 _buildFilterChip(
                   context: context,
+                  label: 'Outlets',
+                  icon: Icons.store_rounded,
+                ),
+                const SizedBox(width: 10),
+                _buildFilterChip(
+                  context: context,
                   label: 'ZMW',
                   icon: Icons.payments_outlined,
                 ),
@@ -312,7 +318,12 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
               TextButton(
                 onPressed: () {
                   context.pushNamed(
-                    AddstoresWidget.routeName,
+                    ManagePharmacyWidget.routeName,
+                    queryParameters: {
+                      'pharmacyName': pharmacy.name,
+                      'pharmacyAddress': pharmacy.address,
+                      'pharmacyRef': pharmacy.reference.id,
+                    },
                   );
                 },
                 style: TextButton.styleFrom(
@@ -684,6 +695,9 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                                       },
                                     ),
                                   ),
+                                  const SizedBox(height: 28),
+                                  // ── OUTLETS SECTION ──
+                                  _buildOutletsSection(context),
                                 ],
                               ),
                             ),
@@ -697,5 +711,425 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
             ),
           ),
         ));
+  }
+
+  // ── OUTLETS SECTION ──────────────────────────────────────────────────────
+
+  Widget _buildOutletsSection(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    return AuthUserStreamWidget(
+      builder: (context) => StreamBuilder<List<OutletRecord>>(
+        stream: queryOutletRecord(
+          parent: _pharmacyParent(),
+        ),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox(
+              height: 120,
+              child: Center(child: LoadingSpinnerWidget(size: 32, showLabel: false)),
+            );
+          }
+
+          final outlets = snapshot.data!;
+
+          return Container(
+            decoration: BoxDecoration(
+              color: theme.secondaryBackground,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: theme.alternate.withValues(alpha: 0.4)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.store_rounded, color: Color(0xFF7C3AED), size: 20),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pharmacy Outlets',
+                              style: theme.titleLarge?.override(
+                                fontFamily: theme.titleLargeFamily,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                                useGoogleFonts: !theme.titleLargeIsCustom,
+                              ),
+                            ),
+                            Text(
+                              '${outlets.length} outlet${outlets.length != 1 ? 's' : ''} across all pharmacies',
+                              style: theme.bodySmall?.override(
+                                fontFamily: theme.bodySmallFamily,
+                                color: theme.secondaryText,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !theme.bodySmallIsCustom,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 36,
+                        child: OutlinedButton.icon(
+                          onPressed: () => _showAddOutletDialog(context),
+                          icon: const Icon(Icons.add_rounded, size: 16),
+                          label: const Text('Add Outlet'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: theme.primary,
+                            side: BorderSide(color: theme.primary.withValues(alpha: 0.5)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                if (outlets.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Icon(Icons.store_outlined, size: 40, color: theme.secondaryText),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No outlets configured',
+                            style: theme.bodyMedium?.override(
+                              fontFamily: theme.bodyMediumFamily,
+                              color: theme.secondaryText,
+                              letterSpacing: 0.0,
+                              useGoogleFonts: !theme.bodyMediumIsCustom,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Add outlets to manage dispensing points across your pharmacy network',
+                            style: theme.bodySmall?.override(
+                              fontFamily: theme.bodySmallFamily,
+                              color: theme.secondaryText,
+                              letterSpacing: 0.0,
+                              useGoogleFonts: !theme.bodySmallIsCustom,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: outlets.map((outlet) => _buildOutletCard(context, outlet)).toList(),
+                    ),
+                  ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildOutletCard(BuildContext context, OutletRecord outlet) {
+    final theme = FlutterFlowTheme.of(context);
+    return Container(
+      width: 260,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.primaryBackground,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: theme.alternate.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: (outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280))
+                      .withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.store_rounded,
+                  size: 18,
+                  color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      outlet.name,
+                      style: theme.bodyMedium?.override(
+                        fontFamily: theme.bodyMediumFamily,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.0,
+                        useGoogleFonts: !theme.bodyMediumIsCustom,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: theme.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        outlet.code,
+                        style: theme.bodySmall?.override(
+                          fontFamily: theme.bodySmallFamily,
+                          color: theme.primary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 10,
+                          letterSpacing: 0.5,
+                          useGoogleFonts: !theme.bodySmallIsCustom,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          ),
+          if (outlet.hasAddress()) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(Icons.location_on_rounded, size: 12, color: theme.secondaryText),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    outlet.address!,
+                    style: theme.bodySmall?.override(
+                      fontFamily: theme.bodySmallFamily,
+                      color: theme.secondaryText,
+                      fontSize: 11,
+                      letterSpacing: 0.0,
+                      useGoogleFonts: !theme.bodySmallIsCustom,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () async {
+                    await outlet.reference.update({
+                      'IsActive': !outlet.isActive,
+                      'UpdatedAt': DateTime.now(),
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: (outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280))
+                          .withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      outlet.isActive ? Icons.toggle_on_rounded : Icons.toggle_off_rounded,
+                      size: 16,
+                      color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () async {
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Delete Outlet'),
+                        content: Text('Delete "${outlet.name}"? This cannot be undone.'),
+                        actions: [
+                          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                          FilledButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFDC2626)),
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed == true) {
+                      await outlet.reference.delete();
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFDC2626).withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.delete_outline_rounded, size: 14, color: Color(0xFFDC2626)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddOutletDialog(BuildContext context) {
+    final nameController = TextEditingController();
+    final codeController = TextEditingController();
+    final addressController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.store_rounded, color: Color(0xFF7C3AED), size: 18),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Add Outlet',
+                style: FlutterFlowTheme.of(context).titleLarge?.override(
+                  fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                  useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
+                ),
+              ),
+            ],
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          content: SizedBox(
+            width: MediaQuery.sizeOf(context).width > 440 ? 440 : double.infinity,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Outlet Name *',
+                      prefixIcon: const Icon(Icons.label_rounded, size: 18),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: codeController,
+                    decoration: InputDecoration(
+                      labelText: 'Outlet Code *',
+                      prefixIcon: const Icon(Icons.qr_code_rounded, size: 18),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: addressController,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      labelText: 'Address',
+                      prefixIcon: const Icon(Icons.location_on_rounded, size: 18),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                if (nameController.text.isEmpty || codeController.text.isEmpty) return;
+                final ownerRef = _pharmacyParent();
+                if (ownerRef == null) return;
+                await OutletRecord.createDoc(ownerRef).set(
+                  createOutletRecordData(
+                    name: nameController.text,
+                    code: codeController.text,
+                    address: addressController.text.isNotEmpty ? addressController.text : null,
+                    isActive: true,
+                    createdAt: getCurrentTimestamp,
+                    updatedAt: getCurrentTimestamp,
+                  ),
+                );
+                Navigator.pop(dialogContext);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Outlet added successfully')),
+                );
+              },
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF7C3AED),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

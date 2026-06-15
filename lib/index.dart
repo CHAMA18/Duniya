@@ -29,6 +29,8 @@ export '/unification/navbar_pages/finances/finances_widget.dart'
     show FinancesWidget;
 export '/unification/navbar_pages/pending_approvals/pending_approvals_widget.dart'
     show PendingApprovalsWidget;
+export '/unification/navbar_pages/manage_pharmacy/manage_pharmacy_widget.dart'
+    show ManagePharmacyWidget;
 export '/unification/pharmacy_tools/point_of_sales/point_of_sales_widget.dart'
     show PointOfSalesWidget;
 export '/unification/authentication/welcome/welcome_widget.dart'

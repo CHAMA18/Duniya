@@ -201,6 +201,31 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => FinancesWidget(),
         ),
         FFRoute(
+          name: PendingApprovalsWidget.routeName,
+          path: PendingApprovalsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => PendingApprovalsWidget(),
+        ),
+        FFRoute(
+          name: ManagePharmacyWidget.routeName,
+          path: ManagePharmacyWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => ManagePharmacyWidget(
+            pharmacyName: params.getParam(
+              'pharmacyName',
+              ParamType.String,
+            ),
+            pharmacyAddress: params.getParam(
+              'pharmacyAddress',
+              ParamType.String,
+            ),
+            pharmacyRef: params.getParam(
+              'pharmacyRef',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
           name: PointOfSalesWidget.routeName,
           path: PointOfSalesWidget.routePath,
           requireAuth: true,

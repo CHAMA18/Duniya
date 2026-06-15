@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/auth/firebase_auth/google_auth.dart' as google_auth;
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -38,6 +39,19 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
       width: size,
       height: size,
       fit: BoxFit.contain,
+    );
+  }
+
+  Widget _buildGoogleLogo() {
+    return SizedBox(
+      width: 20.0,
+      height: 20.0,
+      child: Image.asset(
+        'assets/images/google_icon.png',
+        width: 20.0,
+        height: 20.0,
+        fit: BoxFit.contain,
+      ),
     );
   }
 
@@ -608,6 +622,122 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                         ),
                       ),
                       const SizedBox(height: 22.0),
+
+                      // ── OR Divider ──
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 1.0,
+                              color: _line.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(
+                              'OR',
+                              style: TextStyle(
+                                fontFamily: 'Satoshi',
+                                fontSize: 11.0,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.12,
+                                color: _muted.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 1.0,
+                              color: _line.withValues(alpha: 0.5),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 18.0),
+
+                      // ── Google Sign In Button ──
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50.0,
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            logFirebaseEvent(
+                                'LOGIN_UNI_GOOGLE_SIGN_IN_BTN_ON_TAP');
+                            logFirebaseEvent('Button_auth');
+                            GoRouter.of(context).prepareAuthEvent();
+                            try {
+                              final userCredential =
+                                  await google_auth.googleSignInFunc();
+                              if (userCredential != null) {
+                                final user = userCredential.user;
+                                if (user != null) {
+                                  // Check if user doc exists, create if not
+                                  final userDoc =
+                                      await UserRecord.getDocumentOnce(
+                                    UserRecord.collection.doc(user.uid),
+                                  );
+                                  if (!userDoc.hasRole()) {
+                                    await UserRecord.collection
+                                        .doc(user.uid)
+                                        .set(createUserRecordData(
+                                          email: user.email,
+                                          displayName: user.displayName,
+                                          photoUrl: user.photoURL,
+                                          uid: user.uid,
+                                          createdTime: getCurrentTimestamp,
+                                          role: 'Owner',
+                                        ));
+                                  }
+
+                                  if (context.mounted) {
+                                    context.goNamedAuth(
+                                        WelcomeWidget.routeName,
+                                        context.mounted);
+                                  }
+                                }
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Google sign in failed: $e'),
+                                ),
+                              );
+                            }
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: BorderSide(
+                              color: _line.withValues(alpha: 0.6),
+                              width: 1.2,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildGoogleLogo(),
+                              const SizedBox(width: 10.0),
+                              Text(
+                                'Sign in with Google',
+                                style: TextStyle(
+                                  fontFamily: 'Satoshi',
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.5,
+                                  letterSpacing: -0.01,
+                                  color: _text,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 18.0),
                       if (kDebugMode)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 14.0),
