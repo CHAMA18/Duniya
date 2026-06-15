@@ -30,22 +30,24 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Design tokens from the HTML source
-  static const Color _clinicalBlue = Color(0xFF0052FF);
-  static const Color _primaryDeep = Color(0xFF003EC7);
+  // ── Duniya Purple design tokens ──
+  static const Color _duniyaPurple = Color(0xFF9900FF);
+  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
+  static const Color _duniyaPurpleDeep = Color(0xFF6D28D9);
+  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
   static const Color _navy900 = Color(0xFF0A192F);
   static const Color _background = Color(0xFFF8F9FF);
   static const Color _surface = Color(0xFFF8F9FF);
-  static const Color _surfaceContainerLow = Color(0xFFEFF4FF);
-  static const Color _surfaceContainerHigh = Color(0xFFDCE9FF);
-  static const Color _surfaceContainerHighest = Color(0xFFD3E4FE);
+  static const Color _surfaceContainerLow = Color(0xFFF3F0FF);
+  static const Color _surfaceContainerHigh = Color(0xFFE9D5FF);
+  static const Color _surfaceContainerHighest = Color(0xFFDDD6FE);
   static const Color _onSurface = Color(0xFF0B1C30);
   static const Color _onSurfaceVariant = Color(0xFF434656);
   static const Color _outline = Color(0xFF737688);
   static const Color _outlineVariant = Color(0xFFC3C5D9);
   static const Color _errorColor = Color(0xFFBA1A1A);
   static const Color _errorContainer = Color(0xFFFFDAD6);
-  static const Color _primaryFixed = Color(0xFFDDE1FF);
+  static const Color _primaryFixed = Color(0xFFF3E8FF);
 
   // Category filter state
   String _selectedCategory = 'All Products';
@@ -123,23 +125,23 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   Color _getProductIconBg(ProductMasterRecord product) {
     final cat = (product.category ?? '').toLowerCase();
     if (cat.contains('antibiotic')) {
-      return _clinicalBlue.withValues(alpha: 0.08);
+      return _duniyaPurple.withValues(alpha: 0.08);
     }
     if (cat.contains('vitamin') || cat.contains('supplement')) {
-      return const Color(0xFF006688).withValues(alpha: 0.08);
+      return const Color(0xFF7C3AED).withValues(alpha: 0.08);
     }
     if (cat.contains('analgesic') || cat.contains('antipyretic')) {
-      return const Color(0xFFF59E0B).withValues(alpha: 0.08);
+      return const Color(0xFFD97706).withValues(alpha: 0.08);
     }
-    return _clinicalBlue.withValues(alpha: 0.06);
+    return _duniyaPurple.withValues(alpha: 0.06);
   }
 
   Color _getProductIconFg(ProductMasterRecord product) {
     final cat = (product.category ?? '').toLowerCase();
     if (cat.contains('vitamin') || cat.contains('supplement')) {
-      return const Color(0xFF006688);
+      return const Color(0xFF7C3AED);
     }
-    return _clinicalBlue;
+    return _duniyaPurple;
   }
 
   /// Builds the glass-panel search/filter bar
@@ -231,7 +233,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               fontFamily: 'Satoshi',
                               fontSize: 14.0,
                               fontWeight: FontWeight.w600,
-                              color: _clinicalBlue,
+                              color: _duniyaPurple,
                             ),
                           ),
                         ),
@@ -278,7 +280,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: isSelected ? _clinicalBlue : _surface,
+          color: isSelected ? _duniyaPurple : _surface,
           borderRadius: BorderRadius.circular(8.0),
           border: isSelected
               ? null
@@ -286,7 +288,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: _clinicalBlue.withValues(alpha: 0.2),
+                    color: _duniyaPurple.withValues(alpha: 0.2),
                     blurRadius: 8.0,
                     offset: const Offset(0, 2),
                   )
@@ -315,7 +317,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     final stockBgColor =
         isLowStock ? _errorContainer : _surfaceContainerHigh;
     final stockTextColor =
-        isLowStock ? _errorColor : _clinicalBlue;
+        isLowStock ? _errorColor : _duniyaPurple;
 
     return Container(
       decoration: BoxDecoration(
@@ -461,7 +463,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             child: Icon(
                               Icons.add,
                               size: 16.0,
-                              color: _clinicalBlue,
+                              color: _duniyaPurple,
                             ),
                           ),
                         ),
@@ -493,7 +495,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
     return Title(
         title: 'Product Catalogue',
-        color: _primaryDeep,
+        color: _duniyaPurpleDeep,
         child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -598,7 +600,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                         ),
                                       ),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: _clinicalBlue,
+                                        backgroundColor: _duniyaPurple,
                                         foregroundColor: Colors.white,
                                         elevation: 0,
                                         padding: const EdgeInsets.symmetric(
@@ -626,7 +628,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                       if (!snapshot.hasData) {
                                         return Center(
                                           child: SpinKitRing(
-                                            color: _clinicalBlue,
+                                            color: _duniyaPurple,
                                             size: 40.0,
                                           ),
                                         );
@@ -956,11 +958,11 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 width: 36.0,
                 height: 36.0,
                 decoration: BoxDecoration(
-                  color: _clinicalBlue.withValues(alpha: 0.1),
+                  color: _duniyaPurple.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Icon(Icons.add_circle_outline,
-                    color: _clinicalBlue, size: 20.0),
+                    color: _duniyaPurple, size: 20.0),
               ),
               const SizedBox(width: 12.0),
               Text(
@@ -1125,12 +1127,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Product added successfully'),
-                    backgroundColor: _clinicalBlue,
+                    backgroundColor: _duniyaPurple,
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _clinicalBlue,
+                backgroundColor: _duniyaPurple,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -1175,7 +1177,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: _clinicalBlue, width: 1.5),
+          borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
