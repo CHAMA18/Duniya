@@ -1,0 +1,43 @@
+# Multi-stage build for Duniya Documentation (MkDocs Material)
+# Stage 1: Build the static docs site with Python + MkDocs
+# Stage 2: Serve with nginx
+
+# ---- Build Stage ----
+FROM python:3.12-slim AS builder
+
+# Install build deps for mkdocs-material native extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy MkDocs config and source first for dependency caching
+COPY mkdocs.yml .
+COPY docs/ ./docs/
+
+# Install MkDocs Material and pinned plugins
+# (versions aligned with .github/workflows/deploy-docs.yml)
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+      mkdocs==1.6.1 \
+      mkdocs-material==9.7.6 \
+      pymdown-extensions==10.21.3 \
+      mkdocs-minify-plugin
+
+# Build the static site into ./site
+RUN mkdocs build --strict
+
+# ---- Serve Stage ----
+FROM nginx:alpine
+
+# Copy built docs into nginx serve directory
+COPY --from=builder /app/site /usr/share/nginx/html
+
+# Copy nginx configuration tuned for static docs
+COPY nginx.docs.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080
+
+CMD ["nginx", "-g", "daemon off;"]

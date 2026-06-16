@@ -1,9 +1,44 @@
+# Render Blueprint — Duniya Platform
+#
+# Two web services:
+#   1. medi-tracker   — the Flutter web app (built via Dockerfile, served by nginx)
+#   2. duniya-docs    — the MkDocs Material documentation site (built via Dockerfile.docs)
+#
+# To deploy:
+#   1. Push this branch (docs) to GitHub
+#   2. In Render dashboard → New → Blueprint
+#   3. Select the CHAMA18/Duniya repo and the `docs` branch
+#   4. Render will detect this render.yaml and create both services
+#   5. Each service gets its own URL: https://<service-name>.onrender.com
+#
+# The duniya-docs service is the canonical Render URL for the documentation site.
+
 services:
+  # ─────────────────────────────────────────────────────────────────────
+  # Documentation site (MkDocs Material)
+  # ─────────────────────────────────────────────────────────────────────
+  - type: web
+    name: duniya-docs
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.docs
+    healthCheckPath: /
+    autoDeploy: true
+    branch: docs
+    envVars:
+      - key: PORT
+        value: "8080"
+
+  # ─────────────────────────────────────────────────────────────────────
+  # Main Flutter web application
+  # ─────────────────────────────────────────────────────────────────────
   - type: web
     name: medi-tracker
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    branch: main
     envVars:
       - key: PORT
         value: "8080"

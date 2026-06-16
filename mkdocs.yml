@@ -1,9 +1,9 @@
 site_name: Duniya Documentation
 site_description: The operating system for modern pharmacies. Complete documentation for the Duniya pharmacy management platform.
-site_url: https://chama18.github.io/Duniya/
+site_url: https://duniya-docs.onrender.com/
 repo_url: https://github.com/CHAMA18/Duniya
 repo_name: CHAMA18/Duniya
-edit_uri: edit/main/docs/
+edit_uri: edit/docs/docs/
 
 theme:
   name: material
