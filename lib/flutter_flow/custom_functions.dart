@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// NOTE: google_fonts import intentionally removed — the brand uses Satoshi only.
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'lat_lng.dart';

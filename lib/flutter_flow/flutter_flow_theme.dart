@@ -793,7 +793,23 @@ extension TextStyleHelper on TextStyle {
     List<Shadow>? shadows,
     String? package,
   }) {
-    // When a custom font family is specified, create a TextStyle with it
+    // ═════════════════════════════════════════════════════════════
+    // BRAND FONT POLICY — Satoshi everywhere.
+    //
+    // The Duniya MediTracker brand uses Satoshi as the only typeface.
+    // Any caller that asks for "GoogleFonts" (either via useGoogleFonts
+    // or by passing a GoogleFonts TextStyle as `font:`) is silently
+    // rerouted to Satoshi so the UI stays visually consistent. This
+    // also avoids runtime HTTP fetches to fonts.googleapis.com which
+    // would otherwise pull Plus Jakarta Sans / Roboto / Inter in.
+    // ═════════════════════════════════════════════════════════════
+    const String brandFontFamily = 'Satoshi';
+
+    // Case 1: caller explicitly named a fontFamily AND did NOT ask for
+    // Google Fonts → honour that family (still Satoshi in practice,
+    // because every FlutterFlowTheme *Family getter already returns
+    // 'Satoshi', but allow overrides if a caller truly wants another
+    // bundled font).
     if (fontFamily != null && !useGoogleFonts) {
       return TextStyle(
         fontFamily: fontFamily,
@@ -809,11 +825,11 @@ extension TextStyleHelper on TextStyle {
       );
     }
 
-    // For backward compatibility with useGoogleFonts
-    if (useGoogleFonts && fontFamily != null) {
-      // Fallback to the custom Satoshi font instead of Google Fonts
+    // Case 2: caller asked for Google Fonts (legacy FF-generated code).
+    // Reroute to Satoshi — never reach out to the network.
+    if (useGoogleFonts) {
       return TextStyle(
-        fontFamily: 'Satoshi',
+        fontFamily: brandFontFamily,
         color: color ?? this.color,
         fontSize: fontSize ?? this.fontSize,
         letterSpacing: letterSpacing ?? this.letterSpacing,
@@ -825,28 +841,35 @@ extension TextStyleHelper on TextStyle {
       );
     }
 
-    return font != null
-        ? font.copyWith(
-            color: color ?? this.color,
-            fontSize: fontSize ?? this.fontSize,
-            letterSpacing: letterSpacing ?? this.letterSpacing,
-            fontWeight: fontWeight ?? this.fontWeight,
-            fontStyle: fontStyle ?? this.fontStyle,
-            decoration: decoration,
-            height: lineHeight,
-            shadows: shadows,
-          )
-        : copyWith(
-            fontFamily: fontFamily,
-            package: package,
-            color: color,
-            fontSize: fontSize,
-            letterSpacing: letterSpacing,
-            fontWeight: fontWeight,
-            fontStyle: fontStyle,
-            decoration: decoration,
-            height: lineHeight,
-            shadows: shadows,
-          );
+    // Case 3: caller passed a concrete TextStyle via `font:` (often a
+    // GoogleFonts.X(...) result). Ignore its font family and force
+    // Satoshi, while still applying any color/size/weight overrides.
+    if (font != null) {
+      return TextStyle(
+        fontFamily: brandFontFamily,
+        color: color ?? this.color,
+        fontSize: fontSize ?? this.fontSize,
+        letterSpacing: letterSpacing ?? this.letterSpacing,
+        fontWeight: fontWeight ?? this.fontWeight,
+        fontStyle: fontStyle ?? this.fontStyle,
+        decoration: decoration,
+        height: lineHeight,
+        shadows: shadows,
+      );
+    }
+
+    // Case 4: no font family, no font → just copyWith applied overrides.
+    return copyWith(
+      fontFamily: brandFontFamily,
+      package: package,
+      color: color,
+      fontSize: fontSize,
+      letterSpacing: letterSpacing,
+      fontWeight: fontWeight,
+      fontStyle: fontStyle,
+      decoration: decoration,
+      height: lineHeight,
+      shadows: shadows,
+    );
   }
 }

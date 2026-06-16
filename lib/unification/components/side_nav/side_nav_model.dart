@@ -41,8 +41,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModel16;
   // Model for SidebarLink component.
   late SidebarLinkModel sidebarLinkModel17;
-  // Model for SidebarLink component.
-  late SidebarLinkModel sidebarLinkModel18;
   // Model for PendingApprovals SidebarLink component.
   late SidebarLinkModel sidebarLinkModel19;
   // State field(s) for SwitchListTile widget.
@@ -67,7 +65,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel16 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel17 = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModel18 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel19 = createModel(context, () => SidebarLinkModel());
   }
 
@@ -90,7 +87,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15.dispose();
     sidebarLinkModel16.dispose();
     sidebarLinkModel17.dispose();
-    sidebarLinkModel18.dispose();
     sidebarLinkModel19.dispose();
   }
 }

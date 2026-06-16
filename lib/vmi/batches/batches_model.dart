@@ -48,6 +48,11 @@ class BatchesModel extends FlutterFlowModel<BatchesWidget> {
     sideNavModel2 = createModel(context, () => SideNavModel());
     topNavModel = createModel(context, () => TopNavModel());
     mobileNavbarModel = createModel(context, () => MobileNavbarModel());
+    // Initialize the expiry status dropdown controller so it is never null
+    // when passed to FlutterFlowDropDown (otherwise the dropdown's initState
+    // throws `Null check operator used on a null value` and the whole section
+    // collapses into a grey ErrorWidget).
+    expiryStatusValueController = FormFieldController<String>(null);
   }
 
   @override

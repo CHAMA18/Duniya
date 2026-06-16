@@ -1,7 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/unification/components/import_inventory_dialog/import_inventory_dialog_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/index.dart';
@@ -102,6 +104,35 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
       }
     }
     if (shouldSetState) safeSetState(() {});
+  }
+
+  /// Show the spreadsheet import dialog.
+  void _showImportDialog() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => ImportInventoryDialogWidget(
+        onComplete: (importedCount) {
+          if (importedCount > 0) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  importedCount == 1
+                      ? 'Imported 1 item to your inventory.'
+                      : 'Imported $importedCount items to your inventory.',
+                ),
+                backgroundColor: const Color(0xFF059669),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(16.0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0)),
+              ),
+            );
+            safeSetState(() {});
+          }
+        },
+      ),
+    );
   }
 
   /// Navigate to inventory details
@@ -467,13 +498,42 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
               ),
             ),
             const SizedBox(width: 12.0),
+            // Import Button — opens the spreadsheet import dialog
+            Material(
+              color: const Color(0xFFA100FF),
+              borderRadius: BorderRadius.circular(8.0),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8.0),
+                onTap: () => _showImportDialog(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.upload_file_outlined, color: Colors.white, size: 18.0),
+                      const SizedBox(width: 8.0),
+                      const Text(
+                        'Import',
+                        style: TextStyle(
+                          fontFamily: 'Satoshi',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12.0),
             // Export Button
             Material(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(8.0),
               child: InkWell(
                 borderRadius: BorderRadius.circular(8.0),
-                onTap: () {},
+                onTap: () => downloadInventoryTemplate(),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                   decoration: BoxDecoration(
@@ -486,7 +546,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Icon(Icons.download_outlined, color: onSurface, size: 18.0),
                       SizedBox(width: 8.0),
                       Text(
-                        'Export',
+                        'Template',
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 14.0,
@@ -566,7 +626,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  '\$${_formatNumber(totalStockValue)}',
+                  'ZMK ${_formatNumber(totalStockValue)}',
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 28.0,
@@ -1442,7 +1502,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '\$${stock.price.toStringAsFixed(2)}',
+                      'ZMK ${stock.price.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 14.0,
@@ -1452,7 +1512,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     ),
                     SizedBox(height: 2.0),
                     Text(
-                      'Val: \$${(stock.price * stock.quantity.toDouble()).toStringAsFixed(2)}',
+                      'Val: ZMK ${(stock.price * stock.quantity.toDouble()).toStringAsFixed(2)}',
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 12.0,

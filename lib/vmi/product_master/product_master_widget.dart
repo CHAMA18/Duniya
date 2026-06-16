@@ -441,7 +441,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$${product.sellingPrice.toStringAsFixed(2)}',
+                        'ZMK ${product.sellingPrice.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 18.0,
@@ -818,12 +818,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 children: [
                   Expanded(
                     child: _detailValueBox(
-                        'Cost Price', '\$${product.costPrice.toStringAsFixed(2)}'),
+                        'Cost Price', 'ZMK ${product.costPrice.toStringAsFixed(2)}'),
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
                     child: _detailValueBox('Selling Price',
-                        '\$${product.sellingPrice.toStringAsFixed(2)}'),
+                        'ZMK ${product.sellingPrice.toStringAsFixed(2)}'),
                   ),
                 ],
               ),
@@ -928,7 +928,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     );
   }
 
-  // Add Product Dialog (preserving backend logic)
+  // ── World-Class Add Product Dialog ──
   void _showAddProductDialog(BuildContext context) {
     _model.nameTextController ??= TextEditingController();
     _model.genericNameTextController ??= TextEditingController();
@@ -942,252 +942,695 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     _model.minStockTextController ??= TextEditingController();
     _model.reorderLevelTextController ??= TextEditingController();
 
+    final isWide = MediaQuery.sizeOf(context).width > 700;
+
     showDialog(
       context: context,
+      barrierColor: Color(0xFF0A192F).withValues(alpha: 0.6),
       builder: (dialogContext) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0),
-          contentPadding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 16.0),
-          actionsPadding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 16.0),
-          title: Row(
-            children: [
-              Container(
-                width: 36.0,
-                height: 36.0,
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: isWide ? 720 : double.infinity,
+                  maxHeight: MediaQuery.sizeOf(context).height * 0.92,
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurple.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Icon(Icons.add_circle_outline,
-                    color: _duniyaPurple, size: 20.0),
-              ),
-              const SizedBox(width: 12.0),
-              Text(
-                'Add Product',
-                style: TextStyle(
-                  fontFamily: 'Satoshi',
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: _navy900,
-                ),
-              ),
-            ],
-          ),
-          content: Container(
-            width: MediaQuery.sizeOf(context).width > 600
-                ? 600
-                : double.infinity,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildDialogTextField(
-                      _model.nameTextController!, 'Product Name *'),
-                  const SizedBox(height: 10.0),
-                  _buildDialogTextField(
-                      _model.genericNameTextController!, 'Generic Name'),
-                  const SizedBox(height: 10.0),
-                  _buildDialogTextField(
-                      _model.brandNameTextController!, 'Brand Name'),
-                  const SizedBox(height: 10.0),
-                  Row(children: [
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.strengthTextController!, 'Strength')),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.dosageFormTextController!, 'Dosage Form')),
-                  ]),
-                  const SizedBox(height: 10.0),
-                  Row(children: [
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.packSizeTextController!, 'Pack Size')),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.skuTextController!, 'SKU *')),
-                  ]),
-                  const SizedBox(height: 10.0),
-                  FlutterFlowDropDown<String>(
-                    controller: _model.dialogCategoryValueController ??=
-                        FormFieldController<String>(null),
-                    options: [
-                      'Antibiotics',
-                      'Analgesics',
-                      'Antipyretics',
-                      'Antimalarials',
-                      'Vitamins',
-                      'Cardiovascular',
-                      'Respiratory',
-                      'Gastrointestinal',
-                      'Dermatology',
-                      'Other'
-                    ],
-                    onChanged: (val) =>
-                        safeSetState(() => _model.dialogCategoryValue = val),
-                    width: double.infinity,
-                    height: 48.0,
-                    textStyle: TextStyle(
-                      fontFamily: 'Satoshi',
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                      color: _onSurface,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _duniyaPurpleDeep.withValues(alpha: 0.15),
+                      blurRadius: 60.0,
+                      offset: const Offset(0, 20),
                     ),
-                    hintText: 'Category',
-                    fillColor: _surface,
-                    borderColor: _outlineVariant,
-                    borderRadius: 10.0,
-                    elevation: 2,
-                    borderWidth: 1.0,
-                    margin: EdgeInsets.zero,
-                  ),
-                  const SizedBox(height: 10.0),
-                  Row(children: [
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.costPriceTextController!, 'Cost Price',
-                            isNumber: true)),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.sellingPriceTextController!, 'Selling Price',
-                            isNumber: true)),
-                  ]),
-                  const SizedBox(height: 10.0),
-                  Row(children: [
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.minStockTextController!, 'Min Stock',
-                            isNumber: true)),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                        child: _buildDialogTextField(
-                            _model.reorderLevelTextController!, 'Reorder Level',
-                            isNumber: true)),
-                  ]),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontFamily: 'Satoshi',
-                  color: _onSurfaceVariant,
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 30.0,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (_model.nameTextController?.text.isEmpty ?? true) return;
-                await ProductMasterRecord.collection.doc().set(
-                      createProductMasterRecordData(
-                        name: _model.nameTextController?.text,
-                        genericName: _model.genericNameTextController?.text,
-                        brandName: _model.brandNameTextController?.text,
-                        strength: _model.strengthTextController?.text,
-                        dosageForm: _model.dosageFormTextController?.text,
-                        packSize: _model.packSizeTextController?.text,
-                        sku: _model.skuTextController?.text,
-                        category: _model.dialogCategoryValue,
-                        costPrice: double.tryParse(
-                            _model.costPriceTextController?.text ?? '0'),
-                        sellingPrice: double.tryParse(
-                            _model.sellingPriceTextController?.text ?? '0'),
-                        minimumStockLevel: int.tryParse(
-                            _model.minStockTextController?.text ?? '0'),
-                        reorderLevel: int.tryParse(
-                            _model.reorderLevelTextController?.text ?? '0'),
-                        isActive: true,
-                        createdAt: getCurrentTimestamp,
-                        updatedAt: getCurrentTimestamp,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // ── Gradient Header ──
+                      _buildDialogGradientHeader(),
+
+                      // ── Form Body ──
+                      Flexible(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.fromLTRB(28.0, 24.0, 28.0, 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Section: Product Identity
+                              _buildSectionLabel('Product Identity', Icons.tag_rounded),
+                              const SizedBox(height: 12.0),
+                              _buildPremiumField(
+                                controller: _model.nameTextController!,
+                                label: 'Product Name',
+                                hint: 'e.g. Amoxicillin 500mg',
+                                icon: Icons.medication_rounded,
+                                isRequired: true,
+                              ),
+                              const SizedBox(height: 14.0),
+                              Row(children: [
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.genericNameTextController!,
+                                    label: 'Generic Name',
+                                    hint: 'e.g. Amoxicillin',
+                                    icon: Icons.science_rounded,
+                                  ),
+                                ),
+                                const SizedBox(width: 14.0),
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.brandNameTextController!,
+                                    label: 'Brand Name',
+                                    hint: 'e.g. Amoxil',
+                                    icon: Icons.branding_watermark_rounded,
+                                  ),
+                                ),
+                              ]),
+
+                              const SizedBox(height: 24.0),
+
+                              // Section: Formulation Details
+                              _buildSectionLabel('Formulation', Icons.grain_rounded),
+                              const SizedBox(height: 12.0),
+                              Row(children: [
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.strengthTextController!,
+                                    label: 'Strength',
+                                    hint: 'e.g. 500mg',
+                                    icon: Icons.fitness_center_rounded,
+                                  ),
+                                ),
+                                const SizedBox(width: 14.0),
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.dosageFormTextController!,
+                                    label: 'Dosage Form',
+                                    hint: 'e.g. Capsule',
+                                    icon: Icons.category_rounded,
+                                  ),
+                                ),
+                              ]),
+                              const SizedBox(height: 14.0),
+                              Row(children: [
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.packSizeTextController!,
+                                    label: 'Pack Size',
+                                    hint: 'e.g. 100',
+                                    icon: Icons.inventory_2_rounded,
+                                    isNumber: true,
+                                  ),
+                                ),
+                                const SizedBox(width: 14.0),
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.skuTextController!,
+                                    label: 'SKU',
+                                    hint: 'e.g. AMX-500-CAP',
+                                    icon: Icons.qr_code_rounded,
+                                    isRequired: true,
+                                  ),
+                                ),
+                              ]),
+
+                              const SizedBox(height: 14.0),
+
+                              // Category - Premium Dropdown
+                              _buildPremiumCategoryDropdown(setDialogState),
+
+                              const SizedBox(height: 24.0),
+
+                              // Section: Pricing
+                              _buildSectionLabel('Pricing', Icons.payments_rounded),
+                              const SizedBox(height: 12.0),
+                              Row(children: [
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.costPriceTextController!,
+                                    label: 'Cost Price',
+                                    hint: '0.00',
+                                    icon: Icons.arrow_downward_rounded,
+                                    isNumber: true,
+                                    prefix: 'ZMK',
+                                  ),
+                                ),
+                                const SizedBox(width: 14.0),
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.sellingPriceTextController!,
+                                    label: 'Selling Price',
+                                    hint: '0.00',
+                                    icon: Icons.arrow_upward_rounded,
+                                    isNumber: true,
+                                    prefix: 'ZMK',
+                                  ),
+                                ),
+                              ]),
+
+                              // Margin indicator
+                              const SizedBox(height: 10.0),
+                              _buildMarginIndicator(),
+
+                              const SizedBox(height: 24.0),
+
+                              // Section: Inventory Control
+                              _buildSectionLabel('Inventory Control', Icons.warehouse_rounded),
+                              const SizedBox(height: 12.0),
+                              Row(children: [
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.minStockTextController!,
+                                    label: 'Min Stock Level',
+                                    hint: '0',
+                                    icon: Icons.trending_down_rounded,
+                                    isNumber: true,
+                                  ),
+                                ),
+                                const SizedBox(width: 14.0),
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller: _model.reorderLevelTextController!,
+                                    label: 'Reorder Level',
+                                    hint: '0',
+                                    icon: Icons.autorenew_rounded,
+                                    isNumber: true,
+                                  ),
+                                ),
+                              ]),
+
+                              const SizedBox(height: 24.0),
+                            ],
+                          ),
+                        ),
                       ),
-                    );
-                // Clear form
-                _model.nameTextController?.clear();
-                _model.genericNameTextController?.clear();
-                _model.brandNameTextController?.clear();
-                _model.strengthTextController?.clear();
-                _model.dosageFormTextController?.clear();
-                _model.packSizeTextController?.clear();
-                _model.skuTextController?.clear();
-                _model.costPriceTextController?.clear();
-                _model.sellingPriceTextController?.clear();
-                _model.minStockTextController?.clear();
-                _model.reorderLevelTextController?.clear();
-                Navigator.pop(dialogContext);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Product added successfully'),
-                    backgroundColor: _duniyaPurple,
+
+                      // ── Action Bar ──
+                      _buildDialogActionBar(dialogContext),
+                    ],
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: Text(
-                'Save',
-                style: TextStyle(
-                  fontFamily: 'Satoshi',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
   }
 
-  Widget _buildDialogTextField(TextEditingController controller, String label,
-      {bool isNumber = false}) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(
-          fontFamily: 'Satoshi',
-          fontSize: 13.0,
-          fontWeight: FontWeight.w500,
-          color: _onSurfaceVariant,
+  // ── Gradient header for dialog ──
+  Widget _buildDialogGradientHeader() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(28.0, 24.0, 28.0, 24.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            _duniyaPurple,
+            _duniyaPurpleDark,
+            _duniyaPurpleDeep,
+          ],
         ),
-        filled: true,
-        fillColor: _surface,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: _outlineVariant, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: _outlineVariant, width: 1.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
       ),
-      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-      style: TextStyle(
-        fontFamily: 'Satoshi',
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        color: _onSurface,
+      child: Row(
+        children: [
+          Container(
+            width: 48.0,
+            height: 48.0,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(14.0),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1.0),
+            ),
+            child: Icon(Icons.add_rounded, color: Colors.white, size: 26.0),
+          ),
+          const SizedBox(width: 16.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Add New Product',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi',
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 2.0),
+                Text(
+                  'Fill in the product details to add to your catalogue',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi',
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white.withValues(alpha: 0.75),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Section label with icon ──
+  Widget _buildSectionLabel(String title, IconData icon) {
+    return Row(
+      children: [
+        Container(
+          width: 28.0,
+          height: 28.0,
+          decoration: BoxDecoration(
+            color: _duniyaPurple.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Icon(icon, size: 15.0, color: _duniyaPurple),
+        ),
+        const SizedBox(width: 10.0),
+        Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Satoshi',
+            fontSize: 13.0,
+            fontWeight: FontWeight.w700,
+            color: _duniyaPurpleDark,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(width: 10.0),
+        Expanded(
+          child: Container(
+            height: 1.0,
+            color: _outlineVariant.withValues(alpha: 0.5),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Premium text field with icon, hint, and validation ──
+  Widget _buildPremiumField({
+    required TextEditingController controller,
+    required String label,
+    String? hint,
+    IconData? icon,
+    bool isNumber = false,
+    bool isRequired = false,
+    String? prefix,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Satoshi',
+                fontSize: 12.0,
+                fontWeight: FontWeight.w600,
+                color: _onSurfaceVariant,
+                letterSpacing: 0.2,
+              ),
+            ),
+            if (isRequired) ...[
+              const SizedBox(width: 3.0),
+              Text(
+                '*',
+                style: TextStyle(
+                  color: Color(0xFFE53E3E),
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 6.0),
+        TextFormField(
+          controller: controller,
+          keyboardType: isNumber
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.text,
+          style: TextStyle(
+            fontFamily: 'Satoshi',
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+            color: _onSurface,
+          ),
+          decoration: InputDecoration(
+            hintText: hint ?? label,
+            hintStyle: TextStyle(
+              fontFamily: 'Satoshi',
+              fontSize: 13.0,
+              fontWeight: FontWeight.w400,
+              color: _outline,
+            ),
+            prefixIcon: icon != null
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 14.0, right: 10.0),
+                    child: Icon(icon, size: 18.0, color: _duniyaPurple.withValues(alpha: 0.6)),
+                  )
+                : null,
+            prefixIconConstraints: icon != null
+                ? const BoxConstraints(minWidth: 42.0, minHeight: 0)
+                : null,
+            prefixText: prefix,
+            prefixStyle: TextStyle(
+              fontFamily: 'Satoshi',
+              fontSize: 13.0,
+              fontWeight: FontWeight.w600,
+              color: _duniyaPurpleDark,
+            ),
+            filled: true,
+            fillColor: const Color(0xFFFAFAFE),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 13.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: _outlineVariant.withValues(alpha: 0.6), width: 1.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: _outlineVariant.withValues(alpha: 0.6), width: 1.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: _duniyaPurple, width: 1.8),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: const BorderSide(color: Color(0xFFE53E3E), width: 1.2),
+            ),
+          ),
+          onChanged: (_) => safeSetState(() {}),
+        ),
+      ],
+    );
+  }
+
+  // ── Premium category dropdown ──
+  Widget _buildPremiumCategoryDropdown(StateSetter setDialogState) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Category',
+          style: TextStyle(
+            fontFamily: 'Satoshi',
+            fontSize: 12.0,
+            fontWeight: FontWeight.w600,
+            color: _onSurfaceVariant,
+            letterSpacing: 0.2,
+          ),
+        ),
+        const SizedBox(height: 6.0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            border: Border.all(
+              color: _model.dialogCategoryValue != null
+                  ? _duniyaPurple.withValues(alpha: 0.4)
+                  : _outlineVariant.withValues(alpha: 0.6),
+              width: _model.dialogCategoryValue != null ? 1.5 : 1.0,
+            ),
+            color: const Color(0xFFFAFAFE),
+          ),
+          child: FlutterFlowDropDown<String>(
+            controller: _model.dialogCategoryValueController ??=
+                FormFieldController<String>(null),
+            options: const [
+              'Antibiotics',
+              'Analgesics',
+              'Antipyretics',
+              'Antimalarials',
+              'Vitamins',
+              'Cardiovascular',
+              'Respiratory',
+              'Gastrointestinal',
+              'Dermatology',
+              'Other'
+            ],
+            onChanged: (val) {
+              setDialogState(() => _model.dialogCategoryValue = val);
+            },
+            width: double.infinity,
+            height: 48.0,
+            textStyle: TextStyle(
+              fontFamily: 'Satoshi',
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              color: _model.dialogCategoryValue != null ? _onSurface : _outline,
+            ),
+            hintText: 'Select a category',
+            fillColor: Colors.transparent,
+            borderColor: Colors.transparent,
+            borderRadius: 12.0,
+            elevation: 4,
+            borderWidth: 0.0,
+            margin: EdgeInsets.zero,
+            icon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: _duniyaPurple,
+              size: 20.0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Live margin indicator ──
+  Widget _buildMarginIndicator() {
+    final cost = double.tryParse(_model.costPriceTextController?.text ?? '') ?? 0;
+    final selling = double.tryParse(_model.sellingPriceTextController?.text ?? '') ?? 0;
+    final margin = selling > 0 && cost > 0 ? ((selling - cost) / selling * 100) : 0.0;
+    final hasData = cost > 0 && selling > 0;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+      decoration: BoxDecoration(
+        color: hasData
+            ? (margin >= 30
+                ? const Color(0xFFECFDF5)
+                : margin >= 15
+                    ? Color(0xFFFFFBEB)
+                    : margin > 0
+                        ? const Color(0xFFFEF2F2)
+                        : const Color(0xFFF5F3FF))
+            : const Color(0xFFF5F3FF),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: hasData
+              ? (margin >= 30
+                  ? const Color(0xFFA7F3D0)
+                  : margin >= 15
+                      ? const Color(0xFFFDE68A)
+                      : margin > 0
+                          ? const Color(0xFFFECACA)
+                          : _outlineVariant.withValues(alpha: 0.3))
+              : _outlineVariant.withValues(alpha: 0.3),
+          width: 1.0,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            hasData
+                ? (margin >= 30
+                    ? Icons.trending_up_rounded
+                    : margin >= 15
+                        ? Icons.trending_flat_rounded
+                        : margin > 0
+                            ? Icons.trending_down_rounded
+                            : Icons.info_outline_rounded)
+                : Icons.info_outline_rounded,
+            size: 16.0,
+            color: hasData
+                ? (margin >= 30
+                    ? const Color(0xFF059669)
+                    : margin >= 15
+                        ? const Color(0xFFD97706)
+                        : margin > 0
+                            ? const Color(0xFFDC2626)
+                            : _onSurfaceVariant)
+                : _onSurfaceVariant,
+          ),
+          const SizedBox(width: 8.0),
+          Text(
+            hasData
+                ? 'Profit Margin: ${margin.toStringAsFixed(1)}%  (ZMK ${(selling - cost).toStringAsFixed(2)} per unit)'
+                : 'Enter cost and selling price to see margin',
+            style: TextStyle(
+              fontFamily: 'Satoshi',
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: hasData
+                  ? (margin >= 30
+                      ? const Color(0xFF059669)
+                      : margin >= 15
+                          ? const Color(0xFFD97706)
+                          : margin > 0
+                              ? const Color(0xFFDC2626)
+                              : _onSurfaceVariant)
+                  : _onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Action bar with premium buttons ──
+  Widget _buildDialogActionBar(BuildContext dialogContext) {
+    final nameEmpty = _model.nameTextController?.text.isEmpty ?? true;
+    final skuEmpty = _model.skuTextController?.text.isEmpty ?? true;
+    final canSave = !nameEmpty && !skuEmpty;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(28.0, 12.0, 28.0, 20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: _outlineVariant.withValues(alpha: 0.5), width: 1.0),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Required fields hint
+          Expanded(
+            child: Text(
+              canSave ? 'Ready to save' : 'Product Name and SKU are required',
+              style: TextStyle(
+                fontFamily: 'Satoshi',
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+                color: canSave ? const Color(0xFF059669) : _onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16.0),
+          // Cancel button
+          OutlinedButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: _onSurfaceVariant,
+              side: BorderSide(color: _outlineVariant, width: 1.2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 13.0),
+            ),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontFamily: 'Satoshi',
+                fontSize: 14.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12.0),
+          // Save button
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            child: ElevatedButton.icon(
+              onPressed: canSave
+                  ? () async {
+                      await ProductMasterRecord.collection.doc().set(
+                            createProductMasterRecordData(
+                              name: _model.nameTextController?.text,
+                              genericName: _model.genericNameTextController?.text,
+                              brandName: _model.brandNameTextController?.text,
+                              strength: _model.strengthTextController?.text,
+                              dosageForm: _model.dosageFormTextController?.text,
+                              packSize: _model.packSizeTextController?.text,
+                              sku: _model.skuTextController?.text,
+                              category: _model.dialogCategoryValue,
+                              costPrice: double.tryParse(
+                                  _model.costPriceTextController?.text ?? '0'),
+                              sellingPrice: double.tryParse(
+                                  _model.sellingPriceTextController?.text ?? '0'),
+                              minimumStockLevel: int.tryParse(
+                                  _model.minStockTextController?.text ?? '0'),
+                              reorderLevel: int.tryParse(
+                                  _model.reorderLevelTextController?.text ?? '0'),
+                              isActive: true,
+                              createdAt: getCurrentTimestamp,
+                              updatedAt: getCurrentTimestamp,
+                            ),
+                          );
+                      _model.nameTextController?.clear();
+                      _model.genericNameTextController?.clear();
+                      _model.brandNameTextController?.clear();
+                      _model.strengthTextController?.clear();
+                      _model.dosageFormTextController?.clear();
+                      _model.packSizeTextController?.clear();
+                      _model.skuTextController?.clear();
+                      _model.costPriceTextController?.clear();
+                      _model.sellingPriceTextController?.clear();
+                      _model.minStockTextController?.clear();
+                      _model.reorderLevelTextController?.clear();
+                      Navigator.pop(dialogContext);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(Icons.check_circle_rounded, color: Colors.white, size: 20.0),
+                              const SizedBox(width: 10.0),
+                              Text('Product added successfully'),
+                            ],
+                          ),
+                          backgroundColor: _duniyaPurple,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                      );
+                    }
+                  : null,
+              icon: const Icon(Icons.check_rounded, size: 18.0),
+              label: Text(
+                'Save Product',
+                style: TextStyle(
+                  fontFamily: 'Satoshi',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: canSave ? _duniyaPurple : _outlineVariant,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: _outlineVariant.withValues(alpha: 0.4),
+                disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
+                elevation: canSave ? 4.0 : 0,
+                shadowColor: _duniyaPurple.withValues(alpha: 0.3),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 13.0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -41,6 +41,49 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
+  // Make build errors visible in release web builds. Without this, any widget
+  // that throws during build is silently replaced with a grey box (the default
+  // release-mode ErrorWidget), which makes "grey screen" issues nearly
+  // impossible to diagnose in production. Showing the error text in a red box
+  // matches Flutter's debug behaviour and surfaces the failure immediately.
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    FlutterError.reportError(details);
+    return Material(
+      color: const Color(0xFFFEE2E2),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            color: Color(0xFF991B1B),
+            fontSize: 12.0,
+            fontFamily: 'monospace',
+            height: 1.4,
+          ),
+          child: Scrollbar(
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'A widget failed to build.',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(details.exceptionAsString()),
+                  if (details.stack != null) ...[
+                    const SizedBox(height: 8.0),
+                    Text(details.stack.toString().split('\n').take(15).join('\n')),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  };
+
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
     child: MyApp(),
@@ -154,6 +197,44 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         fontFamily: 'Satoshi',
+        // Force Satoshi on EVERY Material text style slot so any widget
+        // that doesn't go through FlutterFlowTheme.of(context) — default
+        // Text(), AppBar title, Button labels, SnackBar, Dialog, etc. —
+        // also renders in Satoshi.
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(fontFamily: 'Satoshi'),
+          displayMedium: TextStyle(fontFamily: 'Satoshi'),
+          displaySmall: TextStyle(fontFamily: 'Satoshi'),
+          headlineLarge: TextStyle(fontFamily: 'Satoshi'),
+          headlineMedium: TextStyle(fontFamily: 'Satoshi'),
+          headlineSmall: TextStyle(fontFamily: 'Satoshi'),
+          titleLarge: TextStyle(fontFamily: 'Satoshi'),
+          titleMedium: TextStyle(fontFamily: 'Satoshi'),
+          titleSmall: TextStyle(fontFamily: 'Satoshi'),
+          bodyLarge: TextStyle(fontFamily: 'Satoshi'),
+          bodyMedium: TextStyle(fontFamily: 'Satoshi'),
+          bodySmall: TextStyle(fontFamily: 'Satoshi'),
+          labelLarge: TextStyle(fontFamily: 'Satoshi'),
+          labelMedium: TextStyle(fontFamily: 'Satoshi'),
+          labelSmall: TextStyle(fontFamily: 'Satoshi'),
+        ),
+        primaryTextTheme: const TextTheme(
+          displayLarge: TextStyle(fontFamily: 'Satoshi'),
+          displayMedium: TextStyle(fontFamily: 'Satoshi'),
+          displaySmall: TextStyle(fontFamily: 'Satoshi'),
+          headlineLarge: TextStyle(fontFamily: 'Satoshi'),
+          headlineMedium: TextStyle(fontFamily: 'Satoshi'),
+          headlineSmall: TextStyle(fontFamily: 'Satoshi'),
+          titleLarge: TextStyle(fontFamily: 'Satoshi'),
+          titleMedium: TextStyle(fontFamily: 'Satoshi'),
+          titleSmall: TextStyle(fontFamily: 'Satoshi'),
+          bodyLarge: TextStyle(fontFamily: 'Satoshi'),
+          bodyMedium: TextStyle(fontFamily: 'Satoshi'),
+          bodySmall: TextStyle(fontFamily: 'Satoshi'),
+          labelLarge: TextStyle(fontFamily: 'Satoshi'),
+          labelMedium: TextStyle(fontFamily: 'Satoshi'),
+          labelSmall: TextStyle(fontFamily: 'Satoshi'),
+        ),
         primaryColor: const Color(0xFF9900FF),
         colorScheme: const ColorScheme.light(
           primary: Color(0xFF9900FF),
@@ -183,6 +264,40 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: 'Satoshi',
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(fontFamily: 'Satoshi'),
+          displayMedium: TextStyle(fontFamily: 'Satoshi'),
+          displaySmall: TextStyle(fontFamily: 'Satoshi'),
+          headlineLarge: TextStyle(fontFamily: 'Satoshi'),
+          headlineMedium: TextStyle(fontFamily: 'Satoshi'),
+          headlineSmall: TextStyle(fontFamily: 'Satoshi'),
+          titleLarge: TextStyle(fontFamily: 'Satoshi'),
+          titleMedium: TextStyle(fontFamily: 'Satoshi'),
+          titleSmall: TextStyle(fontFamily: 'Satoshi'),
+          bodyLarge: TextStyle(fontFamily: 'Satoshi'),
+          bodyMedium: TextStyle(fontFamily: 'Satoshi'),
+          bodySmall: TextStyle(fontFamily: 'Satoshi'),
+          labelLarge: TextStyle(fontFamily: 'Satoshi'),
+          labelMedium: TextStyle(fontFamily: 'Satoshi'),
+          labelSmall: TextStyle(fontFamily: 'Satoshi'),
+        ),
+        primaryTextTheme: const TextTheme(
+          displayLarge: TextStyle(fontFamily: 'Satoshi'),
+          displayMedium: TextStyle(fontFamily: 'Satoshi'),
+          displaySmall: TextStyle(fontFamily: 'Satoshi'),
+          headlineLarge: TextStyle(fontFamily: 'Satoshi'),
+          headlineMedium: TextStyle(fontFamily: 'Satoshi'),
+          headlineSmall: TextStyle(fontFamily: 'Satoshi'),
+          titleLarge: TextStyle(fontFamily: 'Satoshi'),
+          titleMedium: TextStyle(fontFamily: 'Satoshi'),
+          titleSmall: TextStyle(fontFamily: 'Satoshi'),
+          bodyLarge: TextStyle(fontFamily: 'Satoshi'),
+          bodyMedium: TextStyle(fontFamily: 'Satoshi'),
+          bodySmall: TextStyle(fontFamily: 'Satoshi'),
+          labelLarge: TextStyle(fontFamily: 'Satoshi'),
+          labelMedium: TextStyle(fontFamily: 'Satoshi'),
+          labelSmall: TextStyle(fontFamily: 'Satoshi'),
+        ),
         primaryColor: const Color(0xFF9900FF),
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFF9900FF),

@@ -10,7 +10,7 @@ import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
+// NOTE: google_fonts import intentionally removed — the brand uses Satoshi only.
 import 'request_model.dart';
 export 'request_model.dart';
 
@@ -822,14 +822,9 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                         context)
                                                                     .titleSmall
                                                                     .override(
-                                                                      font: GoogleFonts
-                                                                          .plusJakartaSans(
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .fontStyle,
-                                                                      ),
+                                                                      // Brand policy: Satoshi is the only typeface used in the app.
+                                                                      // The previous `font: GoogleFonts.plusJakartaSans(...)` was
+                                                                      // removed so the entire UI stays on Satoshi.
                                                                       color: FlutterFlowTheme.of(
                                                                               context)
                                                                           .alternate,

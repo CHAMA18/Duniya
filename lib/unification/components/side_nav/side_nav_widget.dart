@@ -81,22 +81,17 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                 // ─── Duniya Logo & Brand ───
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(
-                    isCollapsed ? 8.0 : 16.0,
+                    isCollapsed ? 12.0 : 20.0,
                     8.0,
-                    isCollapsed ? 8.0 : 16.0,
+                    isCollapsed ? 12.0 : 20.0,
                     8.0,
                   ),
-                  child: Align(
-                    alignment:
-                        isCollapsed ? Alignment.center : Alignment.centerLeft,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      width: isCollapsed ? 52.0 : 128.0,
-                      height: isCollapsed ? 52.0 : 128.0,
-                      child: Image.asset(
-                        'assets/images/duniya_logo.png',
-                        fit: BoxFit.contain,
-                      ),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    width: double.infinity,
+                    child: Image.asset(
+                      'assets/images/duniya_logo.png',
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
                 ),
@@ -211,53 +206,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Outlets
-                InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () async {
-                    logFirebaseEvent('SIDE_NAV_COMP_Outlets_ON_TAP');
-                    logFirebaseEvent('SidebarLink_navigate_to');
-
-                    context.goNamed(
-                      OutletsWidget.routeName,
-                      queryParameters: {
-                        'pharmacy': serializeParam(
-                          FFAppState().Pharm,
-                          ParamType.String,
-                        ),
-                      }.withoutNulls,
-                      extra: <String, dynamic>{
-                        '__transition_info__': TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 0),
-                        ),
-                      },
-                    );
-
-                    logFirebaseEvent('SidebarLink_update_app_state');
-                    FFAppState().SelectedPage = 'Outlets';
-                  },
-                  child: wrapWithModel(
-                    model: _model.sidebarLinkModel18,
-                    updateCallback: () => safeSetState(() {}),
-                    child: SidebarLinkWidget(
-                      linkText: 'Outlets',
-                      activeIcon: Icon(
-                        Icons.store,
-                        color: FlutterFlowTheme.of(context).primary,
-                      ),
-                      inactiveIcon: Icon(
-                        Icons.store_outlined,
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                      ),
-                      isActive: FFAppState().SelectedPage == 'Outlets',
-                    ),
-                  ),
-                ),
                 // Human Resource (Owner only)
                 if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
                   AuthUserStreamWidget(

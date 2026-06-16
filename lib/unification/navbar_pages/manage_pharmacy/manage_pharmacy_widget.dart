@@ -359,7 +359,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         ),
         _KPIData(
           title: 'Stock Value',
-          value: 'ZMW ${_totalValue.toStringAsFixed(0)}',
+          value: 'ZMK ${_totalValue.toStringAsFixed(0)}',
           subtitle: 'Total inventory value',
           icon: Icons.account_balance_wallet_rounded,
           color: const Color(0xFF059669),
@@ -847,7 +847,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     SizedBox(
                       width: 100,
                       child: Text(
-                        'ZMW ${item.price.toStringAsFixed(2)}',
+                        'ZMK ${item.price.toStringAsFixed(2)}',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
                           letterSpacing: 0.0,
@@ -966,7 +966,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     SizedBox(
                       width: 100,
                       child: Text(
-                        'ZMW ${bal.stockValue.toStringAsFixed(2)}',
+                        'ZMK ${bal.stockValue.toStringAsFixed(2)}',
                         style: theme.bodySmall?.override(
                           fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,

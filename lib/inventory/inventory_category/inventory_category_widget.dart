@@ -1072,7 +1072,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                         decimalType:
                                                                             DecimalType.periodDecimal,
                                                                         currency:
-                                                                            'K',
+                                                                            'ZMK',
                                                                       ),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)

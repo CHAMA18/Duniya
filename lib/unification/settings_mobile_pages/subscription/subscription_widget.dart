@@ -951,9 +951,9 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
                                                                                 ''),
                                                                           ) ==
                                                                           'ZM'
-                                                                      ? 'K'
-                                                                      : '\$',
-                                                                  '\$',
+                                                                      ? 'ZMK'
+                                                                      : 'ZMK',
+                                                                  'ZMK',
                                                                 ),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
@@ -1447,9 +1447,9 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
                                                                               (_model.apiResult8er?.jsonBody ?? ''),
                                                                             ) ==
                                                                             'ZM'
-                                                                        ? 'K'
-                                                                        : '\$',
-                                                                    '\$',
+                                                                        ? 'ZMK'
+                                                                        : 'ZMK',
+                                                                    'ZMK',
                                                                   ),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)

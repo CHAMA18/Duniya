@@ -1073,9 +1073,9 @@ class _UpdateSubscriptionWidgetState extends State<UpdateSubscriptionWidget> {
                                                                               (_model.apiResult8er?.jsonBody ?? ''),
                                                                             ) ==
                                                                             'ZM'
-                                                                        ? 'K'
-                                                                        : '\$',
-                                                                    '\$',
+                                                                        ? 'ZMK'
+                                                                        : 'ZMK',
+                                                                    'ZMK',
                                                                   ),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
@@ -1574,9 +1574,9 @@ class _UpdateSubscriptionWidgetState extends State<UpdateSubscriptionWidget> {
                                                                                 (_model.apiResult8er?.jsonBody ?? ''),
                                                                               ) ==
                                                                               'ZM'
-                                                                          ? 'K'
-                                                                          : '\$',
-                                                                      '\$',
+                                                                          ? 'ZMK'
+                                                                          : 'ZMK',
+                                                                      'ZMK',
                                                                     ),
                                                                     style: FlutterFlowTheme.of(
                                                                             context)

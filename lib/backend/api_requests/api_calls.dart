@@ -736,7 +736,7 @@ class CreateTokenCall {
   <CustomerPhone>"${mobileNumber}"</CustomerPhone>
   <Transaction>
     <PaymentAmount>${amount}</PaymentAmount>
-    <PaymentCurrency>zmw</PaymentCurrency>
+    <PaymentCurrency>zmk</PaymentCurrency>
     <CompanyRef>49FKEOA</CompanyRef>
     <RedirectURL>http://www.domain.com/payurl.php</RedirectURL>
     <BackURL>http://www.domain.com/backurl.php </BackURL>
@@ -781,7 +781,7 @@ class MobileMoneyCall {
     final ffApiRequestBody = '''
 {
 "amount": 10.50,
-        "currency": "ZMW",
+        "currency": "ZMK",
         "customerEmail": "mundia@getsparco.com",
         "customerFirstName": "Mundia",
         "customerLastName": "Mwala",
@@ -830,7 +830,7 @@ class SubscriptionCall {
 {
   "transactionName": "Test",
   "amount": 500,
-  "currency": "ZMW",
+  "currency": "ZMK",
   "transactionReference: ": "${transactionreference}",
   "customerFirstName": "${customerFirstName}",
   "customerLastName": "${customerLastName}",

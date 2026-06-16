@@ -408,7 +408,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                                 0.0),
                                                                             child:
                                                                                 Text(
-                                                                              'K${() {
+                                                                              'ZMK ${() {
                                                                                 if (pharmacyInventoryFinanceRecord?.revenue == null) {
                                                                                   return '0';
                                                                                 } else if (pharmacyInventoryFinanceRecord?.revenue != null) {
@@ -534,7 +534,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                                 0.0),
                                                                             child:
                                                                                 Text(
-                                                                              'K${() {
+                                                                              'ZMK ${() {
                                                                                 if (pharmacyInventoryFinanceRecord?.costOfGoods == null) {
                                                                                   return '0';
                                                                                 } else if (pharmacyInventoryFinanceRecord?.costOfGoods != null) {
@@ -660,7 +660,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                                 0.0),
                                                                             child:
                                                                                 Text(
-                                                                              'K${functions.grossProfit(pharmacyInventoryFinanceRecord?.revenue, pharmacyInventoryFinanceRecord?.costOfGoods).toString()}',
+                                                                              'ZMK ${functions.grossProfit(pharmacyInventoryFinanceRecord?.revenue, pharmacyInventoryFinanceRecord?.costOfGoods).toString()}',
                                                                               style: FlutterFlowTheme.of(context).displaySmall.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).displaySmallFamily,
                                                                                     letterSpacing: 0.0,
@@ -1577,7 +1577,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                               listViewStockRecord.price,
                                                                               formatType: FormatType.decimal,
                                                                               decimalType: DecimalType.periodDecimal,
-                                                                              currency: 'K',
+                                                                              currency: 'ZMK',
                                                                             ),
                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,

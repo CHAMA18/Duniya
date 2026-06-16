@@ -269,7 +269,7 @@ class _CartWidgetState extends State<CartWidget> {
                                                                             0.0,
                                                                             12.0),
                                                                 child: Text(
-                                                                  'K${priceItem.toString()}',
+                                                                  'ZMK ${priceItem.toString()}',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyMedium
@@ -356,7 +356,7 @@ class _CartWidgetState extends State<CartWidget> {
                                         ),
                                   ),
                                   Text(
-                                    'K${functions.cartTotal(FFAppState().Cart.price.toList(), FFAppState().Cart.quantity.toList()).toString()}',
+                                    'ZMK ${functions.cartTotal(FFAppState().Cart.price.toList(), FFAppState().Cart.quantity.toList()).toString()}',
                                     style: FlutterFlowTheme.of(context)
                                         .headlineMedium
                                         .override(

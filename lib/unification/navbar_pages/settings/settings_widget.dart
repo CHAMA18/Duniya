@@ -2023,7 +2023,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                                 Expanded(
                                                                                                   flex: 2,
                                                                                                   child: Text(
-                                                                                                    'K${cardTable2SubscriptionRecord.price.toString()}',
+                                                                                                    'ZMK ${cardTable2SubscriptionRecord.price.toString()}',
                                                                                                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                                           fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                                           letterSpacing: 0.0,

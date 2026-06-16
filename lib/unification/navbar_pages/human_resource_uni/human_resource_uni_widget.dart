@@ -421,7 +421,7 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                             ];
 
                             Widget cardsLayout(double maxWidth) {
-                              final isWide = maxWidth >= 1100;
+                              final isWide = maxWidth >= 600;
                               final cardGap = 14.0;
                               if (!isWide) {
                                 return Column(

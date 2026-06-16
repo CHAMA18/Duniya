@@ -101,14 +101,14 @@ class _FinancesWidgetState extends State<FinancesWidget> {
     super.dispose();
   }
 
-  /// Format a number as currency (e.g. $1.2M, $84.5K, $312)
+  /// Format a number as Zambian Kwacha currency (e.g. ZMK 1.2M, ZMK 84.5K, ZMK 312)
   String _formatCurrency(double value) {
     if (value >= 1000000) {
-      return '\$${(value / 1000000).toStringAsFixed(1)}M';
+      return 'ZMK ${(value / 1000000).toStringAsFixed(1)}M';
     } else if (value >= 1000) {
-      return '\$${(value / 1000).toStringAsFixed(1)}K';
+      return 'ZMK ${(value / 1000).toStringAsFixed(1)}K';
     } else {
-      return '\$${value.toStringAsFixed(2)}';
+      return 'ZMK ${value.toStringAsFixed(2)}';
     }
   }
 
@@ -958,7 +958,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                             1.8,
                           ),
                           _tableDataCell(
-                            '${isPositive ? '+' : '-'}\$${sale.totalAmount.toStringAsFixed(2)}',
+                            '${isPositive ? '+' : '-'}ZMK ${sale.totalAmount.toStringAsFixed(2)}',
                             1.0,
                             fontWeight: FontWeight.w500,
                             color: isPositive ? _clinicalBlue : _onSurface,
@@ -1493,9 +1493,9 @@ class _RevenueChartPainter extends CustomPainter {
   }
 
   String _formatVal(double v) {
-    if (v >= 1000000) return '\$${(v / 1000000).toStringAsFixed(2)}M';
-    if (v >= 1000) return '\$${(v / 1000).toStringAsFixed(1)}K';
-    return '\$${v.toStringAsFixed(2)}';
+    if (v >= 1000000) return 'ZMK ${(v / 1000000).toStringAsFixed(2)}M';
+    if (v >= 1000) return 'ZMK ${(v / 1000).toStringAsFixed(1)}K';
+    return 'ZMK ${v.toStringAsFixed(2)}';
   }
 
   @override

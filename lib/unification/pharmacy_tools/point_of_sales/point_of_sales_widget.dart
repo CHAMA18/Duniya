@@ -516,7 +516,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'K${formatNumber(
+                      'ZMK ${formatNumber(
                         stock.price,
                         formatType: FormatType.compact,
                       )}',
@@ -1024,7 +1024,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'K${subtotal.toStringAsFixed(2)}',
+                  'ZMK ${subtotal.toStringAsFixed(2)}',
                   style: FlutterFlowTheme.of(context).headlineMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).headlineMediumFamily,
@@ -1629,7 +1629,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                             ?.openEndDrawer();
                                                       },
                                                       text:
-                                                          'Checkout: K${subtotal.toStringAsFixed(2)}',
+                                                          'Checkout: ZMK ${subtotal.toStringAsFixed(2)}',
                                                       options: FFButtonOptions(
                                                         height: 52,
                                                         padding:
@@ -1738,7 +1738,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                             ?.openEndDrawer();
                                                       },
                                                       text:
-                                                          'Checkout: K${subtotal.toStringAsFixed(2)}',
+                                                          'Checkout: ZMK ${subtotal.toStringAsFixed(2)}',
                                                       options: FFButtonOptions(
                                                         width: double.infinity,
                                                         height: 52,

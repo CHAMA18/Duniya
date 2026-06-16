@@ -5,7 +5,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+// NOTE: google_fonts import intentionally removed — the brand uses Satoshi only.
 import 'stores_model.dart';
 export 'stores_model.dart';
 

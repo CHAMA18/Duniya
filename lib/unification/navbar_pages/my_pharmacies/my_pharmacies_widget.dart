@@ -251,7 +251,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                 const SizedBox(width: 10),
                 _buildFilterChip(
                   context: context,
-                  label: 'ZMW',
+                  label: 'ZMK',
                   icon: Icons.payments_outlined,
                 ),
               ],
