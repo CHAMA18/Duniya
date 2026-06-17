@@ -3660,132 +3660,134 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           Icons.bolt_rounded,
         ),
         const SizedBox(height: 16),
-        // 2x2 grid
         LayoutBuilder(
           builder: (context, constraints) {
-            final isWide = constraints.maxWidth > 500;
-            final cardWidth =
-                isWide ? (constraints.maxWidth - 12) / 2 : constraints.maxWidth;
+            final isWide = constraints.maxWidth >= 1100;
+
+            final cards = <Widget>[
+              _buildQuickActionCard(
+                icon: Icon(Icons.point_of_sale_rounded,
+                    color: FlutterFlowTheme.of(context).primary, size: 22),
+                title: 'Point of Sale',
+                subtitle: 'Process transactions & billing',
+                accentColor: FlutterFlowTheme.of(context).primary,
+                onTap: () async {
+                  logFirebaseEvent('HOME_PAGE_QuickAction_POS_ON_TAP');
+                  var _shouldSetState = false;
+                  if (valueOrDefault(currentUserDocument?.role, '') ==
+                      'Owner') {
+                    logFirebaseEvent('QuickAction_POS_navigate_to');
+                    context.pushNamed(PointOfSalesWidget.routeName);
+                    return;
+                  } else {
+                    logFirebaseEvent('QuickAction_POS_firestore_query');
+                    _model.staff = await queryStaffRecordOnce(
+                      queryBuilder: (staffRecord) => staffRecord.where(
+                        'Email',
+                        isEqualTo: currentUserEmail,
+                      ),
+                      singleRecord: true,
+                    ).then((s) => s.firstOrNull);
+                    _shouldSetState = true;
+                    logFirebaseEvent('QuickAction_POS_backend_call');
+                    _model.pharm = await PharmacyRecord.getDocumentOnce(
+                        _model.staff!.pharmId!);
+                    _shouldSetState = true;
+                  }
+                  logFirebaseEvent('QuickAction_POS_navigate_to');
+                  context.pushNamed(
+                    PointOfSalesWidget.routeName,
+                    queryParameters: {
+                      'pharm': serializeParam(
+                        _model.pharm?.name,
+                        ParamType.String,
+                      ),
+                    }.withoutNulls,
+                  );
+                  if (_shouldSetState) safeSetState(() {});
+                },
+              ),
+              if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
+                AuthUserStreamWidget(
+                  builder: (context) => _buildQuickActionCard(
+                    icon: Icon(Icons.people_alt_rounded,
+                        color: FlutterFlowTheme.of(context).secondary,
+                        size: 22),
+                    title: 'HR Portal',
+                    subtitle: 'Manage staff & resources',
+                    accentColor: FlutterFlowTheme.of(context).secondary,
+                    onTap: () async {
+                      logFirebaseEvent('HOME_PAGE_QuickAction_HR_ON_TAP');
+                      logFirebaseEvent('QuickAction_HR_navigate_to');
+                      context.goNamed(HumanResourceUniWidget.routeName);
+                    },
+                  ),
+                ),
+              _buildQuickActionCard(
+                icon: FaIcon(FontAwesomeIcons.robot,
+                    color: FlutterFlowTheme.of(context).primary, size: 22),
+                title: 'AI Assistant',
+                subtitle: 'Smart pharmacy insights',
+                accentColor: FlutterFlowTheme.of(context).primary,
+                trailing: AnimatedBuilder(
+                  animation: _aiDotAnimation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _aiDotAnimation.value,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).success,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                onTap: () async {
+                  logFirebaseEvent('HOME_PAGE_QuickAction_AI_ON_TAP');
+                  logFirebaseEvent('QuickAction_AI_navigate_to');
+                  context.goNamed(AiAssistantWidget.routeName);
+                },
+              ),
+              _buildQuickActionCard(
+                icon: Icon(Icons.calculate_rounded,
+                    color: FlutterFlowTheme.of(context).warning, size: 22),
+                title: 'Calculators',
+                subtitle: 'BMI & health calculators',
+                accentColor: FlutterFlowTheme.of(context).warning,
+                onTap: () async {
+                  logFirebaseEvent('HOME_PAGE_QuickAction_Calc_ON_TAP');
+                  logFirebaseEvent('QuickAction_Calc_navigate_to');
+                  context.goNamed(BMICalcWidget.routeName);
+                },
+              ),
+            ];
+
+            if (isWide) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (var i = 0; i < cards.length; i++) ...[
+                    Expanded(child: cards[i]),
+                    if (i != cards.length - 1) const SizedBox(width: 12),
+                  ],
+                ],
+              );
+            }
 
             return Wrap(
               spacing: 12,
               runSpacing: 12,
-              children: [
-                // Point of Sale
-                SizedBox(
-                  width: isWide ? cardWidth : null,
-                  child: _buildQuickActionCard(
-                    icon: Icon(Icons.point_of_sale_rounded,
-                        color: FlutterFlowTheme.of(context).primary, size: 22),
-                    title: 'Point of Sale',
-                    subtitle: 'Process transactions & billing',
-                    accentColor: FlutterFlowTheme.of(context).primary,
-                    onTap: () async {
-                      logFirebaseEvent('HOME_PAGE_QuickAction_POS_ON_TAP');
-                      var _shouldSetState = false;
-                      if (valueOrDefault(currentUserDocument?.role, '') ==
-                          'Owner') {
-                        logFirebaseEvent('QuickAction_POS_navigate_to');
-                        context.pushNamed(PointOfSalesWidget.routeName);
-                        return;
-                      } else {
-                        logFirebaseEvent('QuickAction_POS_firestore_query');
-                        _model.staff = await queryStaffRecordOnce(
-                          queryBuilder: (staffRecord) => staffRecord.where(
-                            'Email',
-                            isEqualTo: currentUserEmail,
-                          ),
-                          singleRecord: true,
-                        ).then((s) => s.firstOrNull);
-                        _shouldSetState = true;
-                        logFirebaseEvent('QuickAction_POS_backend_call');
-                        _model.pharm = await PharmacyRecord.getDocumentOnce(
-                            _model.staff!.pharmId!);
-                        _shouldSetState = true;
-                      }
-                      logFirebaseEvent('QuickAction_POS_navigate_to');
-                      context.pushNamed(
-                        PointOfSalesWidget.routeName,
-                        queryParameters: {
-                          'pharm': serializeParam(
-                            _model.pharm?.name,
-                            ParamType.String,
-                          ),
-                        }.withoutNulls,
-                      );
-                      if (_shouldSetState) safeSetState(() {});
-                    },
-                  ),
-                ),
-                // HR Portal (Owner only)
-                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
-                  AuthUserStreamWidget(
-                    builder: (context) => SizedBox(
-                      width: isWide ? cardWidth : null,
-                      child: _buildQuickActionCard(
-                        icon: Icon(Icons.people_alt_rounded,
-                            color: FlutterFlowTheme.of(context).secondary,
-                            size: 22),
-                        title: 'HR Portal',
-                        subtitle: 'Manage staff & resources',
-                        accentColor: FlutterFlowTheme.of(context).secondary,
-                        onTap: () async {
-                          logFirebaseEvent('HOME_PAGE_QuickAction_HR_ON_TAP');
-                          logFirebaseEvent('QuickAction_HR_navigate_to');
-                          context.goNamed(HumanResourceUniWidget.routeName);
-                        },
-                      ),
+              children: cards
+                  .map(
+                    (card) => SizedBox(
+                      width: constraints.maxWidth,
+                      child: card,
                     ),
-                  ),
-                // AI Assistant
-                SizedBox(
-                  width: isWide ? cardWidth : null,
-                  child: _buildQuickActionCard(
-                    icon: FaIcon(FontAwesomeIcons.robot,
-                        color: FlutterFlowTheme.of(context).primary, size: 22),
-                    title: 'AI Assistant',
-                    subtitle: 'Smart pharmacy insights',
-                    accentColor: FlutterFlowTheme.of(context).primary,
-                    trailing: AnimatedBuilder(
-                      animation: _aiDotAnimation,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: _aiDotAnimation.value,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context).success,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    onTap: () async {
-                      logFirebaseEvent('HOME_PAGE_QuickAction_AI_ON_TAP');
-                      logFirebaseEvent('QuickAction_AI_navigate_to');
-                      context.goNamed(AiAssistantWidget.routeName);
-                    },
-                  ),
-                ),
-                // Calculators
-                SizedBox(
-                  width: isWide ? cardWidth : null,
-                  child: _buildQuickActionCard(
-                    icon: Icon(Icons.calculate_rounded,
-                        color: FlutterFlowTheme.of(context).warning, size: 22),
-                    title: 'Calculators',
-                    subtitle: 'BMI & health calculators',
-                    accentColor: FlutterFlowTheme.of(context).warning,
-                    onTap: () async {
-                      logFirebaseEvent('HOME_PAGE_QuickAction_Calc_ON_TAP');
-                      logFirebaseEvent('QuickAction_Calc_navigate_to');
-                      context.goNamed(BMICalcWidget.routeName);
-                    },
-                  ),
-                ),
-              ],
+                  )
+                  .toList(),
             );
           },
         ),
