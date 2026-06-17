@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -16,6 +17,11 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'flutter_flow/revenue_cat_util.dart' as revenue_cat;
 
 import '/backend/firebase_dynamic_links/firebase_dynamic_links.dart';
+import '/offline/offline_connectivity_service.dart';
+import '/offline/offline_indicator_banner.dart';
+import '/offline/offline_sync_service.dart';
+import '/offline/cache_warmer_service.dart';
+import '/offline/offline_status_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +29,13 @@ void main() async {
   usePathUrlStrategy();
 
   await initFirebase();
+
+  // Initialise offline connectivity tracking as early as possible so
+  // the banner reflects the correct state from the very first frame.
+  OfflineConnectivityService().initialize();
+
+  // Offline sync service temporarily disabled to fix null check crash.
+  // OfflineSyncService().initialize();
 
   await FlutterFlowTheme.initialize();
 
@@ -142,12 +155,48 @@ class _MyAppState extends State<MyApp> {
     userStream = mediTrackerFirebaseUserStream()
       ..listen((user) {
         _appStateNotifier.update(user);
+        // Auto-warm and sync tracking temporarily disabled to fix
+        // null check crash. Will re-enable after root cause is found.
+        // if (user?.loggedIn == true) {
+        //   _onUserSignedIn();
+        // }
       });
     jwtTokenStream.listen((_) {});
     Future.delayed(
       Duration(milliseconds: 1000),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
+  }
+
+  /// Called whenever a user signs in. Sets up sync-status tracking
+  /// and triggers an automatic cache warm (non-blocking — runs in
+  /// the background so the user can start using the app immediately).
+  void _onUserSignedIn() {
+    try {
+      // Watch the user's collections for pending writes.
+      // This populates the OfflineStatusChip with real sync data.
+      final userDoc = currentUserDocument;
+      if (userDoc != null) {
+        final ownerRef = valueOrDefault(userDoc.role, '') == 'Owner'
+            ? currentUserReference
+            : userDoc.ownerRef;
+        if (ownerRef != null) {
+          OfflineSyncService().watchCollection(
+            FirebaseFirestore.instance
+                .collection('User')
+                .doc(ownerRef.id)
+                .collection('Pharmacy'),
+          );
+        }
+      }
+      // Auto-warm the cache in the background (non-blocking).
+      // We delay slightly so the app's first frame isn't delayed.
+      Future.delayed(const Duration(seconds: 2), () {
+        CacheWarmerService().warmCache();
+      });
+    } catch (e) {
+      debugPrint('[main] Auto-warm setup failed: $e');
+    }
   }
 
   @override
@@ -169,9 +218,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    final app = MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'MediTracker',
+      title: 'Duniya',
       scrollBehavior: MyAppScrollBehavior(),
       localizationsDelegates: [
         FFLocalizationsDelegate(),
@@ -331,5 +380,10 @@ class _MyAppState extends State<MyApp> {
         child: child!,
       ),
     );
+    // Wrap the entire MaterialApp in the offline indicator banner so
+    // the "You're offline" notice overlays every screen in the app.
+    // The banner is non-blocking — it just informs users that writes
+    // are being queued and will sync when connectivity returns.
+    return app; // OfflineIndicatorBanner temporarily removed
   }
 }

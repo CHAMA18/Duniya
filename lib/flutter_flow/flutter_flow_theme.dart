@@ -796,7 +796,7 @@ extension TextStyleHelper on TextStyle {
     // ═════════════════════════════════════════════════════════════
     // BRAND FONT POLICY — Satoshi everywhere.
     //
-    // The Duniya MediTracker brand uses Satoshi as the only typeface.
+    // The Duniya brand uses Satoshi as the only typeface.
     // Any caller that asks for "GoogleFonts" (either via useGoogleFonts
     // or by passing a GoogleFonts TextStyle as `font:`) is silently
     // rerouted to Satoshi so the UI stays visually consistent. This

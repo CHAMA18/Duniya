@@ -24,6 +24,11 @@ class LowStockAlertsModel extends FlutterFlowModel<LowStockAlertsWidget> {
   String? statusValue;
   FormFieldController<String>? statusValueController;
 
+  // State field(s) for Search bar.
+  FocusNode? searchFocusNode;
+  TextEditingController? searchTextController;
+  String? searchValue;
+
   @override
   void initState(BuildContext context) {
     sideNavModel = createModel(context, () => SideNavModel());
@@ -36,5 +41,7 @@ class LowStockAlertsModel extends FlutterFlowModel<LowStockAlertsWidget> {
     sideNavModel.dispose();
     topNavModel.dispose();
     mobileNavbarModel.dispose();
+    searchFocusNode?.dispose();
+    searchTextController?.dispose();
   }
 }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+    DUNIYA — Firebase Email Verification Template
+    Paste this into: Firebase Console → Authentication → Templates
+                     → Email Verification → "Customize message"
+  ═══════════════════════════════════════════════════════════════════
+
+  Notes:
+  • Replace LOGO_URL below with a publicly hosted Duniya logo URL
+    (e.g. uploaded to Firebase Storage and made publicly readable,
+    or hosted on your own CDN). A 200x200 PNG works best.
+  • Firebase substitutes %LINK% with the actual verification link.
+  • %DISPLAY_NAME% is substituted with the user's display name
+    (if available; otherwise the fallback "there" is used).
+  • All colors use the Duniya purple (#9900FF) brand palette.
+
+  Local preview: open this file directly in a browser — the LOGO_URL
+  uses a data-URI SVG fallback so the email renders correctly even
+  before you host a real PNG logo.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>Verify your email — Duniya</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#F8F5FF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1A0533;-webkit-font-smoothing:antialiased;">
+
+  <!-- Preheader (hidden preview text) -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;height:0;width:0;">
+    Welcome to Duniya — please confirm your email address to activate your pharmacy account.
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+
+  <!-- Outer wrapper (full-bleed background) -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F8F5FF;min-width:100%;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <!-- Main card -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#FFFFFF;border-radius:20px;box-shadow:0 8px 24px rgba(153,0,255,0.08);overflow:hidden;">
+
+          <!-- ═══ Brand header (purple gradient) ═══ -->
+          <tr>
+            <td style="padding:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:linear-gradient(135deg,#9900FF 0%,#7C3AED 100%);background-color:#9900FF;">
+                <tr>
+                  <td align="center" style="padding:36px 24px 28px 24px;">
+
+                    <!-- ═══ Duniya Logo ═══ -->
+                    <!-- Replace the src below with a hosted PNG logo, e.g.: -->
+                    <!-- https://firebasestorage.googleapis.com/v0/b/your-project.appspot.com/o/duniya-logo.png?alt=media -->
+                    <!-- Until then, this SVG data-URI renders the brand mark inline. -->
+                    <img
+                      src="LOGO_URL"
+                      alt="Duniya"
+                      width="56"
+                      height="56"
+                      style="display:block;margin:0 auto 14px auto;border-radius:14px;background-color:rgba(255,255,255,0.18);padding:8px;border:1px solid rgba(255,255,255,0.4);"
+                      onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+PHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIyOCIgZmlsbD0iI2ZmZmZmZiIvPjx0ZXh0IHg9IjY0IiB5PSI2NCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNzIiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZmlsbD0iIzk5MDBGRiI+RDwvdGV4dD48L3N2Zz4=';"
+
+                    <!-- Wordmark -->
+                    <div style="font-size:22px;font-weight:700;color:#FFFFFF;letter-spacing:-0.3px;text-align:center;">
+                      Duniya
+                    </div>
+                    <div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.75);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-top:4px;">
+                      Pharmacy Operations
+                    </div>
+
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══ Body ═══ -->
+          <tr>
+            <td style="padding:36px 40px 8px 40px;">
+              <h1 style="margin:0 0 8px 0;font-size:24px;font-weight:700;color:#1A0533;letter-spacing:-0.3px;">
+                Verify your email
+              </h1>
+              <p style="margin:0 0 20px 0;font-size:15px;line-height:1.6;color:#4B5563;">
+                Hi %DISPLAY_NAME%,
+              </p>
+              <p style="margin:0 0 20px 0;font-size:15px;line-height:1.6;color:#4B5563;">
+                Welcome to Duniya — the modern operating system for pharmacy teams.
+                Please confirm your email address to activate your account and start
+                managing inventory, sales, and patient care.
+              </p>
+
+              <!-- Verify button -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="padding:8px 0 24px 0;">
+                    <a href="%LINK%" target="_blank" rel="noopener"
+                       style="display:inline-block;background:linear-gradient(135deg,#9900FF 0%,#7C3AED 100%);background-color:#9900FF;color:#FFFFFF;font-size:15px;font-weight:700;text-decoration:none;padding:14px 36px;border-radius:12px;letter-spacing:0.2px;box-shadow:0 6px 14px rgba(153,0,255,0.25);">
+                      Verify Email Address
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 12px 0;font-size:13px;line-height:1.6;color:#6B7280;">
+                Or copy and paste this link into your browser:
+              </p>
+              <p style="margin:0 0 24px 0;font-size:12px;line-height:1.5;color:#9900FF;word-break:break-all;background-color:#F8F5FF;padding:10px 12px;border-radius:8px;border:1px solid #E2D7FB;">
+                %LINK%
+              </p>
+
+              <p style="margin:0 0 8px 0;font-size:13px;line-height:1.6;color:#6B7280;">
+                <strong style="color:#4B5563;">This link expires in 24 hours.</strong>
+                If you did not create a Duniya account, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ═══ Divider ═══ -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background-color:#E2D7FB;line-height:1px;font-size:1px;">&nbsp;</div>
+            </td>
+          </tr>
+
+          <!-- ═══ Feature highlights ═══ -->
+          <tr>
+            <td style="padding:24px 40px 8px 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="33%" align="center" style="padding:8px;">
+                    <div style="width:36px;height:36px;background-color:#EDE0FE;border-radius:10px;margin:0 auto 8px auto;font-size:18px;line-height:36px;text-align:center;">💊</div>
+                    <div style="font-size:12px;font-weight:600;color:#1A0533;">Inventory</div>
+                    <div style="font-size:11px;color:#6B7280;margin-top:2px;">Real-time stock</div>
+                  </td>
+                  <td width="33%" align="center" style="padding:8px;">
+                    <div style="width:36px;height:36px;background-color:#DBEAFE;border-radius:10px;margin:0 auto 8px auto;font-size:18px;line-height:36px;text-align:center;">📊</div>
+                    <div style="font-size:12px;font-weight:600;color:#1A0533;">Analytics</div>
+                    <div style="font-size:11px;color:#6B7280;margin-top:2px;">Live KPIs</div>
+                  </td>
+                  <td width="33%" align="center" style="padding:8px;">
+                    <div style="width:36px;height:36px;background-color:#D1FAE5;border-radius:10px;margin:0 auto 8px auto;font-size:18px;line-height:36px;text-align:center;">🛡️</div>
+                    <div style="font-size:12px;font-weight:600;color:#1A0533;">Compliance</div>
+                    <div style="font-size:11px;color:#6B7280;margin-top:2px;">HIPAA-ready</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══ Footer ═══ -->
+          <tr>
+            <td style="padding:24px 40px 36px 40px;background-color:#F8F5FF;border-top:1px solid #E2D7FB;">
+              <p style="margin:0 0 8px 0;font-size:12px;line-height:1.5;color:#6B7280;text-align:center;">
+                This is an automated message from <strong style="color:#9900FF;">Duniya</strong>.
+                Please do not reply to this email.
+              </p>
+              <p style="margin:0 0 4px 0;font-size:11px;line-height:1.5;color:#9CA3AF;text-align:center;">
+                © 2026 Duniya · Pharmacy &amp; Inventory Management
+              </p>
+              <p style="margin:0;font-size:11px;line-height:1.5;color:#9CA3AF;text-align:center;">
+                Need help? <a href="mailto:support@duniya.health" style="color:#9900FF;text-decoration:none;">Contact support</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Main card -->
+
+        <!-- Below-card fine print -->
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+          <tr>
+            <td align="center" style="padding:20px 16px 0 16px;">
+              <p style="margin:0;font-size:10px;line-height:1.5;color:#9CA3AF;text-align:center;">
+                Duniya is a pharmacy operations platform. By verifying your email,
+                you agree to our Terms of Service and Privacy Policy.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

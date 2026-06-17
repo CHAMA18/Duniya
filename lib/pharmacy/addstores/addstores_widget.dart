@@ -341,7 +341,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Set up your pharmacy details to get started with MediTracker',
+                            'Set up your pharmacy details to get started with Duniya',
                             style: theme.bodyMedium?.override(
                               fontFamily: theme.bodyMediumFamily,
                               color: Colors.white.withValues(alpha: 0.85),

@@ -111,3 +111,13 @@ export '/vmi/batches/batches_widget.dart' show BatchesWidget;
 export '/vmi/alerts/low_stock_alerts_widget.dart' show LowStockAlertsWidget;
 export '/vmi/replenishment/replenishment_widget.dart' show ReplenishmentWidget;
 export '/vmi/outlets/outlets_widget.dart' show OutletsWidget;
+
+// Duniya dashboard pages
+export '/duniya/stock_balance_visibility/duniya_stock_balances_widget.dart'
+    show DuniyaStockBalancesWidget;
+export '/duniya/pharmacies/duniya_pharmacies_widget.dart'
+    show DuniyaPharmaciesWidget;
+export '/duniya/onboarding_requests/onboarding_requests_widget.dart'
+    show OnboardingRequestsWidget;
+export '/duniya/network_analytics/network_analytics_widget.dart'
+    show NetworkAnalyticsWidget;

@@ -35,6 +35,18 @@ class PharmacyRecord extends FirestoreRecord {
   bool get deleted => _deleted ?? false;
   bool hasDeleted() => _deleted != null;
 
+  // "NetworkStatus" field — tracks Duniya network approval.
+  // Values: 'pending_approval' (self-registered, awaiting Duniya admin),
+  //         'active' (approved or invited), 'rejected' (denied by Duniya).
+  String? _networkStatus;
+  String get networkStatus => _networkStatus ?? 'active';
+  bool hasNetworkStatus() => _networkStatus != null;
+
+  // "RegisteredAt" field — when the pharmacy joined the network.
+  DateTime? _registeredAt;
+  DateTime? get registeredAt => _registeredAt;
+  bool hasRegisteredAt() => _registeredAt != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -42,6 +54,8 @@ class PharmacyRecord extends FirestoreRecord {
     _address = snapshotData['Address'] as String?;
     _userID = snapshotData['UserID'] as DocumentReference?;
     _deleted = snapshotData['deleted'] as bool?;
+    _networkStatus = snapshotData['NetworkStatus'] as String?;
+    _registeredAt = snapshotData['RegisteredAt'] as DateTime?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -88,6 +102,8 @@ Map<String, dynamic> createPharmacyRecordData({
   String? address,
   DocumentReference? userID,
   bool? deleted,
+  String? networkStatus,
+  DateTime? registeredAt,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -95,6 +111,8 @@ Map<String, dynamic> createPharmacyRecordData({
       'Address': address,
       'UserID': userID,
       'deleted': deleted,
+      'NetworkStatus': networkStatus,
+      'RegisteredAt': registeredAt,
     }.withoutNulls,
   );
 
@@ -109,12 +127,14 @@ class PharmacyRecordDocumentEquality implements Equality<PharmacyRecord> {
     return e1?.name == e2?.name &&
         e1?.address == e2?.address &&
         e1?.userID == e2?.userID &&
-        e1?.deleted == e2?.deleted;
+        e1?.deleted == e2?.deleted &&
+        e1?.networkStatus == e2?.networkStatus &&
+        e1?.registeredAt == e2?.registeredAt;
   }
 
   @override
-  int hash(PharmacyRecord? e) =>
-      const ListEquality().hash([e?.name, e?.address, e?.userID, e?.deleted]);
+  int hash(PharmacyRecord? e) => const ListEquality().hash(
+      [e?.name, e?.address, e?.userID, e?.deleted, e?.networkStatus, e?.registeredAt]);
 
   @override
   bool isValidKey(Object? o) => o is PharmacyRecord;

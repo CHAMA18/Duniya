@@ -592,6 +592,61 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             if (user == null) {
                               return;
                             }
+
+                            // ═══════════════════════════════════════════════
+                            //   ACCOUNT TYPE VALIDATION
+                            //   Ensure a user can't sign in with the wrong
+                            //   account type. If their stored account_type
+                            //   doesn't match the selected toggle, sign
+                            //   them out and show an error.
+                            // ═══════════════════════════════════════════════
+                            try {
+                              final userDoc = await UserRecord.getDocumentOnce(
+                                UserRecord.collection.doc(user.uid),
+                              );
+                              final selectedAccountType =
+                                  _selectedMode == 0 ? 'Duniya' : 'Pharmacy';
+                              final storedAccountType =
+                                  userDoc.accountType.isNotEmpty
+                                      ? userDoc.accountType
+                                      : 'Duniya'; // default for legacy users
+
+                              if (storedAccountType != selectedAccountType) {
+                                // Wrong account type — sign out and inform user
+                                await authManager.signOut();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      children: [
+                                        const Icon(Icons.error_outline_rounded,
+                                            color: Colors.white, size: 18.0),
+                                        const SizedBox(width: 8.0),
+                                        Expanded(
+                                          child: Text(
+                                            'This account is registered as "$storedAccountType". '
+                                            'Please select the "$storedAccountType" tab and try again.',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: const Color(0xFFEF4444),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    margin: const EdgeInsets.all(16.0),
+                                    duration: const Duration(seconds: 5),
+                                  ),
+                                );
+                                return;
+                              }
+                            } catch (e) {
+                              // If we can't read the user doc, allow login
+                              // (don't block users due to a transient error)
+                              debugPrint(
+                                  '[login_uni] Account type check failed: $e');
+                            }
+
                             logFirebaseEvent('Button_navigate_to');
                             context.goNamedAuth(
                                 WelcomeWidget.routeName, context.mounted);
@@ -681,13 +736,72 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                     await UserRecord.collection
                                         .doc(user.uid)
                                         .set(createUserRecordData(
-                                          email: user.email,
-                                          displayName: user.displayName,
-                                          photoUrl: user.photoURL,
-                                          uid: user.uid,
-                                          createdTime: getCurrentTimestamp,
-                                          role: 'Owner',
-                                        ));
+                                      email: user.email,
+                                      displayName: user.displayName,
+                                      photoUrl: user.photoURL,
+                                      uid: user.uid,
+                                      createdTime: getCurrentTimestamp,
+                                      role: 'Owner',
+                                      accountType: _selectedMode == 0
+                                          ? 'Duniya'
+                                          : 'Pharmacy',
+                                    ));
+                                  } else {
+                                    // ═══════════════════════════════════════
+                                    //   ACCOUNT TYPE VALIDATION (Google)
+                                    //   For existing users, verify the
+                                    //   selected tab matches their stored
+                                    //   account_type. If not, sign out and
+                                    //   inform them.
+                                    // ═══════════════════════════════════════
+                                    final selectedAccountType =
+                                        _selectedMode == 0
+                                            ? 'Duniya'
+                                            : 'Pharmacy';
+                                    final storedAccountType = userDoc
+                                            .accountType.isNotEmpty
+                                        ? userDoc.accountType
+                                        : 'Duniya';
+
+                                    if (storedAccountType !=
+                                        selectedAccountType) {
+                                      await authManager.signOut();
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Row(
+                                              children: [
+                                                const Icon(
+                                                    Icons
+                                                        .error_outline_rounded,
+                                                    color: Colors.white,
+                                                    size: 18.0),
+                                                const SizedBox(width: 8.0),
+                                                Expanded(
+                                                  child: Text(
+                                                    'This account is registered as "$storedAccountType". '
+                                                    'Please select the "$storedAccountType" tab and try again.',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            backgroundColor:
+                                                const Color(0xFFEF4444),
+                                            behavior:
+                                                SnackBarBehavior.floating,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            margin: const EdgeInsets.all(16.0),
+                                            duration:
+                                                const Duration(seconds: 5),
+                                          ),
+                                        );
+                                      }
+                                      return;
+                                    }
                                   }
 
                                   if (context.mounted) {

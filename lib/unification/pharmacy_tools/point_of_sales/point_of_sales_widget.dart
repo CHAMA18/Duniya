@@ -12,6 +12,7 @@ import '/flutter_flow/form_field_controller.dart';
 import '/index.dart';
 import '/unification/cart/cart_widget.dart';
 import '/unification/components/counter/counter_widget.dart';
+import '/unification/components/side_nav/side_nav_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -1140,6 +1141,15 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: const Color(0xFFF7F3FF),
+          // Mobile drawer: full SideNav accessible via hamburger menu
+          drawer: Drawer(
+            elevation: 16.0,
+            child: wrapWithModel(
+              model: _model.sideNavModel,
+              updateCallback: () => safeSetState(() {}),
+              child: const SideNavWidget(),
+            ),
+          ),
           endDrawer: SizedBox(
             width: 380.0,
             child: Drawer(
@@ -1169,12 +1179,12 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                     borderWidth: 1.0,
                     buttonSize: 60.0,
                     icon: Icon(
-                      Icons.chevron_left_rounded,
+                      Icons.menu_rounded,
                       color: FlutterFlowTheme.of(context).secondary,
                       size: 30.0,
                     ),
                     onPressed: () async {
-                      context.pop();
+                      scaffoldKey.currentState?.openDrawer();
                     },
                   ),
                   title: Text(
@@ -1202,16 +1212,32 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                   final stockParent = _stockScopeParent();
                   final activePharmacyName = _effectivePharmacyName();
 
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(
-                      isWide ? 24 : 16,
-                      18,
-                      isWide ? 24 : 16,
-                      28,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      // Desktop/tablet sidebar
+                      if (responsiveVisibility(
+                        context: context,
+                        phone: false,
+                        tablet: false,
+                      ))
+                        wrapWithModel(
+                          model: _model.sideNavModel,
+                          updateCallback: () => safeSetState(() {}),
+                          child: const SideNavWidget(),
+                        ),
+                      // Main content
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.fromLTRB(
+                            isWide ? 24 : 16,
+                            18,
+                            isWide ? 24 : 16,
+                            28,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                         if (!responsiveVisibility(
                           context: context,
                           phone: false,
@@ -1916,7 +1942,10 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                           },
                         ),
                       ],
-                    ),
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 },
               );

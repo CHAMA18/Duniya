@@ -49,4 +49,5 @@ firebase_options.dart
 .prompt_attachments
 *.hologram.dart
 node_modules/
-functions/lib/
+functions/lib/*.dart.bak
+*.py

@@ -552,7 +552,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: SalesVMIWidget.routeName,
           path: SalesVMIWidget.routePath,
           requireAuth: true,
-          builder: (context, params) => SalesVMIWidget(),
+          builder: (context, params) => SalesVMIWidget(
+            pharmacy: params.getParam(
+              'pharmacy',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: StockCountsWidget.routeName,
@@ -594,6 +599,30 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: OutletsWidget.routePath,
           requireAuth: true,
           builder: (context, params) => OutletsWidget(),
+        ),
+        FFRoute(
+          name: DuniyaStockBalancesWidget.routeName,
+          path: DuniyaStockBalancesWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => DuniyaStockBalancesWidget(),
+        ),
+        FFRoute(
+          name: DuniyaPharmaciesWidget.routeName,
+          path: DuniyaPharmaciesWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => DuniyaPharmaciesWidget(),
+        ),
+        FFRoute(
+          name: OnboardingRequestsWidget.routeName,
+          path: OnboardingRequestsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => OnboardingRequestsWidget(),
+        ),
+        FFRoute(
+          name: NetworkAnalyticsWidget.routeName,
+          path: NetworkAnalyticsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => NetworkAnalyticsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

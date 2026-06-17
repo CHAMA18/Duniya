@@ -4418,21 +4418,21 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
-          'Die MediTracker-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
+          'Die Duniya-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
-          'تم تصميم نظام MediTracker لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
+          'تم تصميم نظام Duniya لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
       'es':
-          'El sistema MediTracker está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
+          'El sistema Duniya está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
       'fr':
-          'Le système MediTracker est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
+          'Le système Duniya est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
       'hi':
           'मेडीट्रैकर सिस्टम को दक्षता और रोगी देखभाल बढ़ाने के अंतिम लक्ष्य के साथ फार्मेसी संचालन, इन्वेंट्री प्रबंधन और खरीद प्रक्रियाओं को अनुकूलित करने के लिए डिज़ाइन किया गया है।',
       'it':
-          'Il sistema MediTracker è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
+          'Il sistema Duniya è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
       'nd': '',
       'pt': '',
       'sw':
-          'Mfumo wa MediTracker umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
+          'Mfumo wa Duniya umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
     },
     'w60qahqv': {
       'en': '2. System Usage',
@@ -4706,21 +4706,21 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'The Provider reserves the right to amend the terms of this notice at any time. Updated versions of the notice will be made available to the User, and continued use of the System constitutes acceptance of the updated terms.\nBy accessing and using the Meditracker Pharmacy Management and Procurement System, you agree to the terms and conditions outlined in this notice. If you do not agree with these terms, please refrain from using the System.',
       'af':
-          'Die Verskaffer behou die reg voor om die bepalings van hierdie kennisgewing te eniger tyd te wysig. Opgedateerde weergawes van die kennisgewing sal aan die Gebruiker beskikbaar gestel word, en voortgesette gebruik van die Stelsel behels aanvaarding van die opgedateerde bepalings.\n\nDeur toegang tot en gebruik van die MediTracker Apteekbestuur- en verkrygingstelsel stem jy in tot die bepalings en voorwaardes wat in hierdie kennisgewing uiteengesit word. Indien u nie met hierdie bepalings saamstem nie, weerhou asseblief daarvan om die stelsel te gebruik.',
+          'Die Verskaffer behou die reg voor om die bepalings van hierdie kennisgewing te eniger tyd te wysig. Opgedateerde weergawes van die kennisgewing sal aan die Gebruiker beskikbaar gestel word, en voortgesette gebruik van die Stelsel behels aanvaarding van die opgedateerde bepalings.\n\nDeur toegang tot en gebruik van die Duniya Apteekbestuur- en verkrygingstelsel stem jy in tot die bepalings en voorwaardes wat in hierdie kennisgewing uiteengesit word. Indien u nie met hierdie bepalings saamstem nie, weerhou asseblief daarvan om die stelsel te gebruik.',
       'ar':
-          'يحتفظ المزود بالحق في تعديل شروط هذا الإشعار في أي وقت. سيتم توفير الإصدارات المحدثة من الإشعار للمستخدم ، ويشكل استمرار استخدام النظام قبولًا للشروط المحدثة.\n\nمن خلال الوصول إلى MediTracker Pharmacy Management and Procurement System ، فإنك توافق على الشروط والأحكام الموضحة في هذا الإشعار. إذا كنت لا توافق على هذه الشروط ، فيرجى الامتناع عن استخدام النظام.',
+          'يحتفظ المزود بالحق في تعديل شروط هذا الإشعار في أي وقت. سيتم توفير الإصدارات المحدثة من الإشعار للمستخدم ، ويشكل استمرار استخدام النظام قبولًا للشروط المحدثة.\n\nمن خلال الوصول إلى Duniya Pharmacy Management and Procurement System ، فإنك توافق على الشروط والأحكام الموضحة في هذا الإشعار. إذا كنت لا توافق على هذه الشروط ، فيرجى الامتناع عن استخدام النظام.',
       'es':
-          'El Proveedor se reserva el derecho de modificar los términos de este aviso en cualquier momento. Se pondrán a disposición del Usuario versiones actualizadas del aviso, y el uso continuado del Sistema constituye la aceptación de los términos actualizados.\n\nAl acceder y utilizar el Sistema de Adquisiciones y Administración de Farmacias de MediTracker, usted acepta los términos y condiciones descritos en este aviso. Si no está de acuerdo con estos términos, por favor absténgase de utilizar el Sistema.',
+          'El Proveedor se reserva el derecho de modificar los términos de este aviso en cualquier momento. Se pondrán a disposición del Usuario versiones actualizadas del aviso, y el uso continuado del Sistema constituye la aceptación de los términos actualizados.\n\nAl acceder y utilizar el Sistema de Adquisiciones y Administración de Farmacias de Duniya, usted acepta los términos y condiciones descritos en este aviso. Si no está de acuerdo con estos términos, por favor absténgase de utilizar el Sistema.',
       'fr':
-          'Le Prestataire se réserve le droit de modifier les termes de cet avis à tout moment. Des versions mises à jour de l\'avis seront mises à la disposition de l\'utilisateur, et l\'utilisation continue du système constitue une acceptation des conditions mises à jour.\n\nEn accédant et en utilisant le système de gestion et d\'approvisionnement en pharmacie MediTracker, vous acceptez les termes et conditions décrits dans cet avis. Si vous n\'êtes pas d\'accord avec ces conditions, veuillez vous abstenir d\'utiliser le système.',
+          'Le Prestataire se réserve le droit de modifier les termes de cet avis à tout moment. Des versions mises à jour de l\'avis seront mises à la disposition de l\'utilisateur, et l\'utilisation continue du système constitue une acceptation des conditions mises à jour.\n\nEn accédant et en utilisant le système de gestion et d\'approvisionnement en pharmacie Duniya, vous acceptez les termes et conditions décrits dans cet avis. Si vous n\'êtes pas d\'accord avec ces conditions, veuillez vous abstenir d\'utiliser le système.',
       'hi':
           'प्रदाता किसी भी समय इस नोटिस की शर्तों में संशोधन करने का अधिकार सुरक्षित रखता है। नोटिस के अद्यतन संस्करण उपयोगकर्ता को उपलब्ध कराए जाएंगे, और सिस्टम का निरंतर उपयोग अद्यतन शर्तों की स्वीकृति माना जाएगा।\n\nमेडीट्रैकर फार्मेसी प्रबंधन और खरीद प्रणाली तक पहुंच और उपयोग करके, आप इस नोटिस में उल्लिखित नियमों और शर्तों से सहमत हैं। यदि आप इन शर्तों से सहमत नहीं हैं, तो कृपया सिस्टम का उपयोग करने से बचें।',
       'it':
-          'Il Fornitore si riserva il diritto di modificare i termini del presente avviso in qualsiasi momento. Versioni aggiornate dell\'avviso saranno messe a disposizione dell\'Utente e l\'uso continuato del Sistema costituisce accettazione dei termini aggiornati.\n\nAccedendo e utilizzando il sistema di gestione e approvvigionamento della farmacia MediTracker, accetti i termini e le condizioni descritti in questo avviso. Se non siete d\'accordo con questi termini, vi preghiamo di astenervi dall\'utilizzare il Sistema.',
+          'Il Fornitore si riserva il diritto di modificare i termini del presente avviso in qualsiasi momento. Versioni aggiornate dell\'avviso saranno messe a disposizione dell\'Utente e l\'uso continuato del Sistema costituisce accettazione dei termini aggiornati.\n\nAccedendo e utilizzando il sistema di gestione e approvvigionamento della farmacia Duniya, accetti i termini e le condizioni descritti in questo avviso. Se non siete d\'accordo con questi termini, vi preghiamo di astenervi dall\'utilizzare il Sistema.',
       'nd': '',
       'pt': '',
       'sw':
-          'Mtoa Huduma anahifadhi haki ya kurekebisha masharti ya notisi hii wakati wowote. Matoleo yaliyosasishwa ya arifa yatatolewa kwa Mtumiaji, na kuendelea kutumia Mfumo kunajumuisha kukubali sheria na masharti yaliyosasishwa.\n\nKwa kufikia na kutumia Mfumo wa Usimamizi na Ununuzi wa Famasia ya MediTracker, unakubali sheria na masharti yaliyoainishwa katika notisi hii. Ikiwa hukubaliani na masharti haya, tafadhali epuka kutumia Mfumo.',
+          'Mtoa Huduma anahifadhi haki ya kurekebisha masharti ya notisi hii wakati wowote. Matoleo yaliyosasishwa ya arifa yatatolewa kwa Mtumiaji, na kuendelea kutumia Mfumo kunajumuisha kukubali sheria na masharti yaliyosasishwa.\n\nKwa kufikia na kutumia Mfumo wa Usimamizi na Ununuzi wa Famasia ya Duniya, unakubali sheria na masharti yaliyoainishwa katika notisi hii. Ikiwa hukubaliani na masharti haya, tafadhali epuka kutumia Mfumo.',
     },
     'ka9ytv0j': {
       'en': 'Last Updated: July 30, 2023',
@@ -4770,21 +4770,21 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
-          'Die MediTracker-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
+          'Die Duniya-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
-          'تم تصميم نظام MediTracker لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
+          'تم تصميم نظام Duniya لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
       'es':
-          'El sistema MediTracker está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
+          'El sistema Duniya está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
       'fr':
-          'Le système MediTracker est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
+          'Le système Duniya est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
       'hi':
           'मेडीट्रैकर सिस्टम को दक्षता और रोगी देखभाल बढ़ाने के अंतिम लक्ष्य के साथ फार्मेसी संचालन, इन्वेंट्री प्रबंधन और खरीद प्रक्रियाओं को अनुकूलित करने के लिए डिज़ाइन किया गया है।',
       'it':
-          'Il sistema MediTracker è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
+          'Il sistema Duniya è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
       'nd': '',
       'pt': '',
       'sw':
-          'Mfumo wa MediTracker umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
+          'Mfumo wa Duniya umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
     },
     'gny61ynu': {
       'en': '2. System Usage',
@@ -5058,21 +5058,21 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'The Provider reserves the right to amend the terms of this notice at any time. Updated versions of the notice will be made available to the User, and continued use of the System constitutes acceptance of the updated terms.\nBy accessing and using the Meditracker Pharmacy Management and Procurement System, you agree to the terms and conditions outlined in this notice. If you do not agree with these terms, please refrain from using the System.',
       'af':
-          'Die Verskaffer behou die reg voor om die bepalings van hierdie kennisgewing te eniger tyd te wysig. Opgedateerde weergawes van die kennisgewing sal aan die Gebruiker beskikbaar gestel word, en voortgesette gebruik van die Stelsel behels aanvaarding van die opgedateerde bepalings.\n\nDeur toegang tot en gebruik van die MediTracker Apteekbestuur- en verkrygingstelsel stem jy in tot die bepalings en voorwaardes wat in hierdie kennisgewing uiteengesit word. Indien u nie met hierdie bepalings saamstem nie, weerhou asseblief daarvan om die stelsel te gebruik.',
+          'Die Verskaffer behou die reg voor om die bepalings van hierdie kennisgewing te eniger tyd te wysig. Opgedateerde weergawes van die kennisgewing sal aan die Gebruiker beskikbaar gestel word, en voortgesette gebruik van die Stelsel behels aanvaarding van die opgedateerde bepalings.\n\nDeur toegang tot en gebruik van die Duniya Apteekbestuur- en verkrygingstelsel stem jy in tot die bepalings en voorwaardes wat in hierdie kennisgewing uiteengesit word. Indien u nie met hierdie bepalings saamstem nie, weerhou asseblief daarvan om die stelsel te gebruik.',
       'ar':
-          'يحتفظ المزود بالحق في تعديل شروط هذا الإشعار في أي وقت. سيتم توفير الإصدارات المحدثة من الإشعار للمستخدم ، ويشكل استمرار استخدام النظام قبولًا للشروط المحدثة.\n\nمن خلال الوصول إلى MediTracker Pharmacy Management and Procurement System ، فإنك توافق على الشروط والأحكام الموضحة في هذا الإشعار. إذا كنت لا توافق على هذه الشروط ، فيرجى الامتناع عن استخدام النظام.',
+          'يحتفظ المزود بالحق في تعديل شروط هذا الإشعار في أي وقت. سيتم توفير الإصدارات المحدثة من الإشعار للمستخدم ، ويشكل استمرار استخدام النظام قبولًا للشروط المحدثة.\n\nمن خلال الوصول إلى Duniya Pharmacy Management and Procurement System ، فإنك توافق على الشروط والأحكام الموضحة في هذا الإشعار. إذا كنت لا توافق على هذه الشروط ، فيرجى الامتناع عن استخدام النظام.',
       'es':
-          'El Proveedor se reserva el derecho de modificar los términos de este aviso en cualquier momento. Se pondrán a disposición del Usuario versiones actualizadas del aviso, y el uso continuado del Sistema constituye la aceptación de los términos actualizados.\n\nAl acceder y utilizar el Sistema de Adquisiciones y Administración de Farmacias de MediTracker, usted acepta los términos y condiciones descritos en este aviso. Si no está de acuerdo con estos términos, por favor absténgase de utilizar el Sistema.',
+          'El Proveedor se reserva el derecho de modificar los términos de este aviso en cualquier momento. Se pondrán a disposición del Usuario versiones actualizadas del aviso, y el uso continuado del Sistema constituye la aceptación de los términos actualizados.\n\nAl acceder y utilizar el Sistema de Adquisiciones y Administración de Farmacias de Duniya, usted acepta los términos y condiciones descritos en este aviso. Si no está de acuerdo con estos términos, por favor absténgase de utilizar el Sistema.',
       'fr':
-          'Le Prestataire se réserve le droit de modifier les termes de cet avis à tout moment. Des versions mises à jour de l\'avis seront mises à la disposition de l\'utilisateur, et l\'utilisation continue du système constitue une acceptation des conditions mises à jour.\n\nEn accédant et en utilisant le système de gestion et d\'approvisionnement en pharmacie MediTracker, vous acceptez les termes et conditions décrits dans cet avis. Si vous n\'êtes pas d\'accord avec ces conditions, veuillez vous abstenir d\'utiliser le système.',
+          'Le Prestataire se réserve le droit de modifier les termes de cet avis à tout moment. Des versions mises à jour de l\'avis seront mises à la disposition de l\'utilisateur, et l\'utilisation continue du système constitue une acceptation des conditions mises à jour.\n\nEn accédant et en utilisant le système de gestion et d\'approvisionnement en pharmacie Duniya, vous acceptez les termes et conditions décrits dans cet avis. Si vous n\'êtes pas d\'accord avec ces conditions, veuillez vous abstenir d\'utiliser le système.',
       'hi':
           'प्रदाता किसी भी समय इस नोटिस की शर्तों में संशोधन करने का अधिकार सुरक्षित रखता है। नोटिस के अद्यतन संस्करण उपयोगकर्ता को उपलब्ध कराए जाएंगे, और सिस्टम का निरंतर उपयोग अद्यतन शर्तों की स्वीकृति माना जाएगा।\n\nमेडीट्रैकर फार्मेसी प्रबंधन और खरीद प्रणाली तक पहुंच और उपयोग करके, आप इस नोटिस में उल्लिखित नियमों और शर्तों से सहमत हैं। यदि आप इन शर्तों से सहमत नहीं हैं, तो कृपया सिस्टम का उपयोग करने से बचें।',
       'it':
-          'Il Fornitore si riserva il diritto di modificare i termini del presente avviso in qualsiasi momento. Versioni aggiornate dell\'avviso saranno messe a disposizione dell\'Utente e l\'uso continuato del Sistema costituisce accettazione dei termini aggiornati.\n\nAccedendo e utilizzando il sistema di gestione e approvvigionamento della farmacia MediTracker, accetti i termini e le condizioni descritti in questo avviso. Se non siete d\'accordo con questi termini, vi preghiamo di astenervi dall\'utilizzare il Sistema.',
+          'Il Fornitore si riserva il diritto di modificare i termini del presente avviso in qualsiasi momento. Versioni aggiornate dell\'avviso saranno messe a disposizione dell\'Utente e l\'uso continuato del Sistema costituisce accettazione dei termini aggiornati.\n\nAccedendo e utilizzando il sistema di gestione e approvvigionamento della farmacia Duniya, accetti i termini e le condizioni descritti in questo avviso. Se non siete d\'accordo con questi termini, vi preghiamo di astenervi dall\'utilizzare il Sistema.',
       'nd': '',
       'pt': '',
       'sw':
-          'Mtoa Huduma anahifadhi haki ya kurekebisha masharti ya notisi hii wakati wowote. Matoleo yaliyosasishwa ya arifa yatatolewa kwa Mtumiaji, na kuendelea kutumia Mfumo kunajumuisha kukubali sheria na masharti yaliyosasishwa.\n\nKwa kufikia na kutumia Mfumo wa Usimamizi na Ununuzi wa Famasia ya MediTracker, unakubali sheria na masharti yaliyoainishwa katika notisi hii. Ikiwa hukubaliani na masharti haya, tafadhali epuka kutumia Mfumo.',
+          'Mtoa Huduma anahifadhi haki ya kurekebisha masharti ya notisi hii wakati wowote. Matoleo yaliyosasishwa ya arifa yatatolewa kwa Mtumiaji, na kuendelea kutumia Mfumo kunajumuisha kukubali sheria na masharti yaliyosasishwa.\n\nKwa kufikia na kutumia Mfumo wa Usimamizi na Ununuzi wa Famasia ya Duniya, unakubali sheria na masharti yaliyoainishwa katika notisi hii. Ikiwa hukubaliani na masharti haya, tafadhali epuka kutumia Mfumo.',
     },
   },
   // drugdetails
@@ -5627,21 +5627,21 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
-          'Die MediTracker-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
+          'Die Duniya-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
-          'تم تصميم نظام MediTracker لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
+          'تم تصميم نظام Duniya لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
       'es':
-          'El sistema MediTracker está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
+          'El sistema Duniya está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
       'fr':
-          'Le système MediTracker est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
+          'Le système Duniya est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
       'hi':
           'मेडीट्रैकर सिस्टम को दक्षता और रोगी देखभाल बढ़ाने के अंतिम लक्ष्य के साथ फार्मेसी संचालन, इन्वेंट्री प्रबंधन और खरीद प्रक्रियाओं को अनुकूलित करने के लिए डिज़ाइन किया गया है।',
       'it':
-          'Il sistema MediTracker è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
+          'Il sistema Duniya è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
       'nd': '',
       'pt': '',
       'sw':
-          'Mfumo wa MediTracker umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
+          'Mfumo wa Duniya umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
     },
     '8tib637l': {
       'en': '2. Refund Eligibility',
@@ -5915,21 +5915,21 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en':
           'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
-          'Die MediTracker-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
+          'Die Duniya-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
-          'تم تصميم نظام MediTracker لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
+          'تم تصميم نظام Duniya لتحسين عمليات الصيدلة وإدارة المخزون وعمليات الشراء ، بهدف نهائي هو تعزيز الكفاءة ورعاية المرضى.',
       'es':
-          'El sistema MediTracker está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
+          'El sistema Duniya está diseñado para optimizar las operaciones de farmacia, la gestión de inventario y los procesos de adquisición, con el objetivo final de mejorar la eficiencia y la atención al paciente.',
       'fr':
-          'Le système MediTracker est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
+          'Le système Duniya est conçu pour optimiser les opérations pharmaceutiques, la gestion des stocks et les processus d\'approvisionnement, dans le but ultime d\'améliorer l\'efficacité et les soins aux patients.',
       'hi':
           'मेडीट्रैकर सिस्टम को दक्षता और रोगी देखभाल बढ़ाने के अंतिम लक्ष्य के साथ फार्मेसी संचालन, इन्वेंट्री प्रबंधन और खरीद प्रक्रियाओं को अनुकूलित करने के लिए डिज़ाइन किया गया है।',
       'it':
-          'Il sistema MediTracker è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
+          'Il sistema Duniya è progettato per ottimizzare le operazioni farmaceutiche, la gestione dell\'inventario e i processi di approvvigionamento, con l\'obiettivo finale di migliorare l\'efficienza e la cura del paziente.',
       'nd': '',
       'pt': '',
       'sw':
-          'Mfumo wa MediTracker umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
+          'Mfumo wa Duniya umeundwa ili kuboresha shughuli za maduka ya dawa, usimamizi wa hesabu, na michakato ya ununuzi, kwa lengo kuu la kuimarisha ufanisi na utunzaji wa wagonjwa.',
     },
     '8niqzfnm': {
       'en': '2. Refund Eligibility',
@@ -8434,7 +8434,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // SideNav
   {
     'xzjjeekv': {
-      'en': 'MediTracker',
+      'en': 'Duniya',
       'af': 'Meditracker',
       'ar': 'Meditracker',
       'es': 'Meditracker',

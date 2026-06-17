@@ -1,16 +1,17 @@
 {
-  "name": "MediTracker",
-  "short_name": "MediTracker",
+  "name": "Duniya — Pharmacy Operations",
+  "short_name": "Duniya",
+  "description": "Duniya — pharmacy and inventory management for modern health teams. Works offline.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "background_color": "#F8F5FF",
-  "theme_color": "#8B5CF6",
-  "description": "Pharmacy and inventory management for modern health teams.",
-  "orientation": "portrait-primary",
+  "theme_color": "#9900FF",
+  "orientation": "any",
   "lang": "en",
   "dir": "ltr",
+  "categories": ["medical", "productivity", "business"],
   "prefer_related_applications": false,
   "icons": [
     {
@@ -23,7 +24,13 @@
       "src": "icons/Icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icons/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

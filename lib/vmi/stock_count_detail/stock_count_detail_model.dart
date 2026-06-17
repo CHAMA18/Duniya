@@ -32,6 +32,11 @@ class StockCountDetailModel extends FlutterFlowModel<StockCountDetailWidget> {
   Map<String, TextEditingController> countedQtyControllers = {};
   Map<String, FocusNode> countedQtyFocusNodes = {};
 
+  // State field(s) for Search bar.
+  FocusNode? searchFocusNode;
+  TextEditingController? searchTextController;
+  String? searchValue;
+
   @override
   void initState(BuildContext context) {
     sideNavModel = createModel(context, () => SideNavModel());
@@ -46,6 +51,8 @@ class StockCountDetailModel extends FlutterFlowModel<StockCountDetailWidget> {
     mobileNavbarModel.dispose();
     notesFocusNode?.dispose();
     notesTextController?.dispose();
+    searchFocusNode?.dispose();
+    searchTextController?.dispose();
     for (var controller in countedQtyControllers.values) {
       controller.dispose();
     }

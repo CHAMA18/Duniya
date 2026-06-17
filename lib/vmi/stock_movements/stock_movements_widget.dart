@@ -1248,169 +1248,682 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     _model.dialogQtyTextController ??= TextEditingController();
     _model.dialogReasonTextController ??= TextEditingController();
     _model.dialogReferenceTextController ??= TextEditingController();
+
+    final theme = FlutterFlowTheme.of(context);
+
     showDialog(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: Text('Add Stock Movement'),
-          content: Container(
-            width:
-                MediaQuery.sizeOf(context).width > 500 ? 500 : double.infinity,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  StreamBuilder<List<ProductMasterRecord>>(
-                    stream: queryProductMasterRecord(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return SpinKitRing(
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 20.0);
-                      }
-                      return FlutterFlowDropDown<String>(
-                        controller: _model.dialogProductValueController ??=
-                            FormFieldController<String>(null),
-                        options: snapshot.data!.map((p) => p.name).toList(),
-                        onChanged: (val) =>
-                            safeSetState(() => _model.dialogProductValue = val),
-                        width: double.infinity,
-                        height: 44.0,
-                        textStyle: FlutterFlowTheme.of(context).bodyMedium,
-                        hintText: 'Select Product',
-                        fillColor:
-                            FlutterFlowTheme.of(context).secondaryBackground,
-                        borderColor: FlutterFlowTheme.of(context).alternate,
-                        borderRadius: 8.0,
-                        elevation: 2,
-                        borderWidth: 1.0,
-                        margin: EdgeInsets.zero,
-                      );
-                    },
-                  ),
-                  SizedBox(height: 12.0),
-                  TextFormField(
-                    controller: _model.dialogQtyTextController,
-                    focusNode: _model.dialogQtyFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'Quantity',
-                      filled: true,
-                      fillColor:
-                          FlutterFlowTheme.of(context).secondaryBackground,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(
+              horizontal: 24.0, vertical: 24.0),
+          child: StatefulBuilder(
+            builder: (context, setDialogState) {
+              final productSelected = _model.dialogProductValue != null &&
+                  (_model.dialogProductValue ?? '').isNotEmpty;
+              final qtyText = _model.dialogQtyTextController?.text ?? '';
+              final qtyValid = int.tryParse(qtyText) != null &&
+                  int.parse(qtyText) > 0;
+              final typeSelected = _model.dialogMovementTypeValue != null &&
+                  (_model.dialogMovementTypeValue ?? '').isNotEmpty;
+              final canSave = productSelected && qtyValid && typeSelected;
+
+              final movementTypes = <Map<String, dynamic>>[
+                {
+                  'type': 'RECEIVED',
+                  'icon': Icons.south_west_rounded,
+                  'color': const Color(0xFF10B981),
+                  'bgColor': const Color(0xFFD1FAE5),
+                  'desc': 'Stock coming in',
+                },
+                {
+                  'type': 'SOLD',
+                  'icon': Icons.north_east_rounded,
+                  'color': const Color(0xFFEF4444),
+                  'bgColor': const Color(0xFFFEE2E2),
+                  'desc': 'Stock going out (sale)',
+                },
+                {
+                  'type': 'TRANSFERRED',
+                  'icon': Icons.swap_horiz_rounded,
+                  'color': const Color(0xFF2563EB),
+                  'bgColor': const Color(0xFFDBEAFE),
+                  'desc': 'Move between locations',
+                },
+                {
+                  'type': 'ADJUSTMENT',
+                  'icon': Icons.tune_rounded,
+                  'color': const Color(0xFFF59E0B),
+                  'bgColor': const Color(0xFFFEF3C7),
+                  'desc': 'Correct discrepancies',
+                },
+              ];
+
+              return Container(
+                width: MediaQuery.sizeOf(context).width > 600
+                    ? 560.0
+                    : double.infinity,
+                constraints: const BoxConstraints(maxWidth: 560.0),
+                decoration: BoxDecoration(
+                  color: theme.secondaryBackground,
+                  borderRadius: BorderRadius.circular(24.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF111827).withAlpha(40),
+                      blurRadius: 32.0,
+                      offset: const Offset(0, 16),
                     ),
-                    keyboardType: TextInputType.number,
-                    style: FlutterFlowTheme.of(context).bodyMedium,
-                  ),
-                  SizedBox(height: 12.0),
-                  FlutterFlowDropDown<String>(
-                    controller: _model.dialogMovementTypeValueController ??=
-                        FormFieldController<String>(null),
-                    options: ['RECEIVED', 'SOLD', 'TRANSFERRED', 'ADJUSTMENT'],
-                    onChanged: (val) => safeSetState(
-                        () => _model.dialogMovementTypeValue = val),
-                    width: double.infinity,
-                    height: 44.0,
-                    textStyle: FlutterFlowTheme.of(context).bodyMedium,
-                    hintText: 'Movement Type',
-                    fillColor: FlutterFlowTheme.of(context).secondaryBackground,
-                    borderColor: FlutterFlowTheme.of(context).alternate,
-                    borderRadius: 8.0,
-                    elevation: 2,
-                    borderWidth: 1.0,
-                    margin: EdgeInsets.zero,
-                  ),
-                  SizedBox(height: 12.0),
-                  TextFormField(
-                    controller: _model.dialogReasonTextController,
-                    focusNode: _model.dialogReasonFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'Reason (optional)',
-                      filled: true,
-                      fillColor:
-                          FlutterFlowTheme.of(context).secondaryBackground,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Hero header
+                    Container(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          24.0, 22.0, 20.0, 20.0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [theme.primary, theme.secondary],
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(24.0),
+                          topRight: Radius.circular(24.0),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44.0,
+                            height: 44.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(30),
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                color: Colors.white.withAlpha(60),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.swap_vert_rounded,
+                              color: Colors.white,
+                              size: 22.0,
+                            ),
+                          ),
+                          const SizedBox(width: 14.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Add Stock Movement',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                                const SizedBox(height: 2.0),
+                                Text(
+                                  'Record inventory movements with full audit trail',
+                                  style: TextStyle(
+                                    color: Colors.white.withAlpha(200),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.pop(dialogContext),
+                            icon: Icon(Icons.close_rounded,
+                                color: Colors.white.withAlpha(200),
+                                size: 20.0),
+                          ),
+                        ],
+                      ),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyMedium,
-                  ),
-                  SizedBox(height: 12.0),
-                  TextFormField(
-                    controller: _model.dialogReferenceTextController,
-                    focusNode: _model.dialogReferenceFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'Reference (optional)',
-                      filled: true,
-                      fillColor:
-                          FlutterFlowTheme.of(context).secondaryBackground,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
+                    // Body
+                    Flexible(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            24.0, 22.0, 24.0, 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _dialogFieldLabel(
+                              label: 'Product',
+                              icon: Icons.medication_rounded,
+                              required_: true,
+                              theme: theme,
+                            ),
+                            const SizedBox(height: 8.0),
+                            StreamBuilder<List<ProductMasterRecord>>(
+                              stream: queryProductMasterRecord(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return _dialogDropdownPlaceholder(
+                                      'Loading products…', theme);
+                                }
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: theme.primaryBackground,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    border: Border.all(
+                                      color: productSelected
+                                          ? theme.primary
+                                          : theme.alternate,
+                                      width: productSelected ? 1.5 : 1.0,
+                                    ),
+                                  ),
+                                  child: FlutterFlowDropDown<String>(
+                                    controller:
+                                        _model.dialogProductValueController ??=
+                                            FormFieldController<String>(null),
+                                    options: snapshot.data!
+                                        .map((p) => p.name)
+                                        .toList(),
+                                    onChanged: (val) => setDialogState(() =>
+                                        _model.dialogProductValue = val),
+                                    width: double.infinity,
+                                    height: 48.0,
+                                    textStyle: theme.bodyMedium.override(
+                                      fontFamily: theme.bodyMediumFamily,
+                                      letterSpacing: 0.0,
+                                      useGoogleFonts:
+                                          !theme.bodyMediumIsCustom,
+                                    ),
+                                    hintText: 'Select a product',
+                                    fillColor: theme.primaryBackground,
+                                    borderColor: Colors.transparent,
+                                    borderRadius: 12.0,
+                                    elevation: 2,
+                                    borderWidth: 0.0,
+                                    margin: EdgeInsets.zero,
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 18.0),
+                            _dialogFieldLabel(
+                              label: 'Movement Type',
+                              icon: Icons.category_rounded,
+                              required_: true,
+                              theme: theme,
+                            ),
+                            const SizedBox(height: 8.0),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: movementTypes.map((mt) {
+                                final type = mt['type'] as String;
+                                final icon = mt['icon'] as IconData;
+                                final color = mt['color'] as Color;
+                                final bgColor = mt['bgColor'] as Color;
+                                final desc = mt['desc'] as String;
+                                final selected =
+                                    _model.dialogMovementTypeValue == type;
+                                return GestureDetector(
+                                  onTap: () => setDialogState(() =>
+                                      _model.dialogMovementTypeValue = type),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 150),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0, vertical: 10.0),
+                                    decoration: BoxDecoration(
+                                      color: selected
+                                          ? color
+                                          : theme.primaryBackground,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      border: Border.all(
+                                        color: selected
+                                            ? color
+                                            : theme.alternate,
+                                        width: selected ? 1.5 : 1.0,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 28.0,
+                                          height: 28.0,
+                                          decoration: BoxDecoration(
+                                            color: selected
+                                                ? Colors.white.withAlpha(40)
+                                                : bgColor,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          child: Icon(icon,
+                                              color: selected
+                                                  ? Colors.white
+                                                  : color,
+                                              size: 16.0),
+                                        ),
+                                        const SizedBox(width: 8.0),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              type,
+                                              style: TextStyle(
+                                                color: selected
+                                                    ? Colors.white
+                                                    : theme.primaryText,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.3,
+                                              ),
+                                            ),
+                                            Text(
+                                              desc,
+                                              style: TextStyle(
+                                                color: selected
+                                                    ? Colors.white
+                                                        .withAlpha(200)
+                                                    : theme.secondaryText,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 18.0),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _dialogFieldLabel(
+                                        label: 'Quantity',
+                                        icon: Icons.inventory_rounded,
+                                        required_: true,
+                                        theme: theme,
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      TextFormField(
+                                        controller:
+                                            _model.dialogQtyTextController,
+                                        focusNode:
+                                            _model.dialogQtyFocusNode,
+                                        keyboardType: TextInputType.number,
+                                        decoration: _dialogInputDecoration(
+                                          theme,
+                                          hint: '0',
+                                          valid: qtyValid ||
+                                              qtyText.isEmpty,
+                                        ),
+                                        style: theme.bodyMedium.override(
+                                          fontFamily: theme.bodyMediumFamily,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18.0,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !theme.bodyMediumIsCustom,
+                                        ),
+                                        onChanged: (_) =>
+                                            setDialogState(() {}),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _dialogFieldLabel(
+                                        label: 'Reference',
+                                        icon: Icons.link_rounded,
+                                        required_: false,
+                                        theme: theme,
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      TextFormField(
+                                        controller:
+                                            _model.dialogReferenceTextController,
+                                        focusNode:
+                                            _model.dialogReferenceFocusNode,
+                                        decoration: _dialogInputDecoration(
+                                          theme,
+                                          hint: 'e.g. GRN-2026-001',
+                                          valid: true,
+                                        ),
+                                        style: theme.bodyMedium.override(
+                                          fontFamily: theme.bodyMediumFamily,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !theme.bodyMediumIsCustom,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 18.0),
+                            _dialogFieldLabel(
+                              label: 'Reason',
+                              icon: Icons.note_outlined,
+                              required_: false,
+                              theme: theme,
+                            ),
+                            const SizedBox(height: 8.0),
+                            TextFormField(
+                              controller: _model.dialogReasonTextController,
+                              focusNode: _model.dialogReasonFocusNode,
+                              maxLines: 2,
+                              decoration: _dialogInputDecoration(
+                                theme,
+                                hint: 'Add context for auditors…',
+                                valid: true,
+                              ),
+                              style: theme.bodyMedium.override(
+                                fontFamily: theme.bodyMediumFamily,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !theme.bodyMediumIsCustom,
+                              ),
+                            ),
+                            if (!canSave &&
+                                (qtyText.isNotEmpty ||
+                                    productSelected ||
+                                    typeSelected))
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.info_outline_rounded,
+                                        size: 14.0,
+                                        color: const Color(0xFFF59E0B)),
+                                    const SizedBox(width: 6.0),
+                                    Expanded(
+                                      child: Text(
+                                        !productSelected
+                                            ? 'Please select a product'
+                                            : !typeSelected
+                                                ? 'Please choose a movement type'
+                                                : !qtyValid
+                                                    ? 'Quantity must be a positive number'
+                                                    : '',
+                                        style: const TextStyle(
+                                          color: Color(0xFFF59E0B),
+                                          fontSize: 11.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyMedium,
-                  ),
-                ],
-              ),
-            ),
+                    // Footer
+                    Container(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          24.0, 14.0, 20.0, 16.0),
+                      decoration: BoxDecoration(
+                        color: theme.primaryBackground,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(24.0),
+                          bottomRight: Radius.circular(24.0),
+                        ),
+                        border: Border(
+                          top: BorderSide(
+                              color: theme.alternate, width: 1.0),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              canSave
+                                  ? 'Ready to record movement'
+                                  : 'Complete required fields to save',
+                              style: TextStyle(
+                                color: canSave
+                                    ? const Color(0xFF10B981)
+                                    : theme.secondaryText,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(dialogContext),
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 12.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: theme.secondaryText,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          FFButtonWidget(
+                            onPressed: canSave
+                                ? () async {
+                                    final products =
+                                        await queryProductMasterRecordOnce();
+                                    final product = products.firstWhere(
+                                      (p) => p.name ==
+                                          _model.dialogProductValue,
+                                      orElse: () => products.first,
+                                    );
+                                    final userDoc = currentUserDocument;
+                                    if (userDoc == null) return;
+                                    final DocumentReference ownerRef;
+                                    if (valueOrDefault(
+                                            userDoc.role, '') ==
+                                        'Owner') {
+                                      final ref = currentUserReference;
+                                      if (ref == null) return;
+                                      ownerRef = ref;
+                                    } else {
+                                      final ref = userDoc.ownerRef;
+                                      if (ref == null) return;
+                                      ownerRef = ref;
+                                    }
+                                    await StockMovementRecord.createDoc(
+                                            ownerRef)
+                                        .set(createStockMovementRecordData(
+                                      productId: product.reference,
+                                      quantity: int.tryParse(
+                                              _model.dialogQtyTextController
+                                                      ?.text ??
+                                                  '0') ??
+                                          0,
+                                      movementType:
+                                          _model.dialogMovementTypeValue,
+                                      reason: _model
+                                          .dialogReasonTextController?.text,
+                                      movementReference: _model
+                                          .dialogReferenceTextController?.text,
+                                      recordedById: currentUserReference,
+                                      createdAt: getCurrentTimestamp,
+                                    ));
+                                    _model.dialogQtyTextController?.clear();
+                                    _model.dialogReasonTextController?.clear();
+                                    _model.dialogReferenceTextController
+                                        ?.clear();
+                                    Navigator.pop(dialogContext);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Row(
+                                          children: [
+                                            const Icon(
+                                                Icons.check_circle_rounded,
+                                                color: Colors.white,
+                                                size: 18.0),
+                                            const SizedBox(width: 8.0),
+                                            const Expanded(
+                                              child: Text(
+                                                  'Stock movement recorded successfully'),
+                                            ),
+                                          ],
+                                        ),
+                                        backgroundColor: theme.primary,
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        margin: const EdgeInsets.all(16.0),
+                                        duration:
+                                            const Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                : null,
+                            text: 'Save Movement',
+                            icon: const Icon(Icons.check_rounded, size: 16.0),
+                            options: FFButtonOptions(
+                              height: 44.0,
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  20.0, 0.0, 20.0, 0.0),
+                              color: theme.primary,
+                              textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              elevation: 0.0,
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text('Cancel'),
-            ),
-            FFButtonWidget(
-              onPressed: () async {
-                final products = await queryProductMasterRecordOnce();
-                final product = products.firstWhere(
-                  (p) => p.name == _model.dialogProductValue,
-                  orElse: () => products.first,
-                );
-                final ownerRef =
-                    valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-                        ? currentUserReference!
-                        : currentUserDocument!.ownerRef!;
-                await StockMovementRecord.createDoc(ownerRef)
-                    .set(createStockMovementRecordData(
-                  productId: product.reference,
-                  quantity: int.tryParse(
-                          _model.dialogQtyTextController?.text ?? '0') ??
-                      0,
-                  movementType: _model.dialogMovementTypeValue,
-                  reason: _model.dialogReasonTextController?.text,
-                  movementReference: _model.dialogReferenceTextController?.text,
-                  recordedById: currentUserReference,
-                  createdAt: getCurrentTimestamp,
-                ));
-                _model.dialogQtyTextController?.clear();
-                _model.dialogReasonTextController?.clear();
-                _model.dialogReferenceTextController?.clear();
-                Navigator.pop(dialogContext);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text('Stock movement recorded successfully')),
-                );
-              },
-              text: 'Save',
-              options: FFButtonOptions(
-                height: 40.0,
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                color: FlutterFlowTheme.of(context).primary,
-                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                      fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
-                      color: Colors.white,
-                      letterSpacing: 0.0,
-                      useGoogleFonts:
-                          !FlutterFlowTheme.of(context).titleSmallIsCustom,
-                    ),
-                elevation: 0.0,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-          ],
         );
       },
     );
   }
+
+  Widget _dialogFieldLabel({
+    required String label,
+    required IconData icon,
+    required bool required_,
+    required FlutterFlowTheme theme,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, color: theme.secondaryText, size: 13.0),
+        const SizedBox(width: 6.0),
+        Text(
+          label,
+          style: theme.bodyMedium.override(
+            fontFamily: theme.bodyMediumFamily,
+            fontWeight: FontWeight.w600,
+            fontSize: 12.0,
+            letterSpacing: 0.0,
+            useGoogleFonts: !theme.bodyMediumIsCustom,
+          ),
+        ),
+        if (required_) ...[
+          const SizedBox(width: 2.0),
+          const Text(
+            ' *',
+            style: TextStyle(
+              color: Color(0xFFEF4444),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  InputDecoration _dialogInputDecoration(FlutterFlowTheme theme,
+      {required String hint, required bool valid}) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: theme.bodySmall.override(
+        fontFamily: theme.bodySmallFamily,
+        color: theme.secondaryText,
+        letterSpacing: 0.0,
+        useGoogleFonts: !theme.bodySmallIsCustom,
+      ),
+      filled: true,
+      fillColor: theme.primaryBackground,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+            color: valid ? theme.alternate : const Color(0xFFEF4444),
+            width: 1.0),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: theme.primary, width: 1.5),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
+    );
+  }
+
+  Widget _dialogDropdownPlaceholder(String label, FlutterFlowTheme theme) {
+    return Container(
+      height: 48.0,
+      decoration: BoxDecoration(
+        color: theme.primaryBackground,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: theme.alternate, width: 1.0),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 14.0),
+          Text(label, style: theme.bodySmall),
+          const Spacer(),
+          SizedBox(
+            width: 16.0,
+            height: 16.0,
+            child: SpinKitRing(
+              color: theme.primary,
+              size: 16.0,
+              lineWidth: 2.0,
+            ),
+          ),
+          const SizedBox(width: 14.0),
+        ],
+      ),
+    );
+  }
+
 }
 
 // ═══════════════════════════════════════════════════════════

@@ -588,16 +588,19 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                         .doc(user.uid)
                                                         .set(
                                                             createUserRecordData(
-                                                          email: user.email,
-                                                          displayName:
-                                                              user.displayName,
-                                                          photoUrl:
-                                                              user.photoURL,
-                                                          uid: user.uid,
-                                                          createdTime:
-                                                              getCurrentTimestamp,
-                                                          role: 'Owner',
-                                                        ));
+                                                      email: user.email,
+                                                      displayName:
+                                                          user.displayName,
+                                                      photoUrl: user.photoURL,
+                                                      uid: user.uid,
+                                                      createdTime:
+                                                          getCurrentTimestamp,
+                                                      role: 'Owner',
+                                                      accountType:
+                                                          _selectedMode == 0
+                                                              ? 'Duniya'
+                                                              : 'Pharmacy',
+                                                    ));
                                                   }
 
                                                   await showModalBottomSheet(
@@ -864,6 +867,10 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                   createdTime:
                                                       getCurrentTimestamp,
                                                   role: 'Owner',
+                                                  accountType:
+                                                      _selectedMode == 0
+                                                          ? 'Duniya'
+                                                          : 'Pharmacy',
                                                   displayName:
                                                       displayName.isNotEmpty
                                                           ? displayName

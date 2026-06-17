@@ -15,7 +15,12 @@ import 'sales_vmi_model.dart';
 export 'sales_vmi_model.dart';
 
 class SalesVMIWidget extends StatefulWidget {
-  const SalesVMIWidget({super.key});
+  const SalesVMIWidget({
+    super.key,
+    this.pharmacy,
+  });
+
+  final String? pharmacy;
 
   static String routeName = 'SalesVMI';
   static String routePath = '/salesVMI';
@@ -416,7 +421,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                 double totalRevenue = sales.fold(
                                     0.0,
                                     (sum, s) =>
-                                        sum + (s.totalAmount ?? 0.0));
+                                        sum + s.totalAmount);
                                 final today = DateTime.now();
                                 final todaySales = sales.where((s) {
                                   if (s.saleDate == null) return false;
@@ -433,7 +438,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                           s.saleDate!.day == today.day;
                                     })
                                     .fold(0.0,
-                                        (sum, s) => sum + (s.totalAmount ?? 0.0));
+                                        (sum, s) => sum + s.totalAmount);
                                 double avgSale = totalSales > 0
                                     ? totalRevenue / totalSales
                                     : 0.0;
@@ -557,6 +562,15 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                   .receipt_long_rounded,
                                               color: _primary,
                                               bgColor: _light.withOpacity(0.5),
+                                            ),
+                                            _buildKpiCard(
+                                              title: 'Today\'s Sales',
+                                              value: '$todaySales',
+                                              icon: Icons
+                                                  .today_outlined,
+                                              color: const Color(0xFF10B981),
+                                              bgColor:
+                                                  const Color(0xFFD1FAE5),
                                             ),
                                             _buildKpiCard(
                                               title: 'Today\'s Revenue',
@@ -1029,11 +1043,40 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                 FFButtonWidget(
                   onPressed: () async {
                     if (_saleLineItems.isEmpty) return;
-                    final ownerRef =
-                        valueOrDefault(currentUserDocument?.role, '') ==
-                                'Owner'
-                            ? currentUserReference!
-                            : currentUserDocument!.ownerRef!;
+                    // Null-safe owner ref resolution — prevents crash
+                    // when currentUserDocument or ownerRef is null.
+                    final userDoc = currentUserDocument;
+                    final DocumentReference ownerRef;
+                    if (userDoc == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text(
+                                'User profile not loaded yet. Please try again in a moment.')),
+                      );
+                      return;
+                    }
+                    if (valueOrDefault(userDoc.role, '') == 'Owner') {
+                      final ref = currentUserReference;
+                      if (ref == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Unable to identify your account.')),
+                        );
+                        return;
+                      }
+                      ownerRef = ref;
+                    } else {
+                      final ref = userDoc.ownerRef;
+                      if (ref == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  'No owner pharmacy is linked to your account. Please contact your administrator.')),
+                        );
+                        return;
+                      }
+                      ownerRef = ref;
+                    }
 
                     double totalAmount = _saleLineItems.fold(
                         0.0, (sum, item) => sum + (item['total'] as double));

@@ -25,6 +25,16 @@ class GoodsReceivedModel extends FlutterFlowModel<GoodsReceivedWidget> {
   String? statusValue;
   FormFieldController<String>? statusValueController;
 
+  // State field(s) for Period dropdown.
+  String? periodValue;
+  FormFieldController<String>? periodValueController;
+
+  // State field(s) for Search bar.
+  FocusNode? searchFocusNode;
+  TextEditingController? searchTextController;
+  String? searchValue;
+  String? Function(BuildContext, String?)? searchTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     sideNavModel = createModel(context, () => SideNavModel());
@@ -37,5 +47,7 @@ class GoodsReceivedModel extends FlutterFlowModel<GoodsReceivedWidget> {
     sideNavModel.dispose();
     topNavModel.dispose();
     mobileNavbarModel.dispose();
+    searchFocusNode?.dispose();
+    searchTextController?.dispose();
   }
 }
