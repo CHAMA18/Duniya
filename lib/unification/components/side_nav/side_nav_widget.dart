@@ -20,9 +20,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
 
   /// Returns true if the current user is a Duniya network admin.
   /// Pharmacy users see operational items; Duniya users see network items.
-  bool get _isDuniyaUser =>
-      currentUserDocument == null ? false :
-      valueOrDefault(currentUserDocument?.accountType, 'Duniya') == 'Duniya';
+  bool get _isDuniyaUser => currentUserDocument == null
+      ? false
+      : valueOrDefault(currentUserDocument?.accountType, 'Duniya') == 'Duniya';
 
   @override
   void setState(VoidCallback callback) {
@@ -166,9 +166,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // My Pharmacies (Owner only, Pharmacy users only)
-                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner' &&
-                    !_isDuniyaUser)
+                // My Pharmacies (Owner only)
+                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
                   AuthUserStreamWidget(
                     builder: (context) => InkWell(
                       splashColor: Colors.transparent,
@@ -213,9 +212,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Human Resource (Owner only, Pharmacy users only)
-                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner' &&
-                    !_isDuniyaUser)
+                // Human Resource (Owner only)
+                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
                   AuthUserStreamWidget(
                     builder: (context) => InkWell(
                       splashColor: Colors.transparent,
@@ -260,7 +258,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                if (!_isDuniyaUser)
                 // Finances
                 InkWell(
                   splashColor: Colors.transparent,
@@ -372,7 +369,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                if (!_isDuniyaUser)
                 // Store Inventory
                 InkWell(
                   splashColor: Colors.transparent,
@@ -414,7 +410,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Product Catalogue
                 InkWell(
                   splashColor: Colors.transparent,
@@ -457,7 +452,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Stock Balances
                 InkWell(
                   splashColor: Colors.transparent,
@@ -505,7 +499,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Stock Movements
                 InkWell(
                   splashColor: Colors.transparent,
@@ -553,7 +546,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Stock Counts
                 InkWell(
                   splashColor: Colors.transparent,
@@ -625,7 +617,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                if (!_isDuniyaUser)
                 // Goods Received
                 InkWell(
                   splashColor: Colors.transparent,
@@ -673,7 +664,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Sales / Dispensing
                 InkWell(
                   splashColor: Colors.transparent,
@@ -722,7 +712,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Batch & Expiry
                 InkWell(
                   splashColor: Colors.transparent,
@@ -770,7 +759,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (!_isDuniyaUser)
                 // Low Stock Alerts
                 InkWell(
                   splashColor: Colors.transparent,
@@ -812,7 +800,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                if (_isDuniyaUser)
                 // Replenishment
                 InkWell(
                   splashColor: Colors.transparent,
@@ -964,152 +951,163 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                         ),
                       ),
 
-                // ═══ DUNIYA NETWORK SECTION (Duniya users only) ═══
-                if (_isDuniyaUser)
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(
-                        16.0, 20.0, 0.0, 8.0),
-                    child: Text(
-                      'DUNIYA NETWORK',
-                      style: FlutterFlowTheme.of(context).labelSmall.override(
-                            fontFamily:
-                                FlutterFlowTheme.of(context).labelSmallFamily,
-                            color: FlutterFlowTheme.of(context).alternate,
-                            letterSpacing: 1.2,
-                            fontWeight: FontWeight.w600,
-                            useGoogleFonts: !FlutterFlowTheme.of(context)
-                                .labelSmallIsCustom,
+                      // ═══ DUNIYA NETWORK SECTION (Duniya users only) ═══
+                      if (_isDuniyaUser)
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              16.0, 20.0, 0.0, 8.0),
+                          child: Text(
+                            'DUNIYA NETWORK',
+                            style: FlutterFlowTheme.of(context)
+                                .labelSmall
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .labelSmallFamily,
+                                  color: FlutterFlowTheme.of(context).alternate,
+                                  letterSpacing: 1.2,
+                                  fontWeight: FontWeight.w600,
+                                  useGoogleFonts: !FlutterFlowTheme.of(context)
+                                      .labelSmallIsCustom,
+                                ),
                           ),
-                    ),
-                  ),
-                // Duniya Pharmacies
-                if (_isDuniyaUser)
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      logFirebaseEvent('SIDE_NAV_Duniya_Pharmacies_ON_TAP');
-                      logFirebaseEvent('SidebarLink_navigate_to');
-                      context.goNamed(DuniyaPharmaciesWidget.routeName);
-                      logFirebaseEvent('SidebarLink_update_app_state');
-                      FFAppState().SelectedPage = 'Duniya Pharmacies';
-                    },
-                    child: wrapWithModel(
-                      model: _model.sidebarLinkModel15,
-                      updateCallback: () => safeSetState(() {}),
-                      child: SidebarLinkWidget(
-                        linkText: 'Duniya Pharmacies',
-                        activeIcon: Icon(
-                          Icons.domain_rounded,
-                          color: FlutterFlowTheme.of(context).primary,
                         ),
-                        inactiveIcon: Icon(
-                          Icons.domain_outlined,
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                      // Duniya Pharmacies
+                      if (_isDuniyaUser)
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_Duniya_Pharmacies_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+                            context.goNamed(DuniyaPharmaciesWidget.routeName);
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Duniya Pharmacies';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModel15,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Duniya Pharmacies',
+                              activeIcon: Icon(
+                                Icons.domain_rounded,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.domain_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Duniya Pharmacies',
+                            ),
+                          ),
                         ),
-                        isActive: FFAppState().SelectedPage ==
-                            'Duniya Pharmacies',
-                      ),
-                    ),
-                  ),
-                // Stock Balance Visibility
-                if (_isDuniyaUser)
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      logFirebaseEvent('SIDE_NAV_Stock_Visibility_ON_TAP');
-                      logFirebaseEvent('SidebarLink_navigate_to');
-                      context.goNamed(DuniyaStockBalancesWidget.routeName);
-                      logFirebaseEvent('SidebarLink_update_app_state');
-                      FFAppState().SelectedPage = 'Stock Balance Visibility';
-                    },
-                    child: wrapWithModel(
-                      model: _model.sidebarLinkModel16,
-                      updateCallback: () => safeSetState(() {}),
-                      child: SidebarLinkWidget(
-                        linkText: 'Stock Balance Visibility',
-                        activeIcon: Icon(
-                          Icons.visibility_rounded,
-                          color: FlutterFlowTheme.of(context).primary,
+                      // Stock Balance Visibility
+                      if (_isDuniyaUser)
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_Stock_Visibility_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+                            context
+                                .goNamed(DuniyaStockBalancesWidget.routeName);
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage =
+                                'Stock Balance Visibility';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModel16,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Stock Balance Visibility',
+                              activeIcon: Icon(
+                                Icons.visibility_rounded,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.visibility_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Stock Balance Visibility',
+                            ),
+                          ),
                         ),
-                        inactiveIcon: Icon(
-                          Icons.visibility_outlined,
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                      // Onboarding Requests
+                      if (_isDuniyaUser)
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent('SIDE_NAV_Onboarding_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+                            context.goNamed(OnboardingRequestsWidget.routeName);
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Onboarding Requests';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModel17,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Onboarding Requests',
+                              activeIcon: Icon(
+                                Icons.pending_actions_rounded,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.pending_actions_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Onboarding Requests',
+                            ),
+                          ),
                         ),
-                        isActive: FFAppState().SelectedPage ==
-                            'Stock Balance Visibility',
-                      ),
-                    ),
-                  ),
-                // Onboarding Requests
-                if (_isDuniyaUser)
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      logFirebaseEvent('SIDE_NAV_Onboarding_ON_TAP');
-                      logFirebaseEvent('SidebarLink_navigate_to');
-                      context.goNamed(OnboardingRequestsWidget.routeName);
-                      logFirebaseEvent('SidebarLink_update_app_state');
-                      FFAppState().SelectedPage = 'Onboarding Requests';
-                    },
-                    child: wrapWithModel(
-                      model: _model.sidebarLinkModel17,
-                      updateCallback: () => safeSetState(() {}),
-                      child: SidebarLinkWidget(
-                        linkText: 'Onboarding Requests',
-                        activeIcon: Icon(
-                          Icons.pending_actions_rounded,
-                          color: FlutterFlowTheme.of(context).primary,
+                      // Network Analytics
+                      if (_isDuniyaUser)
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_Network_Analytics_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+                            context.goNamed(NetworkAnalyticsWidget.routeName);
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Network Analytics';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModel8,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Network Analytics',
+                              activeIcon: Icon(
+                                Icons.analytics_rounded,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.analytics_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Network Analytics',
+                            ),
+                          ),
                         ),
-                        inactiveIcon: Icon(
-                          Icons.pending_actions_outlined,
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                        ),
-                        isActive: FFAppState().SelectedPage ==
-                            'Onboarding Requests',
-                      ),
-                    ),
-                  ),
-                // Network Analytics
-                if (_isDuniyaUser)
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      logFirebaseEvent('SIDE_NAV_Network_Analytics_ON_TAP');
-                      logFirebaseEvent('SidebarLink_navigate_to');
-                      context.goNamed(NetworkAnalyticsWidget.routeName);
-                      logFirebaseEvent('SidebarLink_update_app_state');
-                      FFAppState().SelectedPage = 'Network Analytics';
-                    },
-                    child: wrapWithModel(
-                      model: _model.sidebarLinkModel8,
-                      updateCallback: () => safeSetState(() {}),
-                      child: SidebarLinkWidget(
-                        linkText: 'Network Analytics',
-                        activeIcon: Icon(
-                          Icons.analytics_rounded,
-                          color: FlutterFlowTheme.of(context).primary,
-                        ),
-                        inactiveIcon: Icon(
-                          Icons.analytics_outlined,
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                        ),
-                        isActive: FFAppState().SelectedPage ==
-                            'Network Analytics',
-                      ),
-                    ),
-                  ),
 
                       // Settings
                       InkWell(
