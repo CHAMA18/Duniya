@@ -110,7 +110,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 32.0, vertical: 24.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // ═══ HEADER ═══
                               _buildPageHeader(
@@ -830,26 +830,14 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               ),
             ),
             // Table
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: constraints.maxWidth,
-                    ),
-                    child: _buildTable(
-                      pageMovements,
-                      productMap,
-                      theme,
-                      primaryColor,
-                      onSurface,
-                      onSurfaceVariant,
-                      outlineVariant,
-                    ),
-                  ),
-                );
-              },
+            _buildTable(
+              pageMovements,
+              productMap,
+              theme,
+              primaryColor,
+              onSurface,
+              onSurfaceVariant,
+              outlineVariant,
             ),
             // Pagination footer
             Container(
@@ -974,82 +962,195 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     Color onSurfaceVariant,
     Color outlineVariant,
   ) {
-    return DataTable(
-      headingRowColor: WidgetStateProperty.all(theme.primaryBackground),
-      headingRowHeight: 44.0,
-      dataRowMinHeight: 56.0,
-      dataRowMaxHeight: 56.0,
-      columnSpacing: 16.0,
-      horizontalMargin: 24.0,
-      columns: [
-        DataColumn(
-            label: Text('Date/Time', style: _headerStyle(onSurfaceVariant))),
-        DataColumn(
-            label: Text('Product', style: _headerStyle(onSurfaceVariant))),
-        DataColumn(label: Text('Type', style: _headerStyle(onSurfaceVariant))),
-        DataColumn(
-            label: Text('Quantity', style: _headerStyle(onSurfaceVariant))),
-        DataColumn(
-            label: Text('Source / Destination',
-                style: _headerStyle(onSurfaceVariant))),
-        DataColumn(
-            label: Text('Status', style: _headerStyle(onSurfaceVariant))),
-      ],
-      rows: movements.map((movement) {
-        ProductMasterRecord? product = productMap[movement.productId?.path];
-        final mType = movement.movementType;
-        return DataRow(
-          cells: [
-            // Date/Time
-            DataCell(Text(
-              dateTimeFormat('MMM dd, hh:mm a', movement.createdAt,
-                  locale: FFLocalizations.of(context).languageCode),
-              style: _cellStyle(onSurfaceVariant),
-            )),
-            // Product with icon
-            DataCell(Row(
-              mainAxisSize: MainAxisSize.min,
+    const columnFlexes = [14, 18, 12, 10, 22, 12];
+
+    Widget buildCell({
+      required int flex,
+      required Widget child,
+      EdgeInsets padding = const EdgeInsets.symmetric(
+        horizontal: 24.0,
+        vertical: 16.0,
+      ),
+      Alignment alignment = Alignment.centerLeft,
+    }) {
+      return Expanded(
+        flex: flex,
+        child: Padding(
+          padding: padding,
+          child: Align(alignment: alignment, child: child),
+        ),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final rows = movements.map((movement) {
+          final product = productMap[movement.productId?.path];
+          final mType = movement.movementType;
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: outlineVariant.withValues(alpha: 0.15),
+                ),
+              ),
+            ),
+            child: Row(
+              children: [
+                buildCell(
+                  flex: columnFlexes[0],
+                  child: Text(
+                    dateTimeFormat('MMM dd, hh:mm a', movement.createdAt,
+                        locale: FFLocalizations.of(context).languageCode),
+                    style: _cellStyle(onSurfaceVariant),
+                  ),
+                ),
+                buildCell(
+                  flex: columnFlexes[1],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 32.0,
+                        height: 32.0,
+                        decoration: BoxDecoration(
+                          color: primaryColor.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        child: Icon(
+                          _getProductIcon(product?.name),
+                          color: primaryColor,
+                          size: 16.0,
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Flexible(
+                        child: Text(
+                          product?.name ?? 'Unknown',
+                          overflow: TextOverflow.ellipsis,
+                          style: _cellStyle(onSurface, weight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                buildCell(
+                  flex: columnFlexes[2],
+                  child: _buildTypeBadge(mType, primaryColor, onSurfaceVariant),
+                ),
+                buildCell(
+                  flex: columnFlexes[3],
+                  child: Text(
+                    '${mType == 'RECEIVED' ? '+' : '-'}${movement.quantity}',
+                    style: _cellStyle(
+                      mType == 'RECEIVED' ? primaryColor : onSurface,
+                      weight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                buildCell(
+                  flex: columnFlexes[4],
+                  child: Text(
+                    movement.movementReference ?? movement.reason ?? '-',
+                    overflow: TextOverflow.ellipsis,
+                    style: _cellStyle(onSurfaceVariant),
+                  ),
+                ),
+                buildCell(
+                  flex: columnFlexes[5],
+                  child: _buildStatusBadge(
+                    mType,
+                    primaryColor,
+                    onSurfaceVariant,
+                    outlineVariant,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList();
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  width: 32.0,
-                  height: 32.0,
-                  decoration: BoxDecoration(
-                    color: primaryColor.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(6.0),
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 14.0,
                   ),
-                  child: Icon(_getProductIcon(product?.name),
-                      color: primaryColor, size: 16.0),
+                  decoration: BoxDecoration(
+                    color: theme.primaryBackground,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: outlineVariant.withValues(alpha: 0.2),
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      buildCell(
+                        flex: columnFlexes[0],
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Date/Time',
+                          style: _headerStyle(onSurfaceVariant),
+                        ),
+                      ),
+                      buildCell(
+                        flex: columnFlexes[1],
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Product',
+                          style: _headerStyle(onSurfaceVariant),
+                        ),
+                      ),
+                      buildCell(
+                        flex: columnFlexes[2],
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Type',
+                          style: _headerStyle(onSurfaceVariant),
+                        ),
+                      ),
+                      buildCell(
+                        flex: columnFlexes[3],
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Quantity',
+                          style: _headerStyle(onSurfaceVariant),
+                        ),
+                      ),
+                      buildCell(
+                        flex: columnFlexes[4],
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Source / Destination',
+                          style: _headerStyle(onSurfaceVariant),
+                        ),
+                      ),
+                      buildCell(
+                        flex: columnFlexes[5],
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Status',
+                          style: _headerStyle(onSurfaceVariant),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 8.0),
-                Flexible(
-                    child: Text(
-                  product?.name ?? 'Unknown',
-                  overflow: TextOverflow.ellipsis,
-                  style: _cellStyle(onSurface, weight: FontWeight.w500),
-                )),
+                ...rows,
               ],
-            )),
-            // Type
-            DataCell(_buildTypeBadge(mType, primaryColor, onSurfaceVariant)),
-            // Quantity
-            DataCell(Text(
-              '${mType == 'RECEIVED' ? '+' : '-'}${movement.quantity}',
-              style: _cellStyle(
-                mType == 'RECEIVED' ? primaryColor : onSurface,
-                weight: FontWeight.w500,
-              ),
-            )),
-            // Source/Destination
-            DataCell(Text(
-              movement.movementReference ?? movement.reason ?? '-',
-              style: _cellStyle(onSurfaceVariant),
-            )),
-            // Status
-            DataCell(_buildStatusBadge(
-                mType, primaryColor, onSurfaceVariant, outlineVariant)),
-          ],
+            ),
+          ),
         );
-      }).toList(),
+      },
     );
   }
 

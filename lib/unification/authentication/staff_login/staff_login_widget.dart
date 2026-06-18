@@ -61,6 +61,18 @@ class _StaffLoginWidgetState extends State<StaffLoginWidget> {
         return;
       }
 
+      try {
+        await authManager.refreshUser();
+      } catch (_) {}
+      final isEmailVerified = currentUserEmailVerified || user.emailVerified;
+      if (!isEmailVerified) {
+        await _showEmailVerificationRequiredDialog(
+          _model.emailTextController.text,
+        );
+        await authManager.signOut();
+        return;
+      }
+
       if (currentUserEmail != '') {
         logFirebaseEvent('StaffLogin_alert_dialog');
         await showDialog(
@@ -125,6 +137,43 @@ class _StaffLoginWidgetState extends State<StaffLoginWidget> {
     _model.dispose();
 
     super.dispose();
+  }
+
+  Future<void> _showEmailVerificationRequiredDialog(String email) async {
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (alertDialogContext) {
+        return WebViewAware(
+          child: AlertDialog(
+            title: const Text('Verify your email'),
+            content: Text(
+              'Your account is not verified yet. We can resend the verification email to $email if needed.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await authManager.sendEmailVerification();
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Verification email sent.'),
+                    ),
+                  );
+                  Navigator.pop(alertDialogContext);
+                },
+                child: const Text('Resend'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(alertDialogContext),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

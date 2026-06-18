@@ -1,6 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/unification/components/language_changer/language_changer_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/index.dart';
@@ -34,8 +33,6 @@ class SettingsModel extends FlutterFlowModel<SettingsWidget> {
   FocusNode? textFieldFocusNode3;
   TextEditingController? textController3;
   String? Function(BuildContext, String?)? textController3Validator;
-  // Model for languageChanger component.
-  late LanguageChangerModel languageChangerModel;
   // Stores action output result for [Backend Call - API (subscriptionstatus)] action in Button widget.
   ApiCallResponse? apisub;
   // Stores action output result for [Backend Call - API (deletesub)] action in Button widget.
@@ -49,7 +46,6 @@ class SettingsModel extends FlutterFlowModel<SettingsWidget> {
   void initState(BuildContext context) {
     sideNavModel1 = createModel(context, () => SideNavModel());
     topNavModel = createModel(context, () => TopNavModel());
-    languageChangerModel = createModel(context, () => LanguageChangerModel());
     sideNavModel2 = createModel(context, () => SideNavModel());
   }
 
@@ -66,8 +62,6 @@ class SettingsModel extends FlutterFlowModel<SettingsWidget> {
 
     textFieldFocusNode3?.dispose();
     textController3?.dispose();
-
-    languageChangerModel.dispose();
     sideNavModel2.dispose();
   }
 }

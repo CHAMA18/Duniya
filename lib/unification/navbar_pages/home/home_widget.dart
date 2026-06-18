@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/components/hr_table_widget.dart';
 import '/components/pharma_table_widget.dart';
 import '/components/loading_spinner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -46,6 +45,43 @@ class _PharmacyDashboardData {
   final int totalItemsSold;
   final int nearExpiryItems;
   final int lowStockItems;
+}
+
+class _PharmacyFinanceSnapshot {
+  const _PharmacyFinanceSnapshot({
+    required this.pharmacy,
+    required this.revenue,
+    required this.grossProfit,
+    required this.netProfit,
+    required this.costOfGoods,
+  });
+
+  final PharmacyRecord pharmacy;
+  final double revenue;
+  final double grossProfit;
+  final double netProfit;
+  final double costOfGoods;
+
+  double get profitMargin => revenue > 0 ? (grossProfit / revenue) * 100 : 0.0;
+}
+
+class _DuniyaFinanceOverviewData {
+  const _DuniyaFinanceOverviewData({
+    required this.pharmacySnapshots,
+    required this.totalRevenue,
+    required this.totalGrossProfit,
+    required this.totalNetProfit,
+    required this.totalCostOfGoods,
+  });
+
+  final List<_PharmacyFinanceSnapshot> pharmacySnapshots;
+  final double totalRevenue;
+  final double totalGrossProfit;
+  final double totalNetProfit;
+  final double totalCostOfGoods;
+
+  double get totalMargin =>
+      totalRevenue > 0 ? (totalGrossProfit / totalRevenue) * 100 : 0.0;
 }
 
 class HomeWidget extends StatefulWidget {
@@ -155,6 +191,16 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  String _formatCurrency(double value) {
+    if (value >= 1000000) {
+      return 'ZMK ${(value / 1000000).toStringAsFixed(1)}M';
+    }
+    if (value >= 1000) {
+      return 'ZMK ${(value / 1000).toStringAsFixed(1)}K';
+    }
+    return 'ZMK ${value.toStringAsFixed(2)}';
   }
 
   // ─── Helper: Section header ─────────────────────────────────────────
@@ -886,6 +932,568 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     );
   }
 
+  Future<_DuniyaFinanceOverviewData> _loadDuniyaFinanceOverview({
+    required DocumentReference ownerRef,
+  }) async {
+    final pharmacyRecords = await queryPharmacyRecordOnce(
+      parent: ownerRef,
+      queryBuilder: (query) => query.where('deleted', isEqualTo: false),
+    );
+
+    final pharmacySnapshots = await Future.wait(
+      pharmacyRecords.map((pharmacy) async {
+        final financeRecords = pharmacy.userID == null
+            ? <FinanceRecord>[]
+            : await queryFinanceRecordOnce(
+                parent: pharmacy.userID!,
+                singleRecord: true,
+              );
+        final finance = financeRecords.firstOrNull;
+        return _PharmacyFinanceSnapshot(
+          pharmacy: pharmacy,
+          revenue: finance?.revenue ?? 0.0,
+          grossProfit: finance?.grossProfit ?? 0.0,
+          netProfit: finance?.netProfit ?? 0.0,
+          costOfGoods: finance?.costOfGoods ?? 0.0,
+        );
+      }),
+    );
+
+    final sortedSnapshots = [...pharmacySnapshots]
+      ..sort((a, b) => b.revenue.compareTo(a.revenue));
+
+    return _DuniyaFinanceOverviewData(
+      pharmacySnapshots: sortedSnapshots,
+      totalRevenue: sortedSnapshots.fold<double>(
+        0.0,
+        (sum, snapshot) => sum + snapshot.revenue,
+      ),
+      totalGrossProfit: sortedSnapshots.fold<double>(
+        0.0,
+        (sum, snapshot) => sum + snapshot.grossProfit,
+      ),
+      totalNetProfit: sortedSnapshots.fold<double>(
+        0.0,
+        (sum, snapshot) => sum + snapshot.netProfit,
+      ),
+      totalCostOfGoods: sortedSnapshots.fold<double>(
+        0.0,
+        (sum, snapshot) => sum + snapshot.costOfGoods,
+      ),
+    );
+  }
+
+  Widget _buildFinanceNetworkSection({required bool isPhone}) {
+    final ownerRef = currentUserReference!;
+
+    return AuthUserStreamWidget(
+      builder: (context) => FutureBuilder<_DuniyaFinanceOverviewData>(
+        future: _loadDuniyaFinanceOverview(ownerRef: ownerRef),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildPremiumCard(
+              child: SizedBox(
+                height: 260,
+                child: Center(
+                  child: LoadingSpinnerWidget(
+                    size: 42,
+                    showLabel: false,
+                  ),
+                ),
+              ),
+            );
+          }
+
+          final data = snapshot.data;
+          if (data == null || data.pharmacySnapshots.isEmpty) {
+            return _buildPremiumCard(
+              child: Container(
+                height: 220,
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Network Finances',
+                      style: FlutterFlowTheme.of(context).titleMedium.override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).titleMediumFamily,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.0,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .titleMediumIsCustom,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'No pharmacy finance records are available yet.',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodyMediumFamily,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .bodyMediumIsCustom,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          final heroCards = [
+            _buildMetricCard(
+              title: 'All Pharmacies Revenue',
+              value: _formatCurrency(data.totalRevenue),
+              subtitle:
+                  '${data.pharmacySnapshots.length} pharmacies combined',
+              icon: Icons.account_balance_wallet_rounded,
+              iconBackground: const Color(0xFFF3E8FF),
+              iconColor: FlutterFlowTheme.of(context).primary,
+              footer: Container(
+                height: 8,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      FlutterFlowTheme.of(context).primary,
+                      const Color(0xFF1D4ED8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              width: double.infinity,
+            ),
+            _buildMetricCard(
+              title: 'Gross Profit',
+              value: _formatCurrency(data.totalGrossProfit),
+              subtitle: 'Network-wide gross performance',
+              icon: Icons.trending_up_rounded,
+              iconBackground: const Color(0xFFE8FAF1),
+              iconColor: const Color(0xFF10B981),
+              footer: Row(
+                children: [
+                  Icon(
+                    Icons.stacked_line_chart_rounded,
+                    color: FlutterFlowTheme.of(context).success,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${data.totalMargin.toStringAsFixed(1)}% margin',
+                    style: FlutterFlowTheme.of(context).bodySmall.override(
+                          fontFamily:
+                              FlutterFlowTheme.of(context).bodySmallFamily,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          fontWeight: FontWeight.w600,
+                          useGoogleFonts:
+                              !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                        ),
+                  ),
+                ],
+              ),
+              width: double.infinity,
+            ),
+            _buildMetricCard(
+              title: 'Net Profit',
+              value: _formatCurrency(data.totalNetProfit),
+              subtitle: 'After operating costs',
+              icon: Icons.savings_rounded,
+              iconBackground: const Color(0xFFE0E7FF),
+              iconColor: const Color(0xFF4F46E5),
+              footer: Container(
+                height: 8,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF4F46E5).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              width: double.infinity,
+            ),
+            _buildMetricCard(
+              title: 'Cost of Goods',
+              value: _formatCurrency(data.totalCostOfGoods),
+              subtitle: 'Inventory spend across the network',
+              icon: Icons.receipt_long_rounded,
+              iconBackground: const Color(0xFFFDE7E9),
+              iconColor: const Color(0xFFEF4444),
+              footer: Container(
+                height: 8,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              width: double.infinity,
+            ),
+          ];
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionHeader(
+                'Network Finances',
+                Icons.account_balance_rounded,
+                actionLabel: 'Open Finance View',
+                onAction: () async {
+                  context.pushNamed(FinancesWidget.routeName);
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildPremiumCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            FlutterFlowTheme.of(context)
+                                .primary
+                                .withValues(alpha: 0.98),
+                            const Color(0xFF1D4ED8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.16),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(
+                              Icons.pie_chart_rounded,
+                              color: Colors.white,
+                              size: 26,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'All pharmacies in one view',
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        fontFamily:
+                                            FlutterFlowTheme.of(context)
+                                                .titleMediumFamily,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: -0.2,
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .titleMediumIsCustom,
+                                      ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'A combined finance snapshot with pharmacy-level performance below.',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodySmall
+                                      .override(
+                                        fontFamily:
+                                            FlutterFlowTheme.of(context)
+                                                .bodySmallFamily,
+                                        color: Colors.white.withValues(
+                                            alpha: 0.88),
+                                        useGoogleFonts:
+                                            !FlutterFlowTheme.of(context)
+                                                .bodySmallIsCustom,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.16),
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.18),
+                              ),
+                            ),
+                            child: Text(
+                              '${data.pharmacySnapshots.length} pharmacies',
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    fontFamily:
+                                        FlutterFlowTheme.of(context)
+                                            .labelMediumFamily,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    useGoogleFonts:
+                                        !FlutterFlowTheme.of(context)
+                                            .labelMediumIsCustom,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final columns = constraints.maxWidth >= 1200
+                            ? 4
+                            : constraints.maxWidth >= 760
+                                ? 2
+                                : 1;
+                        return GridView.count(
+                          crossAxisCount: columns,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: columns == 1 ? 2.4 : 1.1,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: heroCards,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildSectionHeader(
+                'Per Pharmacy',
+                Icons.storefront_rounded,
+                actionLabel: 'Open Full Finance View',
+                onAction: () async {
+                  context.pushNamed(FinancesWidget.routeName);
+                },
+              ),
+              const SizedBox(height: 16),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final columns = constraints.maxWidth >= 1200
+                      ? 2
+                      : constraints.maxWidth >= 780
+                          ? 2
+                          : 1;
+                  return GridView.count(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: columns == 1 ? 1.35 : 1.1,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: data.pharmacySnapshots
+                        .map(
+                          (snapshot) => _buildPharmacyFinanceCard(
+                            context,
+                            snapshot: snapshot,
+                          ),
+                        )
+                        .toList(),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPharmacyFinanceCard(
+    BuildContext context, {
+    required _PharmacyFinanceSnapshot snapshot,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: FlutterFlowTheme.of(context).alternate,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      FlutterFlowTheme.of(context).primary.withValues(
+                            alpha: 0.12,
+                          ),
+                      const Color(0xFF1D4ED8).withValues(alpha: 0.12),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  Icons.local_pharmacy_rounded,
+                  color: FlutterFlowTheme.of(context).primary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      snapshot.pharmacy.name.isNotEmpty
+                          ? snapshot.pharmacy.name
+                          : 'Unnamed Pharmacy',
+                      style: FlutterFlowTheme.of(context).titleMedium.override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).titleMediumFamily,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.0,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .titleMediumIsCustom,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      snapshot.pharmacy.address.isNotEmpty
+                          ? snapshot.pharmacy.address
+                          : 'Address not captured',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: FlutterFlowTheme.of(context).bodySmall.override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodySmallFamily,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .bodySmallIsCustom,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF10B981).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '${snapshot.profitMargin.toStringAsFixed(1)}% margin',
+                  style: FlutterFlowTheme.of(context).labelMedium.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).labelMediumFamily,
+                        color: const Color(0xFF059669),
+                        fontWeight: FontWeight.w700,
+                        useGoogleFonts:
+                            !FlutterFlowTheme.of(context).labelMediumIsCustom,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              _buildFinancePill(
+                context,
+                label: 'Revenue',
+                value: _formatCurrency(snapshot.revenue),
+                tint: FlutterFlowTheme.of(context).primary,
+              ),
+              _buildFinancePill(
+                context,
+                label: 'Gross Profit',
+                value: _formatCurrency(snapshot.grossProfit),
+                tint: const Color(0xFF10B981),
+              ),
+              _buildFinancePill(
+                context,
+                label: 'Net Profit',
+                value: _formatCurrency(snapshot.netProfit),
+                tint: const Color(0xFF4F46E5),
+              ),
+              _buildFinancePill(
+                context,
+                label: 'Cost of Goods',
+                value: _formatCurrency(snapshot.costOfGoods),
+                tint: const Color(0xFFEF4444),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFinancePill(
+    BuildContext context, {
+    required String label,
+    required String value,
+    required Color tint,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: tint.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: tint.withValues(alpha: 0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: FlutterFlowTheme.of(context).labelSmall.override(
+                  fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontWeight: FontWeight.w600,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                  color: tint,
+                  fontWeight: FontWeight.w800,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ─── Helper: Glass-panel KPI card ───────────────────────────────────
   Widget _buildGlassKpiCard({
     required IconData icon,
@@ -1214,6 +1822,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                     const SizedBox(height: 28),
                                     _buildAnalyticsOverviewSection(
                                         isPhone: isPhone),
+                                    if (valueOrDefault(
+                                            currentUserDocument?.accountType,
+                                            'Duniya') ==
+                                        'Duniya') ...[
+                                      const SizedBox(height: 28),
+                                      _buildFinanceNetworkSection(
+                                          isPhone: isPhone),
+                                    ],
                                     const SizedBox(height: 32),
                                     if (renderLegacyDashboard) ...[
                                       // ───────────────────────────────────
@@ -2058,41 +2674,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
                                     const SizedBox(height: 32),
 
-                                    // ───────────────────────────────────
-                                    // 4. BOTTOM SECTION (full width)
-                                    // ───────────────────────────────────
-                                    if (valueOrDefault(
-                                            currentUserDocument?.role, '') ==
-                                        'Owner')
-                                      _buildSectionHeader(
-                                        'Active Staff',
-                                        Icons.badge_rounded,
-                                        actionLabel: 'View Roster',
-                                        onAction: () async {
-                                          logFirebaseEvent(
-                                              'HOME_PAGE_ViewRoster_ON_TAP');
-                                          logFirebaseEvent(
-                                              'ViewRoster_navigate_to');
-                                          context.pushNamed(
-                                              HumanResourceUniWidget.routeName);
-                                        },
-                                      ),
-                                    if (valueOrDefault(
-                                            currentUserDocument?.role, '') ==
-                                        'Owner')
-                                      const SizedBox(height: 16),
-                                    if (valueOrDefault(
-                                            currentUserDocument?.role, '') ==
-                                        'Owner')
-                                      AuthUserStreamWidget(
-                                        builder: (context) => wrapWithModel(
-                                          model: _model.hrTableModel,
-                                          updateCallback: () =>
-                                              safeSetState(() {}),
-                                          child: HrTableWidget(),
-                                        ),
-                                      ),
-
                                     const SizedBox(height: 28),
 
                                     _buildSectionHeader(
@@ -2346,6 +2927,35 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 },
                                                 isPrimary: true,
                                               ),
+                                              if (valueOrDefault(
+                                                      currentUserDocument?.role,
+                                                      '') ==
+                                                  'Owner')
+                                                const SizedBox(width: 12),
+                                              if (valueOrDefault(
+                                                      currentUserDocument?.role,
+                                                      '') ==
+                                                  'Owner')
+                                                _buildDashboardActionButton(
+                                                  label: 'HR Portal',
+                                                  icon: Icons.badge_rounded,
+                                                  fillColor: Colors.white,
+                                                  iconColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                  textColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                  onTap: () async {
+                                                    context.goNamed(
+                                                      HumanResourceUniWidget
+                                                          .routeName,
+                                                    );
+                                                  },
+                                                  isPrimary: false,
+                                                ),
                                             ],
                                           ],
                                         ),
@@ -2385,6 +2995,36 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                               label:
                                                   '$movementCount stock movements tracked',
                                             ),
+                                            if (isPhone &&
+                                                valueOrDefault(
+                                                        currentUserDocument?.role,
+                                                        '') ==
+                                                    'Owner')
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 6),
+                                                child:
+                                                    _buildDashboardActionButton(
+                                                  label: 'HR Portal',
+                                                  icon: Icons.badge_rounded,
+                                                  fillColor: Colors.white,
+                                                  iconColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                  textColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondary,
+                                                  onTap: () async {
+                                                    context.goNamed(
+                                                      HumanResourceUniWidget
+                                                          .routeName,
+                                                    );
+                                                  },
+                                                  isPrimary: false,
+                                                ),
+                                              ),
                                           ],
                                         ),
                                       ],
@@ -3707,22 +4347,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   if (_shouldSetState) safeSetState(() {});
                 },
               ),
-              if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
-                AuthUserStreamWidget(
-                  builder: (context) => _buildQuickActionCard(
-                    icon: Icon(Icons.people_alt_rounded,
-                        color: FlutterFlowTheme.of(context).secondary,
-                        size: 22),
-                    title: 'HR Portal',
-                    subtitle: 'Manage staff & resources',
-                    accentColor: FlutterFlowTheme.of(context).secondary,
-                    onTap: () async {
-                      logFirebaseEvent('HOME_PAGE_QuickAction_HR_ON_TAP');
-                      logFirebaseEvent('QuickAction_HR_navigate_to');
-                      context.goNamed(HumanResourceUniWidget.routeName);
-                    },
-                  ),
-                ),
               _buildQuickActionCard(
                 icon: FaIcon(FontAwesomeIcons.robot,
                     color: FlutterFlowTheme.of(context).primary, size: 22),

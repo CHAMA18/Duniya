@@ -100,9 +100,13 @@ class _StaffRegisterWidgetState extends State<StaffRegisterWidget> {
         role: _model.staff?.role,
         ownerRef: _model.staff?.ownerRef,
       ));
-      logFirebaseEvent('StaffRegister_navigate_to');
-
-      context.pushNamedAuth(WelcomeWidget.routeName, context.mounted);
+      await authManager.sendEmailVerification();
+      await _showEmailVerificationSentDialog(_model.emailTextController.text);
+      await authManager.signOut();
+      if (!context.mounted) {
+        return;
+      }
+      context.goNamed(LoginUniWidget.routeName);
     });
 
     _model.emailTextController ??= TextEditingController();
@@ -119,6 +123,30 @@ class _StaffRegisterWidgetState extends State<StaffRegisterWidget> {
     _model.dispose();
 
     super.dispose();
+  }
+
+  Future<void> _showEmailVerificationSentDialog(String email) async {
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (alertDialogContext) {
+        return WebViewAware(
+          child: AlertDialog(
+            title: const Text('Verify your email'),
+            content: Text(
+              'We sent a verification email to $email. Please verify your inbox before logging in.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(alertDialogContext),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

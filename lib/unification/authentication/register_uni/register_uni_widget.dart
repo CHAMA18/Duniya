@@ -83,6 +83,30 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
     super.dispose();
   }
 
+  Future<void> _showEmailVerificationSentDialog(String email) async {
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (alertDialogContext) {
+        return WebViewAware(
+          child: AlertDialog(
+            title: const Text('Verify your email'),
+            content: Text(
+              'We sent a verification email to $email. Please verify your inbox before logging in.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(alertDialogContext),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   /// Builds the Google logo from the uploaded asset
   Widget _buildGoogleLogo() {
     return SizedBox(
@@ -894,39 +918,17 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                       : null,
                                             ));
 
-                                            logFirebaseEvent(
-                                                'Button_bottom_sheet');
-                                            await showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              enableDrag: false,
-                                              context: context,
-                                              builder: (context) {
-                                                return WebViewAware(
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      FocusScope.of(context)
-                                                          .unfocus();
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus();
-                                                    },
-                                                    child: Padding(
-                                                      padding: MediaQuery
-                                                          .viewInsetsOf(
-                                                              context),
-                                                      child: SuccessWidget(),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ).then(
-                                                (value) => safeSetState(() {}));
-
-                                            context.goNamedAuth(
-                                                WelcomeWidget.routeName,
-                                                context.mounted);
+                                            await authManager
+                                                .sendEmailVerification();
+                                            await _showEmailVerificationSentDialog(
+                                              _model.emailAddressTextController.text,
+                                            );
+                                            await authManager.signOut();
+                                            if (!context.mounted) {
+                                              return;
+                                            }
+                                            context.goNamed(
+                                                LoginUniWidget.routeName);
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: _primaryBlue,

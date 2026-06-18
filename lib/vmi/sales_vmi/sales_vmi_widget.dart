@@ -542,8 +542,16 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                       // ── KPI Cards ──
                                       LayoutBuilder(
                                         builder: (context, constraints) {
-                                          final isWide =
-                                              constraints.maxWidth >= 600;
+                                          int cols = 5;
+                                          if (constraints.maxWidth < 1200) {
+                                            cols = 3;
+                                          }
+                                          if (constraints.maxWidth < 800) {
+                                            cols = 2;
+                                          }
+                                          if (constraints.maxWidth < 520) {
+                                            cols = 1;
+                                          }
                                           final cards = [
                                             _buildKpiCard(
                                               title: 'Total Revenue',
@@ -593,32 +601,19 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                             ),
                                           ];
 
-                                          if (isWide) {
-                                            return Row(
-                                              children: cards
-                                                  .map((c) => Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                right: 14),
-                                                        child: Expanded(
-                                                            child: c),
-                                                      ))
-                                                  .toList(),
-                                            );
-                                          }
-                                          return Wrap(
-                                            spacing: 14,
-                                            runSpacing: 14,
-                                            children: cards
-                                                .map((c) => SizedBox(
-                                                      width: (constraints
-                                                                  .maxWidth -
-                                                              14) /
-                                                          2,
-                                                      child: c,
-                                                    ))
-                                                .toList(),
+                                          return SizedBox(
+                                            width: double.infinity,
+                                            child: GridView.count(
+                                              crossAxisCount: cols,
+                                              crossAxisSpacing: 14,
+                                              mainAxisSpacing: 14,
+                                              childAspectRatio:
+                                                  cols == 1 ? 2.4 : 1.18,
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              children: cards,
+                                            ),
                                           );
                                         },
                                       ),

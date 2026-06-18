@@ -7,7 +7,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/unification/components/language_changer/language_changer_widget.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
@@ -60,7 +59,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
 
     _model.tabBarController = TabController(
       vsync: this,
-      length: 4,
+      length: 2,
       initialIndex: 0,
     )..addListener(() => safeSetState(() {}));
 
@@ -256,13 +255,6 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                       text: FFLocalizations.of(
                                                               context)
                                                           .getText(
-                                                        'mdpu7284' /* Language */,
-                                                      ),
-                                                    ),
-                                                    Tab(
-                                                      text: FFLocalizations.of(
-                                                              context)
-                                                          .getText(
                                                         'ljaumbn3' /* Terms  & Conditions */,
                                                       ),
                                                     ),
@@ -271,7 +263,6 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                       _model.tabBarController,
                                                   onTap: (i) async {
                                                     [
-                                                      () async {},
                                                       () async {},
                                                       () async {}
                                                     ][i]();
@@ -1290,14 +1281,6 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    wrapWithModel(
-                                                      model: _model
-                                                          .languageChangerModel,
-                                                      updateCallback: () =>
-                                                          safeSetState(() {}),
-                                                      child:
-                                                          LanguageChangerWidget(),
                                                     ),
                                                     Padding(
                                                       padding:
@@ -2740,99 +2723,6 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                         context)
                                                                     .getText(
                                                                   'apaq9m35' /* Terms and Conditions */,
-                                                                ),
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyLarge
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyLargeFamily,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyLargeIsCustom,
-                                                                    ),
-                                                              ),
-                                                              Icon(
-                                                                Icons
-                                                                    .chevron_right_rounded,
-                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                size: 24.0,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                16.0,
-                                                                12.0,
-                                                                16.0,
-                                                                0.0),
-                                                    child: InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      focusColor:
-                                                          Colors.transparent,
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        logFirebaseEvent(
-                                                            'SETTINGS_PAGE_Container_mmr534x5_ON_TAP');
-                                                        logFirebaseEvent(
-                                                            'Container_navigate_to');
-
-                                                        context.pushNamed(
-                                                            LanguageWidget
-                                                                .routeName);
-                                                      },
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                          border: Border.all(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .alternate,
-                                                            width: 2.0,
-                                                          ),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      12.0,
-                                                                      8.0,
-                                                                      12.0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                FFLocalizations.of(
-                                                                        context)
-                                                                    .getText(
-                                                                  'sv15qh9h' /* Languages */,
                                                                 ),
                                                                 style: FlutterFlowTheme.of(
                                                                         context)

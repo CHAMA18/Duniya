@@ -212,8 +212,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Human Resource (Owner only)
-                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
+                // Human Resource (Pharmacy owners only)
+                if (!_isDuniyaUser &&
+                    valueOrDefault(currentUserDocument?.role, '') == 'Owner')
                   AuthUserStreamWidget(
                     builder: (context) => InkWell(
                       splashColor: Colors.transparent,

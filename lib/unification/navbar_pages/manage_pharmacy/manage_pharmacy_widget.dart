@@ -200,11 +200,11 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                             ? Center(child: LoadingSpinnerWidget())
                             : SingleChildScrollView(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 28,
+                                  horizontal: 16,
                                   vertical: 24,
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     _buildHeroHeader(theme, pharmName, pharmAddress),
                                     const SizedBox(height: 24),
@@ -230,6 +230,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildHeroHeader(FlutterFlowTheme theme, String name, String address) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -337,7 +338,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildKPICards(FlutterFlowTheme theme) {
     return LayoutBuilder(builder: (context, constraints) {
-      final cardWidth = (constraints.maxWidth - 80) / 5;
+      const spacing = 12.0;
+      final cardWidth = (constraints.maxWidth - (spacing * 4)) / 5;
       final showCompact = constraints.maxWidth < 900;
 
       final kpis = [
@@ -385,15 +387,25 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
       if (showCompact) {
         return Wrap(
-          spacing: 12,
-          runSpacing: 12,
+          spacing: spacing,
+          runSpacing: spacing,
           children: kpis.map((kpi) => _buildKPICard(theme, kpi, 160)).toList(),
         );
       }
 
       return Row(
         children: kpis
-            .map((kpi) => Expanded(child: _buildKPICard(theme, kpi, cardWidth)))
+            .asMap()
+            .entries
+            .map((entry) {
+              final isLast = entry.key == kpis.length - 1;
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: isLast ? 0 : spacing),
+                  child: _buildKPICard(theme, entry.value, cardWidth),
+                ),
+              );
+            })
             .toList(),
       );
     });
@@ -403,7 +415,6 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
     return Container(
       constraints: BoxConstraints(minWidth: width.clamp(140, 260)),
       padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16),
@@ -487,10 +498,11 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
     ];
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Tab bar
         Container(
+          width: double.infinity,
           decoration: BoxDecoration(
             color: theme.secondaryBackground,
             borderRadius: BorderRadius.circular(14),
@@ -545,6 +557,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         const SizedBox(height: 20),
         // Tab content
         SizedBox(
+          width: double.infinity,
           height: MediaQuery.sizeOf(context).height * 0.6,
           child: TabBarView(
             controller: _tabController,
@@ -653,6 +666,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildDataTableCard(FlutterFlowTheme theme, {required List<Widget> children}) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16),

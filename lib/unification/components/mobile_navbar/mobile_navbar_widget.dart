@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/auth/firebase_auth/auth_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -177,36 +178,50 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
-                FlutterFlowIconButton(
-                  borderColor: Colors.transparent,
-                  borderRadius: 30.0,
-                  borderWidth: 1.0,
-                  buttonSize: 50.0,
-                  icon: Icon(
-                    Icons.badge,
-                    color: valueOrDefault<Color>(
-                      FFAppState().SelectedPage == 'Human Resource'
-                          ? FlutterFlowTheme.of(context).primary
-                          : FlutterFlowTheme.of(context).secondaryText,
-                      FlutterFlowTheme.of(context).secondaryText,
-                    ),
-                    size: 24.0,
-                  ),
-                  onPressed: () async {
-                    logFirebaseEvent('MOBILE_NAVBAR_COMP_badge_ICN_ON_TAP');
-                    logFirebaseEvent('IconButton_update_app_state');
-                    FFAppState().SelectedPage = 'Human Resource';
-                    safeSetState(() {});
-                    logFirebaseEvent('IconButton_navigate_to');
+                AuthUserStreamWidget(
+                  builder: (context) {
+                    final isPharmacyOwner =
+                        valueOrDefault(currentUserDocument?.accountType, 'Duniya') !=
+                                'Duniya' &&
+                            valueOrDefault(currentUserDocument?.role, '') ==
+                                'Owner';
 
-                    context.goNamed(
-                      HumanResourceUniWidget.routeName,
-                      extra: <String, dynamic>{
-                        '__transition_info__': TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 0),
+                    if (!isPharmacyOwner) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30.0,
+                      borderWidth: 1.0,
+                      buttonSize: 50.0,
+                      icon: Icon(
+                        Icons.badge,
+                        color: valueOrDefault<Color>(
+                          FFAppState().SelectedPage == 'Human Resource'
+                              ? FlutterFlowTheme.of(context).primary
+                              : FlutterFlowTheme.of(context).secondaryText,
+                          FlutterFlowTheme.of(context).secondaryText,
                         ),
+                        size: 24.0,
+                      ),
+                      onPressed: () async {
+                        logFirebaseEvent('MOBILE_NAVBAR_COMP_badge_ICN_ON_TAP');
+                        logFirebaseEvent('IconButton_update_app_state');
+                        FFAppState().SelectedPage = 'Human Resource';
+                        safeSetState(() {});
+                        logFirebaseEvent('IconButton_navigate_to');
+
+                        context.goNamed(
+                          HumanResourceUniWidget.routeName,
+                          extra: <String, dynamic>{
+                            '__transition_info__': TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 0),
+                            ),
+                          },
+                        );
                       },
                     );
                   },

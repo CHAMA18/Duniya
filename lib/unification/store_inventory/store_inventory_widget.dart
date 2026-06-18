@@ -915,6 +915,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     Color cardBg,
   ) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: cardBg,
