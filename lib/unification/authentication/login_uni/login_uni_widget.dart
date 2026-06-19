@@ -203,7 +203,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 48.0),
-                      _buildBrandLogo(size: 72.0),
+                      _buildBrandLogo(size: 144.0),
                       const SizedBox(height: 24.0),
                       Text(
                         'Welcome Back',

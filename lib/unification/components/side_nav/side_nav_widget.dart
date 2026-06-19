@@ -325,7 +325,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       );
 
                       logFirebaseEvent('SidebarLink_update_app_state');
-                      FFAppState().SelectedPage = 'PendingApprovals';
+                      FFAppState().SelectedPage = 'Pending Approvals';
                     },
                     child: wrapWithModel(
                       model: _model.sidebarLinkModel19,
@@ -341,7 +341,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           color: FlutterFlowTheme.of(context).secondaryText,
                         ),
                         isActive:
-                            FFAppState().SelectedPage == 'PendingApprovals',
+                            FFAppState().SelectedPage == 'Pending Approvals',
                       ),
                     ),
                   ),

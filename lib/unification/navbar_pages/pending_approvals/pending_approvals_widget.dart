@@ -34,7 +34,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PendingApprovalsModel());
-    FFAppState().SelectedPage = 'PendingApprovals';
+    FFAppState().SelectedPage = 'Pending Approvals';
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await _loadPendingApprovals();

@@ -4302,7 +4302,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
-            final isWide = constraints.maxWidth >= 1100;
 
             final cards = <Widget>[
               _buildQuickActionCard(
@@ -4389,8 +4388,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               ),
             ];
 
-            if (isWide) {
-              return Row(
+            // Wrap in IntrinsicHeight so CrossAxisAlignment.stretch works
+            // inside the unbounded vertical space of the scrollable Column.
+            // Without this, the cards collapse and the section renders cut off.
+            return IntrinsicHeight(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   for (var i = 0; i < cards.length; i++) ...[
@@ -4398,23 +4400,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     if (i != cards.length - 1) const SizedBox(width: 12),
                   ],
                 ],
-              );
-            }
-
-            return Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: cards
-                  .map(
-                    (card) => SizedBox(
-                      width: constraints.maxWidth,
-                      child: card,
-                    ),
-                  )
-                  .toList(),
+              ),
             );
           },
         ),
+        const SizedBox(height: 32),
       ],
     );
   }

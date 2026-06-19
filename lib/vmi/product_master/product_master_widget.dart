@@ -12,6 +12,11 @@ import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:excel/excel.dart' hide Border;
+import 'package:csv/csv.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'product_master_model.dart';
 export 'product_master_model.dart';
 
@@ -587,29 +592,67 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                         ),
                                       ],
                                     ),
-                                    ElevatedButton.icon(
-                                      onPressed: () =>
-                                          _showAddProductDialog(context),
-                                      icon: const Icon(Icons.add, size: 18.0),
-                                      label: Text(
-                                        'Add Product',
-                                        style: TextStyle(
-                                          fontFamily: 'Satoshi',
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w600,
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        OutlinedButton.icon(
+                                          onPressed: () =>
+                                              _importFromSpreadsheet(context),
+                                          icon: const Icon(
+                                              Icons.upload_file_rounded,
+                                              size: 18.0),
+                                          label: Text(
+                                            'Import Excel',
+                                            style: TextStyle(
+                                              fontFamily: 'Satoshi',
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          style: OutlinedButton.styleFrom(
+                                            foregroundColor: _duniyaPurple,
+                                            side: BorderSide(
+                                                color: _duniyaPurple
+                                                    .withValues(alpha: 0.4),
+                                                width: 1.4),
+                                            elevation: 0,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 18.0,
+                                                vertical: 12.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: _duniyaPurple,
-                                        foregroundColor: Colors.white,
-                                        elevation: 0,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0, vertical: 12.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                        const SizedBox(width: 12.0),
+                                        ElevatedButton.icon(
+                                          onPressed: () =>
+                                              _showAddProductDialog(context),
+                                          icon:
+                                              const Icon(Icons.add, size: 18.0),
+                                          label: Text(
+                                            'Add Product',
+                                            style: TextStyle(
+                                              fontFamily: 'Satoshi',
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: _duniyaPurple,
+                                            foregroundColor: Colors.white,
+                                            elevation: 0,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 12.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -926,6 +969,587 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         ],
       ),
     );
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Excel / CSV Spreadsheet Import
+  // ──────────────────────────────────────────────────────────────────────
+
+  /// Column name aliases → normalized schema key. Supports many common
+  /// spreadsheet headers so users don't have to match our schema exactly.
+  static const Map<String, String> _columnAliases = {
+    'name': 'Name',
+    'product': 'Name',
+    'product name': 'Name',
+    'item': 'Name',
+    'description': 'Name',
+    'generic': 'GenericName',
+    'generic name': 'GenericName',
+    'genericname': 'GenericName',
+    'brand': 'BrandName',
+    'brand name': 'BrandName',
+    'brandname': 'BrandName',
+    'manufacturer': 'BrandName',
+    'strength': 'Strength',
+    'concentration': 'Strength',
+    'dosage': 'DosageForm',
+    'dosage form': 'DosageForm',
+    'dosageform': 'DosageForm',
+    'form': 'DosageForm',
+    'pack': 'PackSize',
+    'pack size': 'PackSize',
+    'packsize': 'PackSize',
+    'unit': 'UnitOfMeasure',
+    'uom': 'UnitOfMeasure',
+    'unit of measure': 'UnitOfMeasure',
+    'sku': 'SKU',
+    'code': 'SKU',
+    'barcode': 'SKU',
+    'category': 'Category',
+    'type': 'Category',
+    'supplier': 'Supplier',
+    'vendor': 'Supplier',
+    'cost': 'CostPrice',
+    'cost price': 'CostPrice',
+    'costprice': 'CostPrice',
+    'buy price': 'CostPrice',
+    'selling': 'SellingPrice',
+    'selling price': 'SellingPrice',
+    'sellingprice': 'SellingPrice',
+    'price': 'SellingPrice',
+    'retail': 'SellingPrice',
+    'minimum stock': 'MinimumStockLevel',
+    'min stock': 'MinimumStockLevel',
+    'minimumstocklevel': 'MinimumStockLevel',
+    'reorder': 'ReorderLevel',
+    'reorder level': 'ReorderLevel',
+    'reorderlevel': 'ReorderLevel',
+  };
+
+  String? _resolveColumn(String? raw) {
+    if (raw == null) return null;
+    final key = raw.trim().toLowerCase();
+    if (key.isEmpty) return null;
+    return _columnAliases[key] ?? _columnAliases[key.replaceAll(r' ', '')];
+  }
+
+  double? _parseDouble(dynamic v) {
+    if (v == null) return null;
+    if (v is num) return v.toDouble();
+    final cleaned = v
+        .toString()
+        .replaceAll(RegExp(r'[^0-9.\-]'), '')
+        .trim();
+    if (cleaned.isEmpty) return null;
+    return double.tryParse(cleaned);
+  }
+
+  int? _parseInt(dynamic v) {
+    final d = _parseDouble(v);
+    return d?.round();
+  }
+
+  String? _parseString(dynamic v) {
+    if (v == null) return null;
+    final s = v.toString().trim();
+    return s.isEmpty ? null : s;
+  }
+
+  /// Entry point for the Import Excel button.
+  Future<void> _importFromSpreadsheet(BuildContext context) async {
+    logFirebaseEvent('PRODUCT_CATALOGUE_ImportExcel_ON_TAP');
+
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls', 'csv'],
+        allowMultiple: false,
+      );
+
+      if (result == null || result.files.isEmpty) {
+        // User cancelled — no error toast.
+        return;
+      }
+
+      final file = result.files.first;
+      final bytes = file.bytes ??
+          (file.path != null
+              ? await _readFileBytes(file.path!)
+              : null);
+
+      if (bytes == null) {
+        _showImportToast(
+          context,
+          success: false,
+          message: 'Could not read the selected file.',
+        );
+        return;
+      }
+
+      final ext = (file.extension ?? '').toLowerCase();
+      List<List<dynamic>> rows;
+
+      if (ext == 'csv') {
+        final decoded = utf8.decode(bytes, allowMalformed: true);
+        rows = const CsvToListConverter(
+          eol: '\n',
+          shouldParseNumbers: false,
+        ).convert(decoded);
+      } else {
+        // xlsx / xls
+        final excel = Excel.decodeBytes(bytes);
+        final sheet = excel.tables.keys.isEmpty
+            ? null
+            : excel.tables[excel.tables.keys.first];
+        if (sheet == null) {
+          _showImportToast(
+            context,
+            success: false,
+            message: 'The spreadsheet appears to be empty.',
+          );
+          return;
+        }
+        rows = sheet.rows
+            .map((row) => row.map((cell) => cell?.value).toList())
+            .toList();
+      }
+
+      if (rows.isEmpty) {
+        _showImportToast(
+          context,
+          success: false,
+          message: 'No rows found in the spreadsheet.',
+        );
+        return;
+      }
+
+      // Build column index map from header row.
+      final header = rows.first;
+      final colIndex = <String, int>{};
+      for (var i = 0; i < header.length; i++) {
+        final resolved = _resolveColumn(header[i]?.toString());
+        if (resolved != null && !colIndex.containsKey(resolved)) {
+          colIndex[resolved] = i;
+        }
+      }
+
+      String? cellVal(List<dynamic> row, String key) {
+        final idx = colIndex[key];
+        if (idx == null || idx >= row.length) return null;
+        return _parseString(row[idx]);
+      }
+
+      // Confirm with the user before writing.
+      final dataRows = rows.skip(1).where((r) {
+        // Skip fully empty rows.
+        return r.any((c) =>
+            c != null && c.toString().trim().isNotEmpty);
+      }).toList();
+
+      if (dataRows.isEmpty) {
+        _showImportToast(
+          context,
+          success: false,
+          message: 'No product rows found after the header.',
+        );
+        return;
+      }
+
+      final confirmed = await _showImportConfirmDialog(
+        context,
+        fileName: file.name,
+        rowCount: dataRows.length,
+        detectedColumns: colIndex.keys.toList(),
+      );
+
+      if (!confirmed) return;
+
+      // Show a progress overlay.
+      _showImportProgressDialog(context, total: dataRows.length);
+
+      int imported = 0;
+      int skipped = 0;
+      final batch = ProductMasterRecord.collection.firestore.batch();
+      final now = DateTime.now();
+
+      for (final row in dataRows) {
+        final name = cellVal(row, 'Name');
+        final sku = cellVal(row, 'SKU');
+        // Name + SKU are required to match the manual add form.
+        if (name == null || name.isEmpty || sku == null || sku.isEmpty) {
+          skipped++;
+          continue;
+        }
+
+        batch.set(
+          ProductMasterRecord.collection.doc(),
+          createProductMasterRecordData(
+            name: name,
+            genericName: cellVal(row, 'GenericName'),
+            brandName: cellVal(row, 'BrandName'),
+            strength: cellVal(row, 'Strength'),
+            dosageForm: cellVal(row, 'DosageForm'),
+            packSize: cellVal(row, 'PackSize'),
+            unitOfMeasure: cellVal(row, 'UnitOfMeasure'),
+            sku: sku,
+            category: cellVal(row, 'Category'),
+            supplier: cellVal(row, 'Supplier'),
+            costPrice: _parseDouble(_rawCell(row, colIndex, 'CostPrice')),
+            sellingPrice: _parseDouble(_rawCell(row, colIndex, 'SellingPrice')),
+            minimumStockLevel:
+                _parseInt(_rawCell(row, colIndex, 'MinimumStockLevel')),
+            reorderLevel: _parseInt(_rawCell(row, colIndex, 'ReorderLevel')),
+            isActive: true,
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+        imported++;
+      }
+
+      await batch.commit();
+
+      if (mounted) Navigator.of(context, rootNavigator: true).pop();
+
+      _showImportToast(
+        context,
+        success: true,
+        message: imported == 0
+            ? 'No rows imported (each row needs a Name and SKU).'
+            : 'Imported $imported product${imported == 1 ? '' : 's'}'
+                '${skipped > 0 ? ' · $skipped skipped' : ''}.',
+      );
+    } catch (e) {
+      if (mounted) {
+        // Dismiss progress dialog if open.
+        Navigator.of(context, rootNavigator: true).maybePop();
+        _showImportToast(
+          context,
+          success: false,
+          message: 'Import failed: ${e.toString()}',
+        );
+      }
+    }
+  }
+
+  dynamic _rawCell(
+    List<dynamic> row,
+    Map<String, int> colIndex,
+    String key,
+  ) {
+    final idx = colIndex[key];
+    if (idx == null || idx >= row.length) return null;
+    return row[idx];
+  }
+
+  Future<Uint8List> _readFileBytes(String path) async {
+    // file_picker on web provides bytes directly; this is a fallback.
+    throw UnsupportedError('File bytes are required for web import.');
+  }
+
+  void _showImportToast(
+    BuildContext context, {
+    required bool success,
+    required String message,
+  }) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              success
+                  ? Icons.check_circle_rounded
+                  : Icons.error_outline_rounded,
+              color: Colors.white,
+              size: 20.0,
+            ),
+            const SizedBox(width: 10.0),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  fontFamily: 'Satoshi',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: success ? _duniyaPurple : _errorColor,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
+  }
+
+  void _showImportProgressDialog(BuildContext context, {required int total}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black54,
+      builder: (dialogContext) {
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SpinKitRing(
+                    color: _duniyaPurple,
+                    size: 48.0,
+                    lineWidth: 3.0,
+                  ),
+                  const SizedBox(height: 20.0),
+                  Text(
+                    'Importing products…',
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w700,
+                      color: _navy900,
+                    ),
+                  ),
+                  const SizedBox(height: 6.0),
+                  Text(
+                    'Processing $total row${total == 1 ? '' : 's'} from your spreadsheet',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: 13.0,
+                      color: _onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool> _showImportConfirmDialog(
+    BuildContext context, {
+    required String fileName,
+    required int rowCount,
+    required List<String> detectedColumns,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 460),
+            child: Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: _duniyaPurple.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.table_view_rounded,
+                          color: _duniyaPurple,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          'Confirm Import',
+                          style: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w700,
+                            color: _navy900,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'File: $fileName',
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: _onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '$rowCount product row${rowCount == 1 ? '' : 's'} will be added to your catalogue.',
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: 13.0,
+                      color: _onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: _surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _outlineVariant.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Detected columns (${detectedColumns.length})',
+                          style: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontSize: 11.0,
+                            fontWeight: FontWeight.w700,
+                            color: _onSurfaceVariant,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: detectedColumns
+                              .map(
+                                (c) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                      color: _outlineVariant,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    c,
+                                    style: TextStyle(
+                                      fontFamily: 'Satoshi',
+                                      fontSize: 11.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: _onSurface,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline_rounded,
+                        size: 14,
+                        color: _onSurfaceVariant.withValues(alpha: 0.7),
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          'Each row needs a Name and SKU to be imported.',
+                          style: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontSize: 11.5,
+                            color: _onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () =>
+                            Navigator.pop(dialogContext, false),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: _onSurfaceVariant,
+                          side: BorderSide(
+                              color: _outlineVariant, width: 1.2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 22.0, vertical: 13.0),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        onPressed: () =>
+                            Navigator.pop(dialogContext, true),
+                        icon: const Icon(Icons.check_rounded, size: 18),
+                        label: Text(
+                          'Import $rowCount',
+                          style: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _duniyaPurple,
+                          foregroundColor: Colors.white,
+                          elevation: 4,
+                          shadowColor: _duniyaPurple.withValues(alpha: 0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0, vertical: 13.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    return result ?? false;
   }
 
   // ── World-Class Add Product Dialog ──
