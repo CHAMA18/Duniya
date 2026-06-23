@@ -1,0 +1,76 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "Stock",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "Category",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Quantity",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Stock",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "Category",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Pharmacy",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Quantity",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Stock",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "Pharmacy",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Quantity",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Staff",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "OwnerRef",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "deleted",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "Saleitem",
+      "fieldPath": "StockID",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    }
+  ]
+}
