@@ -1,14 +1,78 @@
+# =====================================================================
+# Duniya — Render deployment config
+# =====================================================================
+#
+# This is now a STATIC SITE, not a Docker web service.
+#
+# Why the change?
+#   The previous config deployed as a `web` service (Docker runtime).
+#   Render's free web services get 750 instance-hours/month — a 24/7
+#   service consumes ~720 of those just staying alive, leaving almost
+#   no headroom for rebuilds/deploys. The result: "pipeline exhausted"
+#   failures partway through the month.
+#
+#   A Flutter web build produces only static files (HTML/JS/CSS). There
+#   is no need for a long-running container. Render Static Sites:
+#     - Have NO instance-hour limit (they're served from a CDN).
+#     - Have a separate, more generous 500 build-minutes/month quota.
+#     - Don't need nginx — Render serves the static files directly.
+#
+# Migration steps (one-time, in Render dashboard):
+#   1. Create a NEW Static Site using the render.yaml below.
+#   2. Once it's live and the custom domain (ivm.duniyahealthcare.com)
+#      is wired up, delete the old `medi-tracker` web service.
+#   3. Re-point the custom domain DNS to the new static site if needed.
+#
+# =====================================================================
 services:
   - type: web
-    name: medi-tracker
-    runtime: docker
-    plan: free
-    dockerfilePath: ./Dockerfile
+    name: duniya-web
+    runtime: static
+    # The directory emitted by `flutter build web` is build/web.
+    # Render serves everything under this path from its CDN.
+    staticPublishPath: ./build/web
+
+    # Build pipeline. Render runs these on every push / manual deploy.
+    # We use a shell script so the same build works locally and on CI.
+    buildCommand: ./build.sh
+    # No startCommand — static sites don't run a process.
+
+    # Custom domain (carried over from the previous config).
     domains:
       - ivm.duniyahealthcare.com
     renderSubdomainPolicy: disabled
+
+    # Pull requests get preview deploys automatically on the free plan.
+    previews:
+      failureStrategy: ignore
+
+    # Environment variables used by the build / at runtime.
     envVars:
       - key: PORT
         value: "8080"
       - key: RESEND_API_KEY
         sync: false
+      - key: FLUTTER_VERSION
+        value: "3.24.5"
+
+    # Free plan — sufficient for a Flutter web static site.
+    plan: free
+
+# =====================================================================
+# Fallback Docker web service (commented out — DO NOT enable unless the
+# static site approach is insufficient). If you re-enable this, REMOVE
+# the static site block above to avoid running both.
+# =====================================================================
+#  - type: web
+#    name: medi-tracker
+#    runtime: docker
+#    plan: free
+#    dockerfilePath: ./Dockerfile
+#    domains:
+#      - ivm.duniyahealthcare.com
+#    renderSubdomainPolicy: disabled
+#    envVars:
+#      - key: PORT
+#        value: "8080"
+#      - key: RESEND_API_KEY
+#        sync: false

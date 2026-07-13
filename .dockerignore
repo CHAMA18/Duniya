@@ -1,9 +1,71 @@
-.dart_tool/
-.packages
-build/
-.flutter-plugins
-.flutter-plugins-dependencies
-*.iml
+# --- VCS / metadata ---
+.git
+.gitignore
+.gitattributes
+.github
+.dreamflow
+.prompt_attachments
+.hologram*
+
+# --- IDE / editor ---
 .idea/
 .vscode/
+*.iml
+*.ipr
+*.iws
+.atom/
+.history
+.swp
+.DS_Store
+
+# --- Dart / Flutter build artifacts ---
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/doc/api/
+app.*.symbols
+app.*.map.json
+*.dart.bak
+
+# --- Log files ---
 *.log
+.buildlog/
+
+# --- Render / deployment artifacts (rebuilt by Render) ---
+# Keep render.yaml and Dockerfile OUT of the build context — Render reads
+# them via its own pipeline, not via the Docker context.
+render.yaml
+Dockerfile
+.dockerignore
+nginx.conf
+serve_web.dart
+
+# --- Mobile platforms (NOT needed for web build; saves 1+ MB) ---
+android/
+ios/
+linux/
+macos/
+windows/
+
+# --- Project scratch / docs / uploads ---
+upload/
+download/
+skills/
+firebase/email-templates/
+Duniya/
+local_packages/
+
+# --- Node (if any) ---
+node_modules/
+
+# --- Python (sometimes added by tooling) ---
+*.py
+__pycache__/
+*.pyc
+
+# --- Test fixtures ---
+test/
