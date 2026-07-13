@@ -304,12 +304,16 @@ class _ResetPassWidgetState extends State<ResetPassWidget> {
                                               );
                                               return;
                                             }
-                                            await authManager.resetPassword(
+                                            final resetSent = await authManager
+                                                .resetPassword(
                                               email: _model
                                                   .emailAddressTextController
                                                   .text,
                                               context: context,
                                             );
+                                            if (!resetSent) {
+                                              return;
+                                            }
                                             logFirebaseEvent(
                                                 'Button_show_snack_bar');
                                             ScaffoldMessenger.of(context)

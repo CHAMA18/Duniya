@@ -17,6 +17,14 @@ import 'github_auth.dart';
 
 export '../base_auth_user_provider.dart';
 
+/// Continue URL the user is sent to after they complete the password reset
+/// flow on Firebase's hosted reset page. Must be listed under Firebase
+/// Console → Authentication → Settings → Authorized domains.
+/// Points to the login route so the user can immediately sign in with
+/// their new password.
+const _passwordResetContinueUrl =
+    'https://ivm.duniyahealthcare.com/loginUni';
+
 class FirebasePhoneAuthManager extends ChangeNotifier {
   bool? _triggerOnCodeSent;
   FirebaseAuthException? phoneAuthError;
@@ -128,22 +136,72 @@ class FirebaseAuthManager extends AuthManager
   }
 
   @override
-  Future resetPassword({
+  Future<bool> resetPassword({
     required String email,
     required BuildContext context,
   }) async {
+    // Trim+lowercase the email — autocomplete/IME often adds trailing
+    // whitespace or a newline that causes Firebase to throw
+    // `auth/user-not-found` (or silently no-op when email-enumeration
+    // protection is enabled). signIn / createAccount already do this.
+    final normalizedEmail = email.trim();
+    if (normalizedEmail.isEmpty) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email required!')),
+      );
+      return false;
+    }
+
+    // ActionCodeSettings so the reset link is sent correctly and the user
+    // is returned to the deployed app (ivm.duniyahealthcare.com) after
+    // completing the password reset. Without a continueUrl, the reset link
+    // opens Firebase's default firebaseapp.com handler page and the user
+    // is never redirected back to the app.
+    //
+    // We use handleCodeInApp: false (Firebase's hosted reset page) for
+    // maximum reliability — it works on web and mobile without requiring
+    // a dynamic-link domain or in-app OOB-code handling. After the user
+    // resets their password, Firebase redirects them to the continueUrl
+    // (the deployed app's reset route) where the existing widget loads.
+    final actionCodeSettings = ActionCodeSettings(
+      url: _passwordResetContinueUrl,
+      handleCodeInApp: false,
+      androidPackageName: 'com.mycompany.meditrackerpro',
+      androidInstallApp: true,
+      iOSBundleId: 'com.stackone.pharmaaid',
+    );
+
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: normalizedEmail,
+        actionCodeSettings: actionCodeSettings,
+      );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message!}')),
+        SnackBar(content: Text('Error: ${e.message ?? e.code}')),
       );
-      return null;
+      return false;
+    } catch (e) {
+      // On Flutter Web, network/CORS errors throw a generic
+      // FirebaseAuthWebException / PlatformException that is NOT a
+      // FirebaseAuthException — surface those too instead of swallowing.
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Unable to send password reset email. '
+            'Please check your connection and try again. ($e)',
+          ),
+        ),
+      );
+      return false;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Password reset email sent')),
+      const SnackBar(content: Text('Password reset email sent')),
     );
+    return true;
   }
 
   @override
