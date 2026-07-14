@@ -30,12 +30,21 @@ echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHA
 # 1. Install Flutter SDK (cached on Render via /opt/render-cache)
 # ---------------------------------------------------------------------
 FLUTTER_HOME="${FLUTTER_HOME:-/opt/render-cache/flutter}"
-FLUTTER_TARBALL="https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_CHANNEL}/${FLUTTER_PLATFORM:-linux}/${FLUTTER_ARCH:-x64}/flutter_${FLUTTER_PLATFORM:-linux}_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.${FLUTTER_ARCH:-x64}.tar.xz"
+# Correct Flutter release archive URL format:
+#   https://storage.googleapis.com/flutter_infra_release/releases/{channel}/linux/flutter_linux_{version}-{channel}.tar.xz
+# (No /x64 subdirectory, no .x64 suffix in filename.)
+FLUTTER_TARBALL="https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.tar.xz"
 
 if [[ -x "${FLUTTER_HOME}/bin/flutter" && "$(${FLUTTER_HOME}/bin/flutter --version --machine 2>/dev/null | grep -o '"frameworkVersion": "[^"]*"' | cut -d'"' -f4)" == "${FLUTTER_VERSION}" ]]; then
   echo "==> Reusing cached Flutter ${FLUTTER_VERSION} at ${FLUTTER_HOME}"
 else
   echo "==> Downloading Flutter ${FLUTTER_VERSION} from ${FLUTTER_TARBALL}"
+  # Verify the URL exists before downloading (fail fast with a clear error).
+  HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' -I "${FLUTTER_TARBALL}")
+  if [[ "${HTTP_STATUS}" != "200" ]]; then
+    echo "ERROR: Flutter tarball URL returned HTTP ${HTTP_STATUS}. Check FLUTTER_VERSION (${FLUTTER_VERSION}) and FLUTTER_CHANNEL (${FLUTTER_CHANNEL})."
+    exit 1
+  fi
   mkdir -p "${FLUTTER_HOME}"
   curl -fsSL "${FLUTTER_TARBALL}" | tar -xJ -C "${FLUTTER_HOME}" --strip-components=1
 fi
