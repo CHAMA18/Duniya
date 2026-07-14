@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -595,6 +596,42 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        // Download a pre-formatted Excel
+                                        // template so users know exactly
+                                        // which columns to include. The
+                                        // template includes an example row
+                                        // and an Instructions sheet.
+                                        OutlinedButton.icon(
+                                          onPressed: () =>
+                                              downloadInventoryTemplate(),
+                                          icon: const Icon(
+                                              Icons.download_rounded,
+                                              size: 18.0),
+                                          label: Text(
+                                            'Download Template',
+                                            style: TextStyle(
+                                              fontFamily: 'Satoshi',
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          style: OutlinedButton.styleFrom(
+                                            foregroundColor: _duniyaPurple,
+                                            side: BorderSide(
+                                                color: _duniyaPurple
+                                                    .withValues(alpha: 0.4),
+                                                width: 1.4),
+                                            elevation: 0,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 18.0,
+                                                vertical: 12.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12.0),
                                         OutlinedButton.icon(
                                           onPressed: () =>
                                               _importFromSpreadsheet(context),

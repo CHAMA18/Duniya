@@ -445,78 +445,123 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                       children: [
                                                         Expanded(
                                                           child:
-                                                              FlutterFlowDropDown<
+                                                              DropdownButtonFormField<
                                                                   String>(
-                                                            controller: _model
-                                                                    .categoryValueController ??=
-                                                                FormFieldController<
+                                                            key: const ValueKey(
+                                                                'addProduct_category_dropdown'),
+                                                            value: _model
+                                                                .categoryValue,
+                                                            items: [
+                                                              'Medicine',
+                                                              'Nutrition Suppliments',
+                                                              'Mother and Babycare',
+                                                              'Veterinary Products',
+                                                              'Beauty Care',
+                                                              'Personal Care',
+                                                            ]
+                                                                .map((label) =>
+                                                                    DropdownMenuItem<
                                                                         String>(
-                                                                    null),
-                                                            options: [
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                '64jrscea' /* Medicine */,
-                                                              ),
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                'x90hqzrc' /* Nutrition Suppliments */,
-                                                              ),
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                '8axgfzmj' /* Mother and Babycare */,
-                                                              ),
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                'l6psm6n6' /* Veterinary Products */,
-                                                              ),
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                'x5z24sj6' /* Beauty Care */,
-                                                              ),
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                'auyrb2d7' /* Personal Care */,
-                                                              )
-                                                            ],
+                                                                      value:
+                                                                          label,
+                                                                      child: Text(
+                                                                        label,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                              color: FlutterFlowTheme.of(context).secondaryText,
+                                                                              fontSize: 12.0,
+                                                                              letterSpacing: 0.0,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                            ),
+                                                                      ),
+                                                                    ))
+                                                                .toList(),
                                                             onChanged: (val) =>
                                                                 safeSetState(() =>
                                                                     _model.categoryValue =
                                                                         val),
-                                                            width: 300.0,
-                                                            height: 50.0,
-                                                            textStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .secondaryText,
-                                                                      fontSize:
-                                                                          12.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                            hintText:
-                                                                FFLocalizations.of(
-                                                                        context)
-                                                                    .getText(
-                                                              'wsvuthpp' /* Please select... */,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              hintText:
+                                                                  'Please select...',
+                                                              hintStyle: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyMediumFamily,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    fontSize:
+                                                                        12.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    useGoogleFonts:
+                                                                        !FlutterFlowTheme.of(context)
+                                                                            .bodyMediumIsCustom,
+                                                                  ),
+                                                              filled: true,
+                                                              fillColor: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryBackground,
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal:
+                                                                    16.0,
+                                                                vertical:
+                                                                    14.0,
+                                                              ),
+                                                              border:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8.0),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  color: FlutterFlowTheme
+                                                                          .of(context)
+                                                                      .alternate,
+                                                                  width: 0.0,
+                                                                ),
+                                                              ),
+                                                              enabledBorder:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8.0),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  color: FlutterFlowTheme
+                                                                          .of(context)
+                                                                      .alternate,
+                                                                  width: 0.0,
+                                                                ),
+                                                              ),
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8.0),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  color: FlutterFlowTheme
+                                                                          .of(context)
+                                                                      .primary,
+                                                                  width: 1.0,
+                                                                ),
+                                                              ),
                                                             ),
                                                             icon: Icon(
                                                               Icons
@@ -526,28 +571,11 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                   .secondaryText,
                                                               size: 24.0,
                                                             ),
-                                                            fillColor: FlutterFlowTheme
+                                                            elevation: 2,
+                                                            isExpanded: true,
+                                                            dropdownColor: FlutterFlowTheme
                                                                     .of(context)
-                                                                .primaryBackground,
-                                                            elevation: 2.0,
-                                                            borderColor:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .alternate,
-                                                            borderWidth: 0.0,
-                                                            borderRadius: 8.0,
-                                                            margin:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        16.0,
-                                                                        4.0,
-                                                                        16.0,
-                                                                        4.0),
-                                                            hidesUnderline:
-                                                                true,
-                                                            isSearchable: false,
-                                                            isMultiSelect:
-                                                                false,
+                                                                .secondaryBackground,
                                                           ),
                                                         ),
                                                       ],

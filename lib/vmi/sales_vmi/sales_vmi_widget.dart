@@ -120,6 +120,12 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
   }
 
   // ── Sale Card Builder ──
+  //
+  // Each card is tappable and navigates to the SalesItems detail page,
+  // which shows the full list of products dispensed, quantities, and
+  // prices for that sale. The card also shows a live line-item count
+  // and the first few product names so users can identify a sale at a
+  // glance without having to open it.
   Widget _buildSaleCard(SaleRecordVMI sale, int index, bool isPhone) {
     final hasPatient = sale.hasPatientRef();
     final dateStr = sale.hasSaleDate()
@@ -146,98 +152,201 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          // Order number badge
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [_deep, _primary],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          logFirebaseEvent('SALES_VMI_SALE_CARD_ON_TAP');
+          context.pushNamed(
+            SalesItemsWidget.routeName,
+            queryParameters: {
+              'sale': serializeParam(
+                sale.reference,
+                ParamType.DocumentReference,
               ),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Center(
-              child: Text(
-                '#${index + 1}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
+            }.withoutNulls,
+          );
+        },
+        child: Row(
+          children: [
+            // Order number badge
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [_deep, _primary],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                borderRadius: BorderRadius.circular(14),
               ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  hasPatient
-                      ? 'Patient: ${sale.patientRef!}'
-                      : 'Sale #${index + 1}',
+              child: Center(
+                child: Text(
+                  '#${index + 1}',
                   style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: _textDark,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today_outlined,
-                        size: 12, color: _textMuted),
-                    const SizedBox(width: 4),
-                    Text(
-                      dateStr,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: _textMuted,
-                      ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Details + line-item summary
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    hasPatient
+                        ? 'Patient: ${sale.patientRef!}'
+                        : 'Sale #${index + 1}',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: _textDark,
                     ),
-                    if (timeStr.isNotEmpty) ...[
-                      const SizedBox(width: 8),
-                      Icon(Icons.access_time, size: 12, color: _textMuted),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today_outlined,
+                          size: 12, color: _textMuted),
                       const SizedBox(width: 4),
                       Text(
-                        timeStr,
+                        dateStr,
                         style: const TextStyle(
                           fontSize: 12,
                           color: _textMuted,
                         ),
                       ),
+                      if (timeStr.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        Icon(Icons.access_time, size: 12, color: _textMuted),
+                        const SizedBox(width: 4),
+                        Text(
+                          timeStr,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: _textMuted,
+                          ),
+                        ),
+                      ],
                     ],
+                  ),
+                  const SizedBox(height: 6),
+                  // Live line-item summary — shows the number of products
+                  // dispensed and the first few names so the user can
+                  // identify the sale without opening it.
+                  StreamBuilder<List<SaleItemVMIRecord>>(
+                    stream: querySaleItemVMIRecord(
+                      parent: sale.reference,
+                    ),
+                    builder: (context, itemSnapshot) {
+                      if (!itemSnapshot.hasData) {
+                        return const SizedBox(
+                          height: 16,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2),
+                            child: SpinKitRing(
+                                color: _primary, size: 12, lineWidth: 1.5),
+                          ),
+                        );
+                      }
+                      final items = itemSnapshot.data!;
+                      if (items.isEmpty) {
+                        return Row(
+                          children: [
+                            Icon(Icons.shopping_cart_outlined,
+                                size: 12, color: _textMuted),
+                            const SizedBox(width: 4),
+                            Text(
+                              'No items recorded',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: _textMuted,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      final itemSummary = items
+                          .map((i) =>
+                              'x${i.quantity}')
+                          .join(', ');
+                      final totalUnits = items.fold<int>(
+                          0, (sum, i) => sum + i.quantity);
+                      return Row(
+                        children: [
+                          Icon(Icons.medication_outlined,
+                              size: 13, color: _primary),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              '${items.length} item${items.length == 1 ? '' : 's'} · $totalUnits unit${totalUnits == 1 ? '' : 's'} total ($itemSummary)',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: _textMuted,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Amount + view-details chevron
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1FAE5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'ZMK ${formatNumber(
+                      sale.totalAmount,
+                      formatType: FormatType.compact,
+                    )}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF059669),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'View Details',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: _primary,
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: 16,
+                      color: _primary,
+                    ),
                   ],
                 ),
               ],
             ),
-          ),
-          // Amount
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFD1FAE5),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              'ZMK ${formatNumber(
-                sale.totalAmount,
-                formatType: FormatType.compact,
-              )}',
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF059669),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -860,119 +969,198 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                               color: _textDark,
                               fontSize: 15)),
                       const SizedBox(height: 8),
-                      // Add line item row
+                      // Add line item row.
+                      //
+                      // Each field has a visible label above it so users
+                      // can tell what to enter. The selling price is
+                      // auto-populated from ProductMaster when a product
+                      // is selected — the user only needs to enter the
+                      // quantity dispensed.
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          // Product selector
                           Expanded(
-                            flex: 2,
-                            child: StreamBuilder<List<ProductMasterRecord>>(
-                              stream: queryProductMasterRecord(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return SpinKitRing(
-                                      color: _primary, size: 16.0);
-                                }
-                                return FlutterFlowDropDown<String>(
-                                  controller:
-                                      _model.lineProductValueController ??=
-                                          FormFieldController<String>(null),
-                                  options: snapshot.data!
-                                      .map((p) => p.name)
-                                      .toList(),
-                                  onChanged: (val) => setDialogState(
-                                      () => _model.lineProductValue = val),
-                                  width: double.infinity,
-                                  height: 40.0,
-                                  textStyle: const TextStyle(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 4),
+                                  child: Text('Product',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: _textMuted)),
+                                ),
+                                StreamBuilder<List<ProductMasterRecord>>(
+                                  stream: queryProductMasterRecord(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const SpinKitRing(
+                                          color: _primary, size: 16.0);
+                                    }
+                                    final products = snapshot.data!;
+                                    return FlutterFlowDropDown<String>(
+                                      controller:
+                                          _model.lineProductValueController ??=
+                                              FormFieldController<String>(null),
+                                      options: products
+                                          .map((p) => p.name)
+                                          .toList(),
+                                      onChanged: (val) async {
+                                        setDialogState(() =>
+                                            _model.lineProductValue = val);
+                                        // Auto-populate the selling price from
+                                        // the selected product's master record
+                                        // so the user only has to enter qty.
+                                        if (val == null || val.isEmpty) {
+                                          _model.linePriceTextController
+                                              ?.clear();
+                                          return;
+                                        }
+                                        final match = products.firstWhere(
+                                          (p) => p.name == val,
+                                          orElse: () => products.first,
+                                        );
+                                        final sp = match.sellingPrice;
+                                        setDialogState(() {
+                                          _model.linePriceTextController
+                                                  ?.text =
+                                              sp > 0
+                                                  ? sp.toStringAsFixed(2)
+                                                  : '';
+                                        });
+                                      },
+                                      width: double.infinity,
+                                      height: 40.0,
+                                      textStyle: const TextStyle(
+                                          fontSize: 12, color: _textDark),
+                                      hintText: 'Select product…',
+                                      fillColor: _bg,
+                                      borderColor: _light,
+                                      borderRadius: 10.0,
+                                      elevation: 2,
+                                      borderWidth: 1.0,
+                                      margin: EdgeInsets.zero,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          // Quantity dispensed
+                          SizedBox(
+                            width: 110.0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 4),
+                                  child: Text('Quantity Dispensed',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: _textMuted)),
+                                ),
+                                TextFormField(
+                                  controller: _model.lineQtyTextController,
+                                  decoration: InputDecoration(
+                                    hintText: 'e.g. 10',
+                                    filled: true,
+                                    fillColor: _bg,
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: _light),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(
                                       fontSize: 12, color: _textDark),
-                                  hintText: 'Product',
-                                  fillColor: _bg,
-                                  borderColor: _light,
-                                  borderRadius: 10.0,
-                                  elevation: 2,
-                                  borderWidth: 1.0,
-                                  margin: EdgeInsets.zero,
-                                );
-                              },
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          Container(
-                            width: 60.0,
-                            child: TextFormField(
-                              controller: _model.lineQtyTextController,
-                              decoration: InputDecoration(
-                                hintText: 'Qty',
-                                filled: true,
-                                fillColor: _bg,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: _light),
+                          const SizedBox(width: 8),
+                          // Sale amount (auto-filled from product master)
+                          SizedBox(
+                            width: 130.0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 4),
+                                  child: Text('Sale Amount (ZMK)',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: _textMuted)),
                                 ),
-                              ),
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  fontSize: 12, color: _textDark),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Container(
-                            width: 80.0,
-                            child: TextFormField(
-                              controller: _model.linePriceTextController,
-                              decoration: InputDecoration(
-                                hintText: 'Price',
-                                filled: true,
-                                fillColor: _bg,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: _light),
+                                TextFormField(
+                                  controller: _model.linePriceTextController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Auto-filled',
+                                    filled: true,
+                                    fillColor: _bg,
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(color: _light),
+                                    ),
+                                  ),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
+                                  style: const TextStyle(
+                                      fontSize: 12, color: _textDark),
                                 ),
-                              ),
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  fontSize: 12, color: _textDark),
+                              ],
                             ),
                           ),
                           const SizedBox(width: 4),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle,
-                                color: _primary),
-                            onPressed: () async {
-                              if (_model.lineProductValue == null) return;
-                              final products =
-                                  await queryProductMasterRecordOnce();
-                              final product = products.firstWhere(
-                                (p) =>
-                                    p.name ==
-                                    _model.lineProductValue,
-                                orElse: () => products.first,
-                              );
-                              int qty = int.tryParse(
-                                      _model.lineQtyTextController?.text ??
-                                          '0') ??
-                                  0;
-                              double price = double.tryParse(
-                                      _model.linePriceTextController
-                                              ?.text ??
-                                          '0') ??
-                                  0.0;
-                              setDialogState(() {
-                                _saleLineItems.add({
-                                  'productId': product.reference,
-                                  'productName': product.name,
-                                  'quantity': qty,
-                                  'sellingPrice': price,
-                                  'total': qty * price,
+                          // Add button aligned to bottom of the row
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: IconButton(
+                              icon: const Icon(Icons.add_circle,
+                                  color: _primary, size: 28),
+                              tooltip: 'Add line item',
+                              onPressed: () async {
+                                if (_model.lineProductValue == null) return;
+                                final products =
+                                    await queryProductMasterRecordOnce();
+                                final product = products.firstWhere(
+                                  (p) =>
+                                      p.name == _model.lineProductValue,
+                                  orElse: () => products.first,
+                                );
+                                int qty = int.tryParse(
+                                        _model.lineQtyTextController?.text ??
+                                            '0') ??
+                                    0;
+                                double price = double.tryParse(
+                                        _model.linePriceTextController?.text ??
+                                            '0') ??
+                                    0.0;
+                                setDialogState(() {
+                                  _saleLineItems.add({
+                                    'productId': product.reference,
+                                    'productName': product.name,
+                                    'quantity': qty,
+                                    'sellingPrice': price,
+                                    'total': qty * price,
+                                  });
                                 });
-                              });
-                              _model.lineQtyTextController?.clear();
-                              _model.linePriceTextController?.clear();
-                            },
+                                _model.lineQtyTextController?.clear();
+                                _model.linePriceTextController?.clear();
+                              },
+                            ),
                           ),
                         ],
                       ),
