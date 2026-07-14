@@ -21,7 +21,7 @@
 # =====================================================================
 set -euo pipefail
 
-FLUTTER_VERSION="${FLUTTER_VERSION:-3.24.5}"
+FLUTTER_VERSION="${FLUTTER_VERSION:-3.29.3}"
 FLUTTER_CHANNEL="${FLUTTER_CHANNEL:-stable}"
 
 echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
