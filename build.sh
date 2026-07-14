@@ -68,9 +68,7 @@ flutter pub get
 # ---------------------------------------------------------------------
 echo "==> flutter build web"
 flutter build web --release \
-  --no-tree-shake-icons \
-  --web-renderer html \
-  --dart-define=FLUTTER_WEB_USE_SKIA=false
+  --no-tree-shake-icons
 
 echo "==> Build complete. Output: $(pwd)/build/web"
 ls -la build/web | head -20
