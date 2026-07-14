@@ -21,7 +21,7 @@
 # =====================================================================
 set -euo pipefail
 
-FLUTTER_VERSION="3.29.3"  # Pinned — hardcoded to override any stale env var
+FLUTTER_VERSION="3.38.2"  # Pinned — hardcoded to override any stale env var
 FLUTTER_CHANNEL="${FLUTTER_CHANNEL:-stable}"
 
 echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
