@@ -22,6 +22,7 @@ import '/offline/offline_indicator_banner.dart';
 import '/offline/offline_sync_service.dart';
 import '/offline/cache_warmer_service.dart';
 import '/offline/offline_status_widget.dart';
+import '/onboarding/onboarding_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,12 @@ void main() async {
   await FlutterFlowTheme.initialize();
 
   await FFLocalizations.initialize();
+
+  // Initialise the onboarding service so it can read/write the
+  // "has the user seen the tour?" flag from SharedPreferences. Must
+  // run after FFLocalizations.initialize() because that also inits
+  // the SharedPreferences instance.
+  await OnboardingService.instance.initialize();
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();

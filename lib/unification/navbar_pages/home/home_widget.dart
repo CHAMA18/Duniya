@@ -4,6 +4,8 @@ import '/components/pharma_table_widget.dart';
 import '/components/loading_spinner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/onboarding/onboarding_overlay.dart';
+import '/onboarding/onboarding_service.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
@@ -126,6 +128,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         imageUrl: 'Link',
         description: 'Links',
       );
+
+      // Auto-launch the visual onboarding walkthrough the first time
+      // the user lands on Home. Subsequent visits skip this — the flag
+      // is persisted in SharedPreferences by OnboardingService. The
+      // user can always replay the tour from the sidebar ("Take Tour").
+      if (!mounted) return;
+      if (!OnboardingService.instance.hasCompletedTour) {
+        await DuniyaOnboardingOverlay.show(context);
+      }
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));

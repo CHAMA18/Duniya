@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/onboarding/onboarding_overlay.dart';
 import '/unification/components/sidebar_link/sidebar_link_widget.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -1109,6 +1110,66 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
                           ),
                         ),
+
+                      // Take Tour — launches the visual onboarding
+                      // walkthrough overlay. Always available so users
+                      // can replay the tour at any time.
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          logFirebaseEvent(
+                              'SIDE_NAV_COMP_TAKE_TOUR_ON_TAP');
+                          logFirebaseEvent('SidebarLink_open_onboarding');
+                          DuniyaOnboardingOverlay.show(context);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          constraints: const BoxConstraints(minHeight: 48.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                isCollapsed ? 12.0 : 24.0,
+                                10.0,
+                                isCollapsed ? 12.0 : 24.0,
+                                10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Icon(
+                                  Icons.school_rounded,
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  size: 24.0,
+                                ),
+                                if (!isCollapsed) ...[
+                                  const SizedBox(width: 12.0),
+                                  Text(
+                                    'Take Tour',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w600,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
 
                       // Settings
                       InkWell(
