@@ -27,9 +27,12 @@ FLUTTER_CHANNEL="${FLUTTER_CHANNEL:-stable}"
 echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
 
 # ---------------------------------------------------------------------
-# 1. Install Flutter SDK (cached on Render via /opt/render-cache)
+# 1. Install Flutter SDK
 # ---------------------------------------------------------------------
-FLUTTER_HOME="${FLUTTER_HOME:-/opt/render-cache/flutter}"
+# Use /tmp for the SDK — on Render static site builders, /opt is
+# read-only. /tmp is wiped between builds but that's acceptable;
+# the download adds ~60s to each build.
+FLUTTER_HOME="${FLUTTER_HOME:-/tmp/flutter}"
 # Correct Flutter release archive URL format:
 #   https://storage.googleapis.com/flutter_infra_release/releases/{channel}/linux/flutter_linux_{version}-{channel}.tar.xz
 # (No /x64 subdirectory, no .x64 suffix in filename.)
