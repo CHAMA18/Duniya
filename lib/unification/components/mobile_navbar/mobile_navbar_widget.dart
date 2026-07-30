@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,10 @@ class MobileNavbarWidget extends StatefulWidget {
 
 class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
   late MobileNavbarModel _model;
+
+  /// RBAC helpers — powered by the centralized AccessControl system.
+  bool _canSee(NavItem item) => AccessControl.canSeeNavItem(context, item);
+  bool _hasPermission(Permission p) => AccessControl.hasPermission(context, p);
 
   @override
   void setState(VoidCallback callback) {
@@ -77,6 +82,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                // Home (RBAC: everyone)
+                if (_canSee(NavItem.home))
                 FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 30.0,
@@ -111,13 +118,11 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
-                // ─── Point Of Sale (highlighted for pharmacy users) ───
+                // ─── Point Of Sale (RBAC: pharmacy users with posView permission) ───
+                if (_canSee(NavItem.pointOfSale))
                 AuthUserStreamWidget(
                   builder: (context) {
-                    final isPharmacyUser =
-                        valueOrDefault(currentUserDocument?.accountType, 'Duniya') != 'Duniya';
-
-                    if (!isPharmacyUser) {
+                    if (!_hasPermission(Permission.posView)) {
                       return const SizedBox.shrink();
                     }
 
@@ -176,6 +181,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                // Store Inventory (RBAC)
+                if (_canSee(NavItem.storeInventory))
                 FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 30.0,
@@ -210,6 +217,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                // My Pharmacies (RBAC)
+                if (_canSee(NavItem.myPharmacies))
                 FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 30.0,
@@ -244,15 +253,11 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                // Human Resource (RBAC)
+                if (_canSee(NavItem.humanResource))
                 AuthUserStreamWidget(
                   builder: (context) {
-                    final isPharmacyOwner =
-                        valueOrDefault(currentUserDocument?.accountType, 'Duniya') !=
-                                'Duniya' &&
-                            valueOrDefault(currentUserDocument?.role, '') ==
-                                'Owner';
-
-                    if (!isPharmacyOwner) {
+                    if (!_hasPermission(Permission.hrView)) {
                       return const SizedBox.shrink();
                     }
 
@@ -292,6 +297,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                // Finances (RBAC)
+                if (_canSee(NavItem.finances))
                 FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 30.0,
@@ -327,6 +334,8 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                // VMI Dashboard (RBAC)
+                if (_canSee(NavItem.vmiDashboard))
                 FlutterFlowIconButton(
                   borderColor: Colors.transparent,
                   borderRadius: 30.0,

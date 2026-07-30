@@ -2,6 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -42,20 +43,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
 
   /// Get the parent reference based on user role
   DocumentReference? _getParentRef() {
-    final role = valueOrDefault(currentUserDocument?.role, '');
-    if (role == 'Owner') {
-      return currentUserReference;
-    } else {
-      return currentUserDocument?.ownerRef;
-    }
+    return AccessControl.parentRef(context);
   }
 
   /// Recalculate replenishment recommendations
   Future<void> _recalculate() async {
     final products = await queryProductMasterRecordOnce();
-    final ownerRef = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference!
-        : currentUserDocument!.ownerRef!;
+    final ownerRef = AccessControl.parentRef(context) ??
+        currentUserReference!;
     final pharmacies = await queryPharmacyRecordOnce(parent: ownerRef);
 
     for (var pharmacy in pharmacies) {

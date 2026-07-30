@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/damaged_stock/damaged_stock_widget.dart';
 import '/unification/components/sale_details/sale_details_widget.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
@@ -1270,11 +1271,7 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                               SaleitemRecord>(
                                                         pagingController: _model
                                                             .setListViewController1(
-                                                                SaleitemRecord.collection(valueOrDefault(currentUserDocument?.role, '') ==
-                                                                            'Owner'
-                                                                        ? currentUserReference
-                                                                        : currentUserDocument
-                                                                            ?.ownerRef)
+                                                                SaleitemRecord.collection(AccessControl.parentRef(context) ?? currentUserReference)
                                                                     .where(
                                                                   'StockID',
                                                                   isEqualTo:

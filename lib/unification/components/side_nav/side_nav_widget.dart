@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/onboarding/onboarding_overlay.dart';
@@ -20,10 +21,17 @@ class _SideNavWidgetState extends State<SideNavWidget> {
   late SideNavModel _model;
 
   /// Returns true if the current user is a Duniya network admin.
-  /// Pharmacy users see operational items; Duniya users see network items.
-  bool get _isDuniyaUser => currentUserDocument == null
-      ? false
-      : valueOrDefault(currentUserDocument?.accountType, 'Duniya') == 'Duniya';
+  /// Now powered by the centralized RBAC system (AccessControl).
+  bool get _isDuniyaUser => AccessControl.isDuniyaUser(context);
+
+  /// Returns the current user's resolved AppRole from the RBAC system.
+  AppRole get _currentRole => AccessControl.currentRole(context);
+
+  /// Returns true if the current user can see the given navigation item.
+  bool _canSee(NavItem item) => AccessControl.canSeeNavItem(context, item);
+
+  /// Returns true if the current user has the given permission.
+  bool _hasPermission(Permission p) => AccessControl.hasPermission(context, p);
 
   @override
   void setState(VoidCallback callback) {
@@ -126,7 +134,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Home
+                // Home (RBAC)
+                if (_canSee(NavItem.home))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -168,7 +177,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                   ),
                 ),
                 // My Pharmacies (Owner only)
-                if (valueOrDefault(currentUserDocument?.role, '') == 'Owner')
+                if (_canSee(NavItem.myPharmacies))
                   AuthUserStreamWidget(
                     builder: (context) => InkWell(
                       splashColor: Colors.transparent,
@@ -213,9 +222,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Human Resource (Pharmacy owners only)
-                if (!_isDuniyaUser &&
-                    valueOrDefault(currentUserDocument?.role, '') == 'Owner')
+                // Human Resource (RBAC)
+                if (_canSee(NavItem.humanResource))
                   AuthUserStreamWidget(
                     builder: (context) => InkWell(
                       splashColor: Colors.transparent,
@@ -260,7 +268,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Finances
+                // Finances (RBAC)
+                if (_canSee(NavItem.finances))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -303,7 +312,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Pending Approvals
+                // Pending Approvals (RBAC)
+                if (_canSee(NavItem.pendingApprovals))
                 AuthUserStreamWidget(
                   builder: (context) => InkWell(
                     splashColor: Colors.transparent,
@@ -371,7 +381,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Store Inventory
+                // Store Inventory (RBAC)
+                if (_canSee(NavItem.storeInventory))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -412,7 +423,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Product Catalogue
+                // Product Catalogue (RBAC)
+                if (_canSee(NavItem.productCatalogue))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -454,7 +466,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Stock Balances
+                // Stock Balances (RBAC)
+                if (_canSee(NavItem.stockBalances))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -501,7 +514,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Stock Movements
+                // Stock Movements (RBAC)
+                if (_canSee(NavItem.stockMovements))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -548,7 +562,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Stock Counts
+                // Stock Counts (RBAC)
+                if (_canSee(NavItem.stockCounts))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -619,7 +634,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                       ),
                     ),
                   ),
-                // Goods Received
+                // Goods Received (RBAC)
+                if (_canSee(NavItem.goodsReceived))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -666,7 +682,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Sales / Dispensing
+                // Sales / Dispensing (RBAC)
+                if (_canSee(NavItem.salesDispensing))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -714,7 +731,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Batch & Expiry
+                // Batch & Expiry (RBAC)
+                if (_canSee(NavItem.batchesExpiry))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -761,7 +779,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Low Stock Alerts
+                // Low Stock Alerts (RBAC)
+                if (_canSee(NavItem.lowStockAlerts))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -802,7 +821,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     ),
                   ),
                 ),
-                // Replenishment
+                // Replenishment (RBAC)
+                if (_canSee(NavItem.replenishment))
                 InkWell(
                   splashColor: Colors.transparent,
                   focusColor: Colors.transparent,
@@ -973,8 +993,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                           ),
                         ),
-                      // Duniya Pharmacies
-                      if (_isDuniyaUser)
+                      // Duniya Pharmacies (RBAC)
+                      if (_canSee(NavItem.duniyaPharmacies))
                         InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
@@ -1007,8 +1027,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
                           ),
                         ),
-                      // Stock Balance Visibility
-                      if (_isDuniyaUser)
+                      // Stock Balance Visibility (RBAC)
+                      if (_canSee(NavItem.duniyaStockBalances))
                         InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
@@ -1043,8 +1063,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
                           ),
                         ),
-                      // Onboarding Requests
-                      if (_isDuniyaUser)
+                      // Onboarding Requests (RBAC)
+                      if (_canSee(NavItem.duniyaOnboardingRequests))
                         InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
@@ -1076,8 +1096,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
                           ),
                         ),
-                      // Network Analytics
-                      if (_isDuniyaUser)
+                      // Network Analytics (RBAC)
+                      if (_canSee(NavItem.duniyaNetworkAnalytics))
                         InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,

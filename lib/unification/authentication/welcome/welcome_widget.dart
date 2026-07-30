@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/components/loading_spinner_widget.dart';
@@ -36,7 +37,7 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       logFirebaseEvent('WELCOME_PAGE_Welcome_ON_INIT_STATE');
-      if (valueOrDefault(currentUserDocument?.role, '') != 'Owner') {
+      if (!AccessControl.isOwner(context)) {
         if (currentUserDocument?.ownerRef == null) {
           logFirebaseEvent('Welcome_backend_call');
 

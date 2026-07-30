@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/components/pharma_table_widget.dart';
 import '/components/loading_spinner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -563,9 +564,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }
 
   Widget _buildTopOverviewSection({required bool isPhone}) {
-    final stockParent = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef;
+    final stockParent = AccessControl.parentRef(context) ?? currentUserReference;
 
     return AuthUserStreamWidget(
       builder: (context) => FutureBuilder<List<StockRecord>>(
@@ -702,9 +701,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }
 
   Widget _buildAnalyticsOverviewSection({required bool isPhone}) {
-    final stockParent = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef;
+    final stockParent = AccessControl.parentRef(context) ?? currentUserReference;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -758,7 +755,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         builder: (context) => FutureBuilder<int>(
           future: querySalesRecordCount(
             parent: () {
-              if (valueOrDefault(currentUserDocument?.role, '') == 'Owner') {
+              if (AccessControl.isOwner(context)) {
                 return currentUserReference;
               }
               return currentUserDocument?.ownerRef;
@@ -1750,7 +1747,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         ModalRoute.of(context)?.settings.name == '__legacy_dashboard__';
 
     context.watch<FFAppState>();
-    if (valueOrDefault(currentUserDocument?.role, '') != 'Owner') {
+    if (!AccessControl.isOwner(context)) {
       return _buildPharmacyDashboard(isPhone: isPhone);
     }
 
@@ -1829,11 +1826,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                   children: [
                                     _buildDashboardHeader(isPhone: isPhone),
                                     const SizedBox(height: 24),
-                                    // ─── Point Of Sale quick-action card (pharmacy users only) ───
-                                    if (valueOrDefault(
-                                            currentUserDocument?.accountType,
-                                            'Duniya') !=
-                                        'Duniya')
+                                    // ─── Point Of Sale quick-action card (RBAC: pharmacy users with posView) ───
+                                    if (AccessControl.hasAnyPermission(context, [Permission.posView, Permission.posCreateSale]))
                                       AuthUserStreamWidget(
                                         builder: (context) => Padding(
                                           padding: const EdgeInsets.only(bottom: 16),
@@ -1946,10 +1940,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                     const SizedBox(height: 28),
                                     _buildAnalyticsOverviewSection(
                                         isPhone: isPhone),
-                                    if (valueOrDefault(
-                                            currentUserDocument?.accountType,
-                                            'Duniya') ==
-                                        'Duniya') ...[
+                                    if (AccessControl.hasPermission(context, Permission.dashboardViewFinanceNetwork)) ...[
                                       const SizedBox(height: 28),
                                       _buildFinanceNetworkSection(
                                           isPhone: isPhone),
@@ -3051,15 +3042,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 },
                                                 isPrimary: true,
                                               ),
-                                              if (valueOrDefault(
-                                                      currentUserDocument?.role,
-                                                      '') ==
-                                                  'Owner')
+                                              if (AccessControl.hasPermission(context, Permission.hrView))
                                                 const SizedBox(width: 12),
-                                              if (valueOrDefault(
-                                                      currentUserDocument?.role,
-                                                      '') ==
-                                                  'Owner')
+                                              if (AccessControl.hasPermission(context, Permission.hrView))
                                                 _buildDashboardActionButton(
                                                   label: 'HR Portal',
                                                   icon: Icons.badge_rounded,
@@ -3120,10 +3105,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                   '$movementCount stock movements tracked',
                                             ),
                                             if (isPhone &&
-                                                valueOrDefault(
-                                                        currentUserDocument?.role,
-                                                        '') ==
-                                                    'Owner')
+                                                AccessControl.hasPermission(context, Permission.hrView))
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 6),
@@ -4339,10 +4321,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               const SizedBox(height: 24),
               FutureBuilder<List<SalesRecord>>(
                 future: querySalesRecordOnce(
-                  parent:
-                      valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-                          ? currentUserReference
-                          : currentUserDocument?.ownerRef,
+                  parent: AccessControl.parentRef(context) ?? currentUserReference,
                   queryBuilder: (salesRecord) =>
                       salesRecord.orderBy('Date', descending: false).limit(12),
                 ),
@@ -4437,8 +4416,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 onTap: () async {
                   logFirebaseEvent('HOME_PAGE_QuickAction_POS_ON_TAP');
                   var _shouldSetState = false;
-                  if (valueOrDefault(currentUserDocument?.role, '') ==
-                      'Owner') {
+                  if (AccessControl.isOwner(context)) {
                     logFirebaseEvent('QuickAction_POS_navigate_to');
                     context.pushNamed(PointOfSalesWidget.routeName);
                     return;
@@ -4548,10 +4526,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             children: [
               FutureBuilder<List<StockRecord>>(
                 future: queryStockRecordOnce(
-                  parent:
-                      valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-                          ? currentUserReference
-                          : currentUserDocument?.ownerRef,
+                  parent: AccessControl.parentRef(context) ?? currentUserReference,
                   queryBuilder: (stockRecord) =>
                       stockRecord.where('Quantity', isGreaterThan: 0),
                 ),

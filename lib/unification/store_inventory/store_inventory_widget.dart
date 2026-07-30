@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -65,18 +66,13 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
 
   /// Get the parent reference based on user role
   DocumentReference? _getParentRef() {
-    final role = valueOrDefault(currentUserDocument?.role, '');
-    if (role == 'Owner') {
-      return currentUserReference;
-    } else {
-      return currentUserDocument?.ownerRef;
-    }
+    return AccessControl.parentRef(context);
   }
 
   /// Navigate to category page with role-based logic
   Future<void> _navigateToCategory(String category) async {
     var shouldSetState = false;
-    if (valueOrDefault(currentUserDocument?.role, '') == 'Owner') {
+    if (AccessControl.isOwner(context)) {
       context.pushNamed(
         InventoryCategoryWidget.routeName,
         queryParameters: {

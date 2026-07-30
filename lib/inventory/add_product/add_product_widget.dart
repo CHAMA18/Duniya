@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/index.dart';
@@ -1884,11 +1885,8 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                     logFirebaseEvent(
                                                                         'Button_backend_call');
 
-                                                                    await StockRecord.createDoc(valueOrDefault(currentUserDocument?.role, '') ==
-                                                                                'Owner'
-                                                                            ? currentUserReference!
-                                                                            : currentUserDocument!
-                                                                                .ownerRef!)
+                                                                    await StockRecord.createDoc(AccessControl.parentRef(context) ??
+                                                                                currentUserReference!)
                                                                         .set(
                                                                             createStockRecordData(
                                                                       name: _model

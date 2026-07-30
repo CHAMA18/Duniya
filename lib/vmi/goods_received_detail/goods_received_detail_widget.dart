@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -60,9 +61,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   static const Color _dangerBg = Color(0xFFFEF2F2);
 
   DocumentReference? _receiptScopeParent() {
-    return valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef ?? currentUserReference;
+    return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
   Future<PharmacyRecord?> _resolvePharmacyByName(String? pharmacyName) async {
@@ -704,9 +703,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     return AuthUserStreamWidget(
       builder: (context) => FutureBuilder<List<PharmacyRecord>>(
         future: queryPharmacyRecordOnce(
-          parent: valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-              ? currentUserReference
-              : currentUserDocument?.ownerRef,
+          parent: AccessControl.parentRef(context) ?? currentUserReference,
         ),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

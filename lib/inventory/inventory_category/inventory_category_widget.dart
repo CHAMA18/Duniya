@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/no_record_component/no_record_component_widget.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
@@ -889,21 +890,13 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                           )
                                                           .where(
                                                             'Pharmacy',
-                                                            isEqualTo: valueOrDefault(
-                                                                        currentUserDocument
-                                                                            ?.role,
-                                                                        '') ==
-                                                                    'Owner'
+                                                            isEqualTo: AccessControl.isOwner(context)
                                                                 ? _model
                                                                     .dropDownValue1
                                                                 : widget.pharmacy !=
                                                                         ''
-                                                                    ? valueOrDefault(currentUserDocument?.role, '') ==
-                                                                            'Owner'
-                                                                        ? _model
-                                                                            .dropDownValue1
-                                                                        : widget
-                                                                            .pharmacy
+                                                                    ? widget
+                                                                        .pharmacy
                                                                     : null,
                                                           ),
                                                 ),

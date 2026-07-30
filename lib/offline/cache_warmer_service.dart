@@ -63,6 +63,8 @@ class CacheWarmerService extends ChangeNotifier {
     }
 
     // Resolve the owner reference (pharmacies live under the owner).
+    // Note: Uses inline role check (no BuildContext available for AccessControl).
+    // See /lib/rbac/ for the centralized RBAC system.
     final DocumentReference ownerRef;
     if (valueOrDefault(userDoc.role, '') == 'Owner') {
       final ref = currentUserReference;

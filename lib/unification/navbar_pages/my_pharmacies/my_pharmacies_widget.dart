@@ -4,6 +4,7 @@ import '/components/loading_spinner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/index.dart';
@@ -45,9 +46,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
   }
 
   DocumentReference? _pharmacyParent() {
-    return valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef;
+    return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
   Widget _buildFilterChip({

@@ -1,0 +1,179 @@
+/// ─────────────────────────────────────────────────────────────────────
+/// Duniya RBAC — Access Control Helper
+/// ─────────────────────────────────────────────────────────────────────
+/// The primary API for checking permissions throughout the app.
+///
+/// Usage:
+///   // Check a single permission
+///   if (AccessControl.hasPermission(context, Permission.posCreateSale)) {
+///     // show POS create button
+///   }
+///
+///   // Check multiple permissions (any match)
+///   if (AccessControl.hasAnyPermission(context, [
+///     Permission.posCreateSale,
+///     Permission.posEditSale,
+///   ])) { ... }
+///
+///   // Check navigation visibility
+///   if (AccessControl.canSeeNavItem(context, NavItem.humanResource)) {
+///     // show sidebar item
+///   }
+///
+///   // Get the current user's role
+///   final role = AccessControl.currentRole(context);
+///   if (role.isOwnerLevel) { ... }
+///
+///   // Route guard — redirect if no permission
+///   if (!AccessControl.hasPermission(context, Permission.hrView)) {
+///     context.goNamed(HomeWidget.routeName);
+///   }
+/// ─────────────────────────────────────────────────────────────────────
+library;
+
+import 'package:flutter/material.dart';
+
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import 'permissions.dart';
+import 'roles.dart';
+import 'role_config.dart';
+
+class AccessControl {
+  // ─── Role Resolution ─────────────────────────────────────────────
+
+  /// Resolve the current user's AppRole from the Firestore user document.
+  /// Combines both `accountType` and `role` fields to determine the
+  /// canonical AppRole.
+  ///
+  /// Logic:
+  ///   1. If accountType is 'Duniya' → duniyaAdmin or duniyaStaff
+  ///   2. If accountType is 'Pharmacy' → use the `role` field
+  ///   3. Fallback → unknown
+  static AppRole currentRole(BuildContext context) {
+    final userDoc = currentUserDocument;
+    if (userDoc == null) return AppRole.unknown;
+
+    final accountType = userDoc.accountType ?? '';
+    final role = userDoc.role ?? '';
+
+    // Duniya network users
+    if (AppRole.isDuniyaAccountType(accountType)) {
+      // If the Duniya user has a role indicating admin, treat as admin
+      if (role.toLowerCase() == 'admin' || role.toLowerCase() == 'owner') {
+        return AppRole.duniyaAdmin;
+      }
+      return AppRole.duniyaAdmin; // Default Duniya users to admin
+    }
+
+    // Pharmacy users — map from the role field
+    return AppRole.fromFirestoreValue(role);
+  }
+
+  /// Whether the current user is a Duniya network user.
+  static bool isDuniyaUser(BuildContext context) {
+    return currentRole(context).isDuniyaRole;
+  }
+
+  /// Whether the current user is a pharmacy-side user.
+  static bool isPharmacyUser(BuildContext context) {
+    return currentRole(context).isPharmacyRole;
+  }
+
+  /// Whether the current user is an Owner (pharmacy owner).
+  static bool isOwner(BuildContext context) {
+    return currentRole(context).isOwnerLevel;
+  }
+
+  // ─── Permission Checks ───────────────────────────────────────────
+
+  /// Check if the current user has a specific permission.
+  static bool hasPermission(BuildContext context, Permission permission) {
+    final role = currentRole(context);
+    final permissions = rolePermissions[role] ?? {};
+    return permissions.contains(permission);
+  }
+
+  /// Check if the current user has ALL of the specified permissions.
+  static bool hasAllPermissions(
+    BuildContext context,
+    List<Permission> permissions,
+  ) {
+    return permissions.every((p) => hasPermission(context, p));
+  }
+
+  /// Check if the current user has ANY of the specified permissions.
+  static bool hasAnyPermission(
+    BuildContext context,
+    List<Permission> permissions,
+  ) {
+    return permissions.any((p) => hasPermission(context, p));
+  }
+
+  // ─── Navigation Visibility ───────────────────────────────────────
+
+  /// Check if the current user can see a specific navigation item.
+  static bool canSeeNavItem(BuildContext context, NavItem item) {
+    final role = currentRole(context);
+    final items = roleNavItems[role] ?? {};
+    return items.contains(item);
+  }
+
+  // ─── Convenience: Permission Sets ────────────────────────────────
+
+  /// Get all permissions for the current user's role.
+  static Set<Permission> currentPermissions(BuildContext context) {
+    final role = currentRole(context);
+    return rolePermissions[role] ?? {};
+  }
+
+  /// Get all nav items visible to the current user's role.
+  static Set<NavItem> currentNavItems(BuildContext context) {
+    final role = currentRole(context);
+    return roleNavItems[role] ?? {};
+  }
+
+  // ─── Firestore Parent Reference Helper ───────────────────────────
+
+  /// Returns the appropriate Firestore parent reference based on the
+  /// user's role. Owners use their own reference; staff use ownerRef.
+  ///
+  /// This replaces the scattered `role == 'Owner'` checks throughout
+  /// the codebase that determine query parent references.
+  static DocumentReference? parentRef(BuildContext context) {
+    final userDoc = currentUserDocument;
+    if (userDoc == null) return null;
+
+    if (isOwner(context)) {
+      return currentUserReference;
+    }
+    return userDoc.ownerRef;
+  }
+
+  // ─── Role Display ────────────────────────────────────────────────
+
+  /// Get the human-readable display name for the current user's role.
+  static String currentRoleDisplayName(BuildContext context) {
+    return currentRole(context).displayName;
+  }
+
+  // ─── Backward Compatibility ──────────────────────────────────────
+
+  /// Backward-compatible check for the old `role == 'Owner'` pattern.
+  /// Returns true if the user is an Owner-level pharmacy user.
+  ///
+  /// Prefer using `hasPermission()` or `isOwner()` for new code.
+  /// This exists to ease migration from the old inline checks.
+  static bool isOwnerLegacy(BuildContext context) {
+    return isOwner(context);
+  }
+
+  /// Backward-compatible check for the old `_isDuniyaUser` pattern.
+  /// Returns true if the user is a Duniya network user.
+  ///
+  /// Prefer using `isDuniyaUser()` for new code.
+  static bool isDuniyaLegacy(BuildContext context) {
+    return isDuniyaUser(context);
+  }
+}

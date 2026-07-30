@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -44,11 +45,7 @@ class _ImportInventoryDialogWidgetState
 
   /// Get the parent ref (Owner → self, Staff → ownerRef)
   DocumentReference? _getParentRef() {
-    final role = valueOrDefault(currentUserDocument?.role, '');
-    if (role == 'Owner') {
-      return currentUserReference;
-    }
-    return currentUserDocument?.ownerRef;
+    return AccessControl.parentRef(context);
   }
 
   Future<void> _pickAndParseFile() async {

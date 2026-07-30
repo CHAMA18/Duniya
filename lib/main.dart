@@ -184,6 +184,8 @@ class _MyAppState extends State<MyApp> {
       // This populates the OfflineStatusChip with real sync data.
       final userDoc = currentUserDocument;
       if (userDoc != null) {
+        // Note: Uses inline role check (no BuildContext available for AccessControl).
+        // See /lib/rbac/ for the centralized RBAC system.
         final ownerRef = valueOrDefault(userDoc.role, '') == 'Owner'
             ? currentUserReference
             : userDoc.ownerRef;

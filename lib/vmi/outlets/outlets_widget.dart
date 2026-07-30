@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -572,10 +573,7 @@ class _OutletsWidgetState extends State<OutletsWidget> {
                 if (_model.codeTextController?.text.isEmpty ?? true) return;
 
                 final ownerRef =
-                    valueOrDefault(currentUserDocument?.role, '') ==
-                            'Owner'
-                        ? currentUserReference!
-                        : currentUserDocument!.ownerRef!;
+                    AccessControl.parentRef(context) ?? currentUserReference!;
 
                 await OutletRecord.createDoc(ownerRef).set(
                   createOutletRecordData(

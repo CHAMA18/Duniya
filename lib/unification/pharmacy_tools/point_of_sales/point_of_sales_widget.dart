@@ -8,6 +8,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/index.dart';
 import '/unification/cart/cart_widget.dart';
@@ -61,15 +62,11 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
   }
 
   DocumentReference? _pharmacyScopeParent() {
-    return valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef ?? currentUserReference;
+    return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
   DocumentReference? _stockScopeParent() {
-    return valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef ?? currentUserReference;
+    return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
   String _effectivePharmacyName([List<PharmacyRecord>? pharmacies]) {
@@ -743,7 +740,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     final activeName = _effectivePharmacyName(pharmacies);
     final activeRecord = _effectivePharmacyReference(pharmacies, activeName);
     final dropdownEnabled =
-        valueOrDefault(currentUserDocument?.role, '') == 'Owner';
+        AccessControl.isOwner(context);
 
     final dropdown = FlutterFlowDropDown<String>(
       controller: _model.pharmacyDropDownValueController ??=

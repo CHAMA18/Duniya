@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/info_dialog/info_dialog_widget.dart';
@@ -25,6 +26,9 @@ class PharmacyToolsWidget extends StatefulWidget {
 
 class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
   late PharmacyToolsModel _model;
+
+  /// RBAC helper — check if the current user has a specific permission.
+  bool _hasPermission(Permission p) => AccessControl.hasPermission(context, p);
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -124,6 +128,8 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                                   .displaySmallIsCustom,
                                         ),
                                   ),
+                                  // Point of Sale (RBAC: posView permission)
+                                  if (_hasPermission(Permission.posView))
                                   Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: InkWell(
@@ -135,10 +141,7 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                         logFirebaseEvent(
                                             'PHARMACY_TOOLS_Container_kgn2jnqh_ON_TAP');
                                         var _shouldSetState = false;
-                                        if (valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner') {
+                                        if (AccessControl.isOwner(context)) {
                                           logFirebaseEvent(
                                               'Container_navigate_to');
 
@@ -355,6 +358,8 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                       ),
                                     ),
                                   ),
+                                  // AI Assistant (RBAC: aiAssistantUse permission)
+                                  if (_hasPermission(Permission.aiAssistantUse))
                                   Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: InkWell(
@@ -490,6 +495,8 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                       ),
                                     ),
                                   ),
+                                  // BMI Calculator (RBAC: bmiCalculatorUse permission)
+                                  if (_hasPermission(Permission.bmiCalculatorUse))
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     focusColor: Colors.transparent,

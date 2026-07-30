@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/index.dart';
@@ -405,13 +406,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
     return AuthUserStreamWidget(
       builder: (context) => StreamBuilder<List<FinanceRecord>>(
         stream: queryFinanceRecord(
-          parent: () {
-            if (valueOrDefault(currentUserDocument?.role, '') == 'Owner') {
-              return currentUserReference;
-            } else {
-              return currentUserDocument?.ownerRef;
-            }
-          }(),
+          parent: AccessControl.parentRef(context) ?? currentUserReference,
           singleRecord: true,
         ),
         builder: (context, snapshot) {
@@ -814,10 +809,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
 
   /// Builds the Recent Transactions / Sales table
   Widget _buildSalesTable() {
-    final userRole = valueOrDefault(currentUserDocument?.role, '');
-    final parentRef = userRole == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef;
+    final parentRef = AccessControl.parentRef(context) ?? currentUserReference;
 
     return StreamBuilder<List<SalesRecord>>(
       stream: querySalesRecord(

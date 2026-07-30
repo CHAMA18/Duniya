@@ -3,6 +3,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -601,11 +602,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                       Expanded(
                         child: AuthUserStreamWidget(
                           builder: (context) {
-                            final parentRef = valueOrDefault(
-                                        currentUserDocument?.role, '') ==
-                                    'Owner'
-                                ? currentUserReference
-                                : currentUserDocument?.ownerRef;
+                            final parentRef = AccessControl.parentRef(context) ?? currentUserReference;
 
                             return StreamBuilder<List<StockRecord>>(
                               stream: queryStockRecord(

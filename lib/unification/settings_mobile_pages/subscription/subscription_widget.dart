@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -40,7 +41,7 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       logFirebaseEvent('SUBSCRIPTION_Subscription_ON_INIT_STATE');
-      if (valueOrDefault(currentUserDocument?.role, '') == 'Owner') {
+      if (AccessControl.isOwner(context)) {
         logFirebaseEvent('Subscription_backend_call');
         _model.apiResult1a7 = await IpCall.call();
 
@@ -171,11 +172,9 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
                 body: SafeArea(
                   top: true,
                   child: Visibility(
-                    visible: valueOrDefault(currentUserDocument?.role, '') ==
-                        'Owner',
+                    visible: AccessControl.isOwner(context),
                     child: Opacity(
-                      opacity: valueOrDefault(currentUserDocument?.role, '') ==
-                              'Owner'
+                      opacity: AccessControl.isOwner(context)
                           ? 1.0
                           : 0.5,
                       child: AuthUserStreamWidget(

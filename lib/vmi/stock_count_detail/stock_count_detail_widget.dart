@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -120,24 +121,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             .toList();
       });
       // Load stock balances for system quantity
-      final userDoc = currentUserDocument;
-      if (userDoc != null) {
-        final DocumentReference ownerRef;
-        if (valueOrDefault(userDoc.role, '') == 'Owner') {
-          final ref = currentUserReference;
-          if (ref == null) {
-            safeSetState(() => _isLoadingProducts = false);
-            return;
-          }
-          ownerRef = ref;
-        } else {
-          final ref = userDoc.ownerRef;
-          if (ref == null) {
-            safeSetState(() => _isLoadingProducts = false);
-            return;
-          }
-          ownerRef = ref;
-        }
+      final ownerRef = AccessControl.parentRef(context);
+      if (ownerRef != null) {
         final balances = await queryStockBalanceRecordOnce(parent: ownerRef);
         for (var balance in balances) {
           for (var item in _countItems) {
@@ -164,21 +149,12 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
       return;
     }
     final DocumentReference ownerRef;
-    if (valueOrDefault(userDoc.role, '') == 'Owner') {
-      final ref = currentUserReference;
-      if (ref == null) {
-        _showToast('Unable to identify your account.');
-        return;
-      }
-      ownerRef = ref;
-    } else {
-      final ref = userDoc.ownerRef;
-      if (ref == null) {
-        _showToast('No owner pharmacy linked to your account.');
-        return;
-      }
-      ownerRef = ref;
+    final resolvedRef = AccessControl.parentRef(context);
+    if (resolvedRef == null) {
+      _showToast('Unable to identify your account or owner pharmacy.');
+      return;
     }
+    ownerRef = resolvedRef;
 
     DocumentReference countDoc;
     if (_existingDocRef != null) {
@@ -228,50 +204,22 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
       'UpdatedAt': getCurrentTimestamp,
     });
 
-    final userDoc = currentUserDocument;
-    if (userDoc != null) {
-      final DocumentReference ownerRef;
-      if (valueOrDefault(userDoc.role, '') == 'Owner') {
-        final ref = currentUserReference;
-        if (ref != null) {
-          ownerRef = ref;
-          for (var item in _countItems) {
-            int variance = (item['countedQuantity'] as int) -
-                (item['systemQuantity'] as int);
-            if (variance != 0) {
-              final movementDoc = StockMovementRecord.createDoc(ownerRef);
-              await movementDoc.set(createStockMovementRecordData(
-                productId: item['productId'] as DocumentReference?,
-                quantity: variance.abs(),
-                movementType: 'ADJUSTMENT',
-                reason: 'Stock count adjustment',
-                movementReference: _existingDocRef!.path,
-                recordedById: currentUserReference,
-                createdAt: getCurrentTimestamp,
-              ));
-            }
-          }
-        }
-      } else {
-        final ref = userDoc.ownerRef;
-        if (ref != null) {
-          ownerRef = ref;
-          for (var item in _countItems) {
-            int variance = (item['countedQuantity'] as int) -
-                (item['systemQuantity'] as int);
-            if (variance != 0) {
-              final movementDoc = StockMovementRecord.createDoc(ownerRef);
-              await movementDoc.set(createStockMovementRecordData(
-                productId: item['productId'] as DocumentReference?,
-                quantity: variance.abs(),
-                movementType: 'ADJUSTMENT',
-                reason: 'Stock count adjustment',
-                movementReference: _existingDocRef!.path,
-                recordedById: currentUserReference,
-                createdAt: getCurrentTimestamp,
-              ));
-            }
-          }
+    final ownerRef = AccessControl.parentRef(context);
+    if (ownerRef != null) {
+      for (var item in _countItems) {
+        int variance = (item['countedQuantity'] as int) -
+            (item['systemQuantity'] as int);
+        if (variance != 0) {
+          final movementDoc = StockMovementRecord.createDoc(ownerRef);
+          await movementDoc.set(createStockMovementRecordData(
+            productId: item['productId'] as DocumentReference?,
+            quantity: variance.abs(),
+            movementType: 'ADJUSTMENT',
+            reason: 'Stock count adjustment',
+            movementReference: _existingDocRef!.path,
+            recordedById: currentUserReference,
+            createdAt: getCurrentTimestamp,
+          ));
         }
       }
     }
@@ -911,11 +859,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     builder: (context) =>
                         FutureBuilder<List<PharmacyRecord>>(
                       future: queryPharmacyRecordOnce(
-                        parent: valueOrDefault(
-                                    currentUserDocument?.role, '') ==
-                                'Owner'
-                            ? currentUserReference
-                            : currentUserDocument?.ownerRef,
+                        parent: AccessControl.parentRef(context) ?? currentUserReference,
                       ),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {

@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/no_record_component/no_record_component_widget.dart';
 import '/unification/components/sale_item_details/sale_item_details_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
@@ -540,11 +541,7 @@ class _StaffDetailsWidgetState extends State<StaffDetailsWidget> {
                                                               SalesRecord>(
                                                         pagingController: _model
                                                             .setListViewController(
-                                                                SalesRecord.collection(valueOrDefault(currentUserDocument?.role, '') ==
-                                                                            'Owner'
-                                                                        ? currentUserReference
-                                                                        : currentUserDocument
-                                                                            ?.ownerRef)
+                                                                SalesRecord.collection(AccessControl.parentRef(context) ?? currentUserReference)
                                                                     .where(
                                                                   'UserID',
                                                                   isEqualTo:

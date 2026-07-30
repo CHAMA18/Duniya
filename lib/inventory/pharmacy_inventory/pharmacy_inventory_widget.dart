@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/components/item_action_options_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -932,22 +933,16 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                               SalesRecord>(
                                                             pagingController: _model
                                                                 .setListViewController1(
-                                                                    SalesRecord.collection(valueOrDefault(currentUserDocument?.role, '') ==
-                                                                                'Owner'
-                                                                            ? currentUserReference
-                                                                            : currentUserDocument
-                                                                                ?.ownerRef)
+                                                                    SalesRecord.collection(AccessControl.parentRef(context) ??
+                                                                            currentUserReference)
                                                                         .where(
                                                                       'PharmaID',
                                                                       isEqualTo:
                                                                           mainContentPharmacyRecord
                                                                               ?.reference,
                                                                     ),
-                                                                    parent: valueOrDefault(currentUserDocument?.role, '') ==
-                                                                            'Owner'
-                                                                        ? currentUserReference
-                                                                        : currentUserDocument
-                                                                            ?.ownerRef),
+                                                                    parent: AccessControl.parentRef(context) ??
+                                                                            currentUserReference),
                                                             padding:
                                                                 EdgeInsets.zero,
                                                             shrinkWrap: true,

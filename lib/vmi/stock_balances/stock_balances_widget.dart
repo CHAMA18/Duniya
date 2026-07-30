@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
@@ -212,12 +213,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 builder: (context) =>
                                     StreamBuilder<List<StockBalanceRecord>>(
                                   stream: queryStockBalanceRecord(
-                                    parent: valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner'
-                                        ? currentUserReference
-                                        : currentUserDocument?.ownerRef,
+                                    parent: AccessControl.parentRef(context) ?? currentUserReference,
                                   ),
                                   builder: (context, snapshot) {
                                     if (!snapshot.hasData) {
@@ -729,11 +725,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             builder: (context) =>
                 FutureBuilder<List<PharmacyRecord>>(
               future: queryPharmacyRecordOnce(
-                parent: valueOrDefault(
-                            currentUserDocument?.role, '') ==
-                        'Owner'
-                    ? currentUserReference
-                    : currentUserDocument?.ownerRef,
+                parent: AccessControl.parentRef(context) ?? currentUserReference,
               ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

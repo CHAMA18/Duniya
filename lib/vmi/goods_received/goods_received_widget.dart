@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -67,9 +68,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
   }
 
   DocumentReference? _pharmacyScopeParent() {
-    return valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef ?? currentUserReference;
+    return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
   DocumentReference? _resolvePharmacyRef(List<PharmacyRecord> pharmacies) {

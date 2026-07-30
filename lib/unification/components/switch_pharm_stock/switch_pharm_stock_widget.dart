@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -130,10 +131,8 @@ class _SwitchPharmStockWidgetState extends State<SwitchPharmStockWidget> {
                       builder: (context) => StreamBuilder<List<PharmacyRecord>>(
                         stream: queryPharmacyRecord(
                           parent:
-                              valueOrDefault(currentUserDocument?.role, '') ==
-                                      'Owner'
-                                  ? currentUserReference
-                                  : currentUserDocument?.ownerRef,
+                              AccessControl.parentRef(context) ??
+                                  currentUserReference,
                         ),
                         builder: (context, snapshot) {
                           // Customize what your widget looks like when it's loading.
