@@ -19,7 +19,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
 import 'home_model.dart';
 export 'home_model.dart';
@@ -109,9 +108,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
-  // AI dot pulse animation
-  late AnimationController _aiDotController;
-  late Animation<double> _aiDotAnimation;
 
   @override
   void initState() {
@@ -152,19 +148,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     );
 
     // AI dot pulse animation
-    _aiDotController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat(reverse: true);
-    _aiDotAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _aiDotController, curve: Curves.easeInOut),
-    );
   }
 
   @override
   void dispose() {
     _pulseController.dispose();
-    _aiDotController.dispose();
     _model.dispose();
     super.dispose();
   }
@@ -1616,101 +1604,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  // ─── Helper: Quick action card ──────────────────────────────────────
-  Widget _buildQuickActionCard({
-    required Widget icon,
-    required String title,
-    required String subtitle,
-    required Color accentColor,
-    required VoidCallback onTap,
-    Widget? trailing,
-  }) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      focusColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: FlutterFlowTheme.of(context).alternate,
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 12,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: icon,
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        style: FlutterFlowTheme.of(context).bodyLarge.override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).bodyLargeFamily,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.0,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .bodyLargeIsCustom,
-                            ),
-                      ),
-                      if (trailing != null) ...[
-                        const SizedBox(width: 6),
-                        trailing,
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).bodySmallFamily,
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                          fontSize: 12,
-                          letterSpacing: 0.0,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).bodySmallIsCustom,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: FlutterFlowTheme.of(context).secondaryText,
-              size: 20,
-            ),
-          ],
         ),
       ),
     );
@@ -4395,118 +4288,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           ),
         ),
 
-        const SizedBox(height: 28),
 
-        // Quick Actions section
-        _buildSectionHeader(
-          'Quick Actions',
-          Icons.bolt_rounded,
-        ),
-        const SizedBox(height: 16),
-        LayoutBuilder(
-          builder: (context, constraints) {
-
-            final cards = <Widget>[
-              _buildQuickActionCard(
-                icon: Icon(Icons.point_of_sale_rounded,
-                    color: FlutterFlowTheme.of(context).primary, size: 22),
-                title: 'Point of Sale',
-                subtitle: 'Process transactions & billing',
-                accentColor: FlutterFlowTheme.of(context).primary,
-                onTap: () async {
-                  logFirebaseEvent('HOME_PAGE_QuickAction_POS_ON_TAP');
-                  var _shouldSetState = false;
-                  if (AccessControl.isOwner(context)) {
-                    logFirebaseEvent('QuickAction_POS_navigate_to');
-                    context.pushNamed(PointOfSalesWidget.routeName);
-                    return;
-                  } else {
-                    logFirebaseEvent('QuickAction_POS_firestore_query');
-                    _model.staff = await queryStaffRecordOnce(
-                      queryBuilder: (staffRecord) => staffRecord.where(
-                        'Email',
-                        isEqualTo: currentUserEmail,
-                      ),
-                      singleRecord: true,
-                    ).then((s) => s.firstOrNull);
-                    _shouldSetState = true;
-                    logFirebaseEvent('QuickAction_POS_backend_call');
-                    _model.pharm = await PharmacyRecord.getDocumentOnce(
-                        _model.staff!.pharmId!);
-                    _shouldSetState = true;
-                  }
-                  logFirebaseEvent('QuickAction_POS_navigate_to');
-                  context.pushNamed(
-                    PointOfSalesWidget.routeName,
-                    queryParameters: {
-                      'pharm': serializeParam(
-                        _model.pharm?.name,
-                        ParamType.String,
-                      ),
-                    }.withoutNulls,
-                  );
-                  if (_shouldSetState) safeSetState(() {});
-                },
-              ),
-              _buildQuickActionCard(
-                icon: FaIcon(FontAwesomeIcons.robot,
-                    color: FlutterFlowTheme.of(context).primary, size: 22),
-                title: 'AI Assistant',
-                subtitle: 'Smart pharmacy insights',
-                accentColor: FlutterFlowTheme.of(context).primary,
-                trailing: AnimatedBuilder(
-                  animation: _aiDotAnimation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _aiDotAnimation.value,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).success,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                onTap: () async {
-                  logFirebaseEvent('HOME_PAGE_QuickAction_AI_ON_TAP');
-                  logFirebaseEvent('QuickAction_AI_navigate_to');
-                  context.goNamed(AiAssistantWidget.routeName);
-                },
-              ),
-              _buildQuickActionCard(
-                icon: Icon(Icons.calculate_rounded,
-                    color: FlutterFlowTheme.of(context).warning, size: 22),
-                title: 'Calculators',
-                subtitle: 'BMI & health calculators',
-                accentColor: FlutterFlowTheme.of(context).warning,
-                onTap: () async {
-                  logFirebaseEvent('HOME_PAGE_QuickAction_Calc_ON_TAP');
-                  logFirebaseEvent('QuickAction_Calc_navigate_to');
-                  context.goNamed(BMICalcWidget.routeName);
-                },
-              ),
-            ];
-
-            // Wrap in IntrinsicHeight so CrossAxisAlignment.stretch works
-            // inside the unbounded vertical space of the scrollable Column.
-            // Without this, the cards collapse and the section renders cut off.
-            return IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (var i = 0; i < cards.length; i++) ...[
-                    Expanded(child: cards[i]),
-                    if (i != cards.length - 1) const SizedBox(width: 12),
-                  ],
-                ],
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: 32),
       ],
     );
   }
