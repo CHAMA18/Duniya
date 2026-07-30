@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -107,6 +108,71 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                           duration: Duration(milliseconds: 0),
                         ),
                       },
+                    );
+                  },
+                ),
+                // ─── Point Of Sale (highlighted for pharmacy users) ───
+                AuthUserStreamWidget(
+                  builder: (context) {
+                    final isPharmacyUser =
+                        valueOrDefault(currentUserDocument?.accountType, 'Duniya') != 'Duniya';
+
+                    if (!isPharmacyUser) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return GestureDetector(
+                      onTap: () async {
+                        logFirebaseEvent('MOBILE_NAVBAR_point_of_sale_ICN_ON_TAP');
+                        logFirebaseEvent('IconButton_update_app_state');
+                        FFAppState().SelectedPage = 'Point Of Sale';
+                        safeSetState(() {});
+                        logFirebaseEvent('IconButton_navigate_to');
+
+                        context.goNamed(
+                          PointOfSalesWidget.routeName,
+                          queryParameters: {
+                            'pharm': serializeParam(
+                              FFAppState().Pharm,
+                              ParamType.String,
+                            ),
+                          }.withoutNulls,
+                          extra: <String, dynamic>{
+                            '__transition_info__': TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 0),
+                            ),
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: 56.0,
+                        height: 56.0,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              FlutterFlowTheme.of(context).primary,
+                              FlutterFlowTheme.of(context).primary.withValues(alpha: 0.8),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.3),
+                              blurRadius: 8.0,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.point_of_sale_rounded,
+                          color: Colors.white,
+                          size: 28.0,
+                        ),
+                      ),
                     );
                   },
                 ),

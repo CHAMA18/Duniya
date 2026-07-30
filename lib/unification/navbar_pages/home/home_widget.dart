@@ -1829,6 +1829,119 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                   children: [
                                     _buildDashboardHeader(isPhone: isPhone),
                                     const SizedBox(height: 24),
+                                    // ─── Point Of Sale quick-action card (pharmacy users only) ───
+                                    if (valueOrDefault(
+                                            currentUserDocument?.accountType,
+                                            'Duniya') !=
+                                        'Duniya')
+                                      AuthUserStreamWidget(
+                                        builder: (context) => Padding(
+                                          padding: const EdgeInsets.only(bottom: 16),
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              logFirebaseEvent('HOME_POS_QUICK_ACTION_ON_TAP');
+                                              logFirebaseEvent('Home_navigate_to');
+                                              context.goNamed(
+                                                PointOfSalesWidget.routeName,
+                                                queryParameters: {
+                                                  'pharm': serializeParam(
+                                                    FFAppState().Pharm,
+                                                    ParamType.String,
+                                                  ),
+                                                }.withoutNulls,
+                                                extra: <String, dynamic>{
+                                                  '__transition_info__': TransitionInfo(
+                                                    hasTransition: true,
+                                                    transitionType: PageTransitionType.fade,
+                                                    duration: Duration(milliseconds: 0),
+                                                  ),
+                                                },
+                                              );
+                                              FFAppState().SelectedPage = 'Point Of Sale';
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    FlutterFlowTheme.of(context).primary,
+                                                    FlutterFlowTheme.of(context).primary.withValues(alpha: 0.85),
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                                borderRadius: BorderRadius.circular(16.0),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.25),
+                                                    blurRadius: 16.0,
+                                                    offset: Offset(0, 6),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: isPhone ? 20.0 : 28.0,
+                                                  vertical: isPhone ? 18.0 : 24.0,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 52.0,
+                                                      height: 52.0,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white.withValues(alpha: 0.2),
+                                                        borderRadius: BorderRadius.circular(14.0),
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.point_of_sale_rounded,
+                                                        color: Colors.white,
+                                                        size: 28.0,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 16.0),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Point Of Sale',
+                                                            style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                              fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                                                              color: Colors.white,
+                                                              fontSize: isPhone ? 20.0 : 24.0,
+                                                              fontWeight: FontWeight.w700,
+                                                              letterSpacing: -0.5,
+                                                              useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 4.0),
+                                                          Text(
+                                                            'Quick sales & dispensing — tap to start',
+                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                              color: Colors.white.withValues(alpha: 0.85),
+                                                              fontSize: isPhone ? 13.0 : 14.0,
+                                                              fontWeight: FontWeight.w400,
+                                                              useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      Icons.arrow_forward_ios_rounded,
+                                                      color: Colors.white.withValues(alpha: 0.7),
+                                                      size: 20.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    const SizedBox(height: 12),
                                     _buildTopOverviewSection(isPhone: isPhone),
                                     const SizedBox(height: 28),
                                     _buildAnalyticsOverviewSection(

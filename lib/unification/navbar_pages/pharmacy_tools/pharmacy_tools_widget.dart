@@ -133,6 +133,237 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                       highlightColor: Colors.transparent,
                                       onTap: () async {
                                         logFirebaseEvent(
+                                            'PHARMACY_TOOLS_Container_kgn2jnqh_ON_TAP');
+                                        var _shouldSetState = false;
+                                        if (valueOrDefault(
+                                                currentUserDocument?.role,
+                                                '') ==
+                                            'Owner') {
+                                          logFirebaseEvent(
+                                              'Container_navigate_to');
+
+                                          context.pushNamed(
+                                              PointOfSalesWidget.routeName);
+
+                                          if (_shouldSetState)
+                                            safeSetState(() {});
+                                          return;
+                                        } else {
+                                          logFirebaseEvent(
+                                              'Container_firestore_query');
+                                          _model.staff =
+                                              await queryStaffRecordOnce(
+                                            queryBuilder: (staffRecord) =>
+                                                staffRecord.where(
+                                              'Email',
+                                              isEqualTo: currentUserEmail,
+                                            ),
+                                            singleRecord: true,
+                                          ).then((s) => s.firstOrNull);
+                                          _shouldSetState = true;
+                                          logFirebaseEvent(
+                                              'Container_backend_call');
+                                          _model.pharm = await PharmacyRecord
+                                              .getDocumentOnce(
+                                                  _model.staff!.pharmId!);
+                                          _shouldSetState = true;
+                                        }
+
+                                        logFirebaseEvent(
+                                            'Container_navigate_to');
+
+                                        context.pushNamed(
+                                          PointOfSalesWidget.routeName,
+                                          queryParameters: {
+                                            'pharm': serializeParam(
+                                              _model.pharm?.name,
+                                              ParamType.String,
+                                            ),
+                                          }.withoutNulls,
+                                        );
+
+                                        if (_shouldSetState)
+                                          safeSetState(() {});
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                1.0,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              FlutterFlowTheme.of(context)
+                                                  .primary
+                                                  .withValues(alpha: 0.15),
+                                              FlutterFlowTheme.of(context)
+                                                  .primary
+                                                  .withValues(alpha: 0.05),
+                                            ],
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary
+                                                .withValues(alpha: 0.4),
+                                            width: 2.0,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: FlutterFlowTheme.of(context)
+                                                  .primary
+                                                  .withValues(alpha: 0.1),
+                                              blurRadius: 12.0,
+                                              spreadRadius: 2.0,
+                                              offset: Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(24.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 220.0,
+                                                decoration: BoxDecoration(),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                                                          decoration: BoxDecoration(
+                                                            color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.15),
+                                                            borderRadius: BorderRadius.circular(6.0),
+                                                          ),
+                                                          child: Text(
+                                                            'KEY FEATURE',
+                                                            style: FlutterFlowTheme.of(context).labelSmall.override(
+                                                              fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
+                                                              color: FlutterFlowTheme.of(context).primary,
+                                                              fontSize: 10.0,
+                                                              letterSpacing: 1.0,
+                                                              fontWeight: FontWeight.w700,
+                                                              useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 8.0),
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Text(
+                                                        FFLocalizations.of(
+                                                                context)
+                                                            .getText(
+                                                          'xi3halqc' /* Point of Sale */,
+                                                        ),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .labelMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumFamily,
+                                                              color: FlutterFlowTheme.of(context).primary,
+                                                              fontSize: 25.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              lineHeight: 1.5,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumIsCustom,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
+                                                      child: Text(
+                                                        FFLocalizations.of(
+                                                                context)
+                                                            .getText(
+                                                          'upda5r5s' /* Quickly perform sales right in... */,
+                                                        ),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .labelMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumFamily,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                              fontSize: 14.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              lineHeight: 1.5,
+                                                              useGoogleFonts:
+                                                                  !FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelMediumIsCustom,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, -1.0),
+                                                child: Container(
+                                                  width: 60.0,
+                                                  height: 60.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.12),
+                                                    borderRadius: BorderRadius.circular(14.0),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.point_of_sale_rounded,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    size: 32.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
                                             'PHARMACY_TOOLS_Container_tui41i16_ON_TAP');
                                         logFirebaseEvent(
                                             'Container_navigate_to');
@@ -544,184 +775,7 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                       ),
                                     ),
                                   ),
-                                  Align(
-                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                    child: InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        logFirebaseEvent(
-                                            'PHARMACY_TOOLS_Container_kgn2jnqh_ON_TAP');
-                                        var _shouldSetState = false;
-                                        if (valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner') {
-                                          logFirebaseEvent(
-                                              'Container_navigate_to');
-
-                                          context.pushNamed(
-                                              PointOfSalesWidget.routeName);
-
-                                          if (_shouldSetState)
-                                            safeSetState(() {});
-                                          return;
-                                        } else {
-                                          logFirebaseEvent(
-                                              'Container_firestore_query');
-                                          _model.staff =
-                                              await queryStaffRecordOnce(
-                                            queryBuilder: (staffRecord) =>
-                                                staffRecord.where(
-                                              'Email',
-                                              isEqualTo: currentUserEmail,
-                                            ),
-                                            singleRecord: true,
-                                          ).then((s) => s.firstOrNull);
-                                          _shouldSetState = true;
-                                          logFirebaseEvent(
-                                              'Container_backend_call');
-                                          _model.pharm = await PharmacyRecord
-                                              .getDocumentOnce(
-                                                  _model.staff!.pharmId!);
-                                          _shouldSetState = true;
-                                        }
-
-                                        logFirebaseEvent(
-                                            'Container_navigate_to');
-
-                                        context.pushNamed(
-                                          PointOfSalesWidget.routeName,
-                                          queryParameters: {
-                                            'pharm': serializeParam(
-                                              _model.pharm?.name,
-                                              ParamType.String,
-                                            ),
-                                          }.withoutNulls,
-                                        );
-
-                                        if (_shouldSetState)
-                                          safeSetState(() {});
-                                      },
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                1.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          border: Border.all(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(20.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                width: 200.0,
-                                                decoration: BoxDecoration(),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, 0.0),
-                                                      child: Text(
-                                                        FFLocalizations.of(
-                                                                context)
-                                                            .getText(
-                                                          'xi3halqc' /* Point of Sale */,
-                                                        ),
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .labelMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelMediumFamily,
-                                                              fontSize: 25.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              lineHeight: 1.5,
-                                                              useGoogleFonts:
-                                                                  !FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelMediumIsCustom,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              -1.0, 0.0),
-                                                      child: Text(
-                                                        FFLocalizations.of(
-                                                                context)
-                                                            .getText(
-                                                          'upda5r5s' /* Quickly perform sales right in... */,
-                                                        ),
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .labelMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelMediumFamily,
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryText,
-                                                              fontSize: 14.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              lineHeight: 1.5,
-                                                              useGoogleFonts:
-                                                                  !FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelMediumIsCustom,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: AlignmentDirectional(
-                                                    0.0, -1.0),
-                                                child: Icon(
-                                                  Icons.point_of_sale_rounded,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  size: 45.0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ].divide(SizedBox(height: 12.0)),
+                                ].divide(SizedBox(height: 16.0)),
                               ),
                             ),
                           ),
