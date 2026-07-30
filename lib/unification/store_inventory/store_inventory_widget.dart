@@ -586,320 +586,375 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final cardSpacing = 16.0;
-        int columns = 3;
-        if (constraints.maxWidth < 900) columns = 2;
-        if (constraints.maxWidth < 600) columns = 1;
+        final isWide = constraints.maxWidth >= 700;
 
-        final cards = [
-          // Card 1: Total Stock Value
-          _buildGlassCard(
-            cardBg: cardBg,
-            outlineVariant: outlineVariant,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 32.0,
-                      height: 32.0,
-                      decoration: BoxDecoration(
-                        color: primaryContainer,
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: Icon(Icons.payments_outlined, color: primaryBlue, size: 20.0),
-                    ),
-                    SizedBox(width: 12.0),
-                    Flexible(child: Text(
-                      'Total Stock Value',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: onSurfaceVariant,
-                      ),
-                    )),
-                  ],
+        return GestureDetector(
+          onTap: () async {
+            logFirebaseEvent('STORE_INVENTORY_POS_HERO_ON_TAP');
+            logFirebaseEvent('StoreInventory_navigate_to');
+            context.goNamed(
+              PointOfSalesWidget.routeName,
+              queryParameters: {
+                'pharm': serializeParam(
+                  FFAppState().Pharm,
+                  ParamType.String,
                 ),
-                SizedBox(height: 16.0),
-                Text(
-                  'ZMK ${_formatNumber(totalStockValue)}',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.w600,
-                    color: onSurface,
-                    height: 1.2,
-                    letterSpacing: -0.02,
-                  ),
+              }.withoutNulls,
+              extra: <String, dynamic>{
+                '__transition_info__': TransitionInfo(
+                  hasTransition: true,
+                  transitionType: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 0),
                 ),
-                SizedBox(height: 8.0),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6).withValues(alpha: 0.7),
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.trending_up, color: secondaryTeal, size: 14.0),
-                          SizedBox(width: 2.0),
-                          Text(
-                            '+2.4%',
-                            style: TextStyle(
-                              fontFamily: 'Satoshi',
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: secondaryTeal,
+              },
+            );
+            FFAppState().SelectedPage = 'Point Of Sale';
+          },
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  primaryBlue,
+                  primaryBlue.withValues(alpha: 0.82),
+                  Color(0xFF6C3CE1), // Accent purple
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0.0, 0.5, 1.0],
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: [
+                BoxShadow(
+                  color: primaryBlue.withValues(alpha: 0.3),
+                  blurRadius: 24.0,
+                  spreadRadius: 4.0,
+                  offset: Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isWide ? 40.0 : 24.0,
+                vertical: isWide ? 36.0 : 28.0,
+              ),
+              child: isWide
+                  ? Row(
+                      children: [
+                        // Left: POS icon + branding
+                        Container(
+                          width: 72.0,
+                          height: 72.0,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(20.0),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.25),
+                              width: 1.5,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 8.0),
-                    Flexible(child: Text(
-                      'vs last month',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w400,
-                        color: outline,
-                      ),
-                    )),
-                  ],
-                ),
-                Spacer(),
-                SizedBox(height: 44.0, child: Align(alignment: Alignment.bottomCenter, child: _buildSparkline(primaryBlue))),
-              ],
-            ),
-          ),
-          // Card 2: Items Near Expiry
-          _buildGlassCard(
-            cardBg: cardBg,
-            outlineVariant: outlineVariant,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 32.0,
-                      height: 32.0,
-                      decoration: BoxDecoration(
-                        color: primaryContainer,
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: Icon(Icons.warning_amber_rounded, color: primaryBlue, size: 20.0),
-                    ),
-                    SizedBox(width: 12.0),
-                    Flexible(child: Text(
-                      'Items Near Expiry',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: onSurfaceVariant,
-                      ),
-                    )),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '$nearExpiryCount',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.w600,
-                        color: onSurface,
-                        height: 1.2,
-                      ),
-                    ),
-                    SizedBox(width: 4.0),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 4.0),
-                      child: Text(
-                        'SKUs',
-                        style: TextStyle(
-                          fontFamily: 'Satoshi',
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w400,
-                          color: outline,
+                          child: Icon(
+                            Icons.point_of_sale_rounded,
+                            color: Colors.white,
+                            size: 38.0,
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 28.0),
+                        // Center: Title + description
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                    ),
+                                    child: Text(
+                                      'POINT OF SALE',
+                                      style: TextStyle(
+                                        fontFamily: 'Satoshi',
+                                        fontSize: 10.0,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white.withValues(alpha: 0.9),
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                'Start Selling & Dispensing',
+                                style: TextStyle(
+                                  fontFamily: 'Satoshi',
+                                  fontSize: 28.0,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
+                              Text(
+                                'Quick sales, prescriptions, and dispensing — all in one place. Tap to begin a transaction.',
+                                style: TextStyle(
+                                  fontFamily: 'Satoshi',
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white.withValues(alpha: 0.82),
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 24.0),
+                        // Right: Quick stats + CTA
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _buildStatChip(
+                                  icon: Icons.inventory_2_outlined,
+                                  label: '$totalSKUs items',
+                                  value: 'In Stock',
+                                ),
+                                SizedBox(width: 12.0),
+                                _buildStatChip(
+                                  icon: Icons.payments_outlined,
+                                  label: 'ZMK ${_formatNumber(totalStockValue)}',
+                                  value: 'Stock Value',
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16.0),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.12),
+                                    blurRadius: 8.0,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Open POS',
+                                    style: TextStyle(
+                                      fontFamily: 'Satoshi',
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: primaryBlue,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: primaryBlue,
+                                    size: 20.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Mobile layout
+                        Row(
+                          children: [
+                            Container(
+                              width: 56.0,
+                              height: 56.0,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.18),
+                                borderRadius: BorderRadius.circular(16.0),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.25),
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.point_of_sale_rounded,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                            ),
+                            SizedBox(width: 16.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Text(
+                                      'POINT OF SALE',
+                                      style: TextStyle(
+                                        fontFamily: 'Satoshi',
+                                        fontSize: 9.0,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white.withValues(alpha: 0.9),
+                                        letterSpacing: 1.2,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(
+                                    'Start Selling & Dispensing',
+                                    style: TextStyle(
+                                      fontFamily: 'Satoshi',
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      height: 1.2,
+                                      letterSpacing: -0.3,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.0),
+                        Text(
+                          'Quick sales, prescriptions, and dispensing — all in one place. Tap to begin a transaction.',
+                          style: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white.withValues(alpha: 0.82),
+                            height: 1.5,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            _buildStatChip(
+                              icon: Icons.inventory_2_outlined,
+                              label: '$totalSKUs items',
+                              value: 'In Stock',
+                            ),
+                            SizedBox(width: 10.0),
+                            _buildStatChip(
+                              icon: Icons.payments_outlined,
+                              label: 'ZMK ${_formatNumber(totalStockValue)}',
+                              value: 'Value',
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.0),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 8.0,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Open POS',
+                                  style: TextStyle(
+                                    fontFamily: 'Satoshi',
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: primaryBlue,
+                                  ),
+                                ),
+                                SizedBox(width: 6.0),
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: primaryBlue,
+                                  size: 18.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'All items within range',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400,
-                    color: outline,
-                  ),
-                ),
-                Spacer(),
-                SizedBox(height: 44.0, child: Align(alignment: Alignment.bottomCenter, child: Row(
-                  children: [
-                    Container(
-                      width: 8.0,
-                      height: 8.0,
-                      decoration: BoxDecoration(color: primaryBlue, shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 8.0),
-                    Container(
-                      width: 8.0,
-                      height: 8.0,
-                      decoration: BoxDecoration(color: primaryBlue.withValues(alpha: 0.5), shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 8.0),
-                    Container(
-                      width: 8.0,
-                      height: 8.0,
-                      decoration: BoxDecoration(color: outlineVariant.withValues(alpha: 0.3), shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 8.0),
-                    Container(
-                      width: 8.0,
-                      height: 8.0,
-                      decoration: BoxDecoration(color: outlineVariant.withValues(alpha: 0.3), shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: 12.0),
-                    Text(
-                      'Next 30 Days',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                        color: outline,
-                        letterSpacing: 0.08,
-                      ),
-                    ),
-                  ],
-                ))),
-              ],
             ),
           ),
-          // Card 3: Active Stock Items
-          _buildGlassCard(
-            cardBg: cardBg,
-            outlineVariant: outlineVariant,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 32.0,
-                      height: 32.0,
-                      decoration: BoxDecoration(
-                        color: secondaryTeal.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: Icon(Icons.inventory_outlined, color: secondaryTeal, size: 20.0),
-                    ),
-                    SizedBox(width: 12.0),
-                    Flexible(child: Text(
-                      'Active Stock Items',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: onSurfaceVariant,
-                      ),
-                    )),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  '$totalSKUs',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.w600,
-                    color: onSurface,
-                    height: 1.2,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  '$lowStockCount low stock alerts',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400,
-                    color: outline,
-                  ),
-                ),
-                Spacer(),
-                SizedBox(height: 44.0, child: Align(alignment: Alignment.bottomCenter, child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: LinearProgressIndicator(
-                        value: totalSKUs > 0 ? (totalSKUs - lowStockCount) / totalSKUs : 0.0,
-                        backgroundColor: surfaceContainerHighest,
-                        valueColor: AlwaysStoppedAnimation<Color>(secondaryTeal),
-                        minHeight: 6.0,
-                      ),
-                    ),
-                    SizedBox(height: 6.0),
-                    Text(
-                      totalSKUs > 0 ? '${((totalSKUs - lowStockCount) / totalSKUs * 100).round()}% in stock' : 'No data',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontSize: 11.0,
-                        fontWeight: FontWeight.w500,
-                        color: outline,
-                      ),
-                    ),
-                  ],
-                ))),
-              ],
-            ),
-          ),
-        ];
-
-        // Responsive grid using rows
-        final rows = <Widget>[];
-        for (int i = 0; i < cards.length; i += columns) {
-          final rowChildren = <Widget>[];
-          for (int j = 0; j < columns && i + j < cards.length; j++) {
-            if (j > 0) rowChildren.add(SizedBox(width: cardSpacing));
-            rowChildren.add(Expanded(child: cards[i + j]));
-          }
-          while (rowChildren.length < columns * 2 - 1) {
-            rowChildren.add(SizedBox(width: cardSpacing));
-            rowChildren.add(Expanded(child: Container()));
-          }
-          rows.add(IntrinsicHeight(child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: rowChildren,
-          )));
-          if (i + columns < cards.length) {
-            rows.add(SizedBox(height: cardSpacing));
-          }
-        }
-        return Column(children: rows);
+        );
       },
+    );
+  }
+
+  /// Small stat chip used inside the POS hero card
+  Widget _buildStatChip({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1.0,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white.withValues(alpha: 0.85), size: 16.0),
+          SizedBox(width: 8.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontFamily: 'Satoshi',
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  fontFamily: 'Satoshi',
+                  fontSize: 11.0,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
