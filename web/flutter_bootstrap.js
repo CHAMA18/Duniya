@@ -8,16 +8,34 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker
-      .register('/duniya_service_worker.js')
+      .register('/duniya_service_worker.js', { updateViaCache: 'none' })
       .then(function (registration) {
         console.log(
           '[Duniya PWA] Service worker registered with scope:',
           registration.scope
         );
-        // Check for updates every hour.
+        // Check for updates every 5 minutes (cache busting —
+        // ensures users get the latest version quickly).
         setInterval(function () {
           registration.update().catch(function () {});
-        }, 60 * 60 * 1000);
+        }, 5 * 60 * 1000);
+
+        // When a new service worker is waiting, force it to activate.
+        // This ensures cache busting takes effect immediately.
+        if (registration.waiting) {
+          registration.waiting.postMessage('SKIP_WAITING');
+        }
+        registration.addEventListener('updatefound', function () {
+          var newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', function () {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New version available — force activate it.
+                newWorker.postMessage('SKIP_WAITING');
+              }
+            });
+          }
+        });
       })
       .catch(function (err) {
         console.warn('[Duniya PWA] Service worker registration failed:', err);

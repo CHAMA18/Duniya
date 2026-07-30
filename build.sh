@@ -82,3 +82,43 @@ if [[ -f "web/_redirects" ]]; then
   cp web/_redirects build/web/_redirects
   echo "==> Copied web/_redirects -> build/web/_redirects"
 fi
+
+# ---------------------------------------------------------------------
+# 5. Cache busting — inject build version into built files.
+# ---------------------------------------------------------------------
+# Generate a version string from the git commit hash (short) + timestamp.
+# This ensures every deploy produces a unique version that forces:
+#   - Service worker cache invalidation (new CACHE_NAME)
+#   - Fresh index.html (no stale HTML shell)
+#   - CDN/browsers bypass cached copies of the entry point
+BUILD_VERSION="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')-$(date +%s)"
+echo "==> Injecting cache-bust version: ${BUILD_VERSION}"
+
+# Replace the placeholder in the service worker with the build version.
+if [[ -f "build/web/duniya_service_worker.js" ]]; then
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/duniya_service_worker.js
+  echo "==> Injected version into duniya_service_worker.js"
+fi
+
+# Replace the DEV placeholder in index.html with the build version.
+if [[ -f "build/web/index.html" ]]; then
+  sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/index.html
+  echo "==> Injected version into index.html meta tag"
+fi
+
+# Replace the placeholder in manifest.json with the build version.
+if [[ -f "build/web/manifest.json" ]]; then
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/manifest.json
+  echo "==> Injected version into manifest.json start_url"
+fi
+
+# ---------------------------------------------------------------------
+# 6. Copy _headers file for Render CDN cache configuration.
+#    Render static sites support Netlify-style _headers files.
+# ---------------------------------------------------------------------
+if [[ -f "web/_headers" ]]; then
+  cp web/_headers build/web/_headers
+  echo "==> Copied web/_headers -> build/web/_headers (cache-busting HTTP headers)"
+fi
+
+echo "==> Cache busting complete. Build version: ${BUILD_VERSION}"

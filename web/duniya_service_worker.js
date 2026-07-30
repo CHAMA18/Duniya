@@ -15,8 +15,12 @@
  * the registration block at the bottom of this file).
  */
 
-const CACHE_NAME = 'duniya-pwa-v1';
-const RUNTIME_CACHE = 'duniya-runtime-v1';
+// CACHE_VERSION is replaced by build.sh with a timestamp-based version
+// on every deploy. This ensures the service worker busts all caches
+// automatically when a new version is deployed.
+const CACHE_VERSION = '%%BUILD_VERSION%%';
+const CACHE_NAME = `duniya-pwa-${CACHE_VERSION}`;
+const RUNTIME_CACHE = `duniya-runtime-${CACHE_VERSION}`;
 
 // Core app shell — these are the files needed to boot the app offline.
 // The exact filenames may include content hashes, so we use a
@@ -73,14 +77,19 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// ─── Activate: clean up old caches ────────────────────────────────
+// ─── Activate: clean up old caches (cache busting) ────────────────
+// On every new deploy, CACHE_VERSION changes, so the old caches are
+// automatically purged. This is the core cache-busting mechanism.
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
           .filter((name) => name !== CACHE_NAME && name !== RUNTIME_CACHE)
-          .map((name) => caches.delete(name))
+          .map((name) => {
+            console.log('[Duniya SW] Deleting old cache:', name);
+            return caches.delete(name);
+          })
       );
     })
   );
@@ -109,14 +118,21 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Navigation requests (page loads) → serve cached index.html,
-  // fall back to network, then to cache.
+  // Navigation requests (page loads) → network-first with cache busting.
+  // Always fetch fresh index.html from the server; only fall back to
+  // cache when offline. This is the primary cache-busting path.
   if (request.mode === 'navigate') {
     event.respondWith(
       (async () => {
         try {
-          // Try network first (so we get the latest index.html).
-          const networkResponse = await fetch(request);
+          // Network first — always get the latest index.html.
+          // Add a cache-busting query param to defeat intermediate caches.
+          const bustUrl = new URL(request.url);
+          bustUrl.searchParams.set('_v', CACHE_VERSION);
+          const networkResponse = await fetch(bustUrl.href, {
+            cache: 'no-cache',
+            credentials: 'same-origin',
+          });
           const cache = await caches.open(RUNTIME_CACHE);
           cache.put('/index.html', networkResponse.clone()).catch(() => {});
           return networkResponse;
@@ -217,5 +233,16 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') {
     self.skipWaiting();
+  }
+  if (event.data === 'GET_VERSION') {
+    event.ports[0].postMessage({ version: CACHE_VERSION });
+  }
+  if (event.data && event.data.type === 'FORCE_UPDATE') {
+    // Clear all caches and force a full reload.
+    caches.keys().then((names) => {
+      Promise.all(names.map((n) => caches.delete(n))).then(() => {
+        self.skipWaiting();
+      });
+    });
   }
 });
