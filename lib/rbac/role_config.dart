@@ -133,6 +133,10 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.damagedStockEdit,
     Permission.damagedStockDelete,
 
+    // Audit Logs — full access
+    Permission.auditLogsView,
+    Permission.auditLogsExport,
+
     // Notifications
     Permission.notificationsView,
   },
@@ -227,6 +231,9 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.damagedStockView,
     Permission.damagedStockCreate,
     Permission.damagedStockEdit,
+
+    // Audit Logs — view
+    Permission.auditLogsView,
 
     // Notifications
     Permission.notificationsView,
@@ -475,6 +482,10 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.dashboardViewSalesAnalytics,
     Permission.dashboardViewInventoryMix,
 
+    // Audit Logs — full access
+    Permission.auditLogsView,
+    Permission.auditLogsExport,
+
     // Settings
     Permission.settingsView,
     Permission.settingsManage,
@@ -500,6 +511,9 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Dashboard — limited
     Permission.dashboardViewSalesAnalytics,
+
+    // Audit Logs — view
+    Permission.auditLogsView,
 
     // Settings
     Permission.settingsView,
@@ -559,6 +573,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
     NavItem.vmiDashboard,
+    NavItem.auditLogs,
     NavItem.settings,
   },
   AppRole.outletManager: {
@@ -579,6 +594,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
     NavItem.vmiDashboard,
+    NavItem.auditLogs,
     NavItem.settings,
   },
   AppRole.pharmacist: {
@@ -612,6 +628,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.replenishment,
     NavItem.bmiCalculator,
     NavItem.vmiDashboard,
+    NavItem.auditLogs,
     NavItem.settings,
   },
   AppRole.cashier: {
@@ -649,6 +666,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.duniyaStockBalances,
     NavItem.duniyaOnboardingRequests,
     NavItem.duniyaNetworkAnalytics,
+    NavItem.auditLogs,
     NavItem.settings,
   },
   AppRole.duniyaStaff: {
@@ -658,6 +676,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.duniyaPharmacies,
     NavItem.duniyaStockBalances,
     NavItem.duniyaOnboardingRequests,
+    NavItem.auditLogs,
     NavItem.settings,
   },
   AppRole.subscriber: {

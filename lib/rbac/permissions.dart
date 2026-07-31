@@ -127,6 +127,10 @@ enum Permission {
   damagedStockEdit,
   damagedStockDelete,
 
+  // ─── Audit Logs ──────────────────────────────────────────────────
+  auditLogsView,
+  auditLogsExport,
+
   // ─── Notifications ────────────────────────────────────────────────
   notificationsView,
 }

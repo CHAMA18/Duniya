@@ -161,5 +161,6 @@ enum NavItem {
   duniyaOnboardingRequests,
   duniyaNetworkAnalytics,
   vmiDashboard,
+  auditLogs,
   settings,
 }
