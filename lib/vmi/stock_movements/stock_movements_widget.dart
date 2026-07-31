@@ -29,6 +29,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedPeriod = '24h';
 
+  /// Format a number with comma separators (e.g. 1248 → '1,248')
+  static String _fmtNum(int n) {
+    return n.toString().replaceAllMapped(
+        RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -105,110 +111,124 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           },
                         ),
                       ),
-                      // Main Content
+                      // Main Content — wrapped in StreamBuilder so KPI
+                      // cards and chart are data-driven from Firestore
                       Expanded(
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32.0, vertical: 24.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              // ═══ HEADER ═══
-                              _buildPageHeader(
-                                  context,
-                                  theme,
-                                  primaryColor,
-                                  onSurface,
-                                  onSurfaceVariant,
-                                  outlineVariant,
-                                  cardBg),
-                              SizedBox(height: 24.0),
+                        child: AuthUserStreamWidget(
+                          builder: (context) =>
+                              StreamBuilder<List<StockMovementRecord>>(
+                            stream: queryStockMovementRecord(
+                              parent: valueOrDefault(
+                                          currentUserDocument?.role,
+                                          '') ==
+                                      'Owner'
+                                  ? currentUserReference
+                                  : currentUserDocument?.ownerRef,
+                              queryBuilder: (stockMovementRecord) =>
+                                  stockMovementRecord.orderBy('CreatedAt',
+                                      descending: true),
+                            ),
+                            builder: (context, snapshot) {
+                              final isLoading = !snapshot.hasData;
+                              List<StockMovementRecord> allMovements =
+                                  snapshot.data ?? [];
+                              // Apply filter
+                              List<StockMovementRecord> movements =
+                                  allMovements;
+                              if (_model.movementTypeValue != null &&
+                                  _model.movementTypeValue != 'All') {
+                                movements = allMovements
+                                    .where((m) =>
+                                        m.movementType ==
+                                        _model.movementTypeValue)
+                                    .toList();
+                              }
 
-                              // ═══ EXECUTIVE METRICS (4 cards) ═══
-                              _buildMetricCards(
-                                  context,
-                                  theme,
-                                  primaryColor,
-                                  onSurface,
-                                  onSurfaceVariant,
-                                  outlineVariant,
-                                  cardBg),
-                              SizedBox(height: 24.0),
+                              return SingleChildScrollView(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 32.0, vertical: 24.0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    // ═══ HEADER ═══
+                                    _buildPageHeader(
+                                        context,
+                                        theme,
+                                        primaryColor,
+                                        onSurface,
+                                        onSurfaceVariant,
+                                        outlineVariant,
+                                        cardBg),
+                                    SizedBox(height: 24.0),
 
-                              // ═══ MAIN CONTENT: Analytics + Ledger ═══
-                              // Analytics Chart
-                              _buildAnalyticsChart(
-                                  context,
-                                  theme,
-                                  primaryColor,
-                                  onSurface,
-                                  onSurfaceVariant,
-                                  outlineVariant,
-                                  cardBg),
-                              SizedBox(height: 24.0),
+                                    // ═══ EXECUTIVE METRICS (4 cards) — data-driven ═══
+                                    _buildMetricCards(
+                                        context,
+                                        theme,
+                                        primaryColor,
+                                        onSurface,
+                                        onSurfaceVariant,
+                                        outlineVariant,
+                                        cardBg,
+                                        allMovements,
+                                        isLoading),
+                                    SizedBox(height: 24.0),
 
-                              // Movement Ledger Table
-                              AuthUserStreamWidget(
-                                builder: (context) =>
-                                    StreamBuilder<List<StockMovementRecord>>(
-                                  stream: queryStockMovementRecord(
-                                    parent: valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner'
-                                        ? currentUserReference
-                                        : currentUserDocument?.ownerRef,
-                                    queryBuilder: (stockMovementRecord) =>
-                                        stockMovementRecord.orderBy('CreatedAt',
-                                            descending: true),
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return _buildLoadingCard(
-                                          cardBg, outlineVariant, theme);
-                                    }
-                                    List<StockMovementRecord> movements =
-                                        snapshot.data!;
-                                    // Apply filter
-                                    if (_model.movementTypeValue != null &&
-                                        _model.movementTypeValue != 'All') {
-                                      movements = movements
-                                          .where((m) =>
-                                              m.movementType ==
-                                              _model.movementTypeValue)
-                                          .toList();
-                                    }
-                                    return FutureBuilder<
-                                        List<ProductMasterRecord>>(
-                                      future: queryProductMasterRecordOnce(),
-                                      builder: (context, productSnapshot) {
-                                        if (!productSnapshot.hasData) {
-                                          return _buildLoadingCard(
-                                              cardBg, outlineVariant, theme);
-                                        }
-                                        Map<String, ProductMasterRecord>
-                                            productMap = {
-                                          for (var p in productSnapshot.data!)
-                                            p.reference.path: p
-                                        };
-                                        return _buildMovementLedger(
-                                          context,
-                                          movements,
-                                          productMap,
-                                          theme,
-                                          primaryColor,
-                                          onSurface,
-                                          onSurfaceVariant,
-                                          outlineVariant,
-                                          cardBg,
-                                        );
-                                      },
-                                    );
-                                  },
+                                    // ═══ ANALYTICS CHART — data-driven ═══
+                                    _buildAnalyticsChart(
+                                        context,
+                                        theme,
+                                        primaryColor,
+                                        onSurface,
+                                        onSurfaceVariant,
+                                        outlineVariant,
+                                        cardBg,
+                                        allMovements,
+                                        isLoading),
+                                    SizedBox(height: 24.0),
+
+                                    // ═══ MOVEMENT LEDGER TABLE ═══
+                                    if (isLoading)
+                                      _buildLoadingCard(
+                                          cardBg, outlineVariant, theme)
+                                    else
+                                      FutureBuilder<
+                                          List<ProductMasterRecord>>(
+                                        future:
+                                            queryProductMasterRecordOnce(),
+                                        builder:
+                                            (context, productSnapshot) {
+                                          if (!productSnapshot.hasData) {
+                                            return _buildLoadingCard(
+                                                cardBg,
+                                                outlineVariant,
+                                                theme);
+                                          }
+                                          Map<String, ProductMasterRecord>
+                                              productMap = {
+                                            for (var p
+                                                in productSnapshot.data!)
+                                              p.reference.path: p
+                                          };
+                                          return _buildMovementLedger(
+                                            context,
+                                            movements,
+                                            productMap,
+                                            theme,
+                                            primaryColor,
+                                            onSurface,
+                                            onSurfaceVariant,
+                                            outlineVariant,
+                                            cardBg,
+                                          );
+                                        },
+                                      ),
+                                    SizedBox(height: 32.0),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(height: 32.0),
-                            ],
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -433,7 +453,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   }
 
   // ═══════════════════════════════════════════════════════════
-  // EXECUTIVE METRIC CARDS
+  // EXECUTIVE METRIC CARDS — data-driven from Firestore
   // ═══════════════════════════════════════════════════════════
   Widget _buildMetricCards(
     BuildContext context,
@@ -443,22 +463,99 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     Color onSurfaceVariant,
     Color outlineVariant,
     Color cardBg,
+    List<StockMovementRecord> movements,
+    bool isLoading,
   ) {
+    // ── Compute real metrics from Firestore data ──
+    final now = DateTime.now();
+    final yesterday = now.subtract(const Duration(hours: 24));
+    final dayBefore = now.subtract(const Duration(hours: 48));
+
+    // Filter movements in last 24h
+    final last24h = movements.where((m) =>
+        m.hasCreatedAt() && m.createdAt!.isAfter(yesterday)).toList();
+    // Movements in the previous 24h window (for % change)
+    final prev24h = movements.where((m) {
+      if (!m.hasCreatedAt()) return false;
+      return m.createdAt!.isAfter(dayBefore) &&
+          !m.createdAt!.isAfter(yesterday);
+    }).toList();
+
+    final totalMovements = last24h.length;
+    final prevTotal = prev24h.length;
+    final incoming = last24h
+        .where((m) => m.movementType == 'RECEIVED')
+        .length;
+    final outgoing = last24h
+        .where((m) => m.movementType == 'SOLD')
+        .length;
+    final transfers = last24h
+        .where((m) => m.movementType == 'TRANSFERRED')
+        .length;
+
+    // Pending verification: incoming movements without a reference
+    final pendingVerification = last24h
+        .where((m) =>
+            m.movementType == 'RECEIVED' &&
+            (m.movementReference == null ||
+                m.movementReference!.isEmpty))
+        .length;
+
+    // In transit: transfers with no reason or still pending
+    final inTransit = last24h
+        .where((m) =>
+            m.movementType == 'TRANSFERRED' &&
+            (m.reason == null || m.reason!.isEmpty))
+        .length;
+
+    // % change vs yesterday
+    String pctChange = '';
+    Color pctColor = primaryColor;
+    IconData pctIcon = Icons.trending_up;
+    if (prevTotal > 0) {
+      final change = ((totalMovements - prevTotal) / prevTotal * 100);
+      final sign = change >= 0 ? '+' : '';
+      pctChange = '$sign${change.toStringAsFixed(1)}% vs yesterday';
+      pctColor = change >= 0 ? primaryColor : theme.error;
+      pctIcon = change >= 0 ? Icons.trending_up : Icons.trending_down;
+    } else if (totalMovements > 0) {
+      pctChange = 'No data yesterday';
+      pctColor = onSurfaceVariant;
+      pctIcon = Icons.info_outline;
+    }
+
+    // Outgoing insight
+    final adjustments = last24h
+        .where((m) => m.movementType == 'ADJUSTMENT')
+        .length;
+    String outgoingDetail;
+    if (outgoing > 0 && adjustments > 0) {
+      outgoingDetail = 'Sales & $adjustments adjustment${adjustments > 1 ? 's' : ''}';
+    } else if (outgoing > 0) {
+      outgoingDetail = 'Sales & dispensing';
+    } else {
+      outgoingDetail = 'No outgoing today';
+    }
+
     final metrics = [
       _MetricData(
         icon: Icons.timeline,
         label: 'TOTAL MOVEMENTS (24H)',
-        value: '1,248',
-        detail: '+12.4% vs yesterday',
-        detailIcon: Icons.trending_up,
-        detailColor: primaryColor,
+        value: isLoading ? '—' : _fmtNum(totalMovements),
+        detail: isLoading ? 'Loading...' : pctChange,
+        detailIcon: isLoading ? null : pctIcon,
+        detailColor: pctColor,
         accentColor: primaryColor.withValues(alpha: 0.08),
       ),
       _MetricData(
         icon: Icons.login,
         label: 'INCOMING STOCK',
-        value: '452',
-        detail: 'Pending verification: 24',
+        value: isLoading ? '—' : _fmtNum(incoming),
+        detail: isLoading
+            ? 'Loading...'
+            : pendingVerification > 0
+                ? 'Pending verification: $pendingVerification'
+                : 'All verified',
         detailIcon: Icons.info_outline,
         detailColor: primaryColor,
         accentColor: const Color(0xFF00C1FD).withValues(alpha: 0.08),
@@ -466,8 +563,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       _MetricData(
         icon: Icons.logout,
         label: 'OUTGOING STOCK',
-        value: '680',
-        detail: 'Mostly prescriptions',
+        value: isLoading ? '—' : _fmtNum(outgoing),
+        detail: isLoading ? 'Loading...' : outgoingDetail,
         detailIcon: null,
         detailColor: onSurfaceVariant,
         accentColor: primaryColor.withValues(alpha: 0.06),
@@ -475,8 +572,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       _MetricData(
         icon: Icons.sync_alt,
         label: 'INTERNAL TRANSFERS',
-        value: '116',
-        detail: 'In transit: 12',
+        value: isLoading ? '—' : _fmtNum(transfers),
+        detail: isLoading
+            ? 'Loading...'
+            : inTransit > 0
+                ? 'In transit: $inTransit'
+                : 'All completed',
         detailIcon: Icons.local_shipping,
         detailColor: primaryColor,
         accentColor: theme.error.withValues(alpha: 0.06),
@@ -592,7 +693,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   }
 
   // ═══════════════════════════════════════════════════════════
-  // ANALYTICS CHART
+  // ANALYTICS CHART — data-driven from Firestore
   // ═══════════════════════════════════════════════════════════
   Widget _buildAnalyticsChart(
     BuildContext context,
@@ -602,6 +703,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     Color onSurfaceVariant,
     Color outlineVariant,
     Color cardBg,
+    List<StockMovementRecord> movements,
+    bool isLoading,
   ) {
     return Card(
       elevation: 2.0,
@@ -698,7 +801,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             height: 220.0,
             padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: _buildBarChart(
-                primaryColor, outlineVariant, onSurface, onSurfaceVariant),
+                primaryColor, outlineVariant, onSurface, onSurfaceVariant, movements),
           ),
         ],
       ),
@@ -706,16 +809,62 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   }
 
   Widget _buildBarChart(Color primaryColor, Color outlineVariant,
-      Color onSurface, Color onSurfaceVariant) {
-    final bars = [
-      _BarData(height: 0.40, value: '120', isHighlight: false),
-      _BarData(height: 0.60, value: '180', isHighlight: false),
-      _BarData(height: 0.30, value: '90', isHighlight: false),
-      _BarData(height: 0.80, value: '240', isHighlight: false),
-      _BarData(height: 0.50, value: '150', isHighlight: true),
-      _BarData(height: 0.70, value: '210', isHighlight: false),
-      _BarData(height: 0.45, value: '135', isHighlight: false),
-    ];
+      Color onSurface, Color onSurfaceVariant,
+      List<StockMovementRecord> movements) {
+    // ── Aggregate real data into time buckets ──
+    final now = DateTime.now();
+    List<_BarData> bars;
+
+    if (_selectedPeriod == '24h') {
+      // Last 7 hours, 1-hour buckets
+      bars = List.generate(7, (i) {
+        final hourStart = now.subtract(Duration(hours: 7 - i));
+        final hourEnd = hourStart.add(const Duration(hours: 1));
+        final count = movements.where((m) {
+          if (!m.hasCreatedAt()) return false;
+          return m.createdAt!.isAfter(hourStart) &&
+              !m.createdAt!.isAfter(hourEnd);
+        }).length;
+        return _BarData(
+          height: count > 0 ? (count / (movements.length > 0 ? movements.length : 1)).clamp(0.1, 1.0) : 0.05,
+          value: count.toString(),
+          isHighlight: i == 5, // highlight the "current" hour
+        );
+      });
+    } else if (_selectedPeriod == '7d') {
+      // Last 7 days
+      bars = List.generate(7, (i) {
+        final dayStart = DateTime(now.year, now.month, now.day)
+            .subtract(Duration(days: 6 - i));
+        final dayEnd = dayStart.add(const Duration(days: 1));
+        final count = movements.where((m) {
+          if (!m.hasCreatedAt()) return false;
+          return m.createdAt!.isAfter(dayStart) &&
+              !m.createdAt!.isAfter(dayEnd);
+        }).length;
+        return _BarData(
+          height: count > 0 ? (count / (movements.length > 0 ? movements.length : 1)).clamp(0.1, 1.0) : 0.05,
+          value: count.toString(),
+          isHighlight: i == 6, // highlight today
+        );
+      });
+    } else {
+      // 30d — last 6 x 5-day buckets
+      bars = List.generate(6, (i) {
+        final bucketStart = now.subtract(Duration(days: 30 - i * 5));
+        final bucketEnd = bucketStart.add(const Duration(days: 5));
+        final count = movements.where((m) {
+          if (!m.hasCreatedAt()) return false;
+          return m.createdAt!.isAfter(bucketStart) &&
+              !m.createdAt!.isAfter(bucketEnd);
+        }).length;
+        return _BarData(
+          height: count > 0 ? (count / (movements.length > 0 ? movements.length : 1)).clamp(0.1, 1.0) : 0.05,
+          value: count.toString(),
+          isHighlight: i == 5, // highlight current bucket
+        );
+      });
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -771,7 +920,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     Color cardBg,
   ) {
     if (movements.isEmpty) {
-      return _buildEmptyState(theme, onSurfaceVariant);
+      return _buildEmptyState(theme, primaryColor, onSurfaceVariant, cardBg);
     }
 
     // Pagination
@@ -1274,10 +1423,15 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   // ═══════════════════════════════════════════════════════════
   // EMPTY STATE
   // ═══════════════════════════════════════════════════════════
-  Widget _buildEmptyState(FlutterFlowTheme theme, Color onSurfaceVariant) {
+  Widget _buildEmptyState(
+    FlutterFlowTheme theme,
+    Color primaryColor,
+    Color onSurfaceVariant,
+    Color cardBg,
+  ) {
     return Card(
       elevation: 2.0,
-      color: theme.secondaryBackground,
+      color: cardBg,
       shadowColor: Colors.black.withValues(alpha: 0.06),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
@@ -1291,25 +1445,69 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.swap_horiz,
-                  size: 64.0, color: onSurfaceVariant.withValues(alpha: 0.4)),
-              SizedBox(height: 16.0),
+              Container(
+                width: 72.0,
+                height: 72.0,
+                decoration: BoxDecoration(
+                  color: primaryColor.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Icon(Icons.swap_horiz,
+                    size: 36.0,
+                    color: primaryColor.withValues(alpha: 0.6)),
+              ),
+              SizedBox(height: 20.0),
               Text(
-                'No stock movements found',
+                'No stock movements yet',
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                  color: onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                  color: theme.primaryText,
                 ),
               ),
               SizedBox(height: 8.0),
               Text(
-                'Add a movement to get started.',
+                'Record your first stock movement to see data here.',
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 14.0,
-                  color: onSurfaceVariant.withValues(alpha: 0.7),
+                  color: onSurfaceVariant,
+                ),
+              ),
+              SizedBox(height: 24.0),
+              GestureDetector(
+                onTap: () => _showAddMovementDialog(context),
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryColor.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.add, size: 18.0, color: Colors.white),
+                      SizedBox(width: 6.0),
+                      Text(
+                        'Add Movement',
+                        style: TextStyle(
+                          fontFamily: 'Satoshi',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
