@@ -121,3 +121,6 @@ export '/duniya/onboarding_requests/onboarding_requests_widget.dart'
     show OnboardingRequestsWidget;
 export '/duniya/network_analytics/network_analytics_widget.dart'
     show NetworkAnalyticsWidget;
+
+// Audit pages
+export '/audit/audit_logs_widget.dart' show AuditLogsWidget;

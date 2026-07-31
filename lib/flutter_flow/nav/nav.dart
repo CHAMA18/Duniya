@@ -623,6 +623,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: NetworkAnalyticsWidget.routePath,
           requireAuth: true,
           builder: (context, params) => NetworkAnalyticsWidget(),
+        ),
+        FFRoute(
+          name: AuditLogsWidget.routeName,
+          path: AuditLogsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => AuditLogsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
