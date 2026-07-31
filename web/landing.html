@@ -22,17 +22,44 @@
 
   <!-- Satoshi Font -->
   <style>
+    /* Satoshi — Full weight family (woff2 for performance, ttf fallback) */
     @font-face {
       font-family: 'Satoshi';
-      src: url('fonts/Satoshi-Light.ttf') format('truetype');
+      src: url('fonts/Satoshi-Light.woff2') format('woff2'),
+           url('fonts/Satoshi-Light.ttf') format('truetype');
       font-weight: 300;
       font-style: normal;
       font-display: swap;
     }
     @font-face {
       font-family: 'Satoshi';
-      src: url('fonts/Satoshi-Regular.ttf') format('truetype');
+      src: url('fonts/Satoshi-Regular.woff2') format('woff2'),
+           url('fonts/Satoshi-Regular.ttf') format('truetype');
       font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Medium.woff2') format('woff2'),
+           url('fonts/Satoshi-Medium.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Bold.woff2') format('woff2'),
+           url('fonts/Satoshi-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Black.woff2') format('woff2'),
+           url('fonts/Satoshi-Black.ttf') format('truetype');
+      font-weight: 900;
       font-style: normal;
       font-display: swap;
     }
@@ -96,59 +123,7 @@
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      /* Satoshi variable font defaults to wght 900 (Black).
-         Override to 400 (Regular) for body text. */
-      font-variation-settings: 'wght' 400;
-    }
 
-    /* ── Font weight overrides for Satoshi variable font ──
-       The bundled Satoshi font is a variable font whose default
-       wght axis is 900 (Black).  We must explicitly set the
-       weight via font-variation-settings for every element. */
-    h1, h2, h3, h4, h5, h6,
-    .hero-title,
-    .section-title,
-    .webapp-title,
-    .cta-title {
-      font-variation-settings: 'wght' 600;
-    }
-    .nav-brand-text,
-    .feature-title,
-    .download-platform-name,
-    .security-title,
-    .footer-brand-name,
-    .footer-heading,
-    .btn,
-    .download-btn,
-    .nav-cta,
-    .mockup-metric-value,
-    .mockup-chart-title,
-    .trust-number {
-      font-variation-settings: 'wght' 500;
-    }
-    .hero-subtitle,
-    .section-desc,
-    .feature-desc,
-    .download-platform-desc,
-    .download-platform-version,
-    .download-platform-reqs,
-    .security-desc,
-    .webapp-desc,
-    .webapp-feature,
-    .cta-desc,
-    .footer-desc,
-    .footer-link,
-    .footer-bottom,
-    .nav-link,
-    .mockup-metric-label,
-    .mockup-metric-change,
-    .mockup-sidebar-item,
-    .hero-badge,
-    .section-label,
-    .webapp-label,
-    .trust-label,
-    .trust-item {
-      font-variation-settings: 'wght' 400;
     }
 
     /* ============================================
@@ -224,7 +199,7 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 300;
+      font-weight: 700;
       font-size: 22px;
       line-height: 1;
       box-shadow: 0 4px 12px rgba(153, 0, 255, 0.3);
@@ -232,7 +207,7 @@
 
     .nav-brand-text {
       font-size: 22px;
-      font-weight: 300;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
@@ -246,7 +221,7 @@
       text-decoration: none;
       color: var(--text-secondary);
       font-size: 15px;
-      font-weight: 300;
+      font-weight: 400;
       padding: 8px 16px;
       border-radius: var(--radius-sm);
       transition: var(--transition);
@@ -265,7 +240,7 @@
       color: white;
       text-decoration: none;
       font-size: 15px;
-      font-weight: 300;
+      font-weight: 500;
       padding: 10px 24px;
       border-radius: var(--radius-sm);
       transition: var(--transition);
@@ -396,7 +371,7 @@
       border: 1px solid rgba(153, 0, 255, 0.15);
       border-radius: var(--radius-full);
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 500;
       color: var(--primary);
       margin-bottom: 32px;
       opacity: 0;
@@ -419,7 +394,7 @@
 
     .hero-title {
       font-size: clamp(42px, 6vw, 72px);
-      font-weight: 300;
+      font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.1;
       margin-bottom: 24px;
@@ -470,7 +445,7 @@
       gap: 10px;
       font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 500;
       padding: 14px 28px;
       border-radius: var(--radius-sm);
       border: none;
@@ -546,7 +521,7 @@
 
     .btn-download-label {
       font-size: 11px;
-      font-weight: 300;
+      font-weight: 500;
       opacity: 0.8;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -554,7 +529,7 @@
 
     .btn-download-name {
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 500;
     }
 
     .hero-visual {
@@ -674,7 +649,7 @@
 
     .mockup-metric-value {
       font-size: 22px;
-      font-weight: 300;
+      font-weight: 700;
       color: white;
     }
 
@@ -703,7 +678,7 @@
 
     .mockup-chart-title {
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 500;
       color: rgba(255, 255, 255, 0.7);
     }
 
@@ -751,7 +726,7 @@
       gap: 12px;
       color: var(--text-secondary);
       font-size: 15px;
-      font-weight: 300;
+      font-weight: 400;
     }
 
     .trust-icon {
@@ -773,7 +748,7 @@
 
     .trust-number {
       font-size: 24px;
-      font-weight: 300;
+      font-weight: 700;
       color: var(--text-primary);
       line-height: 1;
     }
@@ -803,7 +778,7 @@
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 500;
       color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -821,7 +796,7 @@
 
     .section-title {
       font-size: clamp(32px, 4vw, 44px);
-      font-weight: 300;
+      font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1.2;
       margin-bottom: 16px;
@@ -904,7 +879,7 @@
 
     .feature-title {
       font-size: 18px;
-      font-weight: 300;
+      font-weight: 500;
       margin-bottom: 10px;
       letter-spacing: -0.01em;
     }
@@ -1005,7 +980,7 @@
 
     .download-platform-name {
       font-size: 24px;
-      font-weight: 300;
+      font-weight: 500;
       margin-bottom: 8px;
       letter-spacing: -0.01em;
     }
@@ -1038,7 +1013,7 @@
       color: white;
       font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 15px;
-      font-weight: 300;
+      font-weight: 500;
       padding: 14px 32px;
       border-radius: var(--radius-sm);
       border: none;
@@ -1099,7 +1074,7 @@
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      font-weight: 300;
+      font-weight: 500;
       color: var(--tertiary);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -1108,7 +1083,7 @@
 
     .webapp-title {
       font-size: clamp(28px, 3.5vw, 38px);
-      font-weight: 300;
+      font-weight: 700;
       color: var(--text-light);
       letter-spacing: -0.02em;
       line-height: 1.2;
@@ -1249,7 +1224,7 @@
       justify-content: center;
       color: white;
       font-size: 64px;
-      font-weight: 300;
+      font-weight: 700;
       box-shadow: 0 8px 32px rgba(153, 0, 255, 0.3);
     }
 
@@ -1301,7 +1276,7 @@
 
     .security-title {
       font-size: 17px;
-      font-weight: 300;
+      font-weight: 500;
       margin-bottom: 8px;
     }
 
@@ -1358,7 +1333,7 @@
 
     .cta-title {
       font-size: clamp(32px, 4vw, 44px);
-      font-weight: 300;
+      font-weight: 700;
       color: white;
       letter-spacing: -0.02em;
       line-height: 1.2;
@@ -1436,14 +1411,14 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 300;
+      font-weight: 700;
       font-size: 20px;
       line-height: 1;
     }
 
     .footer-brand-name {
       font-size: 20px;
-      font-weight: 300;
+      font-weight: 700;
     }
 
     .footer-desc {
@@ -1455,7 +1430,7 @@
 
     .footer-heading {
       font-size: 14px;
-      font-weight: 300;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-primary);
