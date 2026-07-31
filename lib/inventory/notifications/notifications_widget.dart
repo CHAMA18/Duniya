@@ -170,10 +170,10 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
       decoration: BoxDecoration(
         color: _surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _light.withOpacity(0.6)),
+        border: Border.all(color: _light.withValues(alpha: 0.6)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -233,12 +233,12 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
             color: isActive ? _primary : _surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isActive ? _primary : _light.withOpacity(0.8),
+              color: isActive ? _primary : _light.withValues(alpha: 0.8),
             ),
             boxShadow: isActive
                 ? [
                     BoxShadow(
-                      color: _primary.withOpacity(0.3),
+                      color: _primary.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -262,8 +262,8 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? Colors.white.withOpacity(0.25)
-                        : _light.withOpacity(0.6),
+                        ? Colors.white.withValues(alpha: 0.25)
+                        : _light.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -294,9 +294,9 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
-        color: index.isEven ? _surface : _bg.withOpacity(0.3),
+        color: index.isEven ? _surface : _bg.withValues(alpha: 0.3),
         border: Border(
-          bottom: BorderSide(color: _light.withOpacity(0.4), width: 0.5),
+          bottom: BorderSide(color: _light.withValues(alpha: 0.4), width: 0.5),
         ),
       ),
       child: Row(
@@ -399,10 +399,10 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
       decoration: BoxDecoration(
         color: _surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _light.withOpacity(0.5)),
+        border: Border.all(color: _light.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -507,7 +507,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: _light.withOpacity(0.3),
+                color: _light.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(24),
               ),
               child: const Icon(
@@ -743,7 +743,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                           boxShadow: [
                                             BoxShadow(
                                               color:
-                                                  _primary.withOpacity(0.3),
+                                                  _primary.withValues(alpha: 0.3),
                                               blurRadius: 24,
                                               offset: const Offset(0, 8),
                                             ),
@@ -760,7 +760,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                   height: 48,
                                                   decoration: BoxDecoration(
                                                     color: Colors.white
-                                                        .withOpacity(0.2),
+                                                        .withValues(alpha: 0.2),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             14),
@@ -795,7 +795,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                         style: TextStyle(
                                                           fontSize: 14,
                                                           color: Colors.white
-                                                              .withOpacity(0.85),
+                                                              .withValues(alpha: 0.85),
                                                         ),
                                                       ),
                                                     ],
@@ -922,11 +922,11 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                     BorderRadius.circular(14),
                                                 border: Border.all(
                                                     color: _light
-                                                        .withOpacity(0.6)),
+                                                        .withValues(alpha: 0.6)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.black
-                                                        .withOpacity(0.03),
+                                                        .withValues(alpha: 0.03),
                                                     blurRadius: 10,
                                                     offset:
                                                         const Offset(0, 2),
@@ -984,7 +984,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                   BorderRadius.circular(14),
                                               border: Border.all(
                                                   color: _light
-                                                      .withOpacity(0.6)),
+                                                      .withValues(alpha: 0.6)),
                                             ),
                                             child: DropdownButton<String>(
                                               value: _sortBy,
@@ -1033,7 +1033,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                   horizontal: 20,
                                                   vertical: 12),
                                           decoration: BoxDecoration(
-                                            color: _light.withOpacity(0.3),
+                                            color: _light.withValues(alpha: 0.3),
                                             borderRadius:
                                                 const BorderRadius.only(
                                               topLeft: Radius.circular(16),
@@ -1114,7 +1114,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                             ),
                                             border: Border.all(
                                                 color:
-                                                    _light.withOpacity(0.4)),
+                                                    _light.withValues(alpha: 0.4)),
                                           ),
                                           child: Column(
                                             children: filtered

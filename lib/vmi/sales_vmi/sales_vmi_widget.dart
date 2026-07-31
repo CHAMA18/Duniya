@@ -74,10 +74,10 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
       decoration: BoxDecoration(
         color: _surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _light.withOpacity(0.6)),
+        border: Border.all(color: _light.withValues(alpha: 0.6)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -144,10 +144,10 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
       decoration: BoxDecoration(
         color: _surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _light.withOpacity(0.5)),
+        border: Border.all(color: _light.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -579,7 +579,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                           boxShadow: [
                                             BoxShadow(
                                               color:
-                                                  _primary.withOpacity(0.3),
+                                                  _primary.withValues(alpha: 0.3),
                                               blurRadius: 24,
                                               offset: const Offset(0, 8),
                                             ),
@@ -608,7 +608,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.white
-                                                          .withOpacity(0.85),
+                                                          .withValues(alpha: 0.85),
                                                     ),
                                                   ),
                                                 ],
@@ -675,7 +675,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                               icon: Icons
                                                   .receipt_long_rounded,
                                               color: _primary,
-                                              bgColor: _light.withOpacity(0.5),
+                                              bgColor: _light.withValues(alpha: 0.5),
                                             ),
                                             _buildKpiCard(
                                               title: 'Today\'s Sales',
@@ -734,11 +734,11 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                           borderRadius:
                                               BorderRadius.circular(20),
                                           border: Border.all(
-                                              color: _light.withOpacity(0.5)),
+                                              color: _light.withValues(alpha: 0.5)),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.black
-                                                  .withOpacity(0.03),
+                                                  .withValues(alpha: 0.03),
                                               blurRadius: 14,
                                               offset: const Offset(0, 4),
                                             ),
@@ -760,7 +760,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                       height: 36,
                                                       decoration: BoxDecoration(
                                                         color: _light
-                                                            .withOpacity(0.4),
+                                                            .withValues(alpha: 0.4),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10),
@@ -1171,7 +1171,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                             decoration: BoxDecoration(
                               color: _bg,
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: _light.withOpacity(0.5)),
+                              border: Border.all(color: _light.withValues(alpha: 0.5)),
                             ),
                             child: Row(
                               mainAxisAlignment:
