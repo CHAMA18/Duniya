@@ -68,6 +68,7 @@ flutter pub get
 # ---------------------------------------------------------------------
 echo "==> flutter build web"
 flutter build web --release \
+  --web-renderer html \
   --no-tree-shake-icons
 
 echo "==> Build complete. Output: $(pwd)/build/web"
@@ -131,4 +132,11 @@ echo "==> Cache busting complete. Build version: ${BUILD_VERSION}"
 if [[ -f "web/landing.html" ]]; then
   cp web/landing.html build/web/landing.html
   echo "==> Copied web/landing.html -> build/web/landing.html (download landing page)"
+fi
+
+# Copy fonts directory for the landing page
+if [[ -d "web/fonts" ]]; then
+  mkdir -p build/web/fonts
+  cp web/fonts/* build/web/fonts/
+  echo "==> Copied web/fonts/ -> build/web/fonts/ (landing page fonts)"
 fi
