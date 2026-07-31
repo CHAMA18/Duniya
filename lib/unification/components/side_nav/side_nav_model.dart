@@ -47,6 +47,10 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModel20;
   // Model for Audit Logs SidebarLink component.
   late SidebarLinkModel sidebarLinkModelAuditLogs;
+  // Duniya Network section models (separate from Operations section models)
+  late SidebarLinkModel sidebarLinkModel15dup;
+  late SidebarLinkModel sidebarLinkModel16dup;
+  late SidebarLinkModel sidebarLinkModel17dup;
   // State field(s) for SwitchListTile widget.
   bool? switchListTileValue;
 
@@ -72,6 +76,9 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel19 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel20 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModelAuditLogs = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModel15dup = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModel16dup = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModel17dup = createModel(context, () => SidebarLinkModel());
   }
 
   @override
@@ -96,5 +103,8 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel19.dispose();
     sidebarLinkModel20.dispose();
     sidebarLinkModelAuditLogs.dispose();
+    sidebarLinkModel15dup.dispose();
+    sidebarLinkModel16dup.dispose();
+    sidebarLinkModel17dup.dispose();
   }
 }
