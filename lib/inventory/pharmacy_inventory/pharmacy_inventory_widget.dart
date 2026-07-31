@@ -1507,7 +1507,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                             style: FlutterFlowTheme.of(context).labelMedium.override(
                                                                                   fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
                                                                                   letterSpacing: 0.0,
-                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontWeight: FontWeight.w300,
                                                                                   useGoogleFonts: !FlutterFlowTheme.of(context).labelMediumIsCustom,
                                                                                 ),
                                                                           ),
@@ -1530,7 +1530,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                     color: FlutterFlowTheme.of(context).secondaryText,
                                                                                     letterSpacing: 0.0,
-                                                                                    fontWeight: FontWeight.w600,
+                                                                                    fontWeight: FontWeight.w300,
                                                                                     useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                                   ),
                                                                             ),
@@ -1558,7 +1558,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                               style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                     fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                     letterSpacing: 0.0,
-                                                                                    fontWeight: FontWeight.w600,
+                                                                                    fontWeight: FontWeight.w300,
                                                                                     useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                                   ),
                                                                             ),
@@ -1577,7 +1577,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                   letterSpacing: 0.0,
-                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontWeight: FontWeight.w300,
                                                                                   useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                                 ),
                                                                           ),

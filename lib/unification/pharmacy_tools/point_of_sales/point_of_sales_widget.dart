@@ -261,7 +261,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
             style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: FlutterFlowTheme.of(context).headlineLargeFamily,
                   fontSize: 34,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: -0.5,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).headlineLargeIsCustom,
@@ -273,7 +273,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
             style: FlutterFlowTheme.of(context).titleMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
                   color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).titleMediumIsCustom,
@@ -329,7 +329,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                 color: selected
                     ? Colors.white
                     : FlutterFlowTheme.of(context).primaryText,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 letterSpacing: 0.0,
                 useGoogleFonts:
                     !FlutterFlowTheme.of(context).bodyMediumIsCustom,
@@ -452,7 +452,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                   ? const Color(0xFFF59E0B)
                                   : const Color(0xFF10B981),
                           fontSize: 11,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).bodySmallIsCustom,
@@ -469,7 +469,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
               style: FlutterFlowTheme.of(context).titleLarge.override(
                     fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
                     fontSize: 22,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.0,
                     useGoogleFonts:
                         !FlutterFlowTheme.of(context).titleLargeIsCustom,
@@ -524,7 +524,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                     .headlineSmallFamily,
                                 color: FlutterFlowTheme.of(context).primaryText,
                                 fontSize: 28,
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.w300,
                                 letterSpacing: -0.3,
                                 useGoogleFonts: !FlutterFlowTheme.of(context)
                                     .headlineSmallIsCustom,
@@ -590,7 +590,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
             style: FlutterFlowTheme.of(context).titleLarge.override(
                   fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
                   fontSize: 24,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).titleLargeIsCustom,
@@ -653,7 +653,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                 FlutterFlowTheme.of(context).displaySmallFamily,
                             color: Colors.white,
                             fontSize: 34,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: -0.8,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .displaySmallIsCustom,
@@ -692,7 +692,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                           fontFamily:
                               FlutterFlowTheme.of(context).titleSmallFamily,
                           color: FlutterFlowTheme.of(context).primary,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).titleSmallIsCustom,
@@ -754,7 +754,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
       height: 52,
       textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
             fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w300,
             letterSpacing: 0.0,
             useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
           ),
@@ -799,7 +799,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                             FlutterFlowTheme.of(context).titleMedium.override(
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .titleMediumFamily,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w300,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .titleMediumIsCustom,
@@ -855,7 +855,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                             FlutterFlowTheme.of(context).titleMedium.override(
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .titleMediumFamily,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w300,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .titleMediumIsCustom,
@@ -888,7 +888,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                   style: FlutterFlowTheme.of(context).titleMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).titleMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.0,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).titleMediumIsCustom,
@@ -954,7 +954,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                       style: FlutterFlowTheme.of(context).titleMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).titleMediumFamily,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: 0.0,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .titleMediumIsCustom,
@@ -1027,7 +1027,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                         fontFamily:
                             FlutterFlowTheme.of(context).headlineMediumFamily,
                         fontSize: 30,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.5,
                         useGoogleFonts: !FlutterFlowTheme.of(context)
                             .headlineMediumIsCustom,
@@ -1063,7 +1063,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
               textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                     fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
                     color: Colors.white,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.0,
                     useGoogleFonts:
                         !FlutterFlowTheme.of(context).titleSmallIsCustom,
@@ -1111,7 +1111,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
             value,
             style: FlutterFlowTheme.of(context).titleMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).titleMediumIsCustom,
@@ -1266,7 +1266,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                             .titleSmallFamily,
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.w300,
                                         letterSpacing: 0.0,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
@@ -1288,7 +1288,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                       fontFamily: FlutterFlowTheme.of(context)
                                           .displaySmallFamily,
                                       letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w800,
+                                      fontWeight: FontWeight.w300,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
                                               .displaySmallIsCustom,

@@ -117,7 +117,7 @@ class _BillingMobileWidgetState extends State<BillingMobileWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -239,7 +239,7 @@ class _BillingMobileWidgetState extends State<BillingMobileWidget> {
                                                                     .headlineLargeFamily,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w300,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
@@ -611,7 +611,7 @@ class _BillingMobileWidgetState extends State<BillingMobileWidget> {
                                                                     .headlineLargeFamily,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w300,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
@@ -963,7 +963,7 @@ class _BillingMobileWidgetState extends State<BillingMobileWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -1124,7 +1124,7 @@ class _BillingMobileWidgetState extends State<BillingMobileWidget> {
                                                                   .headlineLargeFamily,
                                                           letterSpacing: 0.0,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                              FontWeight.w300,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
                                                                       .of(context)
@@ -1511,7 +1511,7 @@ class _BillingMobileWidgetState extends State<BillingMobileWidget> {
                                                                   .headlineLargeFamily,
                                                           letterSpacing: 0.0,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                              FontWeight.w300,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
                                                                       .of(context)

@@ -474,7 +474,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                               color: FlutterFlowTheme.of(context).secondaryText,
                                                                               fontSize: 12.0,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
+                                                                              fontWeight: FontWeight.w300,
                                                                               useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                             ),
                                                                       ),
@@ -741,7 +741,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                         letterSpacing:
                                                                             0.0,
                                                                         fontWeight:
-                                                                            FontWeight.w500,
+                                                                            FontWeight.w300,
                                                                         useGoogleFonts:
                                                                             !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                       ),

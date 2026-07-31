@@ -100,7 +100,7 @@ class _LanguageChangerWidgetState extends State<LanguageChangerWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -141,7 +141,7 @@ class _LanguageChangerWidgetState extends State<LanguageChangerWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -182,7 +182,7 @@ class _LanguageChangerWidgetState extends State<LanguageChangerWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -223,7 +223,7 @@ class _LanguageChangerWidgetState extends State<LanguageChangerWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -264,7 +264,7 @@ class _LanguageChangerWidgetState extends State<LanguageChangerWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -305,7 +305,7 @@ class _LanguageChangerWidgetState extends State<LanguageChangerWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .headlineLargeFamily,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),

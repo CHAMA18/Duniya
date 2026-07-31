@@ -670,7 +670,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                   .labelMediumFamily,
                                                           letterSpacing: 0.0,
                                                           fontWeight:
-                                                              FontWeight.w600,
+                                                              FontWeight.w300,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
                                                                       .of(context)
@@ -698,7 +698,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                 .secondaryBackground,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                                FontWeight.w300,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
@@ -800,7 +800,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                 .secondaryBackground,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                                FontWeight.w300,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
@@ -834,7 +834,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                 .secondaryBackground,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                                FontWeight.w300,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
@@ -991,7 +991,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
-                                                                                FontWeight.w600,
+                                                                                FontWeight.w300,
                                                                             useGoogleFonts:
                                                                                 !FlutterFlowTheme.of(context).labelMediumIsCustom,
                                                                           ),
@@ -1018,7 +1018,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                               fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                               color: FlutterFlowTheme.of(context).secondaryText,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w600,
+                                                                              fontWeight: FontWeight.w300,
                                                                               useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                             ),
                                                                       ),
@@ -1049,7 +1049,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                             .override(
                                                                               fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w600,
+                                                                              fontWeight: FontWeight.w300,
                                                                               useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                             ),
                                                                       ),
@@ -1076,7 +1076,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
-                                                                                FontWeight.w600,
+                                                                                FontWeight.w300,
                                                                             useGoogleFonts:
                                                                                 !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                           ),

@@ -302,7 +302,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
               Icon(Icons.chevron_right,
@@ -312,7 +312,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -348,7 +348,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -359,7 +359,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w300,
                         height: 1.4,
                       ),
                     ),
@@ -461,7 +461,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                       style: TextStyle(
                         color: Colors.white.withAlpha(220),
                         fontSize: 13.0,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -471,7 +471,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w300,
                         height: 1.1,
                         letterSpacing: -0.4,
                       ),
@@ -509,7 +509,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
             style: TextStyle(
               color: FlutterFlowTheme.of(context).primaryText,
               fontSize: 14.0,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
             ),
           ),
         ),
@@ -581,7 +581,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                         pharmacy.name,
                         style: theme.titleMedium.override(
                           fontFamily: theme.titleMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: -0.2,
                           useGoogleFonts: !theme.titleMediumIsCustom,
                         ),
@@ -629,7 +629,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                     style: TextStyle(
                       color: Color(0xFF92400E),
                       fontSize: 10.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -694,7 +694,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                       textStyle: TextStyle(
                         color: Colors.white,
                         fontSize: 13.0,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                       ),
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.circular(10.0),
@@ -717,7 +717,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                       textStyle: TextStyle(
                         color: Colors.white,
                         fontSize: 13.0,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                       ),
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.circular(10.0),
@@ -752,7 +752,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
               style: TextStyle(
                 color: theme.secondaryText,
                 fontSize: 9.0,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 letterSpacing: 0.6,
               ),
             ),
@@ -762,7 +762,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
               style: TextStyle(
                 color: theme.primaryText,
                 fontSize: 12.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ],
@@ -790,7 +790,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -841,7 +841,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
             'All caught up!',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w300,
               letterSpacing: -0.3,
               useGoogleFonts: !theme.headlineSmallIsCustom,
             ),

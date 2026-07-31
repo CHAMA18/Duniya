@@ -131,7 +131,7 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                         fontFamily:
                             FlutterFlowTheme.of(context).titleLargeFamily,
                         fontSize: 26,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.6,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).titleLargeIsCustom,
@@ -143,7 +143,7 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                       ),
@@ -255,7 +255,7 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                           fontFamily:
                               FlutterFlowTheme.of(context).displaySmallFamily,
                           fontSize: isPhone ? 28 : 36,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: -0.9,
                           useGoogleFonts: !FlutterFlowTheme.of(context)
                               .displaySmallIsCustom,
@@ -292,7 +292,7 @@ class _HumanResourceUniWidgetState extends State<HumanResourceUniWidget> {
                 textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                       fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
                       color: Colors.white,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.0,
                       useGoogleFonts:
                           !FlutterFlowTheme.of(context).titleSmallIsCustom,

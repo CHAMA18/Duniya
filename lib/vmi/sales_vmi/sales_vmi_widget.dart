@@ -101,7 +101,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
             value,
             style: const TextStyle(
               fontSize: 28,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w300,
               color: _textDark,
               letterSpacing: -0.5,
             ),
@@ -111,7 +111,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
             title,
             style: const TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: _textMuted,
             ),
           ),
@@ -186,7 +186,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                   '#${index + 1}',
                   style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w300,
                     color: Colors.white,
                   ),
                 ),
@@ -204,7 +204,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                         : 'Sale #${index + 1}',
                     style: const TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       color: _textDark,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -320,7 +320,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                     )}',
                     style: const TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w300,
                       color: Color(0xFF059669),
                     ),
                   ),
@@ -333,7 +333,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                       'View Details',
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         color: _primary,
                       ),
                     ),
@@ -382,7 +382,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
               'No Sales Recorded Yet',
               style: TextStyle(
                 fontSize: 22,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w300,
                 color: _textDark,
                 letterSpacing: -0.3,
               ),
@@ -409,7 +409,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                 color: _primary,
                 textStyle: const TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   fontSize: 14,
                 ),
                 elevation: 0,
@@ -597,7 +597,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                     style: TextStyle(
                                                       fontSize: 24,
                                                       fontWeight:
-                                                          FontWeight.w800,
+                                                          FontWeight.w300,
                                                       color: Colors.white,
                                                       letterSpacing: -0.5,
                                                     ),
@@ -631,7 +631,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                 color: Colors.white,
                                                 textStyle: const TextStyle(
                                                   color: _primary,
-                                                  fontWeight: FontWeight.w700,
+                                                  fontWeight: FontWeight.w300,
                                                   fontSize: 14,
                                                 ),
                                                 elevation: 0,
@@ -778,7 +778,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
-                                                            FontWeight.w700,
+                                                            FontWeight.w300,
                                                         color: _textDark,
                                                       ),
                                                     ),
@@ -804,7 +804,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                                           const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
-                                                            FontWeight.w700,
+                                                            FontWeight.w300,
                                                         fontSize: 13,
                                                       ),
                                                       elevation: 0,
@@ -886,7 +886,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                   const SizedBox(width: 12),
                   const Text('Record New Sale',
                       style: TextStyle(
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w300,
                           color: _textDark)),
                 ],
               ),
@@ -957,7 +957,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                       const SizedBox(height: 20),
                       const Text('Line Items',
                           style: TextStyle(
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               color: _textDark,
                               fontSize: 15)),
                       const SizedBox(height: 8),
@@ -982,7 +982,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                   child: Text('Product',
                                       style: TextStyle(
                                           fontSize: 11,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w300,
                                           color: _textMuted)),
                                 ),
                                 StreamBuilder<List<ProductMasterRecord>>(
@@ -1053,7 +1053,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                   child: Text('Quantity Dispensed',
                                       style: TextStyle(
                                           fontSize: 11,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w300,
                                           color: _textMuted)),
                                 ),
                                 TextFormField(
@@ -1089,7 +1089,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                   child: Text('Sale Amount (ZMK)',
                                       style: TextStyle(
                                           fontSize: 11,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w300,
                                           color: _textMuted)),
                                 ),
                                 TextFormField(
@@ -1181,7 +1181,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                   child: Text(item['productName'],
                                       style: const TextStyle(
                                           fontSize: 13,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w300,
                                           color: _textDark),
                                       overflow: TextOverflow.ellipsis),
                                 ),
@@ -1286,7 +1286,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                     color: _primary,
                     textStyle: const TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.0,
                     ),
                     elevation: 0.0,

@@ -181,7 +181,7 @@ class _WebCreateUserWidgetState extends State<WebCreateUserWidget> {
                                 fontFamily: FlutterFlowTheme.of(context)
                                     .headlineLargeFamily,
                                 letterSpacing: 0.0,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w300,
                                 useGoogleFonts: !FlutterFlowTheme.of(context)
                                     .headlineLargeIsCustom,
                               ),

@@ -396,7 +396,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                   style: TextStyle(
                                                                                     color: Colors.white,
                                                                                     fontSize: 26,
-                                                                                    fontWeight: FontWeight.w800,
+                                                                                    fontWeight: FontWeight.w300,
                                                                                     letterSpacing: 0.5,
                                                                                   ),
                                                                                 ),
@@ -414,7 +414,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                     style: TextStyle(
                                                                                       color: Colors.white,
                                                                                       fontSize: 24,
-                                                                                      fontWeight: FontWeight.w700,
+                                                                                      fontWeight: FontWeight.w300,
                                                                                       letterSpacing: -0.5,
                                                                                       height: 1.1,
                                                                                     ),
@@ -425,7 +425,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                     style: TextStyle(
                                                                                       color: Colors.white.withAlpha(200),
                                                                                       fontSize: 14,
-                                                                                      fontWeight: FontWeight.w500,
+                                                                                      fontWeight: FontWeight.w300,
                                                                                     ),
                                                                                     overflow: TextOverflow.ellipsis,
                                                                                   ),
@@ -451,7 +451,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                           style: TextStyle(
                                                                                             color: Colors.white,
                                                                                             fontSize: 11,
-                                                                                            fontWeight: FontWeight.w700,
+                                                                                            fontWeight: FontWeight.w300,
                                                                                             letterSpacing: 0.5,
                                                                                           ),
                                                                                         ),
@@ -770,7 +770,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                 TextStyle(
                                                                               color: FlutterFlowTheme.of(context).secondaryText,
                                                                               fontSize: 14,
-                                                                              fontWeight: FontWeight.w600,
+                                                                              fontWeight: FontWeight.w300,
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1064,7 +1064,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                             color:
                                                                                 FlutterFlowTheme.of(context).error,
                                                                             fontWeight:
-                                                                                FontWeight.w700,
+                                                                                FontWeight.w300,
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             useGoogleFonts:
@@ -1109,7 +1109,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                 children: [
                                                                                   Icon(Icons.warning_rounded, color: FlutterFlowTheme.of(context).error, size: 24.0),
                                                                                   SizedBox(width: 12.0),
-                                                                                  Text('Delete Account?', style: TextStyle(fontWeight: FontWeight.w700, color: FlutterFlowTheme.of(context).primaryText)),
+                                                                                  Text('Delete Account?', style: TextStyle(fontWeight: FontWeight.w300, color: FlutterFlowTheme.of(context).primaryText)),
                                                                                 ],
                                                                               ),
                                                                               content: ConstrainedBox(
@@ -1242,7 +1242,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                             'Need help?',
                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                               fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                              fontWeight: FontWeight.w600,
+                                                                              fontWeight: FontWeight.w300,
                                                                               letterSpacing: 0.0,
                                                                               useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                             ),
@@ -1270,7 +1270,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                             TextStyle(
                                                                           color: FlutterFlowTheme.of(context).primary,
                                                                           fontSize: 13,
-                                                                          fontWeight: FontWeight.w600,
+                                                                          fontWeight: FontWeight.w300,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2380,7 +2380,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                                                               style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                                                     fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                                                     letterSpacing: 0.0,
-                                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                                    fontWeight: FontWeight.w300,
                                                                                                                     useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                                                                   ),
                                                                                                             ),
@@ -2931,7 +2931,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                 title,
                 style: theme.titleMedium.override(
                   fontFamily: theme.titleMediumFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: -0.2,
                   useGoogleFonts: !theme.titleMediumIsCustom,
                 ),
@@ -2971,7 +2971,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
               label,
               style: theme.bodyMedium.override(
                 fontFamily: theme.bodyMediumFamily,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 fontSize: 13.0,
                 letterSpacing: 0.0,
                 useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -3055,7 +3055,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                       title,
                       style: theme.bodyMedium.override(
                         fontFamily: theme.bodyMediumFamily,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.0,
                         useGoogleFonts: !theme.bodyMediumIsCustom,
                       ),
@@ -3086,7 +3086,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                   style: TextStyle(
                     color: theme.primaryText,
                     fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ),
@@ -3118,7 +3118,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
               letterSpacing: -0.2,
             ),
             textAlign: TextAlign.center,
@@ -3130,7 +3130,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
             style: TextStyle(
               color: Colors.white.withAlpha(180),
               fontSize: 11,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.3,
             ),
             textAlign: TextAlign.center,

@@ -1167,7 +1167,7 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                                 color: FlutterFlowTheme.of(context).primaryText,
                                                                                 fontSize: 12.0,
                                                                                 letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w500,
+                                                                                fontWeight: FontWeight.w300,
                                                                                 useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                               ),
                                                                           hintText:

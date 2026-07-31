@@ -280,7 +280,7 @@ class MobileTypography extends Typography {
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         fontSize: 45.0,
         height: 1.16,
         letterSpacing: -0.02,
@@ -289,7 +289,7 @@ class MobileTypography extends Typography {
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 24.0,
         height: 1.25,
         letterSpacing: -0.01,
@@ -298,7 +298,7 @@ class MobileTypography extends Typography {
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 32.0,
         height: 1.25,
         letterSpacing: -0.02,
@@ -307,7 +307,7 @@ class MobileTypography extends Typography {
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 22.0,
         height: 1.27,
         letterSpacing: -0.01,
@@ -316,7 +316,7 @@ class MobileTypography extends Typography {
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 20.0,
         height: 1.3,
         letterSpacing: -0.01,
@@ -325,7 +325,7 @@ class MobileTypography extends Typography {
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 22.0,
         height: 1.27,
         letterSpacing: -0.01,
@@ -334,7 +334,7 @@ class MobileTypography extends Typography {
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 18.0,
         height: 1.33,
         letterSpacing: -0.005,
@@ -343,7 +343,7 @@ class MobileTypography extends Typography {
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 16.0,
         height: 1.38,
         letterSpacing: -0.005,
@@ -352,7 +352,7 @@ class MobileTypography extends Typography {
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.43,
         letterSpacing: 0.02,
@@ -361,7 +361,7 @@ class MobileTypography extends Typography {
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 12.0,
         height: 1.5,
         letterSpacing: 0.04,
@@ -370,7 +370,7 @@ class MobileTypography extends Typography {
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 11.0,
         height: 1.45,
         letterSpacing: 0.06,
@@ -379,7 +379,7 @@ class MobileTypography extends Typography {
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         fontSize: 16.0,
         height: 1.5,
       );
@@ -387,7 +387,7 @@ class MobileTypography extends Typography {
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.5,
       );
@@ -395,7 +395,7 @@ class MobileTypography extends Typography {
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.5,
       );
@@ -419,7 +419,7 @@ class TabletTypography extends Typography {
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         fontSize: 45.0,
         height: 1.16,
         letterSpacing: -0.02,
@@ -428,7 +428,7 @@ class TabletTypography extends Typography {
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 24.0,
         height: 1.25,
         letterSpacing: -0.01,
@@ -437,7 +437,7 @@ class TabletTypography extends Typography {
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 32.0,
         height: 1.25,
         letterSpacing: -0.02,
@@ -446,7 +446,7 @@ class TabletTypography extends Typography {
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 22.0,
         height: 1.27,
         letterSpacing: -0.01,
@@ -455,7 +455,7 @@ class TabletTypography extends Typography {
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 20.0,
         height: 1.3,
         letterSpacing: -0.01,
@@ -464,7 +464,7 @@ class TabletTypography extends Typography {
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 22.0,
         height: 1.27,
         letterSpacing: -0.01,
@@ -473,7 +473,7 @@ class TabletTypography extends Typography {
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 18.0,
         height: 1.33,
         letterSpacing: -0.005,
@@ -482,7 +482,7 @@ class TabletTypography extends Typography {
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 16.0,
         height: 1.38,
         letterSpacing: -0.005,
@@ -491,7 +491,7 @@ class TabletTypography extends Typography {
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.43,
         letterSpacing: 0.02,
@@ -500,7 +500,7 @@ class TabletTypography extends Typography {
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 12.0,
         height: 1.5,
         letterSpacing: 0.04,
@@ -509,7 +509,7 @@ class TabletTypography extends Typography {
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 11.0,
         height: 1.45,
         letterSpacing: 0.06,
@@ -518,7 +518,7 @@ class TabletTypography extends Typography {
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         fontSize: 16.0,
         height: 1.5,
       );
@@ -526,7 +526,7 @@ class TabletTypography extends Typography {
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.5,
       );
@@ -534,7 +534,7 @@ class TabletTypography extends Typography {
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.5,
       );
@@ -558,7 +558,7 @@ class DesktopTypography extends Typography {
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         fontSize: 45.0,
         height: 1.16,
         letterSpacing: -0.02,
@@ -567,7 +567,7 @@ class DesktopTypography extends Typography {
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 24.0,
         height: 1.25,
         letterSpacing: -0.01,
@@ -576,7 +576,7 @@ class DesktopTypography extends Typography {
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 32.0,
         height: 1.25,
         letterSpacing: -0.02,
@@ -585,7 +585,7 @@ class DesktopTypography extends Typography {
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 22.0,
         height: 1.27,
         letterSpacing: -0.01,
@@ -594,7 +594,7 @@ class DesktopTypography extends Typography {
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 20.0,
         height: 1.3,
         letterSpacing: -0.01,
@@ -603,7 +603,7 @@ class DesktopTypography extends Typography {
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 22.0,
         height: 1.27,
         letterSpacing: -0.01,
@@ -612,7 +612,7 @@ class DesktopTypography extends Typography {
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 18.0,
         height: 1.33,
         letterSpacing: -0.005,
@@ -621,7 +621,7 @@ class DesktopTypography extends Typography {
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         fontSize: 16.0,
         height: 1.38,
         letterSpacing: -0.005,
@@ -630,7 +630,7 @@ class DesktopTypography extends Typography {
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.43,
         letterSpacing: 0.02,
@@ -639,7 +639,7 @@ class DesktopTypography extends Typography {
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 12.0,
         height: 1.5,
         letterSpacing: 0.04,
@@ -648,7 +648,7 @@ class DesktopTypography extends Typography {
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 11.0,
         height: 1.45,
         letterSpacing: 0.06,
@@ -657,7 +657,7 @@ class DesktopTypography extends Typography {
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         fontSize: 16.0,
         height: 1.5,
       );
@@ -665,7 +665,7 @@ class DesktopTypography extends Typography {
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.5,
       );
@@ -673,7 +673,7 @@ class DesktopTypography extends Typography {
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w300,
         fontSize: 14.0,
         height: 1.5,
       );

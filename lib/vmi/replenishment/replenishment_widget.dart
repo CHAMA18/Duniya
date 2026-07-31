@@ -279,7 +279,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 32.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 color: onSurface,
                 height: 1.2,
                 letterSpacing: -0.02,
@@ -291,7 +291,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 14.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w300,
                 color: onSurfaceVariant,
                 height: 1.5,
               ),
@@ -325,7 +325,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w300,
                           color: onSurface,
                         ),
                       ),
@@ -367,7 +367,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w300,
                           color: Colors.white,
                         ),
                       ),
@@ -440,7 +440,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       children: [
                         Flexible(child: Text('Pending Orders',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w300, color: onSurfaceVariant, letterSpacing: 0.08))),
                         Container(
                           width: 32.0, height: 32.0,
                           decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
@@ -449,11 +449,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('$pendingOrders', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('$pendingOrders', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w300, color: onSurface, height: 1.2)),
                     SizedBox(height: 4.0),
                     Text('Est. Value: ZMK ${_formatNumber(estValue)}',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant)),
                   ],
                 ),
               ),
@@ -470,7 +470,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       children: [
                         Flexible(child: Text('Auto-Replen Health',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w300, color: onSurfaceVariant, letterSpacing: 0.08))),
                         Container(
                           width: 32.0, height: 32.0,
                           decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
@@ -479,7 +479,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('${healthPercent.toStringAsFixed(1)}%', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('${healthPercent.toStringAsFixed(1)}%', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w300, color: onSurface, height: 1.2)),
                     SizedBox(height: 4.0),
                     Row(
                       children: [
@@ -487,7 +487,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                         SizedBox(width: 4.0),
                         Flexible(child: Text('+2.1% from last month',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w500, color: primaryBlue))),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: primaryBlue))),
                       ],
                     ),
                   ],
@@ -506,7 +506,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       children: [
                         Flexible(child: Text('Inventory Coverage',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w300, color: onSurfaceVariant, letterSpacing: 0.08))),
                         Container(
                           width: 32.0, height: 32.0,
                           decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
@@ -515,11 +515,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('$coverageDays Days', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('$coverageDays Days', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w300, color: onSurface, height: 1.2)),
                     SizedBox(height: 4.0),
                     Text('Avg. across essential lines',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant)),
                   ],
                 ),
               ),
@@ -536,7 +536,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       children: [
                         Flexible(child: Text('Forecasted Spend',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, fontWeight: FontWeight.w300, color: onSurfaceVariant, letterSpacing: 0.08))),
                         Container(
                           width: 32.0, height: 32.0,
                           decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
@@ -545,11 +545,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('ZMK ${_formatNumber(forecastedSpend)}', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('ZMK ${_formatNumber(forecastedSpend)}', style: TextStyle(fontFamily: 'Satoshi', fontSize: 28.0, fontWeight: FontWeight.w300, color: onSurface, height: 1.2)),
                     SizedBox(height: 4.0),
                     Text('Projected for this month',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant)),
                   ],
                 ),
               ),
@@ -693,7 +693,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 18.0,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       color: onSurface,
                       height: 1.5,
                       letterSpacing: -0.01,
@@ -755,10 +755,10 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                         Icon(Icons.shopping_cart_outlined, size: 48.0, color: outlineVariant),
                         SizedBox(height: 16.0),
                         Text('No replenishment recommendations',
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w500, color: onSurfaceVariant)),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w300, color: onSurfaceVariant)),
                         SizedBox(height: 8.0),
                         Text('Click Auto-Generate Orders to calculate',
-                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: outline)),
+                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: outline)),
                       ],
                     ),
                   );
@@ -853,7 +853,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 12.0,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w300,
             color: color,
             letterSpacing: 0.08,
           ),
@@ -902,7 +902,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w300,
                     color: primaryBlue,
                   ),
                   maxLines: 1,
@@ -917,7 +917,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   sku.isNotEmpty ? sku : 'N/A',
-                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant),
                 ),
               ),
             ),
@@ -929,7 +929,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Text(
                   '${record.currentStock}',
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w500, color: onSurface),
+                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurface),
                 ),
               ),
             ),
@@ -941,7 +941,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Text(
                   '${record.targetStockLevel}',
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant),
                 ),
               ),
             ),
@@ -953,7 +953,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Text(
                   '${record.suggestedOrderQty}',
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w600, color: onSurface),
+                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurface),
                 ),
               ),
             ),
@@ -964,7 +964,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   supplier,
-                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -987,7 +987,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 10.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       color: isCritical ? primaryBlue : onSurfaceVariant,
                       letterSpacing: 0.8,
                     ),
@@ -1061,7 +1061,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     color: onSurface,
                   ),
                 ),
@@ -1076,7 +1076,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w300,
                         color: primaryBlue,
                         letterSpacing: 0.08,
                       ),
@@ -1226,7 +1226,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 14.0,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w300,
                       color: onSurface,
                       letterSpacing: -0.01,
                     ),
@@ -1234,7 +1234,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   SizedBox(height: 2.0),
                   Text(
                     'Shipment • ${shipment.deliveryNoteNumber.isNotEmpty ? shipment.deliveryNoteNumber : "N/A"}',
-                    style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                    style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant),
                   ),
                   SizedBox(height: 4.0),
                   Text(
@@ -1242,7 +1242,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 12.0,
-                      fontWeight: isArriving ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isArriving ? FontWeight.w300 : FontWeight.w300,
                       color: isArriving ? primaryBlue : onSurfaceVariant,
                       letterSpacing: 0.08,
                     ),
@@ -1324,15 +1324,15 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(poNumber, style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w500, color: onSurface, letterSpacing: -0.01)),
+                  Text(poNumber, style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurface, letterSpacing: -0.01)),
                   SizedBox(height: 2.0),
-                  Text(description, style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                  Text(description, style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w300, color: onSurfaceVariant)),
                   SizedBox(height: 4.0),
                   Text(statusText,
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 12.0,
-                        fontWeight: isArriving ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: isArriving ? FontWeight.w300 : FontWeight.w300,
                         color: isArriving ? primaryBlue : onSurfaceVariant,
                         letterSpacing: 0.08,
                       )),

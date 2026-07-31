@@ -204,7 +204,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 16.0,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w300,
                             color: _onSurface,
                           ),
                           decoration: InputDecoration(
@@ -213,7 +213,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             hintStyle: TextStyle(
                               fontFamily: 'Satoshi',
                               fontSize: 16.0,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w300,
                               color: _onSurfaceVariant.withValues(alpha: 0.5),
                             ),
                             border: InputBorder.none,
@@ -238,7 +238,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             style: TextStyle(
                               fontFamily: 'Satoshi',
                               fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w300,
                               color: _duniyaPurple,
                             ),
                           ),
@@ -306,7 +306,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 14.0,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            fontWeight: isSelected ? FontWeight.w300 : FontWeight.w300,
             color: isSelected ? Colors.white : _onSurface,
           ),
         ),
@@ -393,7 +393,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 11.0,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: -0.01,
                             height: 1.0,
                             color: stockTextColor,
@@ -412,7 +412,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: -0.01,
                     height: 1.5,
                     color: _onSurface,
@@ -426,7 +426,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 12.0,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w300,
                     height: 1.5,
                     color: _onSurfaceVariant,
                   ),
@@ -451,7 +451,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 18.0,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: -0.01,
                           height: 1.0,
                           color: _onSurface,
@@ -576,7 +576,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           style: TextStyle(
                                             fontFamily: 'Satoshi',
                                             fontSize: 24.0,
-                                            fontWeight: FontWeight.w700,
+                                            fontWeight: FontWeight.w300,
                                             letterSpacing: -0.02,
                                             color: _navy900,
                                           ),
@@ -587,7 +587,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           style: TextStyle(
                                             fontFamily: 'Satoshi',
                                             fontSize: 14.0,
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w300,
                                             color: _onSurfaceVariant,
                                           ),
                                         ),
@@ -612,7 +612,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                             style: TextStyle(
                                               fontFamily: 'Satoshi',
                                               fontSize: 14.0,
-                                              fontWeight: FontWeight.w600,
+                                              fontWeight: FontWeight.w300,
                                             ),
                                           ),
                                           style: OutlinedButton.styleFrom(
@@ -643,7 +643,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                             style: TextStyle(
                                               fontFamily: 'Satoshi',
                                               fontSize: 14.0,
-                                              fontWeight: FontWeight.w600,
+                                              fontWeight: FontWeight.w300,
                                             ),
                                           ),
                                           style: OutlinedButton.styleFrom(
@@ -673,7 +673,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                             style: TextStyle(
                                               fontFamily: 'Satoshi',
                                               fontSize: 14.0,
-                                              fontWeight: FontWeight.w600,
+                                              fontWeight: FontWeight.w300,
                                             ),
                                           ),
                                           style: ElevatedButton.styleFrom(
@@ -775,7 +775,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                                 style: TextStyle(
                                                   fontFamily: 'Satoshi',
                                                   fontSize: 18.0,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w300,
                                                   color: _onSurface,
                                                 ),
                                               ),
@@ -785,7 +785,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                                 style: TextStyle(
                                                   fontFamily: 'Satoshi',
                                                   fontSize: 14.0,
-                                                  fontWeight: FontWeight.w400,
+                                                  fontWeight: FontWeight.w300,
                                                   color: _onSurfaceVariant,
                                                 ),
                                               ),
@@ -875,7 +875,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     color: _navy900,
                   ),
                 ),
@@ -953,7 +953,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 13.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w300,
                 color: _onSurfaceVariant,
               ),
             ),
@@ -964,7 +964,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 13.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w300,
                 color: _onSurface,
               ),
             ),
@@ -989,7 +989,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 11.0,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: _onSurfaceVariant,
             ),
           ),
@@ -999,7 +999,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 16.0,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
               color: _onSurface,
             ),
           ),
@@ -1308,7 +1308,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 style: const TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ),
@@ -1353,7 +1353,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 18.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       color: _navy900,
                     ),
                   ),
@@ -1421,7 +1421,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 20.0,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             color: _navy900,
                           ),
                         ),
@@ -1434,7 +1434,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       color: _onSurface,
                     ),
                   ),
@@ -1466,7 +1466,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 11.0,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             color: _onSurfaceVariant,
                             letterSpacing: 0.5,
                           ),
@@ -1494,7 +1494,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                     style: TextStyle(
                                       fontFamily: 'Satoshi',
                                       fontSize: 11.0,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w300,
                                       color: _onSurface,
                                     ),
                                   ),
@@ -1548,7 +1548,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                       ),
@@ -1562,7 +1562,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
@@ -1848,7 +1848,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 20.0,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     color: Colors.white,
                     letterSpacing: -0.3,
                   ),
@@ -1859,7 +1859,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   style: TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 13.0,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w300,
                     color: Colors.white.withValues(alpha: 0.75),
                   ),
                 ),
@@ -1890,7 +1890,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 13.0,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w300,
             color: _duniyaPurpleDark,
             letterSpacing: 0.5,
           ),
@@ -1926,7 +1926,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 12.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 color: _onSurfaceVariant,
                 letterSpacing: 0.2,
               ),
@@ -1938,7 +1938,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 style: TextStyle(
                   color: Color(0xFFE53E3E),
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -1953,7 +1953,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 14.0,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w300,
             color: _onSurface,
           ),
           decoration: InputDecoration(
@@ -1961,7 +1961,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             hintStyle: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 13.0,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w300,
               color: _outline,
             ),
             prefixIcon: icon != null
@@ -1977,7 +1977,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             prefixStyle: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 13.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               color: _duniyaPurpleDark,
             ),
             filled: true,
@@ -2016,7 +2016,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 12.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w300,
             color: _onSurfaceVariant,
             letterSpacing: 0.2,
           ),
@@ -2056,7 +2056,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             textStyle: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 14.0,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: _model.dialogCategoryValue != null ? _onSurface : _outline,
             ),
             hintText: 'Select a category',
@@ -2142,7 +2142,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 12.0,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: hasData
                   ? (margin >= 30
                       ? const Color(0xFF059669)
@@ -2182,7 +2182,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w300,
                 color: canSave ? const Color(0xFF059669) : _onSurfaceVariant,
               ),
             ),
@@ -2204,7 +2204,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 14.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ),
@@ -2274,7 +2274,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
               style: ElevatedButton.styleFrom(

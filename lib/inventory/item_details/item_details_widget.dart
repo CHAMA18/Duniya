@@ -1371,7 +1371,7 @@ class _ItemDetailsWidgetState extends State<ItemDetailsWidget> {
                                                                           letterSpacing:
                                                                               0.0,
                                                                           fontWeight:
-                                                                              FontWeight.w600,
+                                                                              FontWeight.w300,
                                                                           useGoogleFonts:
                                                                               !FlutterFlowTheme.of(context).headlineLargeIsCustom,
                                                                         ),

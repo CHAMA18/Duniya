@@ -309,7 +309,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 22.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 color: onSurface,
                 letterSpacing: -0.02,
               ),
@@ -319,7 +319,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 14.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w300,
                 color: onSurfaceVariant,
               ),
             ),
@@ -541,7 +541,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 11.0,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.08,
                       color: onSurfaceVariant,
                     ),
@@ -556,7 +556,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 32.0,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 color: onSurface,
                 letterSpacing: -0.04,
                 height: 1.1,
@@ -577,7 +577,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 13.0,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w300,
                       color: m.detailColor,
                       letterSpacing: -0.01,
                     ),
@@ -636,7 +636,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         color: onSurface,
                         letterSpacing: -0.01,
                       ),
@@ -680,7 +680,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                               fontFamily: 'Satoshi',
                               fontSize: 11.0,
                               fontWeight:
-                                  isActive ? FontWeight.w600 : FontWeight.w500,
+                                  isActive ? FontWeight.w300 : FontWeight.w300,
                               letterSpacing: 0.08,
                               color: isActive ? onSurface : onSurfaceVariant,
                             ),
@@ -820,7 +820,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       color: onSurface,
                       letterSpacing: -0.01,
                     ),
@@ -910,8 +910,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                 fontFamily: 'Satoshi',
                                 fontSize: 12.0,
                                 fontWeight: isActive
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
+                                    ? FontWeight.w300
+                                    : FontWeight.w300,
                                 color:
                                     isActive ? Colors.white : onSurfaceVariant,
                               ),
@@ -1028,7 +1028,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                         child: Text(
                           product?.name ?? 'Unknown',
                           overflow: TextOverflow.ellipsis,
-                          style: _cellStyle(onSurface, weight: FontWeight.w500),
+                          style: _cellStyle(onSurface, weight: FontWeight.w300),
                         ),
                       ),
                     ],
@@ -1044,7 +1044,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     '${mType == 'RECEIVED' ? '+' : '-'}${movement.quantity}',
                     style: _cellStyle(
                       mType == 'RECEIVED' ? primaryColor : onSurface,
-                      weight: FontWeight.w500,
+                      weight: FontWeight.w300,
                     ),
                   ),
                 ),
@@ -1156,12 +1156,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   TextStyle _headerStyle(Color color) => TextStyle(
         fontFamily: 'Satoshi',
         fontSize: 11.0,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w300,
         letterSpacing: 0.08,
         color: color,
       );
 
-  TextStyle _cellStyle(Color color, {FontWeight weight = FontWeight.w400}) =>
+  TextStyle _cellStyle(Color color, {FontWeight weight = FontWeight.w300}) =>
       TextStyle(
         fontFamily: 'Satoshi',
         fontSize: 13.0,
@@ -1210,7 +1210,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 13.0,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: color,
             )),
       ],
@@ -1232,7 +1232,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 10.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.04,
               color: onSurfaceVariant,
             )),
@@ -1248,7 +1248,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 10.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w300,
             letterSpacing: 0.04,
             color: primaryColor,
           )),
@@ -1299,7 +1299,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   color: onSurfaceVariant,
                 ),
               ),
@@ -1464,7 +1464,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 19,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w300,
                                     letterSpacing: -0.3,
                                   ),
                                 ),
@@ -1474,7 +1474,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                   style: TextStyle(
                                     color: Colors.white.withAlpha(200),
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w400,
+                                    fontWeight: FontWeight.w300,
                                   ),
                                 ),
                               ],
@@ -1619,7 +1619,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                                     ? Colors.white
                                                     : theme.primaryText,
                                                 fontSize: 12,
-                                                fontWeight: FontWeight.w700,
+                                                fontWeight: FontWeight.w300,
                                                 letterSpacing: 0.3,
                                               ),
                                             ),
@@ -1631,7 +1631,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                                         .withAlpha(200)
                                                     : theme.secondaryText,
                                                 fontSize: 10,
-                                                fontWeight: FontWeight.w400,
+                                                fontWeight: FontWeight.w300,
                                               ),
                                             ),
                                           ],
@@ -1673,7 +1673,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                         ),
                                         style: theme.bodyMedium.override(
                                           fontFamily: theme.bodyMediumFamily,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w300,
                                           fontSize: 18.0,
                                           letterSpacing: 0.0,
                                           useGoogleFonts:
@@ -1768,7 +1768,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                         style: const TextStyle(
                                           color: Color(0xFFF59E0B),
                                           fontSize: 11.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w300,
                                         ),
                                       ),
                                     ),
@@ -1806,7 +1806,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                     ? const Color(0xFF10B981)
                                     : theme.secondaryText,
                                 fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w300,
                               ),
                             ),
                           ),
@@ -1824,7 +1824,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                               style: TextStyle(
                                 color: theme.secondaryText,
                                 fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w300,
                               ),
                             ),
                           ),
@@ -1914,7 +1914,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                               textStyle: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14.0,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w300,
                               ),
                               elevation: 0.0,
                               borderSide: BorderSide.none,
@@ -1948,7 +1948,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           label,
           style: theme.bodyMedium.override(
             fontFamily: theme.bodyMediumFamily,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w300,
             fontSize: 12.0,
             letterSpacing: 0.0,
             useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1961,7 +1961,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             style: TextStyle(
               color: Color(0xFFEF4444),
               fontSize: 14.0,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
             ),
           ),
         ],

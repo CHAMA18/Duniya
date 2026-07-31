@@ -177,7 +177,7 @@ class _LoadingSpinnerWidgetState extends State<LoadingSpinnerWidget>
                       fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                       color: FlutterFlowTheme.of(context).primary,
                       fontSize: effectiveSize * 0.2,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.5,
                       useGoogleFonts:
                           !FlutterFlowTheme.of(context).bodyMediumIsCustom,

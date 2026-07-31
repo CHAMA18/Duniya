@@ -258,7 +258,7 @@ class _DuniyaStockBalancesWidgetState
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
               Icon(Icons.chevron_right,
@@ -268,7 +268,7 @@ class _DuniyaStockBalancesWidgetState
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -304,7 +304,7 @@ class _DuniyaStockBalancesWidgetState
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -315,7 +315,7 @@ class _DuniyaStockBalancesWidgetState
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w300,
                         height: 1.4,
                       ),
                     ),
@@ -357,7 +357,7 @@ class _DuniyaStockBalancesWidgetState
                 style: TextStyle(
                   color: Colors.white.withAlpha(200),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -389,7 +389,7 @@ class _DuniyaStockBalancesWidgetState
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,
-                      fontWeight: FontWeight.w600)),
+                      fontWeight: FontWeight.w300)),
             ],
           ),
         ),
@@ -531,7 +531,7 @@ class _DuniyaStockBalancesWidgetState
                     style: TextStyle(
                       color: selected ? Colors.white : theme.primaryText,
                       fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                     )),
               ),
             ),
@@ -651,7 +651,7 @@ class _DuniyaStockBalancesWidgetState
                         pharmacy.name,
                         style: theme.titleMedium.override(
                           fontFamily: theme.titleMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: -0.2,
                           useGoogleFonts: !theme.titleMediumIsCustom,
                         ),
@@ -683,7 +683,7 @@ class _DuniyaStockBalancesWidgetState
                       style: TextStyle(
                         color: Color(0xFF92400E),
                         fontSize: 10,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -840,14 +840,14 @@ class _DuniyaStockBalancesWidgetState
                     style: TextStyle(
                       color: theme.primaryText,
                       fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                     ),
                     overflow: TextOverflow.ellipsis),
                 Text(label,
                     style: TextStyle(
                       color: theme.secondaryText,
                       fontSize: 10.0,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w300,
                     )),
               ],
             ),
@@ -887,7 +887,7 @@ class _DuniyaStockBalancesWidgetState
                       style: TextStyle(
                         color: theme.secondaryText,
                         fontSize: 10.0,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: 0.5,
                       )),
                 ))
@@ -940,7 +940,7 @@ class _DuniyaStockBalancesWidgetState
                           style: TextStyle(
                             color: theme.primaryText,
                             fontSize: 13.0,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w300,
                           ),
                           overflow: TextOverflow.ellipsis),
                       if (product.sku.isNotEmpty)
@@ -971,7 +971,7 @@ class _DuniyaStockBalancesWidgetState
                         ? const Color(0xFF10B981)
                         : theme.secondaryText,
                     fontSize: 12.0,
-                    fontWeight: balance.stockReceived > 0 ? FontWeight.w600 : FontWeight.w400),
+                    fontWeight: balance.stockReceived > 0 ? FontWeight.w300 : FontWeight.w300),
                 textAlign: TextAlign.center),
           ),
           // Dispensed
@@ -983,7 +983,7 @@ class _DuniyaStockBalancesWidgetState
                         ? const Color(0xFFEF4444)
                         : theme.secondaryText,
                     fontSize: 12.0,
-                    fontWeight: balance.stockDispensed > 0 ? FontWeight.w600 : FontWeight.w400),
+                    fontWeight: balance.stockDispensed > 0 ? FontWeight.w300 : FontWeight.w300),
                 textAlign: TextAlign.center),
           ),
           // Transferred
@@ -1007,7 +1007,7 @@ class _DuniyaStockBalancesWidgetState
                 style: TextStyle(
                     color: statusColor,
                     fontSize: 13.0,
-                    fontWeight: FontWeight.w700),
+                    fontWeight: FontWeight.w300),
                 textAlign: TextAlign.center),
           ),
           // Value
@@ -1019,7 +1019,7 @@ class _DuniyaStockBalancesWidgetState
                 style: TextStyle(
                     color: theme.primaryText,
                     fontSize: 12.0,
-                    fontWeight: FontWeight.w600),
+                    fontWeight: FontWeight.w300),
                 textAlign: TextAlign.center),
           ),
           // Days remaining
@@ -1044,7 +1044,7 @@ class _DuniyaStockBalancesWidgetState
                                 ? const Color(0xFFF59E0B)
                                 : theme.primaryText,
                         fontSize: 12.0,
-                        fontWeight: FontWeight.w500)),
+                        fontWeight: FontWeight.w300)),
               ],
             ),
           ),
@@ -1063,7 +1063,7 @@ class _DuniyaStockBalancesWidgetState
                     style: TextStyle(
                       color: statusColor,
                       fontSize: 9.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.5,
                     )),
               ),
@@ -1092,14 +1092,14 @@ class _DuniyaStockBalancesWidgetState
               style: TextStyle(
                 color: theme.primaryText,
                 fontSize: 14.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
               )),
           Text(
               'ZMK ${formatNumber(totalValue, formatType: FormatType.decimal, decimalType: DecimalType.periodDecimal)}',
               style: TextStyle(
                 color: theme.primary,
                 fontSize: 16.0,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w300,
               )),
         ],
       ),
@@ -1136,7 +1136,7 @@ class _DuniyaStockBalancesWidgetState
               style: theme.bodyMedium.override(
                 fontFamily: theme.bodyMediumFamily,
                 color: theme.secondaryText,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w300,
                 letterSpacing: 0.0,
                 useGoogleFonts: !theme.bodyMediumIsCustom,
               )),
@@ -1185,7 +1185,7 @@ class _DuniyaStockBalancesWidgetState
           Text('No pharmacies on the network yet',
               style: theme.headlineSmall.override(
                 fontFamily: theme.headlineSmallFamily,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 letterSpacing: -0.3,
                 useGoogleFonts: !theme.headlineSmallIsCustom,
               ),

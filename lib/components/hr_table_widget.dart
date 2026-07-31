@@ -103,7 +103,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                 FlutterFlowTheme.of(context).labelMediumFamily,
                             color: Colors.white.withValues(alpha: 0.9),
                             letterSpacing: 0.8,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .labelMediumIsCustom,
                           ),
@@ -118,7 +118,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                       .labelMediumFamily,
                                   color: Colors.white,
                                   letterSpacing: 0.8,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .labelMediumIsCustom,
                                 ),
@@ -140,7 +140,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                     .bodyMediumFamily,
                                 color: Colors.white.withValues(alpha: 0.9),
                                 letterSpacing: 0.8,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w300,
                                 useGoogleFonts: !FlutterFlowTheme.of(context)
                                     .bodyMediumIsCustom,
                               ),
@@ -163,7 +163,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                     .bodyMediumFamily,
                                 color: Colors.white.withValues(alpha: 0.9),
                                 letterSpacing: 0.8,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w300,
                                 useGoogleFonts: !FlutterFlowTheme.of(context)
                                     .bodyMediumIsCustom,
                               ),
@@ -178,7 +178,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                   FlutterFlowTheme.of(context).bodyMediumFamily,
                               color: Colors.white.withValues(alpha: 0.9),
                               letterSpacing: 0.8,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .bodyMediumIsCustom,
                             ),
@@ -195,7 +195,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                   FlutterFlowTheme.of(context).bodyMediumFamily,
                               color: Colors.white.withValues(alpha: 0.9),
                               letterSpacing: 0.8,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .bodyMediumIsCustom,
                             ),
@@ -342,7 +342,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                                     color: FlutterFlowTheme.of(
                                                             context)
                                                         .primary,
-                                                    fontWeight: FontWeight.w700,
+                                                    fontWeight: FontWeight.w300,
                                                     useGoogleFonts:
                                                         !FlutterFlowTheme.of(
                                                                 context)
@@ -364,7 +364,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                                               context)
                                                           .labelMediumFamily,
                                                   letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w300,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
                                                               context)
@@ -393,7 +393,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                                             context)
                                                         .secondaryText,
                                                     letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight: FontWeight.w300,
                                                     useGoogleFonts:
                                                         !FlutterFlowTheme.of(
                                                                 context)
@@ -420,7 +420,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                                                 context)
                                                             .bodyMediumFamily,
                                                     letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight: FontWeight.w300,
                                                     useGoogleFonts:
                                                         !FlutterFlowTheme.of(
                                                                 context)
@@ -440,7 +440,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                                                               context)
                                                           .bodyMediumFamily,
                                                   letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w300,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
                                                               context)

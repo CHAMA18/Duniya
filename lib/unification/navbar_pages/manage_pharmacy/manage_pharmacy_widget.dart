@@ -272,7 +272,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     fontFamily: theme.headlineMediumFamily,
                     color: Colors.white,
                     fontSize: 26,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: -0.5,
                     useGoogleFonts: !theme.headlineMediumIsCustom,
                   ),
@@ -320,7 +320,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   style: theme.bodySmall?.override(
                     fontFamily: theme.bodySmallFamily,
                     color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.0,
                     useGoogleFonts: !theme.bodySmallIsCustom,
                   ),
@@ -452,7 +452,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             style: theme.headlineMedium?.override(
               fontFamily: theme.headlineMediumFamily,
               fontSize: 24,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w300,
               letterSpacing: -0.5,
               useGoogleFonts: !theme.headlineMediumIsCustom,
             ),
@@ -462,7 +462,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             kpi.title,
             style: theme.bodyMedium?.override(
               fontFamily: theme.bodyMediumFamily,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -523,13 +523,13 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             unselectedLabelColor: theme.secondaryText,
             labelStyle: theme.bodyMedium?.override(
               fontFamily: theme.bodyMediumFamily,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
             unselectedLabelStyle: theme.bodyMedium?.override(
               fontFamily: theme.bodyMediumFamily,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -596,7 +596,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             title,
             style: theme.titleMedium?.override(
               fontFamily: theme.titleMediumFamily,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
               fontSize: 16,
               letterSpacing: -0.2,
               useGoogleFonts: !theme.titleMediumIsCustom,
@@ -615,7 +615,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               style: theme.bodySmall?.override(
                 fontFamily: theme.bodySmallFamily,
                 color: theme.primary,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 fontSize: 11,
                 letterSpacing: 0.0,
                 useGoogleFonts: !theme.bodySmallIsCustom,
@@ -709,7 +709,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               style: theme.bodySmall?.override(
                 fontFamily: theme.bodySmallFamily,
                 color: theme.secondaryText,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 fontSize: 11,
                 letterSpacing: 0.5,
                 useGoogleFonts: !theme.bodySmallIsCustom,
@@ -749,7 +749,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         style: theme.bodySmall?.override(
           fontFamily: theme.bodySmallFamily,
           color: color,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w300,
           fontSize: 11,
           letterSpacing: 0.0,
           useGoogleFonts: !theme.bodySmallIsCustom,
@@ -818,7 +818,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                               item.name,
                               style: theme.bodyMedium?.override(
                                 fontFamily: theme.bodyMediumFamily,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w300,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
                               ),
@@ -849,7 +849,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         '${item.quantity}',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           color: isLow ? const Color(0xFFDC2626) : null,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -937,7 +937,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         bal.period.isNotEmpty ? bal.period : '-',
                         style: theme.bodySmall?.override(
                           fontFamily: theme.bodySmallFamily,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -970,7 +970,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         '${bal.closingStock}',
                         style: theme.bodySmall?.override(
                           fontFamily: theme.bodySmallFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1064,7 +1064,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         '${mov.quantity}',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
                         ),
@@ -1206,7 +1206,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         batch.batchNumber.isNotEmpty ? batch.batchNumber : '-',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
                         ),
@@ -1218,7 +1218,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         '${batch.quantity}',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
                         ),
@@ -1245,7 +1245,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                               style: theme.bodySmall?.override(
                                 fontFamily: theme.bodySmallFamily,
                                 color: statusColor,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w300,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodySmallIsCustom,
                               ),
@@ -1359,7 +1359,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                               'Product',
                               style: theme.bodyMedium?.override(
                                 fontFamily: theme.bodyMediumFamily,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w300,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
                               ),
@@ -1385,7 +1385,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         '${rep.currentStock} units',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           color: urgencyRatio < 0.2 ? const Color(0xFFDC2626) : null,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1416,7 +1416,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                           style: theme.bodyMedium?.override(
                             fontFamily: theme.bodyMediumFamily,
                             color: const Color(0xFF7C3AED),
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: 0.0,
                             useGoogleFonts: !theme.bodyMediumIsCustom,
                           ),
@@ -1521,7 +1521,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                               'Product',
                               style: theme.bodyMedium?.override(
                                 fontFamily: theme.bodyMediumFamily,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w300,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
                               ),
@@ -1537,7 +1537,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         '${alert.currentStock} units',
                         style: theme.bodyMedium?.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           color: alertColor,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1568,7 +1568,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                           style: theme.bodySmall?.override(
                             fontFamily: theme.bodySmallFamily,
                             color: const Color(0xFFDC2626),
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: 0.0,
                             useGoogleFonts: !theme.bodySmallIsCustom,
                           ),
@@ -1582,7 +1582,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         style: theme.bodySmall?.override(
                           fontFamily: theme.bodySmallFamily,
                           color: const Color(0xFF059669),
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1628,7 +1628,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
                   textStyle: theme.bodySmall?.override(
                     fontFamily: theme.bodySmallFamily,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.0,
                     useGoogleFonts: !theme.bodySmallIsCustom,
                   ),
@@ -1686,7 +1686,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                                 outlet.name,
                                 style: theme.bodyMedium?.override(
                                   fontFamily: theme.bodyMediumFamily,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w300,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !theme.bodyMediumIsCustom,
                                 ),
@@ -1710,7 +1710,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                             style: theme.bodySmall?.override(
                               fontFamily: theme.bodySmallFamily,
                               color: theme.primary,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w300,
                               letterSpacing: 0.5,
                               useGoogleFonts: !theme.bodySmallIsCustom,
                             ),
@@ -1834,7 +1834,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 'Add Outlet',
                 style: FlutterFlowTheme.of(context).titleLarge?.override(
                   fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: -0.2,
                   useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
                 ),

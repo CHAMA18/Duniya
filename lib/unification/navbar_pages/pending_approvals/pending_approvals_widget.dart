@@ -299,7 +299,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                       style: FlutterFlowTheme.of(context).headlineMedium.override(
                             fontFamily: FlutterFlowTheme.of(context).headlineMediumFamily,
                             color: Colors.white,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: -0.5,
                             useGoogleFonts: !FlutterFlowTheme.of(context).headlineMediumIsCustom,
                           ),
@@ -364,7 +364,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).labelMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
                   color: Colors.white,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts: !FlutterFlowTheme.of(context).labelMediumIsCustom,
                 ),
           ),
@@ -482,7 +482,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
                       fontFamily: FlutterFlowTheme.of(context).headlineMediumFamily,
                       fontSize: 32,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: -1,
                       useGoogleFonts: !FlutterFlowTheme.of(context).headlineMediumIsCustom,
                     ),
@@ -494,7 +494,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             title,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                 ),
           ),
@@ -633,7 +633,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               style: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                     color: isActive ? Colors.white : FlutterFlowTheme.of(context).secondaryText,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
                   ),
             ),
@@ -667,7 +667,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
         },
         style: FlutterFlowTheme.of(context).bodySmall.override(
               fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
             ),
       ),
@@ -730,7 +730,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
                           color: catColor,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w300,
                           useGoogleFonts: !FlutterFlowTheme.of(context).titleMediumIsCustom,
                         ),
                   ),
@@ -750,7 +750,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                             style: FlutterFlowTheme.of(context).titleLarge.override(
                                   fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w300,
                                   letterSpacing: -0.3,
                                   useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
                                 ),
@@ -773,7 +773,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                                 style: FlutterFlowTheme.of(context).labelSmall.override(
                                       fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                                       color: catColor,
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.w300,
                                       useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
                                     ),
                               ),
@@ -864,7 +864,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                         style: FlutterFlowTheme.of(context).labelSmall.override(
                               fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                               color: const Color(0xFFEF4444),
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
                             ),
                       ),
@@ -961,7 +961,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             isFiltered ? 'No matching approvals' : 'All caught up!',
             style: FlutterFlowTheme.of(context).headlineSmall.override(
                   fontFamily: FlutterFlowTheme.of(context).headlineSmallFamily,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: -0.3,
                   useGoogleFonts: !FlutterFlowTheme.of(context).headlineSmallIsCustom,
                 ),
@@ -1063,7 +1063,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                       'Queue Overview',
                       style: FlutterFlowTheme.of(context).titleMedium.override(
                             fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: -0.2,
                             useGoogleFonts: !FlutterFlowTheme.of(context).titleMediumIsCustom,
                           ),
@@ -1141,7 +1141,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   'Recommended Review Flow',
                   style: FlutterFlowTheme.of(context).titleSmall.override(
                         fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts: !FlutterFlowTheme.of(context).titleSmallIsCustom,
                       ),
                 ),
@@ -1186,7 +1186,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).labelSmall.override(
                   fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
                 ),
           ),
@@ -1195,7 +1195,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             value,
             style: FlutterFlowTheme.of(context).titleMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: -0.2,
                   color: valueColor,
                   useGoogleFonts: !FlutterFlowTheme.of(context).titleMediumIsCustom,
@@ -1232,7 +1232,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               style: FlutterFlowTheme.of(context).labelSmall.override(
                     fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                     color: const Color(0xFF9900FF),
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w300,
                     useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
                   ),
             ),
@@ -1294,7 +1294,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  Text(name, style: const TextStyle(fontWeight: FontWeight.w300)),
                   if (user.email.isNotEmpty) Text(user.email, style: const TextStyle(fontSize: 13)),
                   if (user.pharmacyName.isNotEmpty) Text('Pharmacy: ${user.pharmacyName}', style: const TextStyle(fontSize: 13)),
                 ],
@@ -1369,7 +1369,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  Text(name, style: const TextStyle(fontWeight: FontWeight.w300)),
                   if (user.email.isNotEmpty) Text(user.email, style: const TextStyle(fontSize: 13)),
                 ],
               ),
@@ -1507,7 +1507,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                                             '${visibleUsers.length} item${visibleUsers.length != 1 ? 's' : ''} in queue',
                                             style: FlutterFlowTheme.of(context).bodySmall.override(
                                                   fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w300,
                                                   useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
                                                 ),
                                           ),

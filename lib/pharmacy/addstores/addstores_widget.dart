@@ -237,8 +237,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                 style: theme.bodyMedium?.override(
                                   fontFamily: theme.bodyMediumFamily,
                                   fontWeight: isActive || isCompleted
-                                      ? FontWeight.w600
-                                      : FontWeight.w400,
+                                      ? FontWeight.w300
+                                      : FontWeight.w300,
                                   color: isActive
                                       ? const Color(0xFF9900FF)
                                       : isCompleted
@@ -333,7 +333,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                             style: theme.headlineMedium?.override(
                               fontFamily: theme.headlineMediumFamily,
                               color: Colors.white,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               fontSize: 22,
                               letterSpacing: -0.3,
                               useGoogleFonts: !theme.headlineMediumIsCustom,
@@ -423,7 +423,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       'Pharmacy Information',
                       style: theme.titleMedium?.override(
                         fontFamily: theme.titleMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.2,
                         useGoogleFonts: !theme.titleMediumIsCustom,
                       ),
@@ -549,7 +549,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         style: theme.headlineMedium?.override(
                           fontFamily: theme.headlineMediumFamily,
                           color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           fontSize: 22,
                           letterSpacing: -0.3,
                           useGoogleFonts: !theme.headlineMediumIsCustom,
@@ -580,7 +580,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     style: theme.bodySmall?.override(
                       fontFamily: theme.bodySmallFamily,
                       color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       useGoogleFonts: !theme.bodySmallIsCustom,
                     ),
                   ),
@@ -626,7 +626,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       'Add New Outlet',
                       style: theme.titleMedium?.override(
                         fontFamily: theme.titleMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.2,
                         useGoogleFonts: !theme.titleMediumIsCustom,
                       ),
@@ -699,7 +699,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
               'Configured Outlets',
               style: theme.titleMedium?.override(
                 fontFamily: theme.titleMediumFamily,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 letterSpacing: -0.2,
                 useGoogleFonts: !theme.titleMediumIsCustom,
               ),
@@ -735,7 +735,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     'No outlets added yet',
                     style: theme.bodyMedium?.override(
                       fontFamily: theme.bodyMediumFamily,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       color: theme.secondaryText,
                       useGoogleFonts: !theme.bodyMediumIsCustom,
                     ),
@@ -792,7 +792,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       outlet.name,
                       style: theme.bodyMedium?.override(
                         fontFamily: theme.bodyMediumFamily,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts: !theme.bodyMediumIsCustom,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -810,7 +810,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         style: theme.bodySmall?.override(
                           fontFamily: theme.bodySmallFamily,
                           color: const Color(0xFF9900FF),
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           fontSize: 10,
                           letterSpacing: 0.5,
                           useGoogleFonts: !theme.bodySmallIsCustom,
@@ -920,7 +920,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         style: theme.headlineMedium?.override(
                           fontFamily: theme.headlineMediumFamily,
                           color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           fontSize: 22,
                           letterSpacing: -0.3,
                           useGoogleFonts: !theme.headlineMediumIsCustom,
@@ -951,7 +951,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     style: theme.bodySmall?.override(
                       fontFamily: theme.bodySmallFamily,
                       color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       useGoogleFonts: !theme.bodySmallIsCustom,
                     ),
                   ),
@@ -997,7 +997,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       'Available Roles & Permissions',
                       style: theme.titleMedium?.override(
                         fontFamily: theme.titleMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.2,
                         useGoogleFonts: !theme.titleMediumIsCustom,
                       ),
@@ -1046,7 +1046,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                   rbac['role'] as String,
                                   style: theme.bodyMedium?.override(
                                     fontFamily: theme.bodyMediumFamily,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w300,
                                     color: rbac['color'] as Color,
                                     fontSize: 12,
                                     useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1113,7 +1113,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       'Add Team Member',
                       style: theme.titleMedium?.override(
                         fontFamily: theme.titleMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.2,
                         useGoogleFonts: !theme.titleMediumIsCustom,
                       ),
@@ -1171,7 +1171,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                             'Role *',
                             style: theme.bodyMedium?.override(
                               fontFamily: theme.bodyMediumFamily,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w300,
                               color: theme.secondaryText,
                               fontSize: 12,
                               useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1284,7 +1284,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
               'Team Members',
               style: theme.titleMedium?.override(
                 fontFamily: theme.titleMediumFamily,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 letterSpacing: -0.2,
                 useGoogleFonts: !theme.titleMediumIsCustom,
               ),
@@ -1316,7 +1316,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     'No team members added yet',
                     style: theme.bodyMedium?.override(
                       fontFamily: theme.bodyMediumFamily,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       color: theme.secondaryText,
                       useGoogleFonts: !theme.bodyMediumIsCustom,
                     ),
@@ -1346,7 +1346,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
           'Assign to Outlet (for Outlet Manager role)',
           style: theme.bodyMedium?.override(
             fontFamily: theme.bodyMediumFamily,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w300,
             color: theme.secondaryText,
             fontSize: 12,
             useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1450,7 +1450,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     : '?',
                 style: theme.bodyMedium?.override(
                   fontFamily: theme.bodyMediumFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   color: rbac['color'] as Color,
                   useGoogleFonts: !theme.bodyMediumIsCustom,
                 ),
@@ -1466,7 +1466,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   member.name.isNotEmpty ? member.name : 'Unnamed Member',
                   style: theme.bodyMedium?.override(
                     fontFamily: theme.bodyMediumFamily,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     useGoogleFonts: !theme.bodyMediumIsCustom,
                   ),
                 ),
@@ -1498,7 +1498,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                           fontFamily: theme.bodySmallFamily,
                           color: const Color(0xFF7C3AED),
                           fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
                       ),
@@ -1528,7 +1528,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   style: theme.bodySmall?.override(
                     fontFamily: theme.bodySmallFamily,
                     color: rbac['color'] as Color,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     fontSize: 11,
                     useGoogleFonts: !theme.bodySmallIsCustom,
                   ),
@@ -1583,7 +1583,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
             text: label,
             style: theme.bodyMedium?.override(
               fontFamily: theme.bodyMediumFamily,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: theme.secondaryText,
               fontSize: 12,
               useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1594,7 +1594,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   text: ' *',
                   style: TextStyle(
                     color: theme.error,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
             ],

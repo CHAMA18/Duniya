@@ -440,7 +440,7 @@ class _OutletsWidgetState extends State<OutletsWidget> {
                                                                           fontSize:
                                                                               11.0,
                                                                           fontWeight:
-                                                                              FontWeight.w600,
+                                                                              FontWeight.w300,
                                                                           letterSpacing:
                                                                               0.0,
                                                                           useGoogleFonts:

@@ -324,7 +324,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
               Icon(Icons.chevron_right,
@@ -334,7 +334,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -370,7 +370,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -381,7 +381,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w300,
                         height: 1.4,
                       ),
                     ),
@@ -422,7 +422,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(200),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -457,7 +457,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -653,7 +653,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                   style: TextStyle(
                     color: theme.secondaryText,
                     fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.2,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -668,7 +668,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
             style: TextStyle(
               color: theme.primaryText,
               fontSize: 26.0,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w300,
               letterSpacing: -0.6,
               height: 1.0,
             ),
@@ -680,7 +680,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
             style: TextStyle(
               color: theme.secondaryText,
               fontSize: 11.0,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
@@ -715,7 +715,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
               'No stock value recorded yet',
               style: theme.titleMedium.override(
                 fontFamily: theme.titleMediumFamily,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 letterSpacing: -0.2,
                 useGoogleFonts: !theme.titleMediumIsCustom,
               ),
@@ -781,7 +781,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                       'Top Pharmacies by Stock Value',
                       style: theme.titleMedium.override(
                         fontFamily: theme.titleMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.2,
                         useGoogleFonts: !theme.titleMediumIsCustom,
                       ),
@@ -791,7 +791,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                       style: TextStyle(
                         color: theme.secondaryText,
                         fontSize: 11.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ],
@@ -844,7 +844,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                 style: TextStyle(
                   color: rankColor,
                   fontSize: 13.0,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ),
@@ -864,7 +864,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                           color: theme.primaryText,
                           fontSize: 13.0,
                           fontWeight:
-                              isTop ? FontWeight.w700 : FontWeight.w600,
+                              isTop ? FontWeight.w300 : FontWeight.w300,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -875,7 +875,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                       style: TextStyle(
                         color: theme.primary,
                         fontSize: 13.0,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ],
@@ -905,7 +905,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                           style: TextStyle(
                             color: theme.secondaryText,
                             fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w300,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -920,7 +920,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                       style: TextStyle(
                         color: theme.secondaryText,
                         fontSize: 10.0,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                     const SizedBox(width: 8.0),
@@ -936,7 +936,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                                 ? const Color(0xFFF59E0B)
                                 : theme.secondaryText,
                         fontSize: 10.0,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ],
@@ -968,7 +968,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -1021,7 +1021,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
             'No active pharmacies yet',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
               letterSpacing: -0.3,
               useGoogleFonts: !theme.headlineSmallIsCustom,
             ),

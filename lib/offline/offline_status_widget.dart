@@ -208,7 +208,7 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
                     style: TextStyle(
                       color: fgColor,
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.2,
                     ),
                   ),
@@ -269,7 +269,7 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
                   'Sync Status',
                   style: theme.titleSmall.override(
                     fontFamily: theme.titleSmallFamily,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.0,
                     useGoogleFonts: !theme.titleSmallIsCustom,
                   ),
@@ -393,7 +393,7 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
                     textStyle: const TextStyle(
                       color: Colors.white,
                       fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide.none,
@@ -449,7 +449,7 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
           style: TextStyle(
             color: valueColor,
             fontSize: 12.0,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w300,
           ),
         ),
       ],

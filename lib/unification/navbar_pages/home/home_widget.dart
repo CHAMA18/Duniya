@@ -184,7 +184,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 color: isActive
                     ? Colors.white
                     : FlutterFlowTheme.of(context).secondaryText,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                fontWeight: isActive ? FontWeight.w300 : FontWeight.w300,
                 letterSpacing: 0.0,
                 useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
               ),
@@ -230,7 +230,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           style: FlutterFlowTheme.of(context).titleLarge.override(
                 fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w300,
                 letterSpacing: 0.0,
                 useGoogleFonts:
                     !FlutterFlowTheme.of(context).titleLargeIsCustom,
@@ -248,7 +248,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 style: FlutterFlowTheme.of(context).bodySmall.override(
                       fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                       color: FlutterFlowTheme.of(context).primary,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: 0.0,
                       useGoogleFonts:
                           !FlutterFlowTheme.of(context).bodySmallIsCustom,
@@ -313,7 +313,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                     color: textColor,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.0,
                     useGoogleFonts:
                         !FlutterFlowTheme.of(context).bodyMediumIsCustom,
@@ -400,7 +400,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
                   fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodyMediumIsCustom,
@@ -412,7 +412,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             style: FlutterFlowTheme.of(context).displaySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).displaySmallFamily,
                   fontSize: 34,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: -1.0,
                   lineHeight: 1.0,
                   useGoogleFonts:
@@ -472,7 +472,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                   fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodyMediumIsCustom,
@@ -499,7 +499,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       fontFamily:
                           FlutterFlowTheme.of(context).displaySmallFamily,
                       fontSize: isPhone ? 28 : 32,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: -0.8,
                       lineHeight: 1.0,
                       useGoogleFonts:
@@ -807,7 +807,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                       fontFamily: FlutterFlowTheme.of(context)
                                           .titleMediumFamily,
                                       fontSize: 22,
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.w300,
                                       letterSpacing: 0.0,
                                       useGoogleFonts:
                                           !FlutterFlowTheme.of(context)
@@ -895,7 +895,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .titleMediumFamily,
                                   fontSize: 22,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w300,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .titleMediumIsCustom,
@@ -1015,7 +1015,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       style: FlutterFlowTheme.of(context).titleMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).titleMediumFamily,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: 0.0,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .titleMediumIsCustom,
@@ -1082,7 +1082,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                           fontFamily:
                               FlutterFlowTheme.of(context).bodySmallFamily,
                           color: FlutterFlowTheme.of(context).secondaryText,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).bodySmallIsCustom,
                         ),
@@ -1186,7 +1186,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                             FlutterFlowTheme.of(context)
                                                 .titleMediumFamily,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w800,
+                                        fontWeight: FontWeight.w300,
                                         letterSpacing: -0.2,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
@@ -1232,7 +1232,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                         FlutterFlowTheme.of(context)
                                             .labelMediumFamily,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w300,
                                     useGoogleFonts:
                                         !FlutterFlowTheme.of(context)
                                             .labelMediumIsCustom,
@@ -1367,7 +1367,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       style: FlutterFlowTheme.of(context).titleMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).titleMediumFamily,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: 0.0,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .titleMediumIsCustom,
@@ -1404,7 +1404,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         fontFamily:
                             FlutterFlowTheme.of(context).labelMediumFamily,
                         color: const Color(0xFF059669),
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).labelMediumIsCustom,
                       ),
@@ -1469,7 +1469,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             style: FlutterFlowTheme.of(context).labelSmall.override(
                   fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).labelSmallIsCustom,
                 ),
@@ -1480,7 +1480,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                   color: tint,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                 ),
@@ -1579,7 +1579,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             fontFamily:
                                 FlutterFlowTheme.of(context).displaySmallFamily,
                             fontSize: 48,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: -1.0,
                             lineHeight: 1.0,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
@@ -1797,7 +1797,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                               fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
                                                               color: Colors.white,
                                                               fontSize: isPhone ? 20.0 : 24.0,
-                                                              fontWeight: FontWeight.w700,
+                                                              fontWeight: FontWeight.w300,
                                                               letterSpacing: -0.5,
                                                               useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
                                                             ),
@@ -1809,7 +1809,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                               fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                               color: Colors.white.withValues(alpha: 0.85),
                                                               fontSize: isPhone ? 13.0 : 14.0,
-                                                              fontWeight: FontWeight.w400,
+                                                              fontWeight: FontWeight.w300,
                                                               useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                             ),
                                                           ),
@@ -1857,7 +1857,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                               context)
                                                           .displaySmallFamily,
                                                   fontSize: isPhone ? 26 : 34,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.w300,
                                                   letterSpacing: -0.5,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
@@ -2234,7 +2234,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                                             color:
                                                                                 FlutterFlowTheme.of(context).error,
                                                                             fontWeight:
-                                                                                FontWeight.w700,
+                                                                                FontWeight.w300,
                                                                             fontSize:
                                                                                 11,
                                                                             letterSpacing:
@@ -2362,7 +2362,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                                         color: const Color(
                                                                             0xFF10B981),
                                                                         fontWeight:
-                                                                            FontWeight.w600,
+                                                                            FontWeight.w300,
                                                                         fontSize:
                                                                             12,
                                                                         letterSpacing:
@@ -2609,7 +2609,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                                             .override(
                                                                               fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                                                                               color: FlutterFlowTheme.of(context).error,
-                                                                              fontWeight: FontWeight.w700,
+                                                                              fontWeight: FontWeight.w300,
                                                                               fontSize: 11,
                                                                               letterSpacing: 0.5,
                                                                               useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
@@ -2868,7 +2868,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                           fontSize:
                                                               isPhone ? 28 : 40,
                                                           fontWeight:
-                                                              FontWeight.w800,
+                                                              FontWeight.w300,
                                                           letterSpacing: -1.1,
                                                           useGoogleFonts:
                                                               !FlutterFlowTheme
@@ -3622,7 +3622,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         fontFamily:
                             FlutterFlowTheme.of(context).headlineSmallFamily,
                         fontSize: 28,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w300,
                         letterSpacing: -0.8,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).headlineSmallIsCustom,
@@ -3634,7 +3634,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                       ),
@@ -3682,7 +3682,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             style: FlutterFlowTheme.of(context).bodySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                   color: Colors.white,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodySmallIsCustom,
                 ),
@@ -3722,7 +3722,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 title,
                 style: FlutterFlowTheme.of(context).titleLarge.override(
                       fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w300,
                       letterSpacing: -0.4,
                       useGoogleFonts:
                           !FlutterFlowTheme.of(context).titleLargeIsCustom,
@@ -3797,7 +3797,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).titleMediumFamily,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).titleMediumIsCustom,
                         ),
@@ -3860,7 +3860,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               label,
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     useGoogleFonts:
                         !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                   ),
@@ -3870,7 +3870,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             value,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                 ),
@@ -3922,7 +3922,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 movementLabel,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       useGoogleFonts:
                           !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                     ),
@@ -4013,7 +4013,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                       ),
@@ -4045,7 +4045,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 style: FlutterFlowTheme.of(context).titleMedium.override(
                       fontFamily:
                           FlutterFlowTheme.of(context).titleMediumFamily,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w300,
                       useGoogleFonts:
                           !FlutterFlowTheme.of(context).titleMediumIsCustom,
                     ),
@@ -4064,7 +4064,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         fontFamily:
                             FlutterFlowTheme.of(context).labelSmallFamily,
                         color: statusColor,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).labelSmallIsCustom,
                       ),
@@ -4180,7 +4180,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     style: FlutterFlowTheme.of(context).titleMedium.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).titleMediumFamily,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w300,
                           letterSpacing: 0.0,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).titleMediumIsCustom,
@@ -4201,7 +4201,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodySmallFamily,
                               color: FlutterFlowTheme.of(context).primary,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w300,
                               letterSpacing: 0.0,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .bodySmallIsCustom,
@@ -4404,7 +4404,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                       .override(
                                         fontFamily: FlutterFlowTheme.of(context)
                                             .headlineMediumFamily,
-                                        fontWeight: FontWeight.w800,
+                                        fontWeight: FontWeight.w300,
                                         letterSpacing: -0.5,
                                         lineHeight: 1.0,
                                         useGoogleFonts:
@@ -4492,7 +4492,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           percent,
           style: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 fontSize: 13,
                 letterSpacing: 0.0,
                 useGoogleFonts:
@@ -4542,7 +4542,7 @@ class _RealLineChartPainter extends CustomPainter {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 12.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w300,
             color: labelColor,
           ),
         ),
@@ -4642,7 +4642,7 @@ class _RealLineChartPainter extends CustomPainter {
     final labelStyle = const TextStyle(
       fontFamily: 'Satoshi',
       fontSize: 10.0,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w300,
     );
     final maxLabelCount = math.max(2, (chartWidth / 72).floor());
     final labelStep = math.max(1, (labels.length / maxLabelCount).ceil());

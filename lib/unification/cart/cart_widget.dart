@@ -349,7 +349,7 @@ class _CartWidgetState extends State<CartWidget> {
                                               FlutterFlowTheme.of(context)
                                                   .headlineMediumFamily,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w300,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .headlineMediumIsCustom,

@@ -827,7 +827,7 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
                                                                                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                           fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                                                                                           letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.bold,
+                                                                                          fontWeight: FontWeight.w300,
                                                                                           useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                                         ),
                                                                                   );

@@ -197,7 +197,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
             value,
             style: const TextStyle(
               fontSize: 28,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w300,
               color: _textDark,
               letterSpacing: -0.5,
             ),
@@ -207,7 +207,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
             title,
             style: const TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               color: _textMuted,
             ),
           ),
@@ -252,7 +252,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                 label,
                 style: TextStyle(
                   fontSize: isPhone ? 13 : 14,
-                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                  fontWeight: isActive ? FontWeight.w300 : FontWeight.w300,
                   color: isActive ? Colors.white : _textMuted,
                 ),
               ),
@@ -270,7 +270,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                     '$count',
                     style: TextStyle(
                       fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       color: isActive ? Colors.white : _primary,
                     ),
                   ),
@@ -318,7 +318,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
               stock.name,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w300,
                 color: _textDark,
               ),
               overflow: TextOverflow.ellipsis,
@@ -340,7 +340,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
               '${stock.quantity}',
               style: TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w300,
                 color: stock.quantity <= 0
                     ? const Color(0xFFDC2626)
                     : stock.quantity <= stock.limitNotice
@@ -374,7 +374,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w300,
                   color: sevColor,
                 ),
               ),
@@ -431,7 +431,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                         stock.name,
                         style: const TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           color: _textDark,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -448,7 +448,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                         sevLabel,
                         style: TextStyle(
                           fontSize: 10,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                           color: sevColor,
                         ),
                       ),
@@ -465,7 +465,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                       'Qty: ${stock.quantity}',
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                         color: stock.quantity <= 0
                             ? const Color(0xFFDC2626)
                             : stock.quantity <= stock.limitNotice
@@ -521,7 +521,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
               'All Clear!',
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w300,
                 color: _textDark,
               ),
             ),
@@ -784,7 +784,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                         style: TextStyle(
                                                           fontSize: 24,
                                                           fontWeight:
-                                                              FontWeight.w800,
+                                                              FontWeight.w300,
                                                           color: Colors.white,
                                                           letterSpacing: -0.5,
                                                         ),
@@ -1050,7 +1050,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                          FontWeight.w300,
                                                       color: _deep,
                                                       letterSpacing: 0.5,
                                                     )),
@@ -1061,7 +1061,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                          FontWeight.w300,
                                                       color: _deep,
                                                       letterSpacing: 0.5,
                                                     )),
@@ -1072,7 +1072,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                          FontWeight.w300,
                                                       color: _deep,
                                                       letterSpacing: 0.5,
                                                     )),
@@ -1083,7 +1083,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                          FontWeight.w300,
                                                       color: _deep,
                                                       letterSpacing: 0.5,
                                                     )),
@@ -1094,7 +1094,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                          FontWeight.w700,
+                                                          FontWeight.w300,
                                                       color: _deep,
                                                       letterSpacing: 0.5,
                                                     )),

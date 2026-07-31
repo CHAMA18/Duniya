@@ -114,7 +114,7 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                             : FlutterFlowTheme.of(context).secondaryText,
                         letterSpacing: isSelected ? -0.01 : 0.0,
                         fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w500,
+                            isSelected ? FontWeight.w300 : FontWeight.w300,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                       ),

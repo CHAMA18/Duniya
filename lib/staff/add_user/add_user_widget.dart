@@ -261,7 +261,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               Text('Email already in use',
                   style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       color: _textPrimary,
                       fontSize: 18.0)),
             ],
@@ -293,7 +293,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               ),
               child: Text('Got it',
                   style: TextStyle(
-                      fontFamily: 'Satoshi', fontWeight: FontWeight.w600)),
+                      fontFamily: 'Satoshi', fontWeight: FontWeight.w300)),
             ),
           ],
         ),
@@ -368,7 +368,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     'Add Staff Member',
                     style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       fontSize: 18.0,
                       color: _textPrimary,
                     ),
@@ -701,7 +701,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     initials,
                     style: const TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w300,
                       fontSize: 28.0,
                       color: Colors.white,
                       letterSpacing: 0.5,
@@ -735,7 +735,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                               'NEW STAFF MEMBER',
                               style: TextStyle(
                                 fontFamily: 'Satoshi',
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w300,
                                 fontSize: 11.0,
                                 color: Colors.white,
                                 letterSpacing: 0.8,
@@ -749,7 +749,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         'Add Staff Member',
                         style: TextStyle(
                           fontFamily: 'Satoshi',
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w300,
                           fontSize: 28.0,
                           color: Colors.white,
                           height: 1.1,
@@ -806,7 +806,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               Text(title,
                   style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       fontSize: 16.0,
                       color: _textPrimary,
                       letterSpacing: -0.01)),
@@ -880,7 +880,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             Text(label,
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     fontSize: 13.0,
                     color: _textPrimary)),
             if (required) ...[
@@ -889,7 +889,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   style: TextStyle(
                       fontFamily: 'Satoshi',
                       color: _dangerColor,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       fontSize: 14.0)),
             ],
           ],
@@ -904,14 +904,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               fontFamily: 'Satoshi',
               fontSize: 14.0,
               color: _textPrimary,
-              fontWeight: FontWeight.w500),
+              fontWeight: FontWeight.w300),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 14.0,
                 color: _textSecondary.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w400),
+                fontWeight: FontWeight.w300),
             prefixIcon:
                 Icon(icon, size: 18.0, color: _duniyaPurpleDark),
             filled: true,
@@ -986,7 +986,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 child: Text(initials,
                     style: const TextStyle(
                         fontFamily: 'Satoshi',
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w300,
                         fontSize: 16.0,
                         color: Colors.white)),
               ),
@@ -1000,7 +1000,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 10.0,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             letterSpacing: 0.6,
                             color: _duniyaPurpleDark)),
                     const SizedBox(height: 2.0),
@@ -1009,7 +1009,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontFamily: 'Satoshi',
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             fontSize: 14.0,
                             color: _textPrimary)),
                   ],
@@ -1046,7 +1046,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                             fontFamily: 'Satoshi',
                             fontSize: 11.5,
                             color: _textSecondary,
-                            fontWeight: FontWeight.w500)),
+                            fontWeight: FontWeight.w300)),
                   ]),
                 ],
               ],
@@ -1076,7 +1076,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             Text('Role',
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     fontSize: 13.0,
                     color: _textPrimary)),
             const SizedBox(width: 4.0),
@@ -1084,7 +1084,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 style: TextStyle(
                     fontFamily: 'Satoshi',
                     color: _dangerColor,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     fontSize: 14.0)),
           ],
         ),
@@ -1141,7 +1141,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       Text(role,
                           style: TextStyle(
                               fontFamily: 'Satoshi',
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w300,
                               fontSize: 13.0,
                               color: isSelected
                                   ? Colors.white
@@ -1176,7 +1176,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             Text('Pharmacy',
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     fontSize: 13.0,
                     color: _textPrimary)),
             const SizedBox(width: 4.0),
@@ -1184,7 +1184,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 style: TextStyle(
                     fontFamily: 'Satoshi',
                     color: _dangerColor,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     fontSize: 14.0)),
           ],
         ),
@@ -1257,7 +1257,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   fontFamily: 'Satoshi',
                   color: _textPrimary,
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
                 hintText: 'Select the pharmacy branch…',
                 icon: Icon(
@@ -1326,7 +1326,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             Text(label,
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     fontSize: 13.0,
                     color: _textPrimary)),
             if (required) ...[
@@ -1335,7 +1335,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   style: TextStyle(
                       fontFamily: 'Satoshi',
                       color: _dangerColor,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       fontSize: 14.0)),
             ],
           ],
@@ -1349,14 +1349,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               fontFamily: 'Satoshi',
               fontSize: 14.0,
               color: _textPrimary,
-              fontWeight: FontWeight.w500),
+              fontWeight: FontWeight.w300),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 14.0,
                 color: _textSecondary.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w400),
+                fontWeight: FontWeight.w300),
             prefixIcon:
                 Icon(Icons.lock_outline, size: 18.0, color: _duniyaPurpleDark),
             suffixIcon: InkWell(
@@ -1447,7 +1447,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 11.0,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                       color: color)),
             if (label.isNotEmpty) const SizedBox(width: 12.0),
             Expanded(
@@ -1490,7 +1490,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 10.0,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                   color: met ? _successColor : _textSecondary)),
         ],
       ),
@@ -1515,7 +1515,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 11.5,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w300,
               color: isMatch ? _successColor : _dangerColor),
         ),
       ],
@@ -1572,7 +1572,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 11.0,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         color: _duniyaPurpleDark)),
           ),
           const SizedBox(width: 14.0),
@@ -1588,7 +1588,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w300,
                       color: _textPrimary),
                 ),
                 const SizedBox(height: 2.0),
@@ -1621,7 +1621,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             child: Text('Cancel',
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w300,
                     fontSize: 13.0)),
           ),
           const SizedBox(width: 10.0),
@@ -1677,7 +1677,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         _model.isSubmitting ? 'Saving…' : 'Save Staff Member',
                         style: const TextStyle(
                             fontFamily: 'Satoshi',
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w300,
                             fontSize: 13.0,
                             color: Colors.white),
                       ),
@@ -1791,7 +1791,7 @@ class _BrandedToastState extends State<_BrandedToast>
                             Text(widget.title,
                                 style: const TextStyle(
                                     fontFamily: 'Satoshi',
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w300,
                                     fontSize: 14.0,
                                     color: Color(0xFF0B1C30))),
                             const SizedBox(height: 2.0),

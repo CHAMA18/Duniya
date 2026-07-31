@@ -93,7 +93,7 @@ class _SwitchPharmStockWidgetState extends State<SwitchPharmStockWidget> {
                                       .headlineLargeFamily,
                                   color: FlutterFlowTheme.of(context).primary,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w300,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -117,7 +117,7 @@ class _SwitchPharmStockWidgetState extends State<SwitchPharmStockWidget> {
                                   .titleMediumFamily,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w300,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .titleMediumIsCustom,
                             ),

@@ -413,7 +413,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
               Icon(Icons.chevron_right,
@@ -423,7 +423,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -463,7 +463,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w300,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -474,7 +474,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w300,
                         height: 1.4,
                       ),
                     ),
@@ -538,7 +538,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(200),
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -951,7 +951,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                       style: TextStyle(
                         color: selected ? Colors.white : theme.primaryText,
                         fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                     const SizedBox(width: 8.0),
@@ -969,7 +969,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                         style: TextStyle(
                           color: selected ? Colors.white : fg,
                           fontSize: 11,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                     ),
@@ -1047,7 +1047,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     textStyle: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide.none,
@@ -1171,7 +1171,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                 : receipt.deliveryNoteNumber,
                             style: theme.titleMedium.override(
                               fontFamily: theme.titleMediumFamily,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               letterSpacing: -0.2,
                               useGoogleFonts: !theme.titleMediumIsCustom,
                             ),
@@ -1192,7 +1192,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                             style: TextStyle(
                               color: statusColor,
                               fontSize: 10,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w300,
                               letterSpacing: 0.5,
                             ),
                           ),
@@ -1233,7 +1233,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                     style: theme.bodySmall.override(
                                       fontFamily: theme.bodySmallFamily,
                                       color: theme.primary,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w300,
                                       fontSize: 11.0,
                                       letterSpacing: 0.0,
                                       useGoogleFonts:
@@ -1296,7 +1296,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                 fontFamily: theme.bodySmallFamily,
                                 color: const Color(0xFFEF4444),
                                 fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w300,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodySmallIsCustom,
                               ),
@@ -1398,7 +1398,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 child: Text(
                   'Delete receipt?',
                   style: TextStyle(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     color: FlutterFlowTheme.of(context).primaryText,
                   ),
                 ),
@@ -1533,7 +1533,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 : 'No goods received yet',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
               letterSpacing: -0.3,
               useGoogleFonts: !theme.headlineSmallIsCustom,
             ),
@@ -1581,7 +1581,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 textStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
                 elevation: 0.0,
                 borderSide: BorderSide.none,
@@ -1608,7 +1608,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     textStyle: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide.none,
@@ -1627,7 +1627,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     textStyle: TextStyle(
                       color: theme.primaryText,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w300,
                     ),
                     elevation: 0.0,
                     borderSide:
@@ -1723,7 +1723,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
           title,
           style: theme.bodyMedium.override(
             fontFamily: theme.bodyMediumFamily,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w300,
             fontSize: 12.0,
             letterSpacing: 0.0,
             useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1775,7 +1775,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -1854,7 +1854,7 @@ class _HeroActionButton extends StatelessWidget {
                       ? const Color(0xFF9900FF)
                       : Colors.white,
                   fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -1936,7 +1936,7 @@ class _KpiCard extends StatelessWidget {
             style: theme.bodySmall.override(
               fontFamily: theme.bodySmallFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w300,
               fontSize: 12.0,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodySmallIsCustom,
@@ -1947,7 +1947,7 @@ class _KpiCard extends StatelessWidget {
             value,
             style: theme.headlineMedium.override(
               fontFamily: theme.headlineMediumFamily,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
               fontSize: 22.0,
               letterSpacing: -0.5,
               useGoogleFonts: !theme.headlineMediumIsCustom,
@@ -1976,7 +1976,7 @@ class _KpiCard extends StatelessWidget {
                             ? const Color(0xFF10B981)
                             : const Color(0xFFEF4444)),
                     fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w300,
                     letterSpacing: 0.3,
                   ),
                 ),
