@@ -115,6 +115,395 @@ class _SideNavWidgetState extends State<SideNavWidget> {
     );
   }
 
+  // ────────────────────────────────────────────────────────────────
+  // Expandable Inventory Section
+  // ────────────────────────────────────────────────────────────────
+  // Merges "Store Inventory" and "Product Catalogue" into a single
+  // expandable parent item.  When collapsed, the sidebar icon
+  // navigates directly to Store Inventory.  When expanded, the
+  // parent shows a chevron and two sub-items slide in with a
+  // staggered animation.
+  // ────────────────────────────────────────────────────────────────
+
+  bool _isInventoryExpanded = true;
+
+  /// Whether any inventory sub-item is currently active.
+  bool get _isInventoryChildActive =>
+      FFAppState().SelectedPage == 'Store Inventory' ||
+      FFAppState().SelectedPage == 'Product Catalogue';
+
+  /// Builds a single sub-item row for the expandable section.
+  Widget _buildSubItem({
+    required String label,
+    required IconData activeIcon,
+    required IconData inactiveIcon,
+    required String routeName,
+    required bool isActive,
+    Map<String, String>? queryParameters,
+  }) {
+    return _SubItemHoverBuilder(
+      isActive: isActive,
+      builder: (context, isHovered) => InkWell(
+        splashColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: () async {
+          logFirebaseEvent('SIDE_NAV_INVENTORY_SUB_${label.replaceAll(' ', '_')}_ON_TAP');
+          logFirebaseEvent('SidebarLink_navigate_to');
+
+          context.goNamed(
+            routeName,
+            queryParameters: queryParameters,
+            extra: <String, dynamic>{
+              '__transition_info__': TransitionInfo(
+                hasTransition: true,
+                transitionType: PageTransitionType.fade,
+                duration: Duration(milliseconds: 0),
+              ),
+            },
+          );
+
+          logFirebaseEvent('SidebarLink_update_app_state');
+          FFAppState().SelectedPage = label;
+        },
+        child: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 10.0, 0.0),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeInOut,
+            width: double.infinity,
+            constraints: const BoxConstraints(minHeight: 38.0),
+            decoration: BoxDecoration(
+              color: isActive
+                  ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.08)
+                  : isHovered
+                      ? FlutterFlowTheme.of(context)
+                          .primaryBackground
+                          .withValues(alpha: 0.6)
+                      : Colors.transparent,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Padding(
+              padding:
+                  EdgeInsetsDirectional.fromSTEB(12.0, 6.0, 10.0, 6.0),
+              child: Row(
+                children: [
+                  // Small dot indicator — filled when active, outlined when not
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    width: 6.0,
+                    height: 6.0,
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? FlutterFlowTheme.of(context).primary
+                          : isHovered
+                              ? FlutterFlowTheme.of(context).alternate
+                              : FlutterFlowTheme.of(context)
+                                  .alternate
+                                  .withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Expanded(
+                    child: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 150),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodyMediumFamily,
+                            color: isActive
+                                ? FlutterFlowTheme.of(context).primary
+                                : isHovered
+                                    ? FlutterFlowTheme.of(context).primaryText
+                                    : FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                            letterSpacing: isActive ? -0.01 : 0.0,
+                            fontWeight:
+                                isActive ? FontWeight.w600 : FontWeight.w500,
+                            useGoogleFonts:
+                                !FlutterFlowTheme.of(context)
+                                    .bodyMediumIsCustom,
+                          ),
+                      child: Text(
+                        label,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  // Active indicator bar
+                  if (isActive)
+                    Container(
+                      width: 3.0,
+                      height: 16.0,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).primary,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// The full expandable Inventory section.
+  Widget _buildExpandableInventorySection(bool isCollapsed) {
+    final isParentActive = _isInventoryChildActive;
+    // Auto-expand when a child is active (user navigated to a sub-item)
+    final isExpanded = _isInventoryExpanded || isParentActive;
+
+    // ── Collapsed sidebar: single icon → navigates to Store Inventory ──
+    if (isCollapsed) {
+      return Tooltip(
+        message: 'Inventory',
+        preferBelow: false,
+        child: InkWell(
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: () async {
+            logFirebaseEvent('SIDE_NAV_COLLAPSED_INVENTORY_ON_TAP');
+            logFirebaseEvent('SidebarLink_navigate_to');
+            context.goNamed(
+              StoreInventoryWidget.routeName,
+              extra: <String, dynamic>{
+                '__transition_info__': TransitionInfo(
+                  hasTransition: true,
+                  transitionType: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 0),
+                ),
+              },
+            );
+            FFAppState().SelectedPage = 'Store Inventory';
+          },
+          child: Container(
+            width: double.infinity,
+            constraints: const BoxConstraints(minHeight: 40.0),
+            decoration: BoxDecoration(
+              color: isParentActive
+                  ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.12)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(12.0, 7.0, 12.0, 7.0),
+              child: Center(
+                child: Container(
+                  width: 30.0,
+                  height: 30.0,
+                  decoration: BoxDecoration(
+                    color: isParentActive
+                        ? FlutterFlowTheme.of(context)
+                            .primary
+                            .withValues(alpha: 0.18)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Center(
+                    child: SizedBox(
+                      width: 18.0,
+                      height: 18.0,
+                      child: Icon(
+                        isParentActive
+                            ? Icons.warehouse_rounded
+                            : Icons.warehouse_outlined,
+                        color: isParentActive
+                            ? FlutterFlowTheme.of(context).primary
+                            : FlutterFlowTheme.of(context).secondaryText,
+                        size: 18.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // ── Expanded sidebar: parent row + animated sub-items ──
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Parent row — clickable to expand/collapse
+        MouseRegion(
+          onEnter: (_) => safeSetState(() {}),
+          onExit: (_) => safeSetState(() {}),
+          child: InkWell(
+            splashColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () {
+              safeSetState(() {
+                _isInventoryExpanded = !_isInventoryExpanded;
+              });
+            },
+            child: Container(
+              width: double.infinity,
+              constraints: const BoxConstraints(minHeight: 40.0),
+              decoration: BoxDecoration(
+                color: isParentActive
+                    ? FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.12)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(
+                    16.0, 7.0, 10.0, 7.0),
+                child: Row(
+                  children: [
+                    // Icon
+                    Container(
+                      width: 30.0,
+                      height: 30.0,
+                      decoration: BoxDecoration(
+                        color: isParentActive
+                            ? FlutterFlowTheme.of(context)
+                                .primary
+                                .withValues(alpha: 0.18)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Center(
+                        child: SizedBox(
+                          width: 18.0,
+                          height: 18.0,
+                          child: Icon(
+                            isParentActive
+                                ? Icons.warehouse_rounded
+                                : Icons.warehouse_outlined,
+                            color: isParentActive
+                                ? FlutterFlowTheme.of(context).primary
+                                : FlutterFlowTheme.of(context).secondaryText,
+                            size: 18.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    // Label
+                    Expanded(
+                      child: Text(
+                        'Inventory',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style:
+                            FlutterFlowTheme.of(context).bodyMedium.override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .bodyMediumFamily,
+                                  color: isParentActive
+                                      ? FlutterFlowTheme.of(context).primary
+                                      : FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                  letterSpacing: isParentActive ? -0.01 : 0.0,
+                                  fontWeight: isParentActive
+                                      ? FontWeight.w600
+                                      : FontWeight.w500,
+                                  useGoogleFonts: !FlutterFlowTheme.of(context)
+                                      .bodyMediumIsCustom,
+                                ),
+                      ),
+                    ),
+                    // Active indicator bar
+                    if (isParentActive)
+                      Container(
+                        width: 3.0,
+                        height: 20.0,
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primary,
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                    const SizedBox(width: 8.0),
+                    // Animated chevron
+                    AnimatedRotation(
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeInOut,
+                      turns: isExpanded ? -0.25 : 0.25,
+                      child: Icon(
+                        Icons.chevron_right_rounded,
+                        color: isParentActive
+                            ? FlutterFlowTheme.of(context).primary
+                            : FlutterFlowTheme.of(context).alternate,
+                        size: 18.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // ── Animated sub-items ──
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          crossFadeState: isExpanded
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+          // First: empty (collapsed)
+          firstChild: const SizedBox.shrink(),
+          // Second: sub-items
+          secondChild: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left accent line connecting sub-items to parent
+              if (_canSee(NavItem.storeInventory) &&
+                  _canSee(NavItem.productCatalogue))
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(30.0, 2.0, 0.0, 2.0),
+                  child: Container(
+                    width: 1.5,
+                    height: 8.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context)
+                          .primary
+                          .withValues(alpha: 0.25),
+                      borderRadius: BorderRadius.circular(1.0),
+                    ),
+                  ),
+                ),
+              // Store Inventory sub-item
+              if (_canSee(NavItem.storeInventory))
+                _buildSubItem(
+                  label: 'Store Inventory',
+                  activeIcon: Icons.inventory_2,
+                  inactiveIcon: Icons.inventory_2_outlined,
+                  routeName: StoreInventoryWidget.routeName,
+                  isActive:
+                      FFAppState().SelectedPage == 'Store Inventory',
+                ),
+              // Product Catalogue sub-item
+              if (_canSee(NavItem.productCatalogue))
+                _buildSubItem(
+                  label: 'Product Catalogue',
+                  activeIcon: Icons.medication,
+                  inactiveIcon: Icons.medication_outlined,
+                  routeName: ProductMasterWidget.routeName,
+                  isActive:
+                      FFAppState().SelectedPage == 'Product Catalogue',
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -607,107 +996,12 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                     _buildDivider(),
 
                     // ============================================================
-                    // INVENTORY SECTION
+                    // INVENTORY SECTION — Expandable parent with sub-items
                     // ============================================================
                     if (!isCollapsed) _buildSectionHeader('INVENTORY'),
-                    // Store Inventory (RBAC)
-                    if (_canSee(NavItem.storeInventory))
-                      Tooltip(
-                        message: 'Store Inventory',
-                        preferBelow: false,
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            logFirebaseEvent(
-                                'SIDE_NAV_COMP_Container_2ctlhwc2_ON_TAP');
-                            logFirebaseEvent('SidebarLink_navigate_to');
-
-                            context.goNamed(
-                              StoreInventoryWidget.routeName,
-                              extra: <String, dynamic>{
-                                '__transition_info__': TransitionInfo(
-                                  hasTransition: true,
-                                  transitionType: PageTransitionType.fade,
-                                  duration: Duration(milliseconds: 0),
-                                ),
-                              },
-                            );
-
-                            logFirebaseEvent('SidebarLink_update_app_state');
-                            FFAppState().SelectedPage = 'Store Inventory';
-                          },
-                          child: wrapWithModel(
-                            model: _model.sidebarLinkModel2,
-                            updateCallback: () => safeSetState(() {}),
-                            child: SidebarLinkWidget(
-                              linkText: 'Store Inventory',
-                              activeIcon: Icon(
-                                Icons.inventory_2,
-                                color: FlutterFlowTheme.of(context).primary,
-                              ),
-                              inactiveIcon: Icon(
-                                Icons.inventory_2_outlined,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                              ),
-                              isActive: FFAppState().SelectedPage ==
-                                  'Store Inventory',
-                            ),
-                          ),
-                        ),
-                      ),
-                    // Product Catalogue (RBAC)
-                    if (_canSee(NavItem.productCatalogue))
-                      Tooltip(
-                        message: 'Product Catalogue',
-                        preferBelow: false,
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            logFirebaseEvent(
-                                'SIDE_NAV_COMP_Product_Catalogue_ON_TAP');
-                            logFirebaseEvent('SidebarLink_navigate_to');
-
-                            context.goNamed(
-                              ProductMasterWidget.routeName,
-                              extra: <String, dynamic>{
-                                '__transition_info__': TransitionInfo(
-                                  hasTransition: true,
-                                  transitionType: PageTransitionType.fade,
-                                  duration: Duration(milliseconds: 0),
-                                ),
-                              },
-                            );
-
-                            logFirebaseEvent('SidebarLink_update_app_state');
-                            FFAppState().SelectedPage = 'Product Catalogue';
-                          },
-                          child: wrapWithModel(
-                            model: _model.sidebarLinkModel11,
-                            updateCallback: () => safeSetState(() {}),
-                            child: SidebarLinkWidget(
-                              linkText: 'Product Catalogue',
-                              activeIcon: Icon(
-                                Icons.medication,
-                                color: FlutterFlowTheme.of(context).primary,
-                              ),
-                              inactiveIcon: Icon(
-                                Icons.medication_outlined,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                              ),
-                              isActive: FFAppState().SelectedPage ==
-                                  'Product Catalogue',
-                            ),
-                          ),
-                        ),
-                      ),
+                    if (_canSee(NavItem.storeInventory) ||
+                        _canSee(NavItem.productCatalogue))
+                      _buildExpandableInventorySection(isCollapsed),
                     // Stock Balances (RBAC)
                     if (_canSee(NavItem.stockBalances))
                       Tooltip(
@@ -1810,6 +2104,36 @@ class _SideNavWidgetState extends State<SideNavWidget> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+// Sub-item hover builder — lightweight wrapper that provides
+// hover state to sub-items without requiring a full model.
+// ────────────────────────────────────────────────────────────────
+class _SubItemHoverBuilder extends StatefulWidget {
+  const _SubItemHoverBuilder({
+    required this.isActive,
+    required this.builder,
+  });
+
+  final bool isActive;
+  final Widget Function(BuildContext context, bool isHovered) builder;
+
+  @override
+  State<_SubItemHoverBuilder> createState() => _SubItemHoverBuilderState();
+}
+
+class _SubItemHoverBuilderState extends State<_SubItemHoverBuilder> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => safeSetState(() => _isHovered = true),
+      onExit: (_) => safeSetState(() => _isHovered = false),
+      child: widget.builder(context, _isHovered),
     );
   }
 }
