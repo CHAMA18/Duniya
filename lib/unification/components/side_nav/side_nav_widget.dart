@@ -865,6 +865,78 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                 ),
 
                 // ============================================================
+                // COMPLIANCE SECTION
+                // ============================================================
+                if (_canSee(NavItem.auditLogs)) ...[
+                  if (!isCollapsed)
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                          20.0, 12.0, 20.0, 4.0),
+                      child: Align(
+                        alignment: AlignmentDirectional(-1.0, 0.0),
+                        child: Text(
+                          'COMPLIANCE',
+                          style: FlutterFlowTheme.of(context)
+                              .labelSmall
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .labelSmallFamily,
+                                color: FlutterFlowTheme.of(context).alternate,
+                                letterSpacing: 1.2,
+                                fontWeight: FontWeight.w600,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .labelSmallIsCustom,
+                              ),
+                        ),
+                      ),
+                    ),
+                  // Audit Logs (RBAC)
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      logFirebaseEvent(
+                          'SIDE_NAV_COMP_Audit_Logs_ON_TAP');
+                      logFirebaseEvent('SidebarLink_navigate_to');
+
+                      context.goNamed(
+                        AuditLogsWidget.routeName,
+                        extra: <String, dynamic>{
+                          '__transition_info__': TransitionInfo(
+                            hasTransition: true,
+                            transitionType: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 0),
+                          ),
+                        },
+                      );
+
+                      logFirebaseEvent('SidebarLink_update_app_state');
+                      FFAppState().SelectedPage = 'Audit Logs';
+                    },
+                    child: wrapWithModel(
+                      model: _model.sidebarLinkModelAuditLogs,
+                      updateCallback: () => safeSetState(() {}),
+                      child: SidebarLinkWidget(
+                        linkText: 'Audit Logs',
+                        activeIcon: Icon(
+                          Icons.history_rounded,
+                          color: FlutterFlowTheme.of(context).primary,
+                        ),
+                        inactiveIcon: Icon(
+                          Icons.history_rounded,
+                          color:
+                              FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                        isActive:
+                            FFAppState().SelectedPage == 'Audit Logs',
+                      ),
+                    ),
+                  ),
+                ],
+
+                // ============================================================
                 // BOTTOM SECTION (Dark Mode, Settings, Logout)
                 // ============================================================
                 Padding(
