@@ -68,7 +68,8 @@ flutter pub get
 # ---------------------------------------------------------------------
 echo "==> flutter build web"
 flutter build web --release \
-  --no-tree-shake-icons
+  --no-tree-shake-icons \
+  --verbose 2>&1 | tee /tmp/flutter_build.log
 
 echo "==> Build complete. Output: $(pwd)/build/web"
 ls -la build/web | head -20
