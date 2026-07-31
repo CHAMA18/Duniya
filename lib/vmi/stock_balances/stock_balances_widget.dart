@@ -1916,6 +1916,11 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
     _model.dialogDispensedTextController ??= TextEditingController();
     _model.dialogTransferredTextController ??= TextEditingController();
     _model.dialogAdjustedTextController ??= TextEditingController();
+    _model.dialogOpeningFocusNode ??= FocusNode();
+    _model.dialogReceivedFocusNode ??= FocusNode();
+    _model.dialogDispensedFocusNode ??= FocusNode();
+    _model.dialogTransferredFocusNode ??= FocusNode();
+    _model.dialogAdjustedFocusNode ??= FocusNode();
 
     final theme = FlutterFlowTheme.of(context);
 
@@ -2295,7 +2300,6 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
     await StockBalanceRecord.createDoc(parent).set(
       createStockBalanceRecordData(
         productId: selectedProduct.reference,
-        outletId: currentUserDocument?.outletId,
         openingStock: opening,
         stockReceived: received,
         stockDispensed: dispensed,
@@ -2502,7 +2506,6 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
         await StockBalanceRecord.createDoc(parent).set(
           createStockBalanceRecordData(
             productId: product.reference,
-            outletId: currentUserDocument?.outletId,
             openingStock: opening,
             stockReceived: received,
             stockDispensed: dispensed,
