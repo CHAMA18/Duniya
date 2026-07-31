@@ -95,9 +95,15 @@
        UTILITY
        ============================================ */
     .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .container-narrow {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 48px;
     }
 
     .sr-only {
@@ -138,6 +144,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      max-width: 100%;
     }
 
     .nav-brand {
@@ -279,26 +286,26 @@
     }
 
     .hero-orb-1 {
-      width: 500px;
-      height: 500px;
+      width: 700px;
+      height: 700px;
       background: rgba(153, 0, 255, 0.15);
-      top: -100px;
-      right: -100px;
+      top: -150px;
+      right: -150px;
       animation-delay: 0s;
     }
 
     .hero-orb-2 {
-      width: 400px;
-      height: 400px;
+      width: 550px;
+      height: 550px;
       background: rgba(124, 58, 237, 0.1);
-      bottom: -80px;
-      left: -80px;
+      bottom: -100px;
+      left: -100px;
       animation-delay: -7s;
     }
 
     .hero-orb-3 {
-      width: 300px;
-      height: 300px;
+      width: 400px;
+      height: 400px;
       background: rgba(168, 85, 247, 0.08);
       top: 40%;
       left: 60%;
@@ -316,7 +323,7 @@
       position: relative;
       z-index: 1;
       text-align: center;
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
@@ -499,7 +506,7 @@
 
     .hero-mockup {
       position: relative;
-      max-width: 960px;
+      max-width: 100%;
       margin: 0 auto;
       border-radius: var(--radius-lg);
       overflow: hidden;
@@ -510,7 +517,7 @@
     .hero-mockup-inner {
       background: linear-gradient(135deg, var(--bg-dark), var(--surface-dark));
       padding: 24px;
-      min-height: 400px;
+      min-height: 440px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -539,8 +546,8 @@
 
     .hero-mockup-dashboard {
       display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 16px;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
       width: 100%;
       flex: 1;
     }
@@ -727,7 +734,7 @@
 
     .section-header {
       text-align: center;
-      max-width: 640px;
+      max-width: 720px;
       margin: 0 auto 64px;
     }
 
@@ -769,7 +776,7 @@
     .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      gap: 28px;
     }
 
     .feature-card {
@@ -777,7 +784,7 @@
       background: white;
       border: 1px solid rgba(153, 0, 255, 0.08);
       border-radius: var(--radius-md);
-      padding: 36px 28px;
+      padding: 40px 32px;
       transition: var(--transition);
       overflow: hidden;
     }
@@ -872,7 +879,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 32px;
-      max-width: 800px;
+      max-width: 100%;
       margin: 0 auto;
     }
 
@@ -881,7 +888,7 @@
       background: white;
       border: 1.5px solid rgba(153, 0, 255, 0.1);
       border-radius: var(--radius-lg);
-      padding: 48px 36px;
+      padding: 56px 48px;
       text-align: center;
       transition: var(--transition);
       overflow: hidden;
@@ -1001,7 +1008,7 @@
     .webapp-card {
       background: linear-gradient(135deg, var(--bg-dark), var(--surface-dark));
       border-radius: var(--radius-lg);
-      padding: 64px;
+      padding: 80px;
       display: flex;
       align-items: center;
       gap: 64px;
@@ -1128,7 +1135,7 @@
 
     .webapp-browser {
       width: 100%;
-      max-width: 480px;
+      max-width: 560px;
       border-radius: 16px;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.04);
@@ -1197,16 +1204,16 @@
     .security-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
+      gap: 28px;
     }
 
     .security-card {
       background: white;
       border: 1px solid rgba(153, 0, 255, 0.08);
       border-radius: var(--radius-md);
-      padding: 36px;
+      padding: 40px;
       display: flex;
-      gap: 20px;
+      gap: 24px;
       transition: var(--transition);
     }
 
@@ -1254,7 +1261,7 @@
     .cta-card {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       border-radius: var(--radius-lg);
-      padding: 80px 64px;
+      padding: 100px 80px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -1349,7 +1356,7 @@
     .footer-grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px;
+      gap: 64px;
       margin-bottom: 48px;
     }
 
@@ -1475,6 +1482,10 @@
        RESPONSIVE
        ============================================ */
     @media (max-width: 1024px) {
+      .container {
+        padding: 0 32px;
+      }
+
       .features-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1494,6 +1505,10 @@
     }
 
     @media (max-width: 768px) {
+      .container {
+        padding: 0 20px;
+      }
+
       .nav-links {
         display: none;
       }
