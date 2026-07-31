@@ -68,7 +68,6 @@ flutter pub get
 # ---------------------------------------------------------------------
 echo "==> flutter build web"
 flutter build web --release \
-  --web-renderer html \
   --no-tree-shake-icons
 
 echo "==> Build complete. Output: $(pwd)/build/web"
