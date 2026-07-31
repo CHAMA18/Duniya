@@ -23,6 +23,9 @@ enum AppRole {
   /// Pharmacy technician — assists with inventory and stock management
   pharmacyTechnician,
 
+  /// Cashier — handles POS transactions, sales, and basic inventory views
+  cashier,
+
   /// Sales assistant — handles POS and basic sales operations
   salesAssistant,
 
@@ -54,10 +57,14 @@ enum AppRole {
       case 'pharmacytechnician':
       case 'technician':
         return AppRole.pharmacyTechnician;
+      case 'cashier':
+        return AppRole.cashier;
       case 'sales_assistant':
       case 'salesassistant':
       case 'staff':
         return AppRole.salesAssistant;
+      case 'manager':
+        return AppRole.outletManager;
       case 'duniya_admin':
       case 'duniyaadmin':
       case 'duniya':
@@ -91,6 +98,8 @@ enum AppRole {
         return 'Pharmacist';
       case AppRole.pharmacyTechnician:
         return 'Pharmacy Technician';
+      case AppRole.cashier:
+        return 'Cashier';
       case AppRole.salesAssistant:
         return 'Sales Assistant';
       case AppRole.duniyaAdmin:
@@ -114,6 +123,7 @@ enum AppRole {
       this == AppRole.outletManager ||
       this == AppRole.pharmacist ||
       this == AppRole.pharmacyTechnician ||
+      this == AppRole.cashier ||
       this == AppRole.salesAssistant;
 
   /// Whether this role has Owner-level admin privileges.

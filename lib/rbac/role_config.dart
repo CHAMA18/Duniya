@@ -365,6 +365,46 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   },
 
   // ═══════════════════════════════════════════════════════════════════
+  // CASHIER — POS transactions, sales, and basic inventory views
+  // ═══════════════════════════════════════════════════════════════════
+  AppRole.cashier: {
+    // POS — core access (primary responsibility)
+    Permission.posView,
+    Permission.posCreateSale,
+    Permission.posEditSale,
+
+    // Inventory — view only
+    Permission.inventoryView,
+
+    // Product Catalogue — view
+    Permission.catalogueView,
+
+    // Stock Management — view balances & movements
+    Permission.stockBalancesView,
+    Permission.stockMovementsView,
+
+    // Batch & Expiry — view
+    Permission.batchesView,
+
+    // Low Stock Alerts — view
+    Permission.lowStockAlertsView,
+
+    // Sales / Dispensing — view & create
+    Permission.salesView,
+    Permission.salesCreate,
+
+    // Pharmacy Tools — limited
+    Permission.pharmacyToolsView,
+    Permission.bmiCalculatorUse,
+
+    // Settings
+    Permission.settingsView,
+
+    // Notifications
+    Permission.notificationsView,
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
   // SALES ASSISTANT — POS and basic sales operations
   // ═══════════════════════════════════════════════════════════════════
   AppRole.salesAssistant: {
@@ -572,6 +612,19 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.replenishment,
     NavItem.bmiCalculator,
     NavItem.vmiDashboard,
+    NavItem.settings,
+  },
+  AppRole.cashier: {
+    NavItem.home,
+    NavItem.storeInventory,
+    NavItem.productCatalogue,
+    NavItem.stockBalances,
+    NavItem.stockMovements,
+    NavItem.salesDispensing,
+    NavItem.batchesExpiry,
+    NavItem.lowStockAlerts,
+    NavItem.pointOfSale,
+    NavItem.bmiCalculator,
     NavItem.settings,
   },
   AppRole.salesAssistant: {
