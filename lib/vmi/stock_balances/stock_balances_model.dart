@@ -34,6 +34,22 @@ class StockBalancesModel extends FlutterFlowModel<StockBalancesWidget> {
   String? periodValue;
   FormFieldController<String>? periodValueController;
 
+  // State field(s) for Add Stock Balance dialog.
+  String? dialogProductValue;
+  FormFieldController<String>? dialogProductValueController;
+  FocusNode? dialogOpeningFocusNode;
+  TextEditingController? dialogOpeningTextController;
+  FocusNode? dialogReceivedFocusNode;
+  TextEditingController? dialogReceivedTextController;
+  FocusNode? dialogDispensedFocusNode;
+  TextEditingController? dialogDispensedTextController;
+  FocusNode? dialogTransferredFocusNode;
+  TextEditingController? dialogTransferredTextController;
+  FocusNode? dialogAdjustedFocusNode;
+  TextEditingController? dialogAdjustedTextController;
+  String? dialogPeriodValue;
+  FormFieldController<String>? dialogPeriodValueController;
+
   @override
   void initState(BuildContext context) {
     sideNavModel = createModel(context, () => SideNavModel());
@@ -48,5 +64,15 @@ class StockBalancesModel extends FlutterFlowModel<StockBalancesWidget> {
     mobileNavbarModel.dispose();
     searchFocusNode?.dispose();
     searchTextController?.dispose();
+    dialogOpeningFocusNode?.dispose();
+    dialogOpeningTextController?.dispose();
+    dialogReceivedFocusNode?.dispose();
+    dialogReceivedTextController?.dispose();
+    dialogDispensedFocusNode?.dispose();
+    dialogDispensedTextController?.dispose();
+    dialogTransferredFocusNode?.dispose();
+    dialogTransferredTextController?.dispose();
+    dialogAdjustedFocusNode?.dispose();
+    dialogAdjustedTextController?.dispose();
   }
 }

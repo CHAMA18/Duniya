@@ -15,6 +15,8 @@ import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:csv/csv.dart';
 import 'stock_balances_model.dart';
 export 'stock_balances_model.dart';
 
@@ -519,7 +521,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 _HeroActionButton(
                   icon: Icons.add_rounded,
                   label: 'Add Balance',
-                  onTap: () => _showToast('Opening new balance form…'),
+                  onTap: () => _showAddBalanceDialog(context),
                   isPrimary: true,
                 ),
               ],
@@ -1707,7 +1709,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
               runSpacing: 12.0,
               children: [
                 FFButtonWidget(
-                  onPressed: () => _showToast('Opening new balance form…'),
+                  onPressed: () => _showAddBalanceDialog(context),
                   text: 'Add Your First Stock Balance',
                   icon: Icon(Icons.add_rounded, size: 18.0),
                   options: FFButtonOptions(
@@ -1726,7 +1728,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                   ),
                 ),
                 FFButtonWidget(
-                  onPressed: () => _showToast('Opening spreadsheet import…'),
+                  onPressed: () => _importFromSpreadsheet(),
                   text: 'Import from Spreadsheet',
                   icon: Icon(Icons.upload_file_rounded, size: 18.0),
                   options: FFButtonOptions(
@@ -1903,6 +1905,626 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
         ],
       ),
     );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //   ADD STOCK BALANCE DIALOG
+  // ═══════════════════════════════════════════════════════════════
+  void _showAddBalanceDialog(BuildContext context) {
+    _model.dialogOpeningTextController ??= TextEditingController();
+    _model.dialogReceivedTextController ??= TextEditingController();
+    _model.dialogDispensedTextController ??= TextEditingController();
+    _model.dialogTransferredTextController ??= TextEditingController();
+    _model.dialogAdjustedTextController ??= TextEditingController();
+
+    final theme = FlutterFlowTheme.of(context);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(
+              horizontal: 24.0, vertical: 24.0),
+          child: StatefulBuilder(
+            builder: (context, setDialogState) {
+              final productSelected =
+                  _model.dialogProductValue != null &&
+                      (_model.dialogProductValue ?? '').isNotEmpty;
+              final openingText =
+                  _model.dialogOpeningTextController?.text ?? '';
+              final openingValid =
+                  openingText.isEmpty || int.tryParse(openingText) != null;
+              final periodSelected =
+                  _model.dialogPeriodValue != null &&
+                      (_model.dialogPeriodValue ?? '').isNotEmpty;
+              final canSave = productSelected && openingValid && periodSelected;
+
+              return Container(
+                width: MediaQuery.sizeOf(context).width > 600
+                    ? 580.0
+                    : double.infinity,
+                constraints: const BoxConstraints(maxWidth: 580.0),
+                decoration: BoxDecoration(
+                  color: theme.secondaryBackground,
+                  borderRadius: BorderRadius.circular(24.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF111827).withAlpha(40),
+                      blurRadius: 32.0,
+                      offset: const Offset(0, 16),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Hero header
+                    Container(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          24.0, 22.0, 20.0, 20.0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [theme.primary, theme.secondary],
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(24.0),
+                          topRight: Radius.circular(24.0),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44.0,
+                            height: 44.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(30),
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                color: Colors.white.withAlpha(60),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: const Icon(Icons.add_chart_rounded,
+                                color: Colors.white, size: 22.0),
+                          ),
+                          const SizedBox(width: 14.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Add Stock Balance',
+                                    style: TextStyle(
+                                      fontFamily: 'Satoshi',
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    )),
+                                const SizedBox(height: 2.0),
+                                Text(
+                                    'Record opening & closing quantities for a product',
+                                    style: TextStyle(
+                                      fontFamily: 'Satoshi',
+                                      fontSize: 13.0,
+                                      color: Colors.white.withAlpha(200),
+                                    )),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.pop(dialogContext),
+                            icon: Icon(Icons.close_rounded,
+                                color: Colors.white.withAlpha(180), size: 22.0),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Form body
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Product selector
+                          FutureBuilder<List<ProductMasterRecord>>(
+                            future: queryProductMasterRecordOnce(),
+                            builder: (context, productSnapshot) {
+                              if (!productSnapshot.hasData) {
+                                return _dialogFieldLabel(
+                                    'Product', theme, child: _loadingField(theme));
+                              }
+                              final products = productSnapshot.data!;
+                              final productOptions = products
+                                  .map((p) => p.hasName() ? p.name : p.sku)
+                                  .toList();
+                              return _dialogFieldLabel('Product', theme,
+                                  required: true,
+                                  child: FlutterFlowDropDown<String>(
+                                    controller:
+                                        _model.dialogProductValueController ??=
+                                            FormFieldController<String>(null),
+                                    options: productOptions,
+                                    onChanged: (val) {
+                                      setDialogState(() =>
+                                          _model.dialogProductValue = val);
+                                    },
+                                    width: double.infinity,
+                                    height: 48.0,
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Satoshi',
+                                      fontSize: 14.0,
+                                      color: theme.primaryText,
+                                    ),
+                                    icon: Icon(Icons.keyboard_arrow_down_rounded,
+                                        color: theme.secondaryText, size: 20.0),
+                                    fillColor: theme.primaryBackground,
+                                    elevation: 0,
+                                    borderColor: theme.lineColor,
+                                    borderWidth: 1.0,
+                                    borderRadius: 10.0,
+                                    margin: EdgeInsetsDirectional.fromSTEB(
+                                        12.0, 4.0, 12.0, 4.0),
+                                    hidesUnderline: true,
+                                    isSearchable: true,
+                                    isMultiSelect: false,
+                                  ));
+                            },
+                          ),
+                          const SizedBox(height: 20.0),
+
+                          // Period selector
+                          _dialogFieldLabel('Period', theme,
+                              required: true,
+                              child: FlutterFlowDropDown<String>(
+                                controller:
+                                    _model.dialogPeriodValueController ??=
+                                        FormFieldController<String>(null),
+                                options: _generatePeriodOptions(),
+                                onChanged: (val) {
+                                  setDialogState(
+                                      () => _model.dialogPeriodValue = val);
+                                },
+                                width: double.infinity,
+                                height: 48.0,
+                                textStyle: TextStyle(
+                                  fontFamily: 'Satoshi',
+                                  fontSize: 14.0,
+                                  color: theme.primaryText,
+                                ),
+                                icon: Icon(Icons.keyboard_arrow_down_rounded,
+                                    color: theme.secondaryText, size: 20.0),
+                                fillColor: theme.primaryBackground,
+                                elevation: 0,
+                                borderColor: theme.lineColor,
+                                borderWidth: 1.0,
+                                borderRadius: 10.0,
+                                margin: EdgeInsetsDirectional.fromSTEB(
+                                    12.0, 4.0, 12.0, 4.0),
+                                hidesUnderline: true,
+                                isSearchable: false,
+                                isMultiSelect: false,
+                              )),
+                          const SizedBox(height: 20.0),
+
+                          // Stock quantity fields in a grid
+                          Text('Stock Quantities',
+                              style: TextStyle(
+                                fontFamily: 'Satoshi',
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w500,
+                                color: theme.primaryText,
+                              )),
+                          const SizedBox(height: 10.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: _qtyField(
+                                'Opening',
+                                _model.dialogOpeningTextController!,
+                                _model.dialogOpeningFocusNode!,
+                                theme,
+                                Colors.green,
+                              )),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                  child: _qtyField(
+                                'Received',
+                                _model.dialogReceivedTextController!,
+                                _model.dialogReceivedFocusNode!,
+                                theme,
+                                Colors.blue,
+                              )),
+                            ],
+                          ),
+                          const SizedBox(height: 12.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: _qtyField(
+                                'Dispensed',
+                                _model.dialogDispensedTextController!,
+                                _model.dialogDispensedFocusNode!,
+                                theme,
+                                Colors.orange,
+                              )),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                  child: _qtyField(
+                                'Transferred',
+                                _model.dialogTransferredTextController!,
+                                _model.dialogTransferredFocusNode!,
+                                theme,
+                                Colors.purple,
+                              )),
+                            ],
+                          ),
+                          const SizedBox(height: 12.0),
+                          _qtyField(
+                            'Adjusted',
+                            _model.dialogAdjustedTextController!,
+                            _model.dialogAdjustedFocusNode!,
+                            theme,
+                            Colors.amber,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Footer actions
+                    Container(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          24.0, 0.0, 24.0, 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(dialogContext),
+                            child: Text('Cancel',
+                                style: TextStyle(
+                                  fontFamily: 'Satoshi',
+                                  color: theme.secondaryText,
+                                  fontWeight: FontWeight.w500,
+                                )),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              boxShadow: canSave
+                                  ? [
+                                      BoxShadow(
+                                        color: theme.primary
+                                            .withValues(alpha: 0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                            child: FFButtonWidget(
+                              onPressed: canSave
+                                  ? () async {
+                                      await _saveStockBalance();
+                                      if (dialogContext.mounted) {
+                                        Navigator.pop(dialogContext);
+                                      }
+                                    }
+                                  : null,
+                              text: 'Save Balance',
+                              icon: Icon(Icons.check_rounded, size: 16.0),
+                              options: FFButtonOptions(
+                                height: 44.0,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 0.0),
+                                color: theme.primary,
+                                textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Satoshi',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                elevation: 0.0,
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(12.0),
+                                disabledColor:
+                                    theme.primary.withValues(alpha: 0.4),
+                                disabledTextColor: Colors.white60,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    ).then((_) => safeSetState(() {}));
+  }
+
+  /// Generate period options for the dropdown (current + previous months)
+  static List<String> _generatePeriodOptions() {
+    final now = DateTime.now();
+    final options = <String>[];
+    for (int i = 0; i < 12; i++) {
+      final date = DateTime(now.year, now.month - i, 1);
+      options.add(
+          '${date.year}-${date.month.toString().padLeft(2, '0')}');
+    }
+    return options;
+  }
+
+  /// Save a stock balance record to Firestore
+  Future<void> _saveStockBalance() async {
+    final parent = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
+        ? currentUserReference
+        : currentUserDocument?.ownerRef;
+    if (parent == null) return;
+
+    // Find the selected product's DocumentReference
+    final products = await queryProductMasterRecordOnce();
+    final selectedProduct = products.firstWhere(
+      (p) => p.name == _model.dialogProductValue,
+      orElse: () => products.first,
+    );
+
+    final opening = int.tryParse(
+            _model.dialogOpeningTextController?.text ?? '0') ??
+        0;
+    final received = int.tryParse(
+            _model.dialogReceivedTextController?.text ?? '0') ??
+        0;
+    final dispensed = int.tryParse(
+            _model.dialogDispensedTextController?.text ?? '0') ??
+        0;
+    final transferred = int.tryParse(
+            _model.dialogTransferredTextController?.text ?? '0') ??
+        0;
+    final adjusted = int.tryParse(
+            _model.dialogAdjustedTextController?.text ?? '0') ??
+        0;
+    final closing = opening + received - dispensed - transferred + adjusted;
+
+    await StockBalanceRecord.createDoc(parent).set(
+      createStockBalanceRecordData(
+        productId: selectedProduct.reference,
+        outletId: currentUserDocument?.outletId,
+        openingStock: opening,
+        stockReceived: received,
+        stockDispensed: dispensed,
+        stockTransferred: transferred,
+        stockAdjusted: adjusted,
+        closingStock: closing,
+        stockValue: closing * selectedProduct.costPrice,
+        daysOfStockRemaining: dispensed > 0
+            ? (closing / dispensed * 30.0)
+            : 999.0,
+        period: _model.dialogPeriodValue,
+        updatedAt: DateTime.now(),
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    _showToast('Stock balance saved successfully');
+
+    // Reset dialog state
+    _model.dialogProductValue = null;
+    _model.dialogProductValueController = null;
+    _model.dialogOpeningTextController?.clear();
+    _model.dialogReceivedTextController?.clear();
+    _model.dialogDispensedTextController?.clear();
+    _model.dialogTransferredTextController?.clear();
+    _model.dialogAdjustedTextController?.clear();
+    _model.dialogPeriodValue = null;
+    _model.dialogPeriodValueController = null;
+  }
+
+  /// Field label with optional required indicator
+  Widget _dialogFieldLabel(String label, FlutterFlowTheme theme,
+      {bool required = false, required Widget child}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: TextSpan(
+            text: label,
+            style: TextStyle(
+              fontFamily: 'Satoshi',
+              fontSize: 13.0,
+              fontWeight: FontWeight.w500,
+              color: theme.primaryText,
+            ),
+            children: required
+                ? [
+                    TextSpan(
+                      text: ' *',
+                      style: TextStyle(color: theme.error),
+                    ),
+                  ]
+                : [],
+          ),
+        ),
+        const SizedBox(height: 6.0),
+        child,
+      ],
+    );
+  }
+
+  /// Loading placeholder for a field
+  Widget _loadingField(FlutterFlowTheme theme) {
+    return Container(
+      height: 48.0,
+      decoration: BoxDecoration(
+        color: theme.primaryBackground,
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(color: theme.lineColor, width: 1.0),
+      ),
+      child: Center(
+        child: SpinKitRing(color: theme.primary, size: 20.0, lineWidth: 2.0),
+      ),
+    );
+  }
+
+  /// Quantity input field with colored accent
+  Widget _qtyField(
+    String label,
+    TextEditingController controller,
+    FocusNode focusNode,
+    FlutterFlowTheme theme,
+    Color accentColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 8.0,
+              height: 8.0,
+              decoration: BoxDecoration(
+                color: accentColor,
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+            ),
+            const SizedBox(width: 6.0),
+            Text(label,
+                style: TextStyle(
+                  fontFamily: 'Satoshi',
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                  color: theme.secondaryText,
+                )),
+          ],
+        ),
+        const SizedBox(height: 4.0),
+        TextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          keyboardType: TextInputType.number,
+          style: TextStyle(
+            fontFamily: 'Satoshi',
+            fontSize: 14.0,
+            color: theme.primaryText,
+          ),
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: TextStyle(
+              fontFamily: 'Satoshi',
+              color: theme.secondaryText.withValues(alpha: 0.5),
+            ),
+            filled: true,
+            fillColor: theme.primaryBackground,
+            contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14.0, vertical: 12.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: theme.lineColor, width: 1.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: theme.lineColor, width: 1.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: accentColor, width: 1.5),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //   IMPORT FROM SPREADSHEET
+  // ═══════════════════════════════════════════════════════════════
+  Future<void> _importFromSpreadsheet() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv', 'xlsx'],
+      );
+      if (result == null || result.files.isEmpty) return;
+
+      final file = result.files.first;
+      if (file.bytes == null) {
+        _showToast('Could not read file');
+        return;
+      }
+
+      final parent = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
+          ? currentUserReference
+          : currentUserDocument?.ownerRef;
+      if (parent == null) return;
+
+      // Parse CSV
+      final content = String.fromCharCodes(file.bytes!);
+      final rows = const CsvToListConverter().convert(content);
+      if (rows.isEmpty) {
+        _showToast('File is empty');
+        return;
+      }
+
+      // Load products for matching
+      final products = await queryProductMasterRecordOnce();
+      final productMap = <String, ProductMasterRecord>{};
+      for (final p in products) {
+        if (p.hasName()) productMap[p.name.toLowerCase()] = p;
+        if (p.hasSKU()) productMap[p.sku.toLowerCase()] = p;
+      }
+
+      int imported = 0;
+      // Skip header row, process data rows
+      for (int i = 1; i < rows.length; i++) {
+        final row = rows[i];
+        if (row.isEmpty) continue;
+
+        // Expected columns: Product, Period, Opening, Received, Dispensed, Transferred, Adjusted
+        final productName = row.length > 0 ? row[0].toString().trim() : '';
+        final period = row.length > 1 ? row[1].toString().trim() : '';
+        final opening = row.length > 2 ? (int.tryParse(row[2].toString()) ?? 0) : 0;
+        final received = row.length > 3 ? (int.tryParse(row[3].toString()) ?? 0) : 0;
+        final dispensed = row.length > 4 ? (int.tryParse(row[4].toString()) ?? 0) : 0;
+        final transferred = row.length > 5 ? (int.tryParse(row[5].toString()) ?? 0) : 0;
+        final adjusted = row.length > 6 ? (int.tryParse(row[6].toString()) ?? 0) : 0;
+
+        final product = productMap[productName.toLowerCase()];
+        if (product == null || period.isEmpty) continue;
+
+        final closing = opening + received - dispensed - transferred + adjusted;
+
+        await StockBalanceRecord.createDoc(parent).set(
+          createStockBalanceRecordData(
+            productId: product.reference,
+            outletId: currentUserDocument?.outletId,
+            openingStock: opening,
+            stockReceived: received,
+            stockDispensed: dispensed,
+            stockTransferred: transferred,
+            stockAdjusted: adjusted,
+            closingStock: closing,
+            stockValue: closing * product.costPrice,
+            daysOfStockRemaining: dispensed > 0
+                ? (closing / dispensed * 30.0)
+                : 999.0,
+            period: period,
+            updatedAt: DateTime.now(),
+            createdAt: DateTime.now(),
+          ),
+        );
+        imported++;
+      }
+
+      _showToast('Imported $imported stock balance${imported != 1 ? 's' : ''}');
+    } catch (e) {
+      _showToast('Import failed: ${e.toString().substring(0, 50)}');
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════
