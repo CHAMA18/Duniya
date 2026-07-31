@@ -361,8 +361,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }) {
     return Container(
       width: width,
-      constraints: const BoxConstraints(minHeight: 250),
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(20),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -398,28 +397,28 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             title,
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                  color: FlutterFlowTheme.of(context).secondaryText,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+                  color: FlutterFlowTheme.of(context).primaryText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                 ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Text(
             value,
             style: FlutterFlowTheme.of(context).displaySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).displaySmallFamily,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1.0,
-                  lineHeight: 1.0,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                  lineHeight: 1.2,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).displaySmallIsCustom,
                 ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             subtitle,
             style: FlutterFlowTheme.of(context).bodySmall.override(
@@ -1254,7 +1253,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                           crossAxisCount: columns,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
-                          childAspectRatio: columns == 1 ? 2.4 : 1.1,
+                          childAspectRatio: columns == 1 ? 1.8 : 0.72,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           children: heroCards,
@@ -1285,7 +1284,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     crossAxisCount: columns,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: columns == 1 ? 1.35 : 1.1,
+                    childAspectRatio: columns == 1 ? 1.2 : 0.85,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: data.pharmacySnapshots
@@ -1367,7 +1366,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       style: FlutterFlowTheme.of(context).titleMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).titleMediumFamily,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                             letterSpacing: 0.0,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .titleMediumIsCustom,
@@ -1404,7 +1403,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         fontFamily:
                             FlutterFlowTheme.of(context).labelMediumFamily,
                         color: const Color(0xFF059669),
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                         useGoogleFonts:
                             !FlutterFlowTheme.of(context).labelMediumIsCustom,
                       ),
