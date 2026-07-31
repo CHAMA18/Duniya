@@ -1223,6 +1223,63 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           ),
                         ),
                       ),
+                      // Download App Link
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          logFirebaseEvent('SIDE_NAV_COMP_DOWNLOAD_ON_TAP');
+                          logFirebaseEvent('SidebarLink_navigate_to');
+                          await launchURL('/landing.html#download');
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          constraints: const BoxConstraints(minHeight: 48.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                              isCollapsed ? 12.0 : 24.0,
+                              10.0,
+                              isCollapsed ? 12.0 : 24.0,
+                              10.0,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Icon(
+                                  Icons.download_rounded,
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  size: 24.0,
+                                ),
+                                if (!isCollapsed) ...[
+                                  const SizedBox(width: 12.0),
+                                  Text(
+                                    'Download App',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: 0.0,
+                                          useGoogleFonts:
+                                              !FlutterFlowTheme.of(context)
+                                                  .titleMediumIsCustom,
+                                        ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       // Logout Button
                       InkWell(
                         splashColor: Colors.transparent,

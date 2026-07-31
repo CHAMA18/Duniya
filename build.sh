@@ -122,3 +122,13 @@ if [[ -f "web/_headers" ]]; then
 fi
 
 echo "==> Cache busting complete. Build version: ${BUILD_VERSION}"
+
+# ---------------------------------------------------------------------
+# 7. Copy landing page to build output.
+#    The landing page is a standalone HTML file that serves as the
+#    marketing/download page for Duniya. It's accessible at /landing.html.
+# ---------------------------------------------------------------------
+if [[ -f "web/landing.html" ]]; then
+  cp web/landing.html build/web/landing.html
+  echo "==> Copied web/landing.html -> build/web/landing.html (download landing page)"
+fi

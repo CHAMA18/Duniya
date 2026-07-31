@@ -1,0 +1,184 @@
+# =====================================================================
+# Duniya — Build Desktop Releases
+# =====================================================================
+# Builds Windows (.exe) and macOS (.dmg) installers on every version tag
+# and uploads them as GitHub Release assets.
+#
+# Trigger:
+#   - Push a tag like "v1.8.0" to create a release
+#   - Manual dispatch from the Actions tab
+#
+# Release assets:
+#   - Duniya-Setup.exe (Windows installer)
+#   - Duniya.dmg (macOS disk image)
+# =====================================================================
+
+name: Build Desktop Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (e.g. 1.8.0)'
+        required: false
+        default: ''
+
+env:
+  FLUTTER_VERSION: '3.24.5'
+  JAVA_VERSION: '17'
+
+jobs:
+  # -------------------------------------------------------------------
+  # Build Windows
+  # -------------------------------------------------------------------
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows app
+        run: |
+          $version = "${{ github.event.inputs.version }}"
+          if ($version -eq "") { $version = "${{ github.ref_name }}" -replace '^v','' }
+          flutter build windows --release --build-name="$version" --build-number="${{ github.run_number }}"
+
+      - name: Create Windows installer
+        uses: nicoj04/inno-setup-action@v1
+        with:
+          script-file: installer/duniya_setup.iss
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Duniya-Windows
+          path: build/windows/x64/runner/Release/
+          retention-days: 5
+
+  # -------------------------------------------------------------------
+  # Build macOS
+  # -------------------------------------------------------------------
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Enable macOS desktop
+        run: flutter config --enable-macos-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Install CocoaPods
+        run: |
+          cd macos
+          pod install --repo-update
+          cd ..
+
+      - name: Build macOS app
+        run: |
+          version="${{ github.event.inputs.version }}"
+          if [ -z "$version" ]; then version="${{ github.ref_name }}"; version="${version#v}"; fi
+          flutter build macos --release --build-name="$version" --build-number="${{ github.run_number }}"
+
+      - name: Create macOS DMG
+        run: |
+          mkdir -p release
+          cp -R build/macos/Build/Products/Release/Duniya.app release/
+          hdiutil create -volname "Duniya" -srcfolder release/Duniya.app -ov -format UDZO release/Duniya.dmg
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Duniya-macOS
+          path: release/Duniya.dmg
+          retention-days: 5
+
+  # -------------------------------------------------------------------
+  # Create GitHub Release
+  # -------------------------------------------------------------------
+  create-release:
+    name: Create Release
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Duniya-Windows
+          path: release/windows/
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Duniya-macOS
+          path: release/macos/
+
+      - name: Create ZIP for Windows
+        run: |
+          cd release/windows
+          zip -r ../Duniya-Setup-${{ github.ref_name }}.zip ./
+          cd ../..
+
+      - name: Rename macOS DMG
+        run: |
+          mv release/macos/Duniya.dmg release/Duniya-${{ github.ref_name }}.dmg
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Duniya ${{ github.ref_name }}
+          body: |
+            ## Duniya ${{ github.ref_name }}
+
+            ### Downloads
+            - **Windows**: Download `Duniya-Setup-${{ github.ref_name }}.zip` — extract and run `Duniya.exe`
+            - **macOS**: Download `Duniya-${{ github.ref_name }}.dmg` — open and drag to Applications
+
+            ### System Requirements
+            - Windows 10+ (64-bit) or macOS 12+ (Apple Silicon & Intel)
+            - 4 GB RAM minimum
+            - 200 MB disk space
+
+            ### What's New
+            See the commit history for changes in this release.
+          files: |
+            release/Duniya-Setup-${{ github.ref_name }}.zip
+            release/Duniya-${{ github.ref_name }}.dmg
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
