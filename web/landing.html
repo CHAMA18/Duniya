@@ -89,6 +89,59 @@
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      /* Satoshi variable font defaults to wght 900 (Black).
+         Override to 400 (Regular) for body text. */
+      font-variation-settings: 'wght' 400;
+    }
+
+    /* ── Font weight overrides for Satoshi variable font ──
+       The bundled Satoshi font is a variable font whose default
+       wght axis is 900 (Black).  We must explicitly set the
+       weight via font-variation-settings for every element. */
+    h1, h2, h3, h4, h5, h6,
+    .hero-title,
+    .section-title,
+    .webapp-title,
+    .cta-title {
+      font-variation-settings: 'wght' 600;
+    }
+    .nav-brand-text,
+    .feature-title,
+    .download-platform-name,
+    .security-title,
+    .footer-brand-name,
+    .footer-heading,
+    .btn,
+    .download-btn,
+    .nav-cta,
+    .mockup-metric-value,
+    .mockup-chart-title,
+    .trust-number {
+      font-variation-settings: 'wght' 500;
+    }
+    .hero-subtitle,
+    .section-desc,
+    .feature-desc,
+    .download-platform-desc,
+    .download-platform-version,
+    .download-platform-reqs,
+    .security-desc,
+    .webapp-desc,
+    .webapp-feature,
+    .cta-desc,
+    .footer-desc,
+    .footer-link,
+    .footer-bottom,
+    .nav-link,
+    .mockup-metric-label,
+    .mockup-metric-change,
+    .mockup-sidebar-item,
+    .hero-badge,
+    .section-label,
+    .webapp-label,
+    .trust-label,
+    .trust-item {
+      font-variation-settings: 'wght' 400;
     }
 
     /* ============================================
@@ -164,7 +217,7 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 800;
+      font-weight: 600;
       font-size: 22px;
       line-height: 1;
       box-shadow: 0 4px 12px rgba(153, 0, 255, 0.3);
@@ -172,7 +225,7 @@
 
     .nav-brand-text {
       font-size: 22px;
-      font-weight: 700;
+      font-weight: 500;
       letter-spacing: -0.02em;
     }
 
@@ -359,7 +412,7 @@
 
     .hero-title {
       font-size: clamp(42px, 6vw, 72px);
-      font-weight: 700;
+      font-weight: 500;
       letter-spacing: -0.03em;
       line-height: 1.1;
       margin-bottom: 24px;
@@ -494,7 +547,7 @@
 
     .btn-download-name {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .hero-visual {
@@ -614,7 +667,7 @@
 
     .mockup-metric-value {
       font-size: 22px;
-      font-weight: 700;
+      font-weight: 500;
       color: white;
     }
 
@@ -713,7 +766,7 @@
 
     .trust-number {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--text-primary);
       line-height: 1;
     }
@@ -761,7 +814,7 @@
 
     .section-title {
       font-size: clamp(32px, 4vw, 44px);
-      font-weight: 700;
+      font-weight: 500;
       letter-spacing: -0.02em;
       line-height: 1.2;
       margin-bottom: 16px;
@@ -844,7 +897,7 @@
 
     .feature-title {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 10px;
       letter-spacing: -0.01em;
     }
@@ -945,7 +998,7 @@
 
     .download-platform-name {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 8px;
       letter-spacing: -0.01em;
     }
@@ -1048,7 +1101,7 @@
 
     .webapp-title {
       font-size: clamp(28px, 3.5vw, 38px);
-      font-weight: 700;
+      font-weight: 500;
       color: var(--text-light);
       letter-spacing: -0.02em;
       line-height: 1.2;
@@ -1189,7 +1242,7 @@
       justify-content: center;
       color: white;
       font-size: 64px;
-      font-weight: 800;
+      font-weight: 600;
       box-shadow: 0 8px 32px rgba(153, 0, 255, 0.3);
     }
 
@@ -1241,7 +1294,7 @@
 
     .security-title {
       font-size: 17px;
-      font-weight: 700;
+      font-weight: 500;
       margin-bottom: 8px;
     }
 
@@ -1298,7 +1351,7 @@
 
     .cta-title {
       font-size: clamp(32px, 4vw, 44px);
-      font-weight: 700;
+      font-weight: 500;
       color: white;
       letter-spacing: -0.02em;
       line-height: 1.2;
@@ -1376,14 +1429,14 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 800;
+      font-weight: 600;
       font-size: 20px;
       line-height: 1;
     }
 
     .footer-brand-name {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 500;
     }
 
     .footer-desc {
@@ -1395,7 +1448,7 @@
 
     .footer-heading {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-primary);
