@@ -106,7 +106,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                     fontFamily: FlutterFlowTheme.of(context).bodyLargeFamily,
                     color: selected ? Colors.white : const Color(0xFF4B5563),
                     fontSize: 16.0,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.0,
                     useGoogleFonts:
                         !FlutterFlowTheme.of(context).bodyLargeIsCustom,
@@ -213,7 +213,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                   fontFamily: FlutterFlowTheme.of(context)
                                       .displaySmallFamily,
                                   fontSize: 34.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: -0.03,
                                   color: _text,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
@@ -448,7 +448,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                     fontFamily: FlutterFlowTheme.of(context)
                                         .bodyMediumFamily,
                                     fontSize: 14.0,
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w500,
                                     color: const Color(0xFF6B7280),
                                     useGoogleFonts:
                                         !FlutterFlowTheme.of(context)
@@ -716,7 +716,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                       .titleSmallFamily,
                                   color: Colors.white,
                                   fontSize: 16.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w700,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .titleSmallIsCustom,
@@ -744,7 +744,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                               style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 11.0,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w600,
                                 letterSpacing: 0.12,
                                 color: _muted.withValues(alpha: 0.7),
                               ),
@@ -890,7 +890,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                 style: TextStyle(
                                   fontFamily: 'Satoshi',
                                   fontSize: 16.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   height: 1.5,
                                   letterSpacing: -0.01,
                                   color: _text,
@@ -924,7 +924,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                     fontFamily: FlutterFlowTheme.of(context)
                                         .bodySmallFamily,
                                     color: const Color(0xFF6D28D9),
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w600,
                                     useGoogleFonts:
                                         !FlutterFlowTheme.of(context)
                                             .bodySmallIsCustom,
@@ -960,7 +960,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                     fontFamily: FlutterFlowTheme.of(context)
                                         .bodyMediumFamily,
                                     fontSize: 14.0,
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w500,
                                     color: _primary,
                                     useGoogleFonts:
                                         !FlutterFlowTheme.of(context)

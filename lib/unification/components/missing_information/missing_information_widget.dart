@@ -94,7 +94,7 @@ class _MissingInformationWidgetState extends State<MissingInformationWidget> {
                                       .headlineLargeFamily,
                                   color: FlutterFlowTheme.of(context).error,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.bold,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -118,7 +118,7 @@ class _MissingInformationWidgetState extends State<MissingInformationWidget> {
                                   .titleMediumFamily,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .titleMediumIsCustom,
                             ),

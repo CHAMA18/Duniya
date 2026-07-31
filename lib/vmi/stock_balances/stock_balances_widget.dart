@@ -429,7 +429,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               Icon(Icons.chevron_right, color: Colors.white.withAlpha(120), size: 14),
@@ -438,7 +438,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -478,7 +478,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w700,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -489,7 +489,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         height: 1.4,
                       ),
                     ),
@@ -551,7 +551,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 style: TextStyle(
                   color: Colors.white.withAlpha(200),
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -964,7 +964,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                       style: TextStyle(
                         color: selected ? Colors.white : theme.primaryText,
                         fontSize: 13,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(width: 8.0),
@@ -982,7 +982,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                         style: TextStyle(
                           color: selected ? Colors.white : fg,
                           fontSize: 11,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -1067,7 +1067,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                         style: TextStyle(
                           color: Colors.white.withAlpha(220),
                           fontSize: 12,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
@@ -1079,7 +1079,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 13,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
@@ -1112,7 +1112,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           style: theme.labelSmall.override(
                             fontFamily: theme.labelSmallFamily,
                             color: theme.secondaryText,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                             useGoogleFonts: !theme.labelSmallIsCustom,
                           ))),
@@ -1121,7 +1121,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           style: theme.labelSmall.override(
                             fontFamily: theme.labelSmallFamily,
                             color: theme.secondaryText,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                             useGoogleFonts: !theme.labelSmallIsCustom,
                           ))),
@@ -1130,7 +1130,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           style: theme.labelSmall.override(
                             fontFamily: theme.labelSmallFamily,
                             color: theme.secondaryText,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                             useGoogleFonts: !theme.labelSmallIsCustom,
                           ))),
@@ -1139,7 +1139,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           style: theme.labelSmall.override(
                             fontFamily: theme.labelSmallFamily,
                             color: theme.secondaryText,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                             useGoogleFonts: !theme.labelSmallIsCustom,
                           ))),
@@ -1148,7 +1148,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           style: theme.labelSmall.override(
                             fontFamily: theme.labelSmallFamily,
                             color: theme.secondaryText,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                             useGoogleFonts: !theme.labelSmallIsCustom,
                           ))),
@@ -1157,7 +1157,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           style: theme.labelSmall.override(
                             fontFamily: theme.labelSmallFamily,
                             color: theme.secondaryText,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                             useGoogleFonts: !theme.labelSmallIsCustom,
                           ))),
@@ -1204,7 +1204,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                   row.product.name,
                                   style: theme.bodyMedium.override(
                                     fontFamily: theme.bodyMediumFamily,
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w600,
                                     letterSpacing: 0.0,
                                     useGoogleFonts: !theme.bodyMediumIsCustom,
                                   ),
@@ -1231,7 +1231,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           '${row.balance.closingStock} ${row.product.unitOfMeasure ?? ''}',
                           style: theme.bodyMedium.override(
                             fontFamily: theme.bodyMediumFamily,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w700,
                             color: statusColor,
                             letterSpacing: 0.0,
                             useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1248,7 +1248,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           ),
                           style: theme.bodyMedium.override(
                             fontFamily: theme.bodyMediumFamily,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.0,
                             useGoogleFonts: !theme.bodyMediumIsCustom,
                           ),
@@ -1278,7 +1278,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                     : row.balance.daysOfStockRemaining < 14
                                         ? const Color(0xFFF59E0B)
                                         : theme.primaryText,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
                               ),
@@ -1307,7 +1307,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                   style: TextStyle(
                                     color: statusColor,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w700,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -1357,8 +1357,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                     ? const Color(0xFF10B981)
                                     : theme.secondaryText,
                                 fontWeight: row.balance.stockReceived > 0
-                                    ? FontWeight.w300
-                                    : FontWeight.w300,
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
                               ),
@@ -1385,8 +1385,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                     ? const Color(0xFFEF4444)
                                     : theme.secondaryText,
                                 fontWeight: row.balance.stockDispensed > 0
-                                    ? FontWeight.w300
-                                    : FontWeight.w300,
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
                                 letterSpacing: 0.0,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
                               ),
@@ -1489,7 +1489,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                   style: theme.titleSmall.override(
                     fontFamily: theme.titleSmallFamily,
                     color: theme.primary,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0.0,
                     useGoogleFonts: !theme.titleSmallIsCustom,
                   ),
@@ -1524,7 +1524,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             style: theme.labelSmall.override(
               fontFamily: theme.labelSmallFamily,
               color: selected ? theme.primary : theme.secondaryText,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
               useGoogleFonts: !theme.labelSmallIsCustom,
             ),
@@ -1646,7 +1646,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 : 'No stock balances yet',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.3,
               useGoogleFonts: !theme.headlineSmallIsCustom,
             ),
@@ -1693,7 +1693,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 textStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
                 elevation: 0.0,
                 borderSide: BorderSide.none,
@@ -1718,7 +1718,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                     textStyle: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide.none,
@@ -1737,7 +1737,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                     textStyle: TextStyle(
                       color: theme.primaryText,
                       fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide(color: theme.alternate, width: 1.0),
@@ -1832,7 +1832,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
           title,
           style: theme.bodyMedium.override(
             fontFamily: theme.bodyMediumFamily,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w600,
             fontSize: 12.0,
             letterSpacing: 0.0,
             useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1884,7 +1884,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -2001,7 +2001,7 @@ class _HeroActionButton extends StatelessWidget {
                       ? const Color(0xFF9900FF)
                       : Colors.white,
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -2084,7 +2084,7 @@ class _KpiCard extends StatelessWidget {
             style: theme.bodySmall.override(
               fontFamily: theme.bodySmallFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               fontSize: 12.0,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodySmallIsCustom,
@@ -2095,7 +2095,7 @@ class _KpiCard extends StatelessWidget {
             value,
             style: theme.headlineMedium.override(
               fontFamily: theme.headlineMediumFamily,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               fontSize: 22.0,
               letterSpacing: -0.5,
               useGoogleFonts: !theme.headlineMediumIsCustom,
@@ -2124,7 +2124,7 @@ class _KpiCard extends StatelessWidget {
                             ? const Color(0xFF10B981)
                             : const Color(0xFFEF4444)),
                     fontSize: 10,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0.3,
                   ),
                 ),

@@ -67,7 +67,7 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 color: textColor,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
                 fontSize: 20,
               ),
             ),
@@ -95,7 +95,7 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       color: textColor.applyAlpha(0.65),
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w500,
                       fontSize: 20,
                     ),
                   ),

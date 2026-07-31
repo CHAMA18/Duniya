@@ -100,7 +100,7 @@ class _SubscriptionSuccessWidgetState extends State<SubscriptionSuccessWidget> {
                                   FlutterFlowTheme.of(context).bodyMediumFamily,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .bodyMediumIsCustom,
                             ),

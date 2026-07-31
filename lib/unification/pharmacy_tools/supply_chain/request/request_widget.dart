@@ -342,7 +342,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           .override(
                                                                             font:
                                                                                 TextStyle(fontFamily: 'Satoshi', 
-                                                                              fontWeight: FontWeight.w300,
+                                                                              fontWeight: FontWeight.bold,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
                                                                             color: FlutterFlowTheme.of(context).primaryText,
@@ -351,7 +351,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
-                                                                                FontWeight.w300,
+                                                                                FontWeight.bold,
                                                                             fontStyle:
                                                                                 FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                           ),
@@ -418,7 +418,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           .override(
                                                                             font:
                                                                                 TextStyle(fontFamily: 'Satoshi', 
-                                                                              fontWeight: FontWeight.w300,
+                                                                              fontWeight: FontWeight.bold,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
                                                                             color: FlutterFlowTheme.of(context).primaryText,
@@ -427,7 +427,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
-                                                                                FontWeight.w300,
+                                                                                FontWeight.bold,
                                                                             fontStyle:
                                                                                 FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                           ),
@@ -496,13 +496,13 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                             .bodyMedium
                                                                             .override(
                                                                               font: TextStyle(fontFamily: 'Satoshi', 
-                                                                                fontWeight: FontWeight.w300,
+                                                                                fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                               ),
                                                                               color: FlutterFlowTheme.of(context).primaryText,
                                                                               fontSize: 14.0,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w300,
+                                                                              fontWeight: FontWeight.w500,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
                                                                       ),
@@ -656,13 +656,13 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                               .headlineSmall
                                                                               .override(
                                                                                 font: TextStyle(fontFamily: 'Satoshi', 
-                                                                                  fontWeight: FontWeight.w300,
+                                                                                  fontWeight: FontWeight.w500,
                                                                                   fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                                                                                 ),
                                                                                 color: FlutterFlowTheme.of(context).primaryText,
                                                                                 fontSize: 24.0,
                                                                                 letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w300,
+                                                                                fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).headlineSmall.fontStyle,
                                                                               ),
                                                                         ),
@@ -679,13 +679,13 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                             ),
                                                                             style: FlutterFlowTheme.of(context).labelMedium.override(
                                                                                   font: TextStyle(fontFamily: 'Satoshi', 
-                                                                                    fontWeight: FontWeight.w300,
+                                                                                    fontWeight: FontWeight.w500,
                                                                                     fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
                                                                                   ),
                                                                                   color: FlutterFlowTheme.of(context).secondaryText,
                                                                                   fontSize: 14.0,
                                                                                   letterSpacing: 0.0,
-                                                                                  fontWeight: FontWeight.w300,
+                                                                                  fontWeight: FontWeight.w500,
                                                                                   fontStyle: FlutterFlowTheme.of(context).labelMedium.fontStyle,
                                                                                 ),
                                                                           ),
@@ -703,13 +703,13 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                             ),
                                                                             style: FlutterFlowTheme.of(context).displaySmall.override(
                                                                                   font: TextStyle(fontFamily: 'Satoshi', 
-                                                                                    fontWeight: FontWeight.w300,
+                                                                                    fontWeight: FontWeight.w600,
                                                                                     fontStyle: FlutterFlowTheme.of(context).displaySmall.fontStyle,
                                                                                   ),
                                                                                   color: FlutterFlowTheme.of(context).primaryText,
                                                                                   fontSize: 36.0,
                                                                                   letterSpacing: 0.0,
-                                                                                  fontWeight: FontWeight.w300,
+                                                                                  fontWeight: FontWeight.w600,
                                                                                   fontStyle: FlutterFlowTheme.of(context).displaySmall.fontStyle,
                                                                                 ),
                                                                           ),
@@ -770,7 +770,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                           .override(
                                                                             font:
                                                                                 TextStyle(fontFamily: 'Satoshi', 
-                                                                              fontWeight: FontWeight.w300,
+                                                                              fontWeight: FontWeight.w500,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
                                                                             color: FlutterFlowTheme.of(context).primaryText,
@@ -779,7 +779,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                             letterSpacing:
                                                                                 0.0,
                                                                             fontWeight:
-                                                                                FontWeight.w300,
+                                                                                FontWeight.w500,
                                                                             fontStyle:
                                                                                 FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                           ),

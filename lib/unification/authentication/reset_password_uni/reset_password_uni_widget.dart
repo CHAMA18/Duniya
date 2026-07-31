@@ -159,7 +159,7 @@ class _ResetPasswordUniWidgetState extends State<ResetPasswordUniWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .headlineLargeFamily,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w300,
+                                              fontWeight: FontWeight.w600,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .headlineLargeIsCustom,
@@ -433,7 +433,7 @@ class _ResetPasswordUniWidgetState extends State<ResetPasswordUniWidget> {
                                                           context)
                                                       .primary,
                                                   letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w300,
+                                                  fontWeight: FontWeight.w600,
                                                   useGoogleFonts:
                                                       !FlutterFlowTheme.of(
                                                               context)
@@ -552,7 +552,7 @@ class _ResetPasswordUniWidgetState extends State<ResetPasswordUniWidget> {
                                                                 .primary,
                                                         letterSpacing: 0.0,
                                                         fontWeight:
-                                                            FontWeight.w300,
+                                                            FontWeight.w600,
                                                         useGoogleFonts:
                                                             !FlutterFlowTheme
                                                                     .of(context)

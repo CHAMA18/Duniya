@@ -87,7 +87,7 @@ void main() async {
                 children: [
                   const Text(
                     'A widget failed to build.',
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.0),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
                   ),
                   const SizedBox(height: 8.0),
                   Text(details.exceptionAsString()),

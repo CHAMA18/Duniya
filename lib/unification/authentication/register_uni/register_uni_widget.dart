@@ -181,7 +181,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                     fontFamily: FlutterFlowTheme.of(context).bodyLargeFamily,
                     color: selected ? Colors.white : const Color(0xFF4B5563),
                     fontSize: 16.0,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.0,
                     useGoogleFonts:
                         !FlutterFlowTheme.of(context).bodyLargeIsCustom,
@@ -214,7 +214,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 12.0,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w500,
             letterSpacing: 0.08,
             height: 1.0,
             color: _onSurfaceVariant,
@@ -232,7 +232,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 16.0,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
               height: 1.6,
               color: _onSurface,
             ),
@@ -241,7 +241,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
               hintStyle: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 16.0,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w400,
                 color: _outline,
               ),
               prefixIcon: prefixIcon != null
@@ -372,7 +372,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                         style: TextStyle(
                                           fontFamily: 'Satoshi',
                                           fontSize: 24.0,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w700,
                                           letterSpacing: -0.02,
                                           color: Colors.white,
                                         ),
@@ -386,7 +386,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                             style: TextStyle(
                                               fontFamily: 'Satoshi',
                                               fontSize: 34.0,
-                                              fontWeight: FontWeight.w300,
+                                              fontWeight: FontWeight.w600,
                                               height: 1.15,
                                               letterSpacing: -0.03,
                                               color: Colors.white,
@@ -398,7 +398,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                             style: TextStyle(
                                               fontFamily: 'Satoshi',
                                               fontSize: 18.0,
-                                              fontWeight: FontWeight.w300,
+                                              fontWeight: FontWeight.w400,
                                               height: 1.65,
                                               color: Colors.white
                                                   .withValues(alpha: 0.88),
@@ -435,7 +435,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                               style: TextStyle(
                                                 fontFamily: 'Satoshi',
                                                 fontSize: 13.0,
-                                                fontWeight: FontWeight.w300,
+                                                fontWeight: FontWeight.w500,
                                                 letterSpacing: 0.0,
                                                 color: Colors.white
                                                     .withValues(alpha: 0.9),
@@ -519,7 +519,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           style: TextStyle(
                                             fontFamily: 'Satoshi',
                                             fontSize: isDesktop ? 34.0 : 26.0,
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w600,
                                             height: 1.2,
                                             letterSpacing: -0.03,
                                             color: _onSurface,
@@ -534,7 +534,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           style: TextStyle(
                                             fontFamily: 'Satoshi',
                                             fontSize: isDesktop ? 18.0 : 15.0,
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w400,
                                             height: 1.6,
                                             color: _onSurfaceVariant,
                                           ),
@@ -698,7 +698,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                 style: TextStyle(
                                                   fontFamily: 'Satoshi',
                                                   fontSize: 18.0,
-                                                  fontWeight: FontWeight.w300,
+                                                  fontWeight: FontWeight.w600,
                                                   height: 1.5,
                                                   letterSpacing: -0.01,
                                                   color: _onSurface,
@@ -729,7 +729,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                               style: TextStyle(
                                                 fontFamily: 'Satoshi',
                                                 fontSize: 10.0,
-                                                fontWeight: FontWeight.w300,
+                                                fontWeight: FontWeight.w500,
                                                 letterSpacing: 0.08,
                                                 color: _outline,
                                               ),
@@ -960,7 +960,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                 style: TextStyle(
                                                   fontFamily: 'Satoshi',
                                                   fontSize: 18.0,
-                                                  fontWeight: FontWeight.w300,
+                                                  fontWeight: FontWeight.w600,
                                                   height: 1.5,
                                                   letterSpacing: -0.01,
                                                   color: Colors.white,
@@ -995,7 +995,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                   style: TextStyle(
                                                     fontFamily: 'Satoshi',
                                                     fontSize: 14.0,
-                                                    fontWeight: FontWeight.w300,
+                                                    fontWeight: FontWeight.w400,
                                                     height: 1.5,
                                                     color: _onSurfaceVariant,
                                                   ),
@@ -1005,7 +1005,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                   style: TextStyle(
                                                     fontFamily: 'Satoshi',
                                                     fontSize: 14.0,
-                                                    fontWeight: FontWeight.w300,
+                                                    fontWeight: FontWeight.w500,
                                                     height: 1.5,
                                                     color: _primaryDeep,
                                                     decoration: TextDecoration

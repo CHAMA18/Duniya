@@ -403,7 +403,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               Icon(Icons.chevron_right,
@@ -413,7 +413,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -453,7 +453,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w700,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -464,7 +464,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         height: 1.4,
                       ),
                     ),
@@ -528,7 +528,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(200),
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -849,7 +849,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                       style: TextStyle(
                         color: selected ? Colors.white : theme.primaryText,
                         fontSize: 13,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(width: 8.0),
@@ -867,7 +867,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                         style: TextStyle(
                           color: selected ? Colors.white : fg,
                           fontSize: 11,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -946,7 +946,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 13,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide.none,
@@ -1071,7 +1071,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                           'Stock Count #${index + 1}',
                           style: theme.titleMedium.override(
                             fontFamily: theme.titleMediumFamily,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w700,
                             letterSpacing: -0.2,
                             useGoogleFonts: !theme.titleMediumIsCustom,
                           ),
@@ -1090,7 +1090,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                             style: TextStyle(
                               color: statusColor,
                               fontSize: 10,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w700,
                               letterSpacing: 0.5,
                             ),
                           ),
@@ -1262,7 +1262,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
               Text(
                 'Delete Count #$countNumber?',
                 style: TextStyle(
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),
               ),
@@ -1394,7 +1394,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                 : 'No stock counts yet',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.3,
               useGoogleFonts: !theme.headlineSmallIsCustom,
             ),
@@ -1439,7 +1439,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                 textStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
                 elevation: 0.0,
                 borderSide: BorderSide.none,
@@ -1466,7 +1466,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                     textStyle: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     elevation: 0.0,
                     borderSide: BorderSide.none,
@@ -1485,7 +1485,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                     textStyle: TextStyle(
                       color: theme.primaryText,
                       fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     elevation: 0.0,
                     borderSide:
@@ -1581,7 +1581,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
           title,
           style: theme.bodyMedium.override(
             fontFamily: theme.bodyMediumFamily,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w600,
             fontSize: 12.0,
             letterSpacing: 0.0,
             useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1633,7 +1633,7 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -1713,7 +1713,7 @@ class _HeroActionButton extends StatelessWidget {
                       ? const Color(0xFF9900FF)
                       : Colors.white,
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -1796,7 +1796,7 @@ class _KpiCard extends StatelessWidget {
             style: theme.bodySmall.override(
               fontFamily: theme.bodySmallFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               fontSize: 12.0,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodySmallIsCustom,
@@ -1807,7 +1807,7 @@ class _KpiCard extends StatelessWidget {
             value,
             style: theme.headlineMedium.override(
               fontFamily: theme.headlineMediumFamily,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               fontSize: 22.0,
               letterSpacing: -0.5,
               useGoogleFonts: !theme.headlineMediumIsCustom,
@@ -1836,7 +1836,7 @@ class _KpiCard extends StatelessWidget {
                             ? const Color(0xFF10B981)
                             : const Color(0xFFEF4444)),
                     fontSize: 10,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0.3,
                   ),
                 ),

@@ -477,13 +477,13 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                             .titleMedium
                                                                             .override(
                                                                               font: TextStyle(fontFamily: 'Satoshi', 
-                                                                                fontWeight: FontWeight.w300,
+                                                                                fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).titleMedium.fontStyle,
                                                                               ),
                                                                               color: FlutterFlowTheme.of(context).primaryText,
                                                                               fontSize: 18.0,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w300,
+                                                                              fontWeight: FontWeight.w500,
                                                                               fontStyle: FlutterFlowTheme.of(context).titleMedium.fontStyle,
                                                                             ),
                                                                       ),

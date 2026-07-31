@@ -79,7 +79,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
             style: FlutterFlowTheme.of(context).bodySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 0.0,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).bodySmallIsCustom,
@@ -174,7 +174,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                                 FlutterFlowTheme.of(context).bodySmallFamily,
                             color: const Color(0xFF10B981),
                             fontSize: 11,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.0,
                             useGoogleFonts:
                                 !FlutterFlowTheme.of(context).bodySmallIsCustom,
@@ -191,7 +191,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
             style: FlutterFlowTheme.of(context).titleLarge.override(
                   fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
                   fontSize: 22,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                   letterSpacing: -0.3,
                   useGoogleFonts:
                       !FlutterFlowTheme.of(context).titleLargeIsCustom,
@@ -275,7 +275,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                           fontFamily:
                               FlutterFlowTheme.of(context).bodySmallFamily,
                           color: FlutterFlowTheme.of(context).primary,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 0.0,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).bodySmallIsCustom,
@@ -293,7 +293,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodyMediumFamily,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.0,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .bodyMediumIsCustom,
@@ -425,7 +425,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                                                                 context)
                                                             .displaySmallFamily,
                                                     fontSize: 30,
-                                                    fontWeight: FontWeight.w300,
+                                                    fontWeight: FontWeight.w700,
                                                     letterSpacing: -0.6,
                                                     useGoogleFonts:
                                                         !FlutterFlowTheme.of(
@@ -493,7 +493,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                                                     FlutterFlowTheme.of(context)
                                                         .secondaryBackground,
                                                 letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w300,
+                                                fontWeight: FontWeight.w600,
                                                 useGoogleFonts:
                                                     !FlutterFlowTheme.of(
                                                             context)
@@ -648,7 +648,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                                                                         context)
                                                                     .titleMediumFamily,
                                                             fontWeight:
-                                                                FontWeight.w300,
+                                                                FontWeight.w700,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
                                                                         context)
@@ -769,7 +769,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                               'Pharmacy Outlets',
                               style: theme.titleLarge?.override(
                                 fontFamily: theme.titleLargeFamily,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w700,
                                 letterSpacing: -0.3,
                                 useGoogleFonts: !theme.titleLargeIsCustom,
                               ),
@@ -891,7 +891,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                       outlet.name,
                       style: theme.bodyMedium?.override(
                         fontFamily: theme.bodyMediumFamily,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 0.0,
                         useGoogleFonts: !theme.bodyMediumIsCustom,
                       ),
@@ -909,7 +909,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                         style: theme.bodySmall?.override(
                           fontFamily: theme.bodySmallFamily,
                           color: theme.primary,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w600,
                           fontSize: 10,
                           letterSpacing: 0.5,
                           useGoogleFonts: !theme.bodySmallIsCustom,
@@ -1050,7 +1050,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                 'Add Outlet',
                 style: FlutterFlowTheme.of(context).titleLarge?.override(
                   fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
                   useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
                 ),

@@ -227,8 +227,8 @@ class _DuniyaOnboardingOverlayState extends State<DuniyaOnboardingOverlay> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: i == currentChapterIndex
-                              ? FontWeight.w300
-                              : FontWeight.w300,
+                              ? FontWeight.w700
+                              : FontWeight.w500,
                           color: i == currentChapterIndex
                               ? Colors.white
                               : Colors.black54,
@@ -251,7 +251,7 @@ class _DuniyaOnboardingOverlayState extends State<DuniyaOnboardingOverlay> {
             ),
             child: const Text(
               'Skip',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -420,7 +420,7 @@ class _ChapterDividerPage extends StatelessWidget {
               'Chapter ${kOnboardingChapters.indexOf(chapter) + 1} of ${kOnboardingChapters.length}',
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w700,
                 color: chapter.gradient[0],
                 letterSpacing: 0.5,
               ),
@@ -432,7 +432,7 @@ class _ChapterDividerPage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 28,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w800,
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white
                   : const Color(0xFF1A0533),
@@ -468,7 +468,7 @@ class _ChapterDividerPage extends StatelessWidget {
                   'What you\'ll learn',
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     color: chapter.gradient[0],
                     letterSpacing: 0.5,
                   ),
@@ -496,7 +496,7 @@ class _ChapterDividerPage extends StatelessWidget {
                             s.headline,
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               color: Theme.of(context).brightness == Brightness.dark
                                   ? Colors.white70
                                   : const Color(0xFF374151),
@@ -555,7 +555,7 @@ class _StepPage extends StatelessWidget {
                       chapter.title.toUpperCase(),
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w700,
                         color: chapter.gradient[0],
                         letterSpacing: 1.0,
                       ),
@@ -565,7 +565,7 @@ class _StepPage extends StatelessWidget {
                       step.headline,
                       style: TextStyle(
                         fontSize: 20,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w800,
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white
                             : const Color(0xFF1A0533),

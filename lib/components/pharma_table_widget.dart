@@ -85,7 +85,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                             fontFamily:
                                 FlutterFlowTheme.of(context).labelMediumFamily,
                             letterSpacing: 0.0,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .labelMediumIsCustom,
                           ),
@@ -103,7 +103,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryBackground,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .labelMediumIsCustom,
                                 ),
@@ -121,7 +121,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .bodyMediumIsCustom,
                             ),
@@ -141,7 +141,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .bodyMediumIsCustom,
                             ),
@@ -216,7 +216,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .labelMediumFamily,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w300,
+                                              fontWeight: FontWeight.w600,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .labelMediumIsCustom,
@@ -234,7 +234,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMediumFamily,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w300,
+                                              fontWeight: FontWeight.w600,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .bodyMediumIsCustom,

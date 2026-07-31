@@ -180,7 +180,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 12.0,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w500,
                           letterSpacing: -0.01,
                           height: 1.0,
                           color: isTrendError ? _errorColor : _clinicalBlue,
@@ -197,7 +197,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 12.0,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w500,
                 letterSpacing: 0.08,
                 height: 1.0,
                 color: _onSurfaceVariant,
@@ -209,7 +209,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 26.0,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
                 letterSpacing: -0.02,
                 height: 1.2,
                 color: _onSurface,
@@ -254,7 +254,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 18.0,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: -0.01,
                         height: 1.5,
                         color: _onSurface,
@@ -266,7 +266,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 12.0,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         color: _onSurfaceVariant,
                       ),
                     ),
@@ -303,7 +303,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                             style: TextStyle(
                               fontFamily: 'Satoshi',
                               fontSize: 12.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               letterSpacing: 0.08,
                               color: isSelected ? Colors.white : _onSurface,
                             ),
@@ -380,7 +380,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
         style: TextStyle(
           fontFamily: 'Satoshi',
           fontSize: 12.0,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w500,
           color: textColor,
         ),
       ),
@@ -517,7 +517,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                   style: TextStyle(
                                                     fontFamily: 'Satoshi',
                                                     fontSize: 30.0,
-                                                    fontWeight: FontWeight.w300,
+                                                    fontWeight: FontWeight.w700,
                                                     letterSpacing: -0.02,
                                                     height: 1.2,
                                                     color: _onSurface,
@@ -529,7 +529,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                   style: TextStyle(
                                                     fontFamily: 'Satoshi',
                                                     fontSize: 14.0,
-                                                    fontWeight: FontWeight.w300,
+                                                    fontWeight: FontWeight.w400,
                                                     height: 1.6,
                                                     color: _onSurfaceVariant,
                                                   ),
@@ -565,7 +565,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                   style: TextStyle(
                                                     fontFamily: 'Satoshi',
                                                     fontSize: 12.0,
-                                                    fontWeight: FontWeight.w300,
+                                                    fontWeight: FontWeight.w500,
                                                     letterSpacing: 0.08,
                                                     color: _onSurface,
                                                   ),
@@ -608,7 +608,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                         fontFamily: 'Satoshi',
                                                         fontSize: 12.0,
                                                         fontWeight:
-                                                            FontWeight.w300,
+                                                            FontWeight.w500,
                                                         letterSpacing: 0.08,
                                                       ),
                                                     ),
@@ -747,7 +747,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                       fontFamily: 'Satoshi',
                                                       fontSize: 18.0,
                                                       fontWeight:
-                                                          FontWeight.w300,
+                                                          FontWeight.w600,
                                                       letterSpacing: -0.01,
                                                       height: 1.5,
                                                       color: _onSurface,
@@ -764,7 +764,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                                 'Satoshi',
                                                             fontSize: 12.0,
                                                             fontWeight:
-                                                                FontWeight.w300,
+                                                                FontWeight.w500,
                                                             letterSpacing: 0.08,
                                                             color:
                                                                 _clinicalBlue,
@@ -850,7 +850,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 16.0,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       color: _onSurface,
                     ),
                   ),
@@ -860,7 +860,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 14.0,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                       color: _onSurfaceVariant,
                     ),
                   ),
@@ -934,7 +934,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                           _tableDataCell(
                             '#TXN-${sale.reference.id.substring(0, 4).toUpperCase()}',
                             1.2,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w500,
                           ),
                           _tableDataCell(
                             sale.date != null
@@ -952,7 +952,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                           _tableDataCell(
                             '${isPositive ? '+' : '-'}ZMK ${sale.totalAmount.toStringAsFixed(2)}',
                             1.0,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w500,
                             color: isPositive ? _clinicalBlue : _onSurface,
                           ),
                           SizedBox(
@@ -980,7 +980,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
         style: TextStyle(
           fontFamily: 'Satoshi',
           fontSize: 12.0,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w500,
           letterSpacing: 0.08,
           color: _onSurfaceVariant,
         ),
@@ -989,7 +989,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
   }
 
   Widget _tableDataCell(String text, double flex,
-      {FontWeight fontWeight = FontWeight.w300, Color? color}) {
+      {FontWeight fontWeight = FontWeight.w400, Color? color}) {
     return Expanded(
       flex: (flex * 10).round(),
       child: Text(
@@ -1086,7 +1086,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 18.0,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w600,
                                 letterSpacing: -0.01,
                                 height: 1.5,
                                 color: _onSurface)),
@@ -1104,7 +1104,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               style: TextStyle(
                                   fontFamily: 'Satoshi',
                                   fontSize: 11.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   color: const Color(0xFF9900FF))),
                         ),
                         const SizedBox(width: 8.0),
@@ -1119,7 +1119,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               style: TextStyle(
                                   fontFamily: 'Satoshi',
                                   fontSize: 11.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   color: const Color(0xFF854D0E))),
                         ),
                       ],
@@ -1142,7 +1142,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 15.0,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                                 color: _onSurfaceVariant)),
                         const SizedBox(height: 4.0),
                         Text('No pending approvals at this time',
@@ -1186,7 +1186,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                   style: TextStyle(
                                       fontFamily: 'Satoshi',
                                       fontSize: 16.0,
-                                      fontWeight: FontWeight.w300,
+                                      fontWeight: FontWeight.w700,
                                       color: isPharmacy
                                           ? const Color(0xFF9900FF)
                                           : const Color(0xFF854D0E)))),
@@ -1203,7 +1203,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                   style: TextStyle(
                                       fontFamily: 'Satoshi',
                                       fontSize: 14.0,
-                                      fontWeight: FontWeight.w300,
+                                      fontWeight: FontWeight.w600,
                                       color: _onSurface)),
                               const SizedBox(height: 2.0),
                               Text(user.email,
@@ -1224,7 +1224,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               style: TextStyle(
                                   fontFamily: 'Satoshi',
                                   fontSize: 11.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   color: isPharmacy
                                       ? const Color(0xFF9900FF)
                                       : const Color(0xFF854D0E))),
@@ -1247,7 +1247,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               style: TextStyle(
                                   fontFamily: 'Satoshi',
                                   fontSize: 12.0,
-                                  fontWeight: FontWeight.w300)),
+                                  fontWeight: FontWeight.w600)),
                         ),
                       ],
                     ),
@@ -1306,7 +1306,7 @@ class _RevenueChartPainter extends CustomPainter {
       final emptyStyle = TextStyle(
         fontFamily: 'Satoshi',
         fontSize: 12.0,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w600,
         color: labelColor,
       );
       final textSpan = TextSpan(
@@ -1351,7 +1351,7 @@ class _RevenueChartPainter extends CustomPainter {
     final labelStyle = TextStyle(
       fontFamily: 'Satoshi',
       fontSize: 10.0,
-      fontWeight: FontWeight.w300,
+      fontWeight: FontWeight.w500,
       color: labelColor,
     );
     for (int i = 0; i <= 4; i++) {
@@ -1374,7 +1374,7 @@ class _RevenueChartPainter extends CustomPainter {
     final xLabelStyle = TextStyle(
       fontFamily: 'Satoshi',
       fontSize: 10.0,
-      fontWeight: FontWeight.w300,
+      fontWeight: FontWeight.w500,
       color: labelColor,
     );
     for (int i = 0; i < labels.length; i++) {
@@ -1463,7 +1463,7 @@ class _RevenueChartPainter extends CustomPainter {
         style: TextStyle(
           fontFamily: 'Satoshi',
           fontSize: 12.0,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
       );

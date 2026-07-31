@@ -224,7 +224,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       style: TextStyle(
                         color: _textPrimary,
                         fontSize: 18,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     centerTitle: true,
@@ -354,7 +354,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                     style: TextStyle(
                       color: _duniyaPurple,
                       fontSize: 13,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -401,7 +401,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                   style: TextStyle(
                     color: _textPrimary,
                     fontSize: 26,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: -0.4,
                     height: 1.1,
                   ),
@@ -452,7 +452,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 style: TextStyle(
                   color: _duniyaPurpleDark,
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -478,7 +478,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 style: TextStyle(
                   color: _textPrimary,
                   fontSize: 16,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
                 ),
               ),
@@ -663,7 +663,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             style: TextStyle(
               color: _textPrimary,
               fontSize: 12.5,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w600,
               letterSpacing: 0.1,
             ),
             children: isRequired
@@ -694,7 +694,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       style: TextStyle(
         color: _textPrimary,
         fontSize: 14,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
@@ -732,7 +732,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               textStyle: TextStyle(
                 color: _textPrimary,
                 fontSize: 14,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w500,
               ),
               hintText: 'Select pharmacy',
               icon: Icon(
@@ -798,7 +798,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 style: TextStyle(
                   color: hasDate ? _textPrimary : _textTertiary,
                   fontSize: 14,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -842,7 +842,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                   style: TextStyle(
                     color: _textTertiary,
                     fontSize: 10,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0.6,
                   ),
                 ),
@@ -852,7 +852,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                   style: TextStyle(
                     color: _textPrimary,
                     fontSize: 13.5,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -900,7 +900,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             style: TextStyle(
               color: color,
               fontSize: 11,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: 0.4,
             ),
           ),
@@ -954,7 +954,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                         style: TextStyle(
                           color: _duniyaPurpleDark,
                           fontSize: 11.5,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 0.2,
                         ),
                       ),
@@ -1031,7 +1031,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   static const TextStyle _columnHeaderStyle = TextStyle(
     color: Color(0xFF94A3B8),
     fontSize: 10.5,
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w700,
     letterSpacing: 0.7,
   );
 
@@ -1112,7 +1112,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               style: TextStyle(
                 color: _duniyaPurpleDark,
                 fontSize: 12,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -1139,7 +1139,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                     style: TextStyle(
                       color: _textPrimary,
                       fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -1210,7 +1210,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                     style: TextStyle(
                       color: _textPrimary,
                       fontSize: 12,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       fontFamily: 'Roboto Mono',
                     ),
                   ),
@@ -1261,7 +1261,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                   style: TextStyle(
                     color: _duniyaPurpleDark,
                     fontSize: 11,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
@@ -1283,7 +1283,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                     style: TextStyle(
                       color: _textPrimary,
                       fontSize: 14,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                   );
                 },
@@ -1402,7 +1402,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             style: TextStyle(
               color: _textPrimary,
               fontSize: 16,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
             ),
           ),
           SizedBox(height: 6),
@@ -1474,7 +1474,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       style: TextStyle(
                         color: delta < 0 ? _danger : _warning,
                         fontSize: 11.5,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -1490,7 +1490,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                         style: TextStyle(
                           color: _warning,
                           fontSize: 12,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -1574,7 +1574,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             style: TextStyle(
               color: _textPrimary,
               fontSize: 13,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -1608,7 +1608,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           style: TextStyle(
             color: _textSecondary,
             fontSize: 13,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -1655,7 +1655,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       hintStyle: TextStyle(
         color: _textTertiary,
         fontSize: 14,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
       ),
       filled: true,
       fillColor: _bgColor,
@@ -1764,7 +1764,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 17,
-                                      fontWeight: FontWeight.w300,
+                                      fontWeight: FontWeight.w700,
                                       letterSpacing: -0.2,
                                     ),
                                   ),
@@ -1830,7 +1830,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                     textStyle: TextStyle(
                                       color: _textPrimary,
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w300,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                     hintText: 'Select product',
                                     icon: Icon(
@@ -1879,7 +1879,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                         style: TextStyle(
                                           color: _textPrimary,
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                         onChanged: (_) => setDialogState(() {}),
                                       ),
@@ -1908,7 +1908,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                         style: TextStyle(
                                           color: _textPrimary,
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                         onChanged: (_) => setDialogState(() {}),
                                       ),
@@ -1943,7 +1943,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                         style: TextStyle(
                                           color: _textPrimary,
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ],
@@ -2010,7 +2010,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                                         : _textTertiary,
                                                     fontSize: 14,
                                                     fontWeight:
-                                                        FontWeight.w300,
+                                                        FontWeight.w500,
                                                   ),
                                                 ),
                                               ),
@@ -2040,7 +2040,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                               style: TextStyle(
                                 color: _textPrimary,
                                 fontSize: 14,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             SizedBox(height: 24),
@@ -2095,7 +2095,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
         style: TextStyle(
           color: _textPrimary,
           fontSize: 12.5,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w600,
         ),
         children: isRequired
             ? [
@@ -2133,7 +2133,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               style: TextStyle(
                 color: _success,
                 fontSize: 12.5,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -2161,7 +2161,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               style: TextStyle(
                 color: delta < 0 ? _danger : _warning,
                 fontSize: 12.5,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -2254,7 +2254,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                               SizedBox(height: 2),
@@ -2299,7 +2299,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                           style: TextStyle(
                             color: _textPrimary,
                             fontSize: 14,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         SizedBox(height: 20),
@@ -2514,7 +2514,7 @@ class _AddItemButtonState extends State<_AddItemButton> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 13.5,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -2547,7 +2547,7 @@ class _AddItemButtonState extends State<_AddItemButton> {
                 style: TextStyle(
                   color: _hover ? Colors.white : purpleDark,
                   fontSize: 12.5,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -2590,7 +2590,7 @@ class _QtyChip extends StatelessWidget {
               style: TextStyle(
                 color: color,
                 fontSize: 13.5,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w700,
               ),
             ),
             if (delta != null && delta != 0) ...[
@@ -2600,7 +2600,7 @@ class _QtyChip extends StatelessWidget {
                 style: TextStyle(
                   color: color,
                   fontSize: 10.5,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -2641,7 +2641,7 @@ class _MiniStat extends StatelessWidget {
             style: TextStyle(
               color: Color(0xFF94A3B8),
               fontSize: 9.5,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
             ),
           ),
@@ -2651,7 +2651,7 @@ class _MiniStat extends StatelessWidget {
             style: TextStyle(
               color: color,
               fontSize: 13,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
             ),
           ),
           if (delta != null && delta != 0) ...[
@@ -2661,7 +2661,7 @@ class _MiniStat extends StatelessWidget {
               style: TextStyle(
                 color: color,
                 fontSize: 11,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -2696,7 +2696,7 @@ class _StatusPill extends StatelessWidget {
               style: TextStyle(
                 color: Color(0xFFEA580C),
                 fontSize: 10,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w700,
                 letterSpacing: 0.5,
               ),
             ),
@@ -2722,7 +2722,7 @@ class _StatusPill extends StatelessWidget {
             style: TextStyle(
               color: Color(0xFF16A34A),
               fontSize: 10,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
             ),
           ),
@@ -2792,7 +2792,7 @@ class _SummaryItem extends StatelessWidget {
           style: TextStyle(
             color: Color(0xFF64748B),
             fontSize: 12.5,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w500,
           ),
         ),
         Text(
@@ -2800,7 +2800,7 @@ class _SummaryItem extends StatelessWidget {
           style: TextStyle(
             color: color ?? Color(0xFF0B1C30),
             fontSize: 13.5,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ],
@@ -2875,7 +2875,7 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 13.5,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -2940,7 +2940,7 @@ class _SecondaryButtonState extends State<_SecondaryButton> {
                 style: TextStyle(
                   color: color,
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

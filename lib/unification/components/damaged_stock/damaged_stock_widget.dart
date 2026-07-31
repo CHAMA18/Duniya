@@ -106,7 +106,7 @@ class _DamagedStockWidgetState extends State<DamagedStockWidget> {
                                       .headlineLargeFamily,
                                   color: FlutterFlowTheme.of(context).error,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.bold,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -130,7 +130,7 @@ class _DamagedStockWidgetState extends State<DamagedStockWidget> {
                                   .titleMediumFamily,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .titleMediumIsCustom,
                             ),
@@ -222,7 +222,7 @@ class _DamagedStockWidgetState extends State<DamagedStockWidget> {
                                   .titleMediumFamily,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .titleMediumIsCustom,
                             ),

@@ -185,7 +185,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
           children: [
             pw.Text('Batch & Expiry Tracking Report',
                 style: pw.TextStyle(
-                    fontSize: 22, fontWeight: pw.FontWeight.w300)),
+                    fontSize: 22, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 4),
             pw.Text(
                 'Generated: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
@@ -255,7 +255,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             data: tableData,
             headerStyle: pw.TextStyle(
                 fontSize: 9,
-                fontWeight: pw.FontWeight.w300,
+                fontWeight: pw.FontWeight.bold,
                 color: PdfColors.white),
             headerDecoration:
                 pw.BoxDecoration(color: PdfColor.fromHex('#9900FF')),
@@ -323,7 +323,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 28.0,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w800,
                   color: textColor,
                   height: 1.0,
                 ),
@@ -336,7 +336,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 13.0,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               color: textColor,
               height: 1.3,
             ),
@@ -374,7 +374,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               Text('Add New Batch',
                   style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
           ),
@@ -478,7 +478,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   style: TextStyle(
                       fontFamily: 'Satoshi',
                       color: _textSecondary,
-                      fontWeight: FontWeight.w300)),
+                      fontWeight: FontWeight.w500)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -514,7 +514,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               child: Text('Add Batch',
                   style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       fontSize: 14.0)),
             ),
           ],
@@ -550,7 +550,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               Text('Edit Batch',
                   style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
           ),
@@ -655,7 +655,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   style: TextStyle(
                       fontFamily: 'Satoshi',
                       color: _textSecondary,
-                      fontWeight: FontWeight.w300)),
+                      fontWeight: FontWeight.w500)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -686,7 +686,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               child: Text('Save Changes',
                   style: TextStyle(
                       fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       fontSize: 14.0)),
             ),
           ],
@@ -716,7 +716,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             Text('Delete Batch',
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w700,
                     color: _textPrimary)),
           ],
         ),
@@ -732,7 +732,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 style: TextStyle(
                     fontFamily: 'Satoshi',
                     color: _textSecondary,
-                    fontWeight: FontWeight.w300)),
+                    fontWeight: FontWeight.w500)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -751,7 +751,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             child: Text('Delete',
                 style: TextStyle(
                     fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                     fontSize: 14.0)),
           ),
         ],
@@ -832,7 +832,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                           style: TextStyle(
                                             fontFamily: 'Satoshi',
                                             fontSize: 32.0,
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w700,
                                             letterSpacing: -0.02,
                                             height: 1.2,
                                             color: _textPrimary,
@@ -844,7 +844,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                           style: TextStyle(
                                             fontFamily: 'Satoshi',
                                             fontSize: 16.0,
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w400,
                                             height: 1.6,
                                             color: _textSecondary,
                                           ),
@@ -1134,7 +1134,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                       fontFamily: 'Satoshi',
                                                       color: _duniyaPurple,
                                                       fontWeight:
-                                                          FontWeight.w300,
+                                                          FontWeight.w500,
                                                       fontSize: 13.0,
                                                     ),
                                                     icon: Icon(Icons.filter_list,
@@ -1226,7 +1226,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                         children: [
                                                           Icon(Icons.inventory_2_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
                                                           const SizedBox(height: 16.0),
-                                                          Text('No batches found', style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w300, color: _textSecondary)),
+                                                          Text('No batches found', style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
                                                           const SizedBox(height: 8.0),
                                                           Text('Click "Add Batch" to create your first batch entry', style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
                                                         ],
@@ -1253,7 +1253,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                               children: [
                                                                 Icon(_getExpiryIcon(batch.expiryDate), size: 16.0, color: _getExpiryBadgeBg(batch.expiryDate)),
                                                                 const SizedBox(width: 8.0),
-                                                                Text(batch.batchNumber, style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w300, color: _getExpiryTextColor(batch.expiryDate))),
+                                                                Text(batch.batchNumber, style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w600, color: _getExpiryTextColor(batch.expiryDate))),
                                                               ],
                                                             ),
                                                           ),
@@ -1268,7 +1268,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                           ),
                                                           Expanded(
                                                             flex: 7,
-                                                            child: Text(batch.quantity.toString(), style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w300, color: _getExpiryTextColor(batch.expiryDate))),
+                                                            child: Text(batch.quantity.toString(), style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w500, color: _getExpiryTextColor(batch.expiryDate))),
                                                           ),
                                                           Expanded(
                                                             flex: 13,
@@ -1279,7 +1279,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                             child: Container(
                                                               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                                                               decoration: BoxDecoration(color: _getExpiryBadgeBg(batch.expiryDate), borderRadius: BorderRadius.circular(9999.0)),
-                                                              child: Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Satoshi', fontSize: 11.0, fontWeight: FontWeight.w300, color: _getExpiryBadgeText(batch.expiryDate))),
+                                                              child: Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Satoshi', fontSize: 11.0, fontWeight: FontWeight.w600, color: _getExpiryBadgeText(batch.expiryDate))),
                                                             ),
                                                           ),
                                                           Expanded(
@@ -1383,7 +1383,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               child: Icon(Icons.error_outline, color: _expiredBadge, size: 32.0),
             ),
             const SizedBox(height: 16.0),
-            Text('Something went wrong', style: TextStyle(fontFamily: 'Satoshi', fontSize: 18.0, fontWeight: FontWeight.w300, color: _textPrimary)),
+            Text('Something went wrong', style: TextStyle(fontFamily: 'Satoshi', fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
             const SizedBox(height: 8.0),
             Text('Unable to load batch data. Please try again later.', style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
             const SizedBox(height: 20.0),
@@ -1411,7 +1411,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
         style: TextStyle(
           fontFamily: 'Satoshi',
           fontSize: 12.0,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.w600,
           letterSpacing: 0.08,
           color: _duniyaPurpleDark,
         ),

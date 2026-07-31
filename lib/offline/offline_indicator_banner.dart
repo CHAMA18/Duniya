@@ -137,7 +137,7 @@ class _OfflineIndicatorBannerState extends State<OfflineIndicatorBanner>
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12.5,
-                                    fontWeight: FontWeight.w300,
+                                    fontWeight: FontWeight.w600,
                                     letterSpacing: 0.1,
                                   ),
                                   overflow: TextOverflow.ellipsis,

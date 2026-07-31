@@ -319,7 +319,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               Icon(Icons.chevron_right,
@@ -329,7 +329,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -365,7 +365,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w700,
                         height: 1.1,
                         letterSpacing: -0.5,
                       ),
@@ -376,7 +376,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         height: 1.4,
                       ),
                     ),
@@ -423,7 +423,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -591,7 +591,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                   style: TextStyle(
                     color: theme.primaryText,
                     fontSize: 22.0,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
                     height: 1.0,
                   ),
@@ -602,7 +602,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                   style: TextStyle(
                     color: theme.secondaryText,
                     fontSize: 11.0,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -763,7 +763,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                         color:
                             selected ? Colors.white : theme.primaryText,
                         fontSize: 13,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(width: 6.0),
@@ -783,7 +783,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                               ? Colors.white
                               : theme.secondaryText,
                           fontSize: 11.0,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -813,7 +813,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
             style: TextStyle(
               color: FlutterFlowTheme.of(context).secondaryText,
               fontSize: 12.0,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -888,7 +888,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                               pharmacy.name,
                               style: theme.titleMedium.override(
                                 fontFamily: theme.titleMediumFamily,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w700,
                                 letterSpacing: -0.2,
                                 useGoogleFonts: !theme.titleMediumIsCustom,
                               ),
@@ -911,7 +911,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                               style: TextStyle(
                                 color: statusColor,
                                 fontSize: 10.0,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w700,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -958,7 +958,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                                 style: TextStyle(
                                   color: theme.secondaryText,
                                   fontSize: 11.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -982,7 +982,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                                       ? theme.secondaryText
                                       : theme.primaryText,
                                   fontSize: 11.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
@@ -1022,7 +1022,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
@@ -1075,7 +1075,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
             'No pharmacies on the network yet',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.3,
               useGoogleFonts: !theme.headlineSmallIsCustom,
             ),
@@ -1117,7 +1117,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
             'No pharmacies match your filters',
             style: theme.titleMedium.override(
               fontFamily: theme.titleMediumFamily,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.2,
               useGoogleFonts: !theme.titleMediumIsCustom,
             ),

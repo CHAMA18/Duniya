@@ -257,7 +257,7 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                                               color: FlutterFlowTheme.of(context).primary,
                                                               fontSize: 10.0,
                                                               letterSpacing: 1.0,
-                                                              fontWeight: FontWeight.w300,
+                                                              fontWeight: FontWeight.w700,
                                                               useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
                                                             ),
                                                           ),
@@ -559,7 +559,7 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                                             fontSize: 25.0,
                                                             letterSpacing: 0.0,
                                                             fontWeight:
-                                                                FontWeight.w300,
+                                                                FontWeight.w600,
                                                             lineHeight: 1.5,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(

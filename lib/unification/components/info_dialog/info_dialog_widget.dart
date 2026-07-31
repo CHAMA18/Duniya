@@ -99,7 +99,7 @@ class _InfoDialogWidgetState extends State<InfoDialogWidget> {
                                       .headlineLargeFamily,
                                   color: FlutterFlowTheme.of(context).primary,
                                   letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.bold,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .headlineLargeIsCustom,
                                 ),
@@ -121,7 +121,7 @@ class _InfoDialogWidgetState extends State<InfoDialogWidget> {
                                   .titleMediumFamily,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               letterSpacing: 0.0,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .titleMediumIsCustom,
                             ),

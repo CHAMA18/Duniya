@@ -347,7 +347,7 @@ class _ImportInventoryDialogWidgetState
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 20.0,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                         color: onSurface,
                         height: 1.2,
                       ),
@@ -358,7 +358,7 @@ class _ImportInventoryDialogWidgetState
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 13.0,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         color: onSurfaceVariant,
                       ),
                     ),
@@ -440,7 +440,7 @@ class _ImportInventoryDialogWidgetState
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 11,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       color: textColor,
                     ),
                   ),
@@ -452,7 +452,7 @@ class _ImportInventoryDialogWidgetState
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 12,
-            fontWeight: isCurrent ? FontWeight.w300 : FontWeight.w300,
+            fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
             color: isDone || isCurrent ? onSurface : onSurfaceVariant,
           ),
         ),
@@ -519,7 +519,7 @@ class _ImportInventoryDialogWidgetState
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 16.0,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       color: onSurface,
                     ),
                     textAlign: TextAlign.center,
@@ -530,7 +530,7 @@ class _ImportInventoryDialogWidgetState
                     style: TextStyle(
                       fontFamily: 'Satoshi',
                       fontSize: 13.0,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                       color: onSurfaceVariant,
                     ),
                   ),
@@ -596,7 +596,7 @@ class _ImportInventoryDialogWidgetState
                       style: TextStyle(
                         fontFamily: 'Satoshi',
                         fontSize: 13.0,
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w600,
                         color: onSurface,
                       ),
                     ),
@@ -658,7 +658,7 @@ class _ImportInventoryDialogWidgetState
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 12.0,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w500,
               color: required
                   ? const Color(0xFF6A00D9)
                   : const Color(0xFF374151),
@@ -671,7 +671,7 @@ class _ImportInventoryDialogWidgetState
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 10.0,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w500,
                 color: Color(0xFF6A00D9),
               ),
             ),
@@ -711,7 +711,7 @@ class _ImportInventoryDialogWidgetState
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 13.0,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                   color: onSurface,
                 ),
               ),
@@ -740,7 +740,7 @@ class _ImportInventoryDialogWidgetState
                   style: const TextStyle(
                     fontFamily: 'Satoshi',
                     fontSize: 12.0,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w600,
                     color: Color(0xFFA100FF),
                     decoration: TextDecoration.underline,
                     decorationColor: Color(0xFFA100FF),
@@ -870,63 +870,63 @@ class _ImportInventoryDialogWidgetState
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Status',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Name',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Category',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Qty',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Price',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Batch',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Expiry',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Notes',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
                                 fontSize: 12,
-                                fontWeight: FontWeight.w300)),
+                                fontWeight: FontWeight.w600)),
                       ),
                     ],
                     rows: [
@@ -977,7 +977,7 @@ class _ImportInventoryDialogWidgetState
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 12,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w500,
                 color: status
                     ? const Color(0xFF059669)
                     : const Color(0xFFDC2626),
@@ -990,7 +990,7 @@ class _ImportInventoryDialogWidgetState
           style: TextStyle(
             fontFamily: 'Satoshi',
             fontSize: 12,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w500,
             color: onSurface,
           ),
         )),
@@ -1085,7 +1085,7 @@ class _ImportInventoryDialogWidgetState
                 style: TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                   color: color,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -1138,7 +1138,7 @@ class _ImportInventoryDialogWidgetState
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 26,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                           color: onSurface,
                         ),
                       ),
@@ -1162,7 +1162,7 @@ class _ImportInventoryDialogWidgetState
               style: TextStyle(
                 fontFamily: 'Satoshi',
                 fontSize: 18,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
                 color: onSurface,
               ),
             ),
@@ -1267,7 +1267,7 @@ class _ImportInventoryDialogWidgetState
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 22,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w600,
               color: onSurface,
             ),
           ),
@@ -1345,7 +1345,7 @@ class _ImportInventoryDialogWidgetState
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 12,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w600,
                           color: onSurface,
                         ),
                       ),
@@ -1410,7 +1410,7 @@ class _ImportInventoryDialogWidgetState
             style: TextStyle(
               fontFamily: 'Satoshi',
               fontSize: 26,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w700,
               color: color,
             ),
           ),
@@ -1473,7 +1473,7 @@ class _ImportInventoryDialogWidgetState
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 12,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w500,
                           color: onSurfaceVariant,
                         ),
                       ),
@@ -1494,7 +1494,7 @@ class _ImportInventoryDialogWidgetState
                         style: TextStyle(
                           fontFamily: 'Satoshi',
                           fontSize: 12,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w600,
                           color: Color(0xFFA100FF),
                         ),
                       ),
@@ -1517,7 +1517,7 @@ class _ImportInventoryDialogWidgetState
                           style: TextStyle(
                             fontFamily: 'Satoshi',
                             fontSize: 13,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w500,
                             color: onSurfaceVariant,
                           ),
                         ),
@@ -1583,7 +1583,7 @@ class _ImportInventoryDialogWidgetState
                 style: const TextStyle(
                   fontFamily: 'Satoshi',
                   fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
               ),

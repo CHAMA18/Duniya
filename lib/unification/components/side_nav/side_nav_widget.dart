@@ -127,7 +127,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   FlutterFlowTheme.of(context).labelSmallFamily,
                               color: FlutterFlowTheme.of(context).alternate,
                               letterSpacing: 1.2,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .labelSmallIsCustom,
                             ),
@@ -374,7 +374,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   FlutterFlowTheme.of(context).labelSmallFamily,
                               color: FlutterFlowTheme.of(context).alternate,
                               letterSpacing: 1.2,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .labelSmallIsCustom,
                             ),
@@ -627,7 +627,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   FlutterFlowTheme.of(context).labelSmallFamily,
                               color: FlutterFlowTheme.of(context).alternate,
                               letterSpacing: 1.2,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w600,
                               useGoogleFonts: !FlutterFlowTheme.of(context)
                                   .labelSmallIsCustom,
                             ),
@@ -946,7 +946,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryText,
                                               letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w300,
+                                              fontWeight: FontWeight.w500,
                                               useGoogleFonts:
                                                   !FlutterFlowTheme.of(context)
                                                       .bodyMediumIsCustom,
@@ -987,7 +987,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                       .labelSmallFamily,
                                   color: FlutterFlowTheme.of(context).alternate,
                                   letterSpacing: 1.2,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   useGoogleFonts: !FlutterFlowTheme.of(context)
                                       .labelSmallIsCustom,
                                 ),
@@ -1178,7 +1178,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                           color: FlutterFlowTheme.of(context)
                                               .primaryText,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w600,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .bodyMediumIsCustom,
@@ -1267,7 +1267,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                                   .titleMediumFamily,
                                           color: FlutterFlowTheme.of(context)
                                               .primary,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                           letterSpacing: 0.0,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
@@ -1335,7 +1335,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                           color: FlutterFlowTheme.of(context)
                                               .error,
                                           letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w300,
+                                          fontWeight: FontWeight.w500,
                                           useGoogleFonts:
                                               !FlutterFlowTheme.of(context)
                                                   .titleMediumIsCustom,
@@ -1398,7 +1398,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                                     .bodyMediumFamily,
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryText,
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w500,
                                             letterSpacing: 0.0,
                                             useGoogleFonts:
                                                 !FlutterFlowTheme.of(context)

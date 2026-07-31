@@ -95,7 +95,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
       hintText: hint,
       labelStyle: theme.bodyMedium.override(
         fontFamily: theme.bodyMediumFamily,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w600,
         fontSize: 13.0,
         letterSpacing: 0.0,
         useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -148,7 +148,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
               label,
               style: theme.bodyMedium.override(
                 fontFamily: theme.bodyMediumFamily,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w600,
                 fontSize: 13.0,
                 letterSpacing: 0.0,
                 useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -161,7 +161,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                 style: TextStyle(
                   color: Color(0xFFEF4444),
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -299,7 +299,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
                   ),
                 ),
@@ -313,7 +313,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 36,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w800,
                 height: 1.1,
                 letterSpacing: -0.8,
               ),
@@ -324,7 +324,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
               style: TextStyle(
                 color: Colors.white.withAlpha(220),
                 fontSize: 16,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w400,
                 height: 1.5,
               ),
             ),
@@ -369,7 +369,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                     style: TextStyle(
                       color: Colors.white.withAlpha(220),
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 0.3,
                     ),
                   ),
@@ -406,7 +406,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                 style: TextStyle(
                   color: Colors.white.withAlpha(220),
                   fontSize: 14.0,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w500,
                   height: 1.4,
                 ),
               ),
@@ -449,7 +449,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
               'Duniya',
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w800,
                 letterSpacing: -0.3,
               ),
             ),
@@ -461,7 +461,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
           style: theme.headlineMedium.override(
             fontFamily: theme.headlineMediumFamily,
             fontSize: 26.0,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w800,
             letterSpacing: -0.5,
             useGoogleFonts: !theme.headlineMediumIsCustom,
           ),
@@ -522,7 +522,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                             'Create Your Pharmacy',
                             style: theme.headlineSmall.override(
                               fontFamily: theme.headlineSmallFamily,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w800,
                               letterSpacing: -0.3,
                               useGoogleFonts: !theme.headlineSmallIsCustom,
                             ),
@@ -584,7 +584,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                         ),
                         style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
                         ),
@@ -623,7 +623,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                         ),
                         style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
                         ),
@@ -663,7 +663,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                           ),
                           style: theme.bodyMedium.override(
                             fontFamily: theme.bodyMediumFamily,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.0,
                             useGoogleFonts: !theme.bodyMediumIsCustom,
                           ),
@@ -688,7 +688,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                           ),
                           style: theme.bodyMedium.override(
                             fontFamily: theme.bodyMediumFamily,
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.0,
                             useGoogleFonts: !theme.bodyMediumIsCustom,
                           ),
@@ -717,7 +717,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                                 ),
                                 style: theme.bodyMedium.override(
                                   fontFamily: theme.bodyMediumFamily,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !theme.bodyMediumIsCustom,
                                 ),
@@ -744,7 +744,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                                 ),
                                 style: theme.bodyMedium.override(
                                   fontFamily: theme.bodyMediumFamily,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 0.0,
                                   useGoogleFonts: !theme.bodyMediumIsCustom,
                                 ),
@@ -811,7 +811,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                         textStyle: const TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 0.2,
                         ),
                         elevation: 0.0,
