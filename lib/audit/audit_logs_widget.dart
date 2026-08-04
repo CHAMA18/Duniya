@@ -45,6 +45,7 @@ class _AuditLogsWidgetState extends State<AuditLogsWidget> {
 
     return Title(
       title: 'Audit Logs',
+      color: FlutterFlowTheme.of(context).primary.withAlpha(0xFF),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -75,7 +76,11 @@ class _AuditLogsWidgetState extends State<AuditLogsWidget> {
                       wrapWithModel(
                         model: _model.topNavModel,
                         updateCallback: () => safeSetState(() {}),
-                        child: const TopNavWidget(),
+                        child: TopNavWidget(
+                          openDrawer: () async {
+                            scaffoldKey.currentState?.openDrawer();
+                          },
+                        ),
                       ),
                       Expanded(
                         child: _buildContent(theme),

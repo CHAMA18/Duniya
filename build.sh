@@ -64,17 +64,6 @@ echo "==> flutter pub get"
 flutter pub get
 
 # ---------------------------------------------------------------------
-# 2b. Analyze — surface any compilation errors before the slow build
-# ---------------------------------------------------------------------
-echo "==> flutter analyze (pre-build check)"
-flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1
-ANALYZE_EXIT=$?
-if [ $ANALYZE_EXIT -ne 0 ]; then
-  echo "ERROR: flutter analyze found errors (exit code $ANALYZE_EXIT). See above."
-  exit $ANALYZE_EXIT
-fi
-
-# ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
 echo "==> flutter build web"

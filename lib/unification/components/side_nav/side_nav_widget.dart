@@ -154,7 +154,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
 
           context.goNamed(
             routeName,
-            queryParameters: queryParameters,
+            queryParameters: queryParameters != null
+                ? Map<String, dynamic>.from(queryParameters)
+                : const <String, dynamic>{},
             extra: <String, dynamic>{
               '__transition_info__': TransitionInfo(
                 hasTransition: true,
@@ -449,7 +451,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
         // ── Animated sub-items ──
         AnimatedCrossFade(
           duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
+          firstCurve: Curves.easeInOut,
+          secondCurve: Curves.easeInOut,
+          sizeCurve: Curves.easeInOut,
           crossFadeState: isExpanded
               ? CrossFadeState.showSecond
               : CrossFadeState.showFirst,
