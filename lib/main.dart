@@ -23,6 +23,7 @@ import '/offline/offline_sync_service.dart';
 import '/offline/cache_warmer_service.dart';
 import '/offline/offline_status_widget.dart';
 import '/onboarding/onboarding_service.dart';
+import '/rbac/rbac.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
