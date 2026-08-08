@@ -770,15 +770,15 @@ class _CreateUserCompleteRegistrationWidgetState
                                                     phoneNumber:
                                                         currentPhoneNumber,
                                                     role: (userDoc?.role ??
-                                                                '')
-                                                            .isEmpty
-                                                        ? 'Owner'
-                                                        : null,
+                                                                    '')
+                                                                .isEmpty
+                                                            ? 'Owner'
+                                                            : null,
                                                     accountType: (userDoc?.accountType ??
-                                '')
-                            .isEmpty
-                        ? 'Pharmacy'
-                        : null,
+                                                                    '')
+                                                                .isEmpty
+                                                            ? 'Pharmacy'
+                                                            : null,
                                                   ));
                                                   logFirebaseEvent(
                                                       'Button_navigate_to');

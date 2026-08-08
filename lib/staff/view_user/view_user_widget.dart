@@ -1,7 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/rbac/permissions.dart';
-import '/rbac/roles.dart';
-import '/rbac/access_control.dart';
+import '/rbac/rbac.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';

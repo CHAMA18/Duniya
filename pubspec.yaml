@@ -125,7 +125,7 @@ dependencies:
   shared_preferences_platform_interface: 2.4.1
   shared_preferences_web: 2.4.3
   shared_preferences_windows: 2.4.1
-  share_plus: ^12.0.2
+  share_plus: 10.0.0
   sign_in_with_apple: 7.0.1
   sign_in_with_apple_platform_interface: 2.0.0
   sign_in_with_apple_web: 3.0.0
@@ -166,6 +166,10 @@ dependencies:
 dependency_overrides:
   http: 1.4.0
   uuid: ^4.0.0
+  # Force web ^1.1.0 to satisfy webviewx_plus's requirement.
+  # share_plus 10.0.0 depends on web ^0.5.0, but web 1.x is
+  # backward-compatible for the APIs share_plus actually uses.
+  web: ^1.1.0
   flutter_spinkit:
     path: local_packages/flutter_spinkit
 
