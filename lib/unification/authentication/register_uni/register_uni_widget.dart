@@ -619,7 +619,9 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                       uid: user.uid,
                                                       createdTime:
                                                           getCurrentTimestamp,
-                                                      role: 'Owner',
+                                                      role: _selectedMode == 0
+                                                          ? 'admin'
+                                                          : 'Owner',
                                                       accountType:
                                                           _selectedMode == 0
                                                               ? 'Duniya'
@@ -890,7 +892,9 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                 .update(createUserRecordData(
                                                   createdTime:
                                                       getCurrentTimestamp,
-                                                  role: 'Owner',
+                                                  role: _selectedMode == 0
+                                                      ? 'admin'
+                                                      : 'Owner',
                                                   accountType:
                                                       _selectedMode == 0
                                                           ? 'Duniya'

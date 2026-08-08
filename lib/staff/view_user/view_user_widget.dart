@@ -1,4 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/permissions.dart';
+import '/rbac/roles.dart';
+import '/rbac/access_control.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -54,7 +57,10 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
         context.goNamed(LoginUniWidget.routeName);
 
         return;
-      } else {
+      }
+      // RBAC guard — only users with hrView can access staff details
+      if (!AccessControl.hasPermission(context, Permission.hrView)) {
+        context.goNamed(HomeWidget.routeName);
         return;
       }
     });
@@ -1305,6 +1311,11 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                     createUserRecordData(
                                                               email: _model
                                                                   .emailAddressTextController
+                                                                  .text,
+                                                              // Sync role to UserRecord so RBAC
+                                                              // reads the latest value.
+                                                              role: _model
+                                                                  .roleTextController
                                                                   .text,
                                                             ));
                                                             logFirebaseEvent(

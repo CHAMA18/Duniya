@@ -756,6 +756,11 @@ class _CreateUserCompleteRegistrationWidgetState
                                                   logFirebaseEvent(
                                                       'Button_backend_call');
 
+                                                  // Ensure role and accountType are set —
+                                                  // Google Sign-In users may reach this
+                                                  // page without these fields populated.
+                                                  final userDoc =
+                                                      currentUserDocument;
                                                   await currentUserReference!
                                                       .update(
                                                           createUserRecordData(
@@ -764,6 +769,16 @@ class _CreateUserCompleteRegistrationWidgetState
                                                         .text,
                                                     phoneNumber:
                                                         currentPhoneNumber,
+                                                    role: (userDoc?.role ??
+                                                                '')
+                                                            .isEmpty
+                                                        ? 'Owner'
+                                                        : null,
+                                                    accountType: (userDoc?.accountType ??
+                                '')
+                            .isEmpty
+                        ? 'Pharmacy'
+                        : null,
                                                   ));
                                                   logFirebaseEvent(
                                                       'Button_navigate_to');

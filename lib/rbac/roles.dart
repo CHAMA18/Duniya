@@ -134,6 +134,13 @@ enum AppRole {
   /// Whether this role can manage other staff.
   bool get canManageStaff =>
       this == AppRole.owner || this == AppRole.outletManager;
+
+  /// Check if an accountType string represents a Pharmacy account.
+  /// Case-insensitive; treats null/empty as Pharmacy (safe default).
+  static bool isPharmacyAccountType(String? accountType) {
+    if (accountType == null || accountType.isEmpty) return true;
+    return accountType.toLowerCase() == 'pharmacy';
+  }
 }
 
 /// ─────────────────────────────────────────────────────────────────────

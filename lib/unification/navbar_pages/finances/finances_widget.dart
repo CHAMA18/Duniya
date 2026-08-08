@@ -1037,9 +1037,9 @@ class _FinancesWidgetState extends State<FinancesWidget> {
 
         final pendingUsers = snapshot.data!;
         final pendingPharmacies =
-            pendingUsers.where((u) => u.accountType == 'Pharmacy').toList();
+            pendingUsers.where((u) => AppRole.isPharmacyAccountType(u.accountType)).toList();
         final pendingDuniyaUsers = pendingUsers
-            .where((u) => u.accountType == 'Duniya' || u.accountType.isEmpty)
+            .where((u) => AppRole.isDuniyaAccountType(u.accountType) || u.accountType.isEmpty)
             .toList();
 
         return Container(
@@ -1157,7 +1157,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                 )
               else
                 ...pendingUsers.map((user) {
-                  final isPharmacy = user.accountType == 'Pharmacy';
+                  final isPharmacy = AppRole.isPharmacyAccountType(user.accountType);
                   return Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24.0, vertical: 16.0),

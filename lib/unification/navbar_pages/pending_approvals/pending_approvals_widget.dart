@@ -116,11 +116,11 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
 
   // Categorize the approval type based on user data using RBAC
   String _approvalCategory(UserRecord user) {
-    if (user.accountType == 'pharmacy') return 'Pharmacy Registration';
+    if (AppRole.isPharmacyAccountType(user.accountType)) return 'Pharmacy Registration';
     final role = AppRole.fromFirestoreValue(user.role);
     if (role == AppRole.salesAssistant) return 'Staff Approval';
     if (role == AppRole.outletManager) return 'Outlet Setup';
-    if (role == AppRole.subscriber || user.accountType == 'subscription') return 'Subscription';
+    if (role == AppRole.subscriber || user.accountType.toLowerCase() == 'subscription') return 'Subscription';
     return 'Pharmacy Registration'; // Default to pharmacy-focused
   }
 
@@ -233,7 +233,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
   }
 
   String _displayNameFor(UserRecord user) {
-    if (user.accountType == 'pharmacy') {
+    if (AppRole.isPharmacyAccountType(user.accountType)) {
       return user.pharmacyName.isNotEmpty
           ? user.pharmacyName
           : user.displayName;
@@ -792,7 +792,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                         _buildMetaChip(Icons.email_outlined, user.email),
                         if (user.phoneNumber.isNotEmpty)
                           _buildMetaChip(Icons.call_outlined, user.phoneNumber),
-                        if (user.pharmacyName.isNotEmpty && user.accountType == 'pharmacy')
+                        if (user.pharmacyName.isNotEmpty && AppRole.isPharmacyAccountType(user.accountType))
                           _buildMetaChip(Icons.local_pharmacy_outlined, user.pharmacyName),
                         if (user.role.isNotEmpty)
                           _buildMetaChip(Icons.badge_outlined, user.role),

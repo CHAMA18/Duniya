@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -47,7 +48,13 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
     _model = createModel(context, () => OnboardingRequestsModel());
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'OnboardingRequests'});
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!AccessControl.isDuniyaUser(context)) {
+        context.goNamed(HomeWidget.routeName);
+        return;
+      }
+      safeSetState(() {});
+    });
   }
 
   @override

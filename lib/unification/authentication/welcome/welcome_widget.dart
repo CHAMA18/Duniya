@@ -40,9 +40,12 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
       if (!AccessControl.isOwner(context)) {
         if (currentUserDocument?.ownerRef == null) {
           logFirebaseEvent('Welcome_backend_call');
-
+          // Orphaned account — no ownerRef.  Assign Owner role
+          // so the user can create their first pharmacy, but also
+          // set accountType to 'Pharmacy' for RBAC resolution.
           await currentUserReference!.update(createUserRecordData(
             role: 'Owner',
+            accountType: 'Pharmacy',
           ));
           logFirebaseEvent('Welcome_auth');
           GoRouter.of(context).prepareAuthEvent();

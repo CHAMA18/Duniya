@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -81,7 +82,13 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
     _model = createModel(context, () => NetworkAnalyticsModel());
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'NetworkAnalytics'});
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!AccessControl.isDuniyaUser(context)) {
+        context.goNamed(HomeWidget.routeName);
+        return;
+      }
+      safeSetState(() {});
+    });
   }
 
   @override

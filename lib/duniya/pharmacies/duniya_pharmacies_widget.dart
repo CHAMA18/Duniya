@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -47,7 +48,14 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         parameters: {'screen_name': 'DuniyaPharmacies'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    // RBAC guard — only Duniya network users can access this page
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!AccessControl.isDuniyaUser(context)) {
+        context.goNamed(HomeWidget.routeName);
+        return;
+      }
+      safeSetState(() {});
+    });
   }
 
   @override

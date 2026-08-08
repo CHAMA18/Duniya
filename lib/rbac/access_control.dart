@@ -58,13 +58,19 @@ class AccessControl {
     final accountType = userDoc.accountType ?? '';
     final role = userDoc.role ?? '';
 
-    // Duniya network users
+    // Duniya network users — resolve duniyaAdmin vs duniyaStaff from the
+    // Firestore `role` field.  Only explicit admin/owner values map to
+    // duniyaAdmin; everything else (including empty/missing) maps to
+    // duniyaStaff for least-privilege safety.
     if (AppRole.isDuniyaAccountType(accountType)) {
-      // If the Duniya user has a role indicating admin, treat as admin
-      if (role.toLowerCase() == 'admin' || role.toLowerCase() == 'owner') {
+      final normalizedRole = role.toLowerCase().replaceAll(' ', '_');
+      if (normalizedRole == 'admin' ||
+          normalizedRole == 'owner' ||
+          normalizedRole == 'duniya_admin' ||
+          normalizedRole == 'duniyaadmin') {
         return AppRole.duniyaAdmin;
       }
-      return AppRole.duniyaAdmin; // Default Duniya users to admin
+      return AppRole.duniyaStaff; // Least-privilege default for Duniya users
     }
 
     // Pharmacy users — map from the role field

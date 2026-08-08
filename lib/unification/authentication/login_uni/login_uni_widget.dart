@@ -791,7 +791,9 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                       photoUrl: user.photoURL,
                                       uid: user.uid,
                                       createdTime: getCurrentTimestamp,
-                                      role: 'Owner',
+                                      role: _selectedMode == 0
+                                          ? 'admin'
+                                          : 'Owner',
                                       accountType: _selectedMode == 0
                                           ? 'Duniya'
                                           : 'Pharmacy',

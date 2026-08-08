@@ -62,9 +62,13 @@ class _StaffRegisterWidgetState extends State<StaffRegisterWidget> {
         return;
       }
 
+      // Write the correct role immediately — never temporarily assign
+      // 'Owner' as that creates a privilege-escalation window.
+      final staffRole = _model.staff?.role ?? 'Pharmacist';
       await UserRecord.collection.doc(user.uid).update(createUserRecordData(
             createdTime: getCurrentTimestamp,
-            role: 'Owner',
+            role: staffRole,
+            accountType: 'Pharmacy',
           ));
 
       if (!loggedIn) {
@@ -97,7 +101,8 @@ class _StaffRegisterWidgetState extends State<StaffRegisterWidget> {
         displayName: _model.staff?.name,
         email: _model.staff?.email,
         phoneNumber: _model.staff?.phone,
-        role: _model.staff?.role,
+        role: _model.staff?.role ?? staffRole,
+        accountType: 'Pharmacy',
         ownerRef: _model.staff?.ownerRef,
       ));
       await authManager.sendEmailVerification();
