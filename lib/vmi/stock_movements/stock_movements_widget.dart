@@ -118,12 +118,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           builder: (context) =>
                               StreamBuilder<List<StockMovementRecord>>(
                             stream: queryStockMovementRecord(
-                              parent: valueOrDefault(
-                                          currentUserDocument?.role,
-                                          '') ==
-                                      'Owner'
-                                  ? currentUserReference
-                                  : currentUserDocument?.ownerRef,
+                              parent: AccessControl.parentRef(context) ??
+                                  currentUserReference,
                               queryBuilder: (stockMovementRecord) =>
                                   stockMovementRecord.orderBy('CreatedAt',
                                       descending: true),
@@ -2039,18 +2035,10 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                     );
                                     final userDoc = currentUserDocument;
                                     if (userDoc == null) return;
-                                    final DocumentReference ownerRef;
-                                    if (valueOrDefault(
-                                            userDoc.role, '') ==
-                                        'Owner') {
-                                      final ref = currentUserReference;
-                                      if (ref == null) return;
-                                      ownerRef = ref;
-                                    } else {
-                                      final ref = userDoc.ownerRef;
-                                      if (ref == null) return;
-                                      ownerRef = ref;
-                                    }
+                                    final ref = AccessControl.parentRef(context) ??
+                                        currentUserReference;
+                                    if (ref == null) return;
+                                    final ownerRef = ref;
                                     await StockMovementRecord.createDoc(
                                             ownerRef)
                                         .set(createStockMovementRecordData(

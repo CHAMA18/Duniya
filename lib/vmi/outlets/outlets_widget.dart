@@ -162,12 +162,8 @@ class _OutletsWidgetState extends State<OutletsWidget> {
                                   builder: (context) =>
                                       FutureBuilder<List<PharmacyRecord>>(
                                     future: queryPharmacyRecordOnce(
-                                      parent: valueOrDefault(
-                                                  currentUserDocument?.role,
-                                                  '') ==
-                                              'Owner'
-                                          ? currentUserReference
-                                          : currentUserDocument?.ownerRef,
+                                      parent: AccessControl.parentRef(context) ??
+                                          currentUserReference,
                                     ),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
@@ -252,14 +248,8 @@ class _OutletsWidgetState extends State<OutletsWidget> {
                                                     List<OutletRecord>>(
                                                 stream:
                                                     queryOutletRecord(
-                                                  parent: valueOrDefault(
-                                                              currentUserDocument
-                                                                  ?.role,
-                                                              '') ==
-                                                          'Owner'
-                                                      ? currentUserReference
-                                                      : currentUserDocument
-                                                          ?.ownerRef,
+                                                  parent: AccessControl.parentRef(context) ??
+                                                      currentUserReference,
                                                 ),
                                                 builder:
                                                     (context, snapshot) {

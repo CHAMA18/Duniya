@@ -2,6 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/components/empty_cart_widget.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -388,11 +389,8 @@ class _CartWidgetState extends State<CartWidget> {
                               logFirebaseEvent('Button_backend_call');
 
                               var salesRecordReference = SalesRecord.createDoc(
-                                  valueOrDefault(
-                                              currentUserDocument?.role, '') ==
-                                          'Owner'
-                                      ? currentUserReference!
-                                      : currentUserDocument!.ownerRef!);
+                                  (AccessControl.parentRef(context) ??
+                                          currentUserReference)!);
                               await salesRecordReference
                                   .set(createSalesRecordData(
                                 date: getCurrentTimestamp,
@@ -403,11 +401,8 @@ class _CartWidgetState extends State<CartWidget> {
                                     FFAppState().Cart.displayName.length,
                                 userID: currentUserReference,
                                 pharmaID: FFAppState().Cart.pharmId,
-                                ownerRef: valueOrDefault(
-                                            currentUserDocument?.role, '') ==
-                                        'Owner'
-                                    ? currentUserReference
-                                    : currentUserDocument?.ownerRef,
+                                ownerRef: AccessControl.parentRef(context) ??
+                                    currentUserReference,
                               ));
                               _model.sales = SalesRecord.getDocumentFromData(
                                   createSalesRecordData(
@@ -419,32 +414,23 @@ class _CartWidgetState extends State<CartWidget> {
                                         FFAppState().Cart.displayName.length,
                                     userID: currentUserReference,
                                     pharmaID: FFAppState().Cart.pharmId,
-                                    ownerRef: valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner'
-                                        ? currentUserReference
-                                        : currentUserDocument?.ownerRef,
+                                    ownerRef:
+                                        AccessControl.parentRef(context) ??
+                                            currentUserReference,
                                   ),
                                   salesRecordReference);
                               logFirebaseEvent('Button_firestore_query');
                               _model.fine = await queryFinanceRecordOnce(
-                                parent: valueOrDefault(
-                                            currentUserDocument?.role, '') ==
-                                        'Owner'
-                                    ? currentUserReference
-                                    : currentUserDocument?.ownerRef,
+                                parent: AccessControl.parentRef(context) ??
+                                    currentUserReference,
                                 singleRecord: true,
                               ).then((s) => s.firstOrNull);
                               if (_model.fine?.revenue == null) {
                                 logFirebaseEvent('Button_backend_call');
 
-                                await FinanceRecord.createDoc(valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner'
-                                        ? currentUserReference!
-                                        : currentUserDocument!.ownerRef!)
+                                await FinanceRecord.createDoc(
+                                    (AccessControl.parentRef(context) ??
+                                            currentUserReference)!)
                                     .set(createFinanceRecordData(
                                   revenue: functions.cartTotal(
                                       FFAppState().Cart.price.toList(),
@@ -476,11 +462,8 @@ class _CartWidgetState extends State<CartWidget> {
                                   FFAppState().Cart.displayName.length) {
                                 logFirebaseEvent('Button_firestore_query');
                                 _model.stock = await queryStockRecordOnce(
-                                  parent: valueOrDefault(
-                                              currentUserDocument?.role, '') ==
-                                          'Owner'
-                                      ? currentUserReference
-                                      : currentUserDocument?.ownerRef,
+                                  parent: AccessControl.parentRef(context) ??
+                                      currentUserReference,
                                   queryBuilder: (stockRecord) => stockRecord
                                       .where(
                                         'Name',
@@ -498,12 +481,9 @@ class _CartWidgetState extends State<CartWidget> {
                                 ).then((s) => s.firstOrNull);
                                 logFirebaseEvent('Button_backend_call');
 
-                                await SaleitemRecord.createDoc(valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner'
-                                        ? currentUserReference!
-                                        : currentUserDocument!.ownerRef!)
+                                await SaleitemRecord.createDoc(
+                                    (AccessControl.parentRef(context) ??
+                                            currentUserReference)!)
                                     .set(createSaleitemRecordData(
                                   quantity: FFAppState()
                                       .Cart
@@ -536,9 +516,7 @@ class _CartWidgetState extends State<CartWidget> {
                                     (_model.stock?.limitNotice != null
                                         ? _model.stock!.limitNotice
                                         : 5)) {
-                                  if (valueOrDefault(
-                                          currentUserDocument?.role, '') ==
-                                      'Owner') {
+                                  if (AccessControl.isOwner(context)) {
                                     logFirebaseEvent('Button_backend_call');
                                     _model.ownerCall = await SendEmailCall.call(
                                       toEmail: currentUserEmail,

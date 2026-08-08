@@ -153,19 +153,17 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.posApplyDiscount,
     Permission.posVoidTransaction,
 
-    // Inventory — view & edit, no delete/import/export
+    // Inventory — view, create, edit (no delete/import/export)
     Permission.inventoryView,
     Permission.inventoryCreate,
     Permission.inventoryEdit,
-    Permission.inventoryDelete,
-    Permission.inventoryImport,
 
-    // Product Catalogue — view & edit
+    // Product Catalogue — view, create, edit
     Permission.catalogueView,
     Permission.catalogueCreate,
     Permission.catalogueEdit,
 
-    // Stock Management — view & create
+    // Stock Management — view, create, approve
     Permission.stockBalancesView,
     Permission.stockMovementsView,
     Permission.stockCountsView,
@@ -173,7 +171,7 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.stockCountsEdit,
     Permission.stockCountsApprove,
 
-    // Goods Received
+    // Goods Received — view, create, edit
     Permission.goodsReceivedView,
     Permission.goodsReceivedCreate,
     Permission.goodsReceivedEdit,
@@ -194,13 +192,13 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     // Outlets — view only
     Permission.outletsView,
 
-    // HR — can view & manage staff (but not assign Owner role)
+    // HR — can view & manage staff (no role assignment, no delete)
     Permission.hrView,
     Permission.hrCreateStaff,
     Permission.hrEditStaff,
     Permission.hrViewStaffDetails,
 
-    // Finances — view only
+    // Finances — view + reports
     Permission.financesView,
     Permission.financesViewReports,
 
@@ -210,7 +208,7 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     // Pending Approvals — view only
     Permission.pendingApprovalsView,
 
-    // Sales / Dispensing
+    // Sales / Dispensing — no delete
     Permission.salesView,
     Permission.salesCreate,
     Permission.salesEdit,
@@ -223,11 +221,11 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     // Settings
     Permission.settingsView,
 
-    // Dashboard
+    // Dashboard — sales + inventory
     Permission.dashboardViewSalesAnalytics,
     Permission.dashboardViewInventoryMix,
 
-    // Damaged Stock
+    // Damaged Stock — view, create, edit
     Permission.damagedStockView,
     Permission.damagedStockCreate,
     Permission.damagedStockEdit,
@@ -243,18 +241,20 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   // PHARMACIST — Handles dispensing, POS, and clinical tools
   // ═══════════════════════════════════════════════════════════════════
   AppRole.pharmacist: {
-    // POS — full access (core responsibility)
+    // POS — full access, no void/delete
     Permission.posView,
     Permission.posCreateSale,
     Permission.posEditSale,
     Permission.posApplyDiscount,
 
-    // Inventory — view & edit
+    // Inventory — view, create, edit
     Permission.inventoryView,
+    Permission.inventoryCreate,
     Permission.inventoryEdit,
 
-    // Product Catalogue — view & edit
+    // Product Catalogue — view, create, edit
     Permission.catalogueView,
+    Permission.catalogueCreate,
     Permission.catalogueEdit,
 
     // Stock Management — view & create counts
@@ -318,16 +318,18 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   // PHARMACY TECHNICIAN — Inventory & stock management focus
   // ═══════════════════════════════════════════════════════════════════
   AppRole.pharmacyTechnician: {
-    // POS — view only (can assist but not create)
+    // POS — view only
     Permission.posView,
 
-    // Inventory — view & create
+    // Inventory — view, create, edit
     Permission.inventoryView,
     Permission.inventoryCreate,
     Permission.inventoryEdit,
 
-    // Product Catalogue — view
+    // Product Catalogue — view, create, edit
     Permission.catalogueView,
+    Permission.catalogueCreate,
+    Permission.catalogueEdit,
 
     // Stock Management — view & create counts
     Permission.stockBalancesView,
@@ -612,7 +614,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.pointOfSale,
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
-    NavItem.vmiDashboard,
     NavItem.settings,
   },
   AppRole.pharmacyTechnician: {
@@ -627,8 +628,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.lowStockAlerts,
     NavItem.replenishment,
     NavItem.bmiCalculator,
-    NavItem.vmiDashboard,
-    NavItem.auditLogs,
     NavItem.settings,
   },
   AppRole.cashier: {

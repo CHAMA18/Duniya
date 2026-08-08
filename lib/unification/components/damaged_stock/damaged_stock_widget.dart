@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -309,19 +310,9 @@ class _DamagedStockWidgetState extends State<DamagedStockWidget> {
                                 'DAMAGED_STOCK_COMP_SUBMIT_BTN_ON_TAP');
                             logFirebaseEvent('Button_backend_call');
 
-                            await DamagedStockRecord.createDoc(() {
-                              if (valueOrDefault(
-                                      currentUserDocument?.role, '') ==
-                                  'Owner') {
-                                return currentUserReference!;
-                              } else if (valueOrDefault(
-                                      currentUserDocument?.role, '') !=
-                                  'Owner') {
-                                return currentUserDocument!.ownerRef!;
-                              } else {
-                                return currentUserDocument!.ownerRef!;
-                              }
-                            }())
+                            await DamagedStockRecord.createDoc(
+                                (AccessControl.parentRef(context) ??
+                                        currentUserReference)!)
                                 .set(createDamagedStockRecordData(
                               stockId: widget.stockId,
                               quantity:

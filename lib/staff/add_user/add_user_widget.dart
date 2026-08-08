@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -48,27 +49,42 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   static const Color _dangerColor = Color(0xFFEF4444);
   static const Color _warningColor = Color(0xFFF59E0B);
 
-  // Pre-defined role chips (matches what the original text field accepted,
-  // but presented as a guided picker so staff owners can't typo a role).
-  static const List<String> _roleOptions = [
+  // Pre-defined role chips using normalized Firestore values that
+  // AppRole.fromFirestoreValue() can parse. Displayed as a guided
+  // picker so staff owners can't typo a role.
+  static const List<String> _allRoleOptions = [
     'Cashier',
+    'Sales Assistant',
+    'Pharmacy Technician',
     'Pharmacist',
-    'Manager',
-    'Technician',
+    'Outlet Manager',
     'Owner',
   ];
+
+  /// Returns the role options the current user is allowed to assign.
+  /// Only Owners can assign the Owner role. Outlet Managers can assign
+  /// all pharmacy staff roles except Owner.
+  List<String> _allowedRoleOptions(BuildContext context) {
+    if (AccessControl.isOwner(context)) {
+      return _allRoleOptions;
+    }
+    // Non-owners cannot assign the Owner role
+    return _allRoleOptions.where((r) => r != 'Owner').toList();
+  }
 
   // Friendly icon per role for the chip picker.
   IconData _roleIcon(String role) {
     switch (role) {
       case 'Cashier':
         return Icons.point_of_sale_outlined;
+      case 'Sales Assistant':
+        return Icons.storefront_outlined;
+      case 'Pharmacy Technician':
+        return Icons.science_outlined;
       case 'Pharmacist':
         return Icons.medical_services_outlined;
-      case 'Manager':
+      case 'Outlet Manager':
         return Icons.manage_accounts_outlined;
-      case 'Technician':
-        return Icons.science_outlined;
       case 'Owner':
         return Icons.verified_user_outlined;
       default:
@@ -214,7 +230,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               createStaffRecordData(
                 ownerRef: currentUserReference,
                 name: _model.nameTextController!.text,
-                role: _model.roleTextController!.text,
+                // Normalize the role string through AppRole to ensure
+                // only valid role values are written to Firestore.
+                role: AppRole.fromFirestoreValue(
+                        _model.roleTextController!.text)
+                    .displayName,
                 email: _model.emailAddressTextController!.text,
                 phone: _model.phoneTextController!.text,
                 pharmId: _model.pharm?.reference,
@@ -1092,7 +1112,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         Wrap(
           spacing: 10.0,
           runSpacing: 10.0,
-          children: _roleOptions.map((role) {
+          children: _allowedRoleOptions(context).map((role) {
             final isSelected = _model.selectedRole == role;
             return Material(
               color: Colors.transparent,

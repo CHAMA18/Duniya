@@ -183,12 +183,8 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                 builder: (context) =>
                                     StreamBuilder<List<PharmacyRecord>>(
                                   stream: queryPharmacyRecord(
-                                    parent: valueOrDefault(
-                                                currentUserDocument?.role,
-                                                '') ==
-                                            'Owner'
-                                        ? currentUserReference
-                                        : currentUserDocument?.ownerRef,
+                                    parent: AccessControl.parentRef(context) ??
+                                        currentUserReference,
                                     queryBuilder: (pharmacyRecord) =>
                                         pharmacyRecord.where(
                                       'Name',
@@ -1382,25 +1378,8 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                     child: StreamBuilder<
                                                         List<StockRecord>>(
                                                       stream: queryStockRecord(
-                                                        parent: () {
-                                                          if (valueOrDefault(
-                                                                  currentUserDocument
-                                                                      ?.role,
-                                                                  '') ==
-                                                              'Owner') {
-                                                            return currentUserReference;
-                                                          } else if (valueOrDefault(
-                                                                  currentUserDocument
-                                                                      ?.role,
-                                                                  '') !=
-                                                              'Owner') {
-                                                            return currentUserDocument
-                                                                ?.ownerRef;
-                                                          } else {
-                                                            return currentUserDocument
-                                                                ?.ownerRef;
-                                                          }
-                                                        }(),
+                                                        parent: AccessControl.parentRef(context) ??
+                                                            currentUserReference,
                                                         queryBuilder:
                                                             (stockRecord) =>
                                                                 stockRecord

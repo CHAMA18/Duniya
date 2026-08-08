@@ -114,12 +114,13 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
     }
   }
 
-  // Categorize the approval type based on user data
+  // Categorize the approval type based on user data using RBAC
   String _approvalCategory(UserRecord user) {
     if (user.accountType == 'pharmacy') return 'Pharmacy Registration';
-    if (user.role == 'staff' || user.role == 'Staff') return 'Staff Approval';
-    if (user.role == 'outlet_manager' || user.role == 'OutletManager') return 'Outlet Setup';
-    if (user.role == 'subscription' || user.accountType == 'subscription') return 'Subscription';
+    final role = AppRole.fromFirestoreValue(user.role);
+    if (role == AppRole.salesAssistant) return 'Staff Approval';
+    if (role == AppRole.outletManager) return 'Outlet Setup';
+    if (role == AppRole.subscriber || user.accountType == 'subscription') return 'Subscription';
     return 'Pharmacy Registration'; // Default to pharmacy-focused
   }
 

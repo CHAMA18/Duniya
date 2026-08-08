@@ -188,10 +188,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                           logFirebaseEvent(
                                               'INVENTORY_CATEGORY_ADD_PRODUCT_BTN_ON_TA');
                                           var _shouldSetState = false;
-                                          if (valueOrDefault(
-                                                  currentUserDocument?.role,
-                                                  '') ==
-                                              'Owner') {
+                                          if (AccessControl.isOwner(context)) {
                                             logFirebaseEvent(
                                                 'Button_navigate_to');
 
@@ -297,25 +294,8 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                           builder: (context) => StreamBuilder<
                                               List<PharmacyRecord>>(
                                             stream: queryPharmacyRecord(
-                                              parent: () {
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') ==
-                                                    'Owner') {
-                                                  return currentUserReference;
-                                                } else if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') !=
-                                                    'Owner') {
-                                                  return currentUserDocument
-                                                      ?.ownerRef;
-                                                } else {
-                                                  return currentUserDocument
-                                                      ?.ownerRef;
-                                                }
-                                              }(),
+                                              parent: AccessControl.parentRef(context) ??
+                                                  currentUserReference,
                                             ),
                                             builder: (context, snapshot) {
                                               // Customize what your widget looks like when it's loading.
@@ -402,11 +382,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                     .fromSTEB(
                                                         16.0, 4.0, 16.0, 4.0),
                                                 hidesUnderline: true,
-                                                disabled: valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') !=
-                                                    'Owner',
+                                                disabled: !AccessControl.isOwner(context),
                                                 isOverButton: true,
                                                 isSearchable: false,
                                                 isMultiSelect: false,
@@ -426,23 +402,8 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                         builder: (context) =>
                                             StreamBuilder<List<StockRecord>>(
                                           stream: queryStockRecord(
-                                            parent: () {
-                                              if (valueOrDefault(
-                                                      currentUserDocument?.role,
-                                                      '') ==
-                                                  'Owner') {
-                                                return currentUserReference;
-                                              } else if (valueOrDefault(
-                                                      currentUserDocument?.role,
-                                                      '') !=
-                                                  'Owner') {
-                                                return currentUserDocument
-                                                    ?.ownerRef;
-                                              } else {
-                                                return currentUserDocument
-                                                    ?.ownerRef;
-                                              }
-                                            }(),
+                                            parent: AccessControl.parentRef(context) ??
+                                                currentUserReference,
                                             queryBuilder: (stockRecord) =>
                                                 stockRecord
                                                     .where(
@@ -492,25 +453,8 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                     'DropDown_firestore_query');
                                                 _model.drug =
                                                     await queryStockRecordOnce(
-                                                  parent: () {
-                                                    if (valueOrDefault(
-                                                            currentUserDocument
-                                                                ?.role,
-                                                            '') ==
-                                                        'Owner') {
-                                                      return currentUserReference;
-                                                    } else if (valueOrDefault(
-                                                            currentUserDocument
-                                                                ?.role,
-                                                            '') !=
-                                                        'Owner') {
-                                                      return currentUserDocument
-                                                          ?.ownerRef;
-                                                    } else {
-                                                      return currentUserDocument
-                                                          ?.ownerRef;
-                                                    }
-                                                  }(),
+                                                  parent: AccessControl.parentRef(context) ??
+                                                      currentUserReference,
                                                   queryBuilder: (stockRecord) =>
                                                       stockRecord.where(
                                                     'Name',
@@ -853,25 +797,8 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                   StreamBuilder<
                                                       List<StockRecord>>(
                                                 stream: queryStockRecord(
-                                                  parent: () {
-                                                    if (valueOrDefault(
-                                                            currentUserDocument
-                                                                ?.role,
-                                                            '') ==
-                                                        'Owner') {
-                                                      return currentUserReference;
-                                                    } else if (valueOrDefault(
-                                                            currentUserDocument
-                                                                ?.role,
-                                                            '') !=
-                                                        'Owner') {
-                                                      return currentUserDocument
-                                                          ?.ownerRef;
-                                                    } else {
-                                                      return currentUserDocument
-                                                          ?.ownerRef;
-                                                    }
-                                                  }(),
+                                                  parent: AccessControl.parentRef(context) ??
+                                                      currentUserReference,
                                                   queryBuilder: (stockRecord) =>
                                                       stockRecord
                                                           .where(

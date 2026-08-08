@@ -2268,9 +2268,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
 
   /// Save a stock balance record to Firestore
   Future<void> _saveStockBalance() async {
-    final parent = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-        ? currentUserReference
-        : currentUserDocument?.ownerRef;
+    final parent = AccessControl.parentRef(context) ??
+        currentUserReference;
     if (parent == null) return;
 
     // Find the selected product's DocumentReference
@@ -2462,9 +2461,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
         return;
       }
 
-      final parent = valueOrDefault(currentUserDocument?.role, '') == 'Owner'
-          ? currentUserReference
-          : currentUserDocument?.ownerRef;
+      final parent = AccessControl.parentRef(context) ??
+          currentUserReference;
       if (parent == null) return;
 
       // Parse CSV

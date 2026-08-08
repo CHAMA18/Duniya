@@ -151,6 +151,25 @@ class AccessControl {
     return userDoc.ownerRef;
   }
 
+  /// Context-free variant of [parentRef] for use in places where
+  /// BuildContext is not available (e.g., top-level functions,
+  /// background services, main.dart init).
+  ///
+  /// Accepts the user document and reference directly instead of
+  /// reading from the widget tree.
+  static DocumentReference? parentRefFromDoc(
+    UserRecord? userDoc,
+    DocumentReference? userRef,
+  ) {
+    if (userDoc == null || userRef == null) return null;
+
+    final role = AppRole.fromFirestoreValue(userDoc.role);
+    if (role.isOwnerLevel) {
+      return userRef;
+    }
+    return userDoc.ownerRef;
+  }
+
   // ─── Role Display ────────────────────────────────────────────────
 
   /// Get the human-readable display name for the current user's role.

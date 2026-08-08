@@ -192,11 +192,9 @@ class _MyAppState extends State<MyApp> {
       }
       // Watch the user's collections for pending writes.
       // This populates the OfflineStatusChip with real sync data.
-      // Note: Uses inline role check (no BuildContext available for AccessControl).
-      // See /lib/rbac/ for the centralized RBAC system.
-      final ownerRef = valueOrDefault(userDoc.role, '') == 'Owner'
-          ? userRef
-          : userDoc.ownerRef;
+      // Uses AccessControl.parentRefFromDoc (context-free variant)
+      // instead of inline role == 'Owner' check.
+      final ownerRef = AccessControl.parentRefFromDoc(userDoc, userRef);
       if (ownerRef != null) {
         OfflineSyncService().watchCollection(
           FirebaseFirestore.instance

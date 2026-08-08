@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/rbac/access_control.dart';
 
 /// Preloads critical Firestore data into the offline cache so the app
 /// is fully functional when the network drops.
@@ -63,25 +64,13 @@ class CacheWarmerService extends ChangeNotifier {
     }
 
     // Resolve the owner reference (pharmacies live under the owner).
-    // Note: Uses inline role check (no BuildContext available for AccessControl).
-    // See /lib/rbac/ for the centralized RBAC system.
-    final DocumentReference ownerRef;
-    if (valueOrDefault(userDoc.role, '') == 'Owner') {
-      final ref = currentUserReference;
-      if (ref == null) {
-        _lastError = 'Unable to identify your account';
-        notifyListeners();
-        return 0;
-      }
-      ownerRef = ref;
-    } else {
-      final ref = userDoc.ownerRef;
-      if (ref == null) {
-        _lastError = 'No owner pharmacy linked to your account';
-        notifyListeners();
-        return 0;
-      }
-      ownerRef = ref;
+    // Uses AccessControl.parentRefFromDoc (context-free variant)
+    // instead of inline role == 'Owner' check.
+    final ownerRef = AccessControl.parentRefFromDoc(userDoc, currentUserReference);
+    if (ownerRef == null) {
+      _lastError = 'Unable to identify your owner pharmacy';
+      notifyListeners();
+      return 0;
     }
 
     _isWarming = true;

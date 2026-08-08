@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -152,11 +153,8 @@ class _SwitchPharmStaffWidgetState extends State<SwitchPharmStaffWidget> {
                           builder: (context) =>
                               StreamBuilder<List<PharmacyRecord>>(
                             stream: queryPharmacyRecord(
-                              parent: valueOrDefault(
-                                          currentUserDocument?.role, '') ==
-                                      'Owner'
-                                  ? currentUserReference
-                                  : currentUserDocument?.ownerRef,
+                              parent: AccessControl.parentRef(context) ??
+                                  currentUserReference,
                             ),
                             builder: (context, snapshot) {
                               // Customize what your widget looks like when it's loading.
@@ -236,11 +234,8 @@ class _SwitchPharmStaffWidgetState extends State<SwitchPharmStaffWidget> {
                                     'SWITCH_PHARM_STAFF_SWITCH_BTN_ON_TAP');
                                 logFirebaseEvent('Button_firestore_query');
                                 _model.pharm = await queryPharmacyRecordOnce(
-                                  parent: valueOrDefault(
-                                              currentUserDocument?.role, '') ==
-                                          'Owner'
-                                      ? currentUserReference
-                                      : currentUserDocument?.ownerRef,
+                                  parent: AccessControl.parentRef(context) ??
+                                      currentUserReference,
                                   queryBuilder: (pharmacyRecord) =>
                                       pharmacyRecord.where(
                                     'Name',

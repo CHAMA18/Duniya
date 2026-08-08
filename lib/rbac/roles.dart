@@ -82,8 +82,10 @@ enum AppRole {
 
   /// Convert a Firestore `accountType` string to determine if
   /// the user is a Duniya network user or a pharmacy user.
+  /// Defaults to pharmacy (false) when null/empty for security —
+  /// missing accountType should not grant network admin access.
   static bool isDuniyaAccountType(String? accountType) {
-    if (accountType == null || accountType.isEmpty) return true;
+    if (accountType == null || accountType.isEmpty) return false;
     return accountType.toLowerCase() == 'duniya';
   }
 
