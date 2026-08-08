@@ -648,7 +648,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         double cardSpacing = 16.0;
         double minCardWidth = 180.0;
         int cols =
-            (constraints.maxWidth / (minCardWidth + cardSpacing)).clamp(1, 4);
+            (constraints.maxWidth / (minCardWidth + cardSpacing)).clamp(1, 4).toInt();
         final cardWidth =
             (constraints.maxWidth - cardSpacing * (cols - 1)) / cols;
 

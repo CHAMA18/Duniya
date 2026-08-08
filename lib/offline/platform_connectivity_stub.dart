@@ -5,5 +5,7 @@ import 'dart:async';
 bool get isOnline => true;
 
 /// No-op stream that never emits (never offline on non-web).
-Stream<Event> get onOnline => const Stream.empty();
-Stream<Event> get onOffline => const Stream.empty();
+/// Uses `void` as the stream type — callers only need to know *when*
+/// connectivity changes, not what the event payload is.
+Stream<void> get onOnline => const Stream.empty();
+Stream<void> get onOffline => const Stream.empty();

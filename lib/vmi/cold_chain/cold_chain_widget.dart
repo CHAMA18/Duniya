@@ -1043,7 +1043,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
               ),
             )
           else
-            ...unacknowledged.map((alert) => _buildAlertRow(alert))
+            ...unacknowledged.map((alert) => _buildAlertRow(alert)),
             ...acknowledged.map((alert) => _buildAlertRow(alert)),
         ],
       ),

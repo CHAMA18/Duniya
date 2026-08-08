@@ -1278,6 +1278,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   borderColor: Colors.transparent,
                   borderWidth: 0,
                   borderRadius: 10.0,
+                  margin: EdgeInsets.zero,
                 ),
               ),
             ],

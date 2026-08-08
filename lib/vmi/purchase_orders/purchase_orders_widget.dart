@@ -1066,10 +1066,9 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
               padding: const EdgeInsets.all(32.0),
               child: Column(
                 children: [
-                  SpinKitRipple(
+                  SpinKitRing(
                     color: theme.primary,
                     size: 40.0,
-                    borderWidth: 3.0,
                   ),
                   const SizedBox(height: 16.0),
                   Text(
