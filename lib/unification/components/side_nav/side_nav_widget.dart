@@ -893,6 +893,55 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           ),
                         ),
                       ),
+                    // Patient Records (RBAC)
+                    if (_canSee(NavItem.patientRecords))
+                      Tooltip(
+                        message: 'Patient Records',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Patient_Records_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              PatientRecordsWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Patient Records';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelPatientRecords,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Patient Records',
+                              activeIcon: Icon(
+                                Icons.people,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.people_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Patient Records',
+                            ),
+                          ),
+                        ),
+                      ),
                     // Finances (RBAC)
                     if (_canSee(NavItem.finances))
                       Tooltip(
@@ -940,6 +989,55 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                               ),
                               isActive:
                                   FFAppState().SelectedPage == 'Finances',
+                            ),
+                          ),
+                        ),
+                      ),
+                    // Insurance (RBAC)
+                    if (_canSee(NavItem.insurance))
+                      Tooltip(
+                        message: 'Insurance',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Insurance_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              InsuranceWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Insurance';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelInsurance,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Insurance',
+                              activeIcon: Icon(
+                                Icons.shield,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.shield_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Insurance',
                             ),
                           ),
                         ),
@@ -1171,6 +1269,55 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           ),
                         ),
                       ),
+                    // Cold Chain (RBAC)
+                    if (_canSee(NavItem.coldChain))
+                      Tooltip(
+                        message: 'Cold Chain',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Cold_Chain_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              ColdChainWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Cold Chain';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelColdChain,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Cold Chain',
+                              activeIcon: Icon(
+                                Icons.ac_unit,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.ac_unit_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Cold Chain',
+                            ),
+                          ),
+                        ),
+                      ),
 
                     // ─── Divider ───
                     _buildDivider(),
@@ -1289,6 +1436,104 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           ),
                         ),
                       ),
+                    // Drug Interactions (RBAC)
+                    if (_canSee(NavItem.drugInteractions))
+                      Tooltip(
+                        message: 'Drug Interactions',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Drug_Interactions_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              DrugInteractionsWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Drug Interactions';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelDrugInteractions,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Drug Interactions',
+                              activeIcon: Icon(
+                                Icons.medication,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.medication_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Drug Interactions',
+                            ),
+                          ),
+                        ),
+                      ),
+                    // Prescriptions (RBAC)
+                    if (_canSee(NavItem.prescriptions))
+                      Tooltip(
+                        message: 'Prescriptions',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Prescriptions_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              PrescriptionsWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Prescriptions';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelPrescription,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Prescriptions',
+                              activeIcon: Icon(
+                                Icons.receipt_long,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.receipt_long_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Prescriptions',
+                            ),
+                          ),
+                        ),
+                      ),
                     // Batch & Expiry (RBAC)
                     if (_canSee(NavItem.batchesExpiry))
                       Tooltip(
@@ -1340,6 +1585,55 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                               ),
                               isActive: FFAppState().SelectedPage ==
                                   'Batch & Expiry',
+                            ),
+                          ),
+                        ),
+                      ),
+                    // Expiry Tracking (RBAC)
+                    if (_canSee(NavItem.expiryTracking))
+                      Tooltip(
+                        message: 'Expiry Tracking',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Expiry_Tracking_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              ExpiryTrackingWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Expiry Tracking';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelExpiryTracking,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Expiry Tracking',
+                              activeIcon: Icon(
+                                Icons.timer,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.timer_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Expiry Tracking',
                             ),
                           ),
                         ),
@@ -1438,6 +1732,55 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                               ),
                               isActive: FFAppState().SelectedPage ==
                                   'Replenishment',
+                            ),
+                          ),
+                        ),
+                      ),
+                    // Purchase Orders (RBAC)
+                    if (_canSee(NavItem.purchaseOrders))
+                      Tooltip(
+                        message: 'Purchase Orders',
+                        preferBelow: false,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            logFirebaseEvent(
+                                'SIDE_NAV_COMP_Purchase_Orders_ON_TAP');
+                            logFirebaseEvent('SidebarLink_navigate_to');
+
+                            context.goNamed(
+                              PurchaseOrdersWidget.routeName,
+                              extra: <String, dynamic>{
+                                '__transition_info__': TransitionInfo(
+                                  hasTransition: true,
+                                  transitionType: PageTransitionType.fade,
+                                  duration: Duration(milliseconds: 0),
+                                ),
+                              },
+                            );
+
+                            logFirebaseEvent('SidebarLink_update_app_state');
+                            FFAppState().SelectedPage = 'Purchase Orders';
+                          },
+                          child: wrapWithModel(
+                            model: _model.sidebarLinkModelPurchaseOrders,
+                            updateCallback: () => safeSetState(() {}),
+                            child: SidebarLinkWidget(
+                              linkText: 'Purchase Orders',
+                              activeIcon: Icon(
+                                Icons.shopping_cart,
+                                color: FlutterFlowTheme.of(context).primary,
+                              ),
+                              inactiveIcon: Icon(
+                                Icons.shopping_cart_outlined,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                              ),
+                              isActive: FFAppState().SelectedPage ==
+                                  'Purchase Orders',
                             ),
                           ),
                         ),

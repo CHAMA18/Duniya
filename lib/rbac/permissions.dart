@@ -133,4 +133,42 @@ enum Permission {
 
   // ─── Notifications ────────────────────────────────────────────────
   notificationsView,
+
+  // ─── Drug Interaction Alerts ──────────────────────────────────────
+  drugInteractionsView,
+  drugInteractionsCheck,
+  drugInteractionsManageRules,
+
+  // ─── Expiry Tracking ─────────────────────────────────────────────
+  expiryTrackingView,
+  expiryTrackingExport,
+
+  // ─── Purchase Orders ─────────────────────────────────────────────
+  purchaseOrdersView,
+  purchaseOrdersCreate,
+  purchaseOrdersEdit,
+  purchaseOrdersApprove,
+  purchaseOrdersDelete,
+
+  // ─── Digital Prescriptions ────────────────────────────────────────
+  prescriptionsView,
+  prescriptionsCreate,
+  prescriptionsVerify,
+  prescriptionsFulfill,
+
+  // ─── Insurance / Claims ───────────────────────────────────────────
+  insuranceView,
+  insuranceSubmitClaim,
+  insuranceVerifyMember,
+
+  // ─── Cold Chain Monitoring ────────────────────────────────────────
+  coldChainView,
+  coldChainManageSensors,
+  coldChainViewAlerts,
+
+  // ─── Patient Medication Records ───────────────────────────────────
+  patientRecordsView,
+  patientRecordsCreate,
+  patientRecordsEdit,
+  patientRecordsViewHistory,
 }

@@ -371,6 +371,265 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
+                // Drug Interactions (RBAC)
+                if (_canSee(NavItem.drugInteractions))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.medication_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Drug Interactions'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_drug_interactions_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Drug Interactions';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      DrugInteractionsWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
+                // Expiry Tracking (RBAC)
+                if (_canSee(NavItem.expiryTracking))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.timer_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Expiry Tracking'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_expiry_tracking_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Expiry Tracking';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      ExpiryTrackingWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
+                // Purchase Orders (RBAC)
+                if (_canSee(NavItem.purchaseOrders))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.shopping_cart_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Purchase Orders'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_purchase_orders_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Purchase Orders';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      PurchaseOrdersWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
+                // Prescriptions (RBAC)
+                if (_canSee(NavItem.prescriptions))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.receipt_long_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Prescriptions'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_prescriptions_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Prescriptions';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      PrescriptionsWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
+                // Insurance (RBAC)
+                if (_canSee(NavItem.insurance))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.shield_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Insurance'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_insurance_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Insurance';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      InsuranceWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
+                // Cold Chain (RBAC)
+                if (_canSee(NavItem.coldChain))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.ac_unit_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Cold Chain'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_cold_chain_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Cold Chain';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      ColdChainWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
+                // Patient Records (RBAC)
+                if (_canSee(NavItem.patientRecords))
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 50.0,
+                  icon: Icon(
+                    Icons.people_outlined,
+                    color: valueOrDefault<Color>(
+                      FFAppState().SelectedPage == 'Patient Records'
+                          ? FlutterFlowTheme.of(context).primary
+                          : FlutterFlowTheme.of(context).secondaryText,
+                      FlutterFlowTheme.of(context).secondaryText,
+                    ),
+                    size: 24.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'MOBILE_NAVBAR_patient_records_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_update_app_state');
+                    FFAppState().SelectedPage = 'Patient Records';
+                    safeSetState(() {});
+                    logFirebaseEvent('IconButton_navigate_to');
+
+                    context.goNamed(
+                      PatientRecordsWidget.routeName,
+                      extra: <String, dynamic>{
+                        '__transition_info__': TransitionInfo(
+                          hasTransition: true,
+                          transitionType: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 0),
+                        ),
+                      },
+                    );
+                  },
+                ),
               ],
             ),
           ),

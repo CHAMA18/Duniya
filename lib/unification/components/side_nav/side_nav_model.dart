@@ -51,6 +51,14 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModel15dup;
   late SidebarLinkModel sidebarLinkModel16dup;
   late SidebarLinkModel sidebarLinkModel17dup;
+  // New feature models
+  late SidebarLinkModel sidebarLinkModelDrugInteractions;
+  late SidebarLinkModel sidebarLinkModelExpiryTracking;
+  late SidebarLinkModel sidebarLinkModelPurchaseOrders;
+  late SidebarLinkModel sidebarLinkModelPrescription;
+  late SidebarLinkModel sidebarLinkModelInsurance;
+  late SidebarLinkModel sidebarLinkModelColdChain;
+  late SidebarLinkModel sidebarLinkModelPatientRecords;
   // State field(s) for SwitchListTile widget.
   bool? switchListTileValue;
 
@@ -79,6 +87,13 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15dup = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel16dup = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel17dup = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelDrugInteractions = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelExpiryTracking = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelPurchaseOrders = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelPrescription = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelInsurance = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelColdChain = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelPatientRecords = createModel(context, () => SidebarLinkModel());
   }
 
   @override
@@ -106,5 +121,12 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15dup.dispose();
     sidebarLinkModel16dup.dispose();
     sidebarLinkModel17dup.dispose();
+    sidebarLinkModelDrugInteractions.dispose();
+    sidebarLinkModelExpiryTracking.dispose();
+    sidebarLinkModelPurchaseOrders.dispose();
+    sidebarLinkModelPrescription.dispose();
+    sidebarLinkModelInsurance.dispose();
+    sidebarLinkModelColdChain.dispose();
+    sidebarLinkModelPatientRecords.dispose();
   }
 }

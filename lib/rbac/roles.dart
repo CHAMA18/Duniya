@@ -164,5 +164,12 @@ enum NavItem {
   duniyaNetworkAnalytics,
   vmiDashboard,
   auditLogs,
+  drugInteractions,
+  expiryTracking,
+  purchaseOrders,
+  prescriptions,
+  insurance,
+  coldChain,
+  patientRecords,
   settings,
 }

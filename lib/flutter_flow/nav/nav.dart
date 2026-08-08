@@ -27,6 +27,13 @@ import '/vmi/batches/batches_widget.dart';
 import '/vmi/alerts/low_stock_alerts_widget.dart';
 import '/vmi/replenishment/replenishment_widget.dart';
 import '/vmi/outlets/outlets_widget.dart';
+import '/vmi/drug_interactions/drug_interactions_widget.dart';
+import '/vmi/expiry_tracking/expiry_tracking_widget.dart';
+import '/vmi/purchase_orders/purchase_orders_widget.dart';
+import '/vmi/prescriptions/prescriptions_widget.dart';
+import '/vmi/insurance/insurance_widget.dart';
+import '/vmi/cold_chain/cold_chain_widget.dart';
+import '/vmi/patient_records/patient_records_widget.dart';
 
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
@@ -629,6 +636,49 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: AuditLogsWidget.routePath,
           requireAuth: true,
           builder: (context, params) => AuditLogsWidget(),
+        ),
+        // New feature routes
+        FFRoute(
+          name: DrugInteractionsWidget.routeName,
+          path: DrugInteractionsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => DrugInteractionsWidget(),
+        ),
+        FFRoute(
+          name: ExpiryTrackingWidget.routeName,
+          path: ExpiryTrackingWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => ExpiryTrackingWidget(),
+        ),
+        FFRoute(
+          name: PurchaseOrdersWidget.routeName,
+          path: PurchaseOrdersWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => PurchaseOrdersWidget(),
+        ),
+        FFRoute(
+          name: PrescriptionsWidget.routeName,
+          path: PrescriptionsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => PrescriptionsWidget(),
+        ),
+        FFRoute(
+          name: InsuranceWidget.routeName,
+          path: InsuranceWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => InsuranceWidget(),
+        ),
+        FFRoute(
+          name: ColdChainWidget.routeName,
+          path: ColdChainWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => ColdChainWidget(),
+        ),
+        FFRoute(
+          name: PatientRecordsWidget.routeName,
+          path: PatientRecordsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => PatientRecordsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

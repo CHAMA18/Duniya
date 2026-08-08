@@ -139,6 +139,44 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions — full access
+    Permission.drugInteractionsView,
+    Permission.drugInteractionsCheck,
+    Permission.drugInteractionsManageRules,
+
+    // Expiry Tracking — full access
+    Permission.expiryTrackingView,
+    Permission.expiryTrackingExport,
+
+    // Purchase Orders — full access
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+    Permission.purchaseOrdersEdit,
+    Permission.purchaseOrdersApprove,
+    Permission.purchaseOrdersDelete,
+
+    // Prescriptions — full access
+    Permission.prescriptionsView,
+    Permission.prescriptionsCreate,
+    Permission.prescriptionsVerify,
+    Permission.prescriptionsFulfill,
+
+    // Insurance — full access
+    Permission.insuranceView,
+    Permission.insuranceSubmitClaim,
+    Permission.insuranceVerifyMember,
+
+    // Cold Chain — full access
+    Permission.coldChainView,
+    Permission.coldChainManageSensors,
+    Permission.coldChainViewAlerts,
+
+    // Patient Records — full access
+    Permission.patientRecordsView,
+    Permission.patientRecordsCreate,
+    Permission.patientRecordsEdit,
+    Permission.patientRecordsViewHistory,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -235,6 +273,41 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions
+    Permission.drugInteractionsView,
+    Permission.drugInteractionsCheck,
+
+    // Expiry Tracking
+    Permission.expiryTrackingView,
+    Permission.expiryTrackingExport,
+
+    // Purchase Orders
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+    Permission.purchaseOrdersEdit,
+    Permission.purchaseOrdersApprove,
+
+    // Prescriptions
+    Permission.prescriptionsView,
+    Permission.prescriptionsCreate,
+    Permission.prescriptionsVerify,
+    Permission.prescriptionsFulfill,
+
+    // Insurance
+    Permission.insuranceView,
+    Permission.insuranceSubmitClaim,
+    Permission.insuranceVerifyMember,
+
+    // Cold Chain
+    Permission.coldChainView,
+    Permission.coldChainViewAlerts,
+
+    // Patient Records
+    Permission.patientRecordsView,
+    Permission.patientRecordsCreate,
+    Permission.patientRecordsEdit,
+    Permission.patientRecordsViewHistory,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -312,6 +385,37 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions
+    Permission.drugInteractionsView,
+    Permission.drugInteractionsCheck,
+
+    // Expiry Tracking
+    Permission.expiryTrackingView,
+
+    // Purchase Orders
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+
+    // Prescriptions
+    Permission.prescriptionsView,
+    Permission.prescriptionsCreate,
+    Permission.prescriptionsVerify,
+    Permission.prescriptionsFulfill,
+
+    // Insurance
+    Permission.insuranceView,
+    Permission.insuranceVerifyMember,
+
+    // Cold Chain
+    Permission.coldChainView,
+    Permission.coldChainViewAlerts,
+
+    // Patient Records
+    Permission.patientRecordsView,
+    Permission.patientRecordsCreate,
+    Permission.patientRecordsEdit,
+    Permission.patientRecordsViewHistory,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -371,6 +475,23 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions
+    Permission.drugInteractionsView,
+
+    // Expiry Tracking
+    Permission.expiryTrackingView,
+
+    // Purchase Orders
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+
+    // Cold Chain
+    Permission.coldChainView,
+    Permission.coldChainViewAlerts,
+
+    // Patient Records
+    Permission.patientRecordsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -411,6 +532,16 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions
+    Permission.drugInteractionsView,
+
+    // Insurance
+    Permission.insuranceView,
+    Permission.insuranceVerifyMember,
+
+    // Patient Records
+    Permission.patientRecordsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -454,6 +585,16 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions
+    Permission.drugInteractionsView,
+
+    // Insurance
+    Permission.insuranceView,
+    Permission.insuranceVerifyMember,
+
+    // Patient Records
+    Permission.patientRecordsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -494,6 +635,15 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 
     // Notifications
     Permission.notificationsView,
+
+    // Drug Interactions
+    Permission.drugInteractionsView,
+
+    // Expiry Tracking
+    Permission.expiryTrackingView,
+
+    // Purchase Orders
+    Permission.purchaseOrdersView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -577,6 +727,13 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.vmiDashboard,
     NavItem.auditLogs,
     NavItem.settings,
+    NavItem.drugInteractions,
+    NavItem.expiryTracking,
+    NavItem.purchaseOrders,
+    NavItem.prescriptions,
+    NavItem.insurance,
+    NavItem.coldChain,
+    NavItem.patientRecords,
   },
   AppRole.outletManager: {
     NavItem.home,
@@ -598,6 +755,13 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.vmiDashboard,
     NavItem.auditLogs,
     NavItem.settings,
+    NavItem.drugInteractions,
+    NavItem.expiryTracking,
+    NavItem.purchaseOrders,
+    NavItem.prescriptions,
+    NavItem.insurance,
+    NavItem.coldChain,
+    NavItem.patientRecords,
   },
   AppRole.pharmacist: {
     NavItem.home,
@@ -615,6 +779,13 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
     NavItem.settings,
+    NavItem.drugInteractions,
+    NavItem.expiryTracking,
+    NavItem.purchaseOrders,
+    NavItem.prescriptions,
+    NavItem.insurance,
+    NavItem.coldChain,
+    NavItem.patientRecords,
   },
   AppRole.pharmacyTechnician: {
     NavItem.home,
@@ -629,6 +800,9 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.replenishment,
     NavItem.bmiCalculator,
     NavItem.settings,
+    NavItem.expiryTracking,
+    NavItem.purchaseOrders,
+    NavItem.coldChain,
   },
   AppRole.cashier: {
     NavItem.home,
@@ -642,6 +816,8 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.pointOfSale,
     NavItem.bmiCalculator,
     NavItem.settings,
+    NavItem.drugInteractions,
+    NavItem.insurance,
   },
   AppRole.salesAssistant: {
     NavItem.home,
@@ -656,6 +832,8 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.bmiCalculator,
     NavItem.vmiDashboard,
     NavItem.settings,
+    NavItem.drugInteractions,
+    NavItem.insurance,
   },
   AppRole.duniyaAdmin: {
     NavItem.home,
