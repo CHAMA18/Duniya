@@ -16,7 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'dart:html' as html;
+import '/flutter_flow/platform_download.dart';
 import 'dart:typed_data';
 import 'batches_model.dart';
 export 'batches_model.dart';
@@ -277,14 +277,11 @@ class _BatchesWidgetState extends State<BatchesWidget> {
     );
 
     final bytes = await pdf.save();
-    final blob = html.Blob([bytes], 'application/pdf');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    html.document.createElement('a')
-      ..setAttribute('href', url)
-      ..setAttribute('download',
-          'batch_expiry_report_${DateTime.now().millisecondsSinceEpoch}.pdf')
-      ..click();
-    html.Url.revokeObjectUrl(url);
+    await save(
+      bytes: Uint8List.fromList(bytes),
+      fileName: 'batch_expiry_report_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      mimeType: 'application/pdf',
+    );
   }
 
   // ── Alert Summary Card ──

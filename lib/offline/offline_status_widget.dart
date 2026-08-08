@@ -48,9 +48,12 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
       duration: const Duration(milliseconds: 280),
     );
 
+    // Only listen to _connectivity explicitly — _sync and _warmer are
+    // already listened to via AnimatedBuilder's Listenable.merge below.
+    // Adding explicit listeners for them too caused a double-notify
+    // cycle: notifyListeners → _onChanged → setState → rebuild →
+    // AnimatedBuilder tick → notifyListeners → stack overflow.
     _connectivity.addListener(_onChanged);
-    _sync.addListener(_onChanged);
-    _warmer.addListener(_onChanged);
 
     // Initial visibility
     _scheduleAutoHide();
@@ -87,8 +90,6 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
   @override
   void dispose() {
     _connectivity.removeListener(_onChanged);
-    _sync.removeListener(_onChanged);
-    _warmer.removeListener(_onChanged);
     _hideController.dispose();
     super.dispose();
   }

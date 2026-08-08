@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'dart:html' as html;
+import '/flutter_flow/platform_download.dart';
 import 'dart:typed_data';
 import 'package:excel/excel.dart';
 
@@ -150,13 +150,9 @@ Future<void> downloadInventoryTemplate() async {
   final bytes = excel.encode();
   if (bytes == null) return;
 
-  final blob = html.Blob(
-    [Uint8List.fromList(bytes)],
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  await save(
+    bytes: Uint8List.fromList(bytes),
+    fileName: 'Duniya_Inventory_Template.xlsx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   );
-  final url = html.Url.createObjectUrlFromBlob(blob);
-  final anchor = html.AnchorElement(href: url)
-    ..setAttribute('download', 'Duniya_Inventory_Template.xlsx')
-    ..click();
-  html.Url.revokeObjectUrl(url);
 }

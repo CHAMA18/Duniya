@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'platform_connectivity.dart';
 
 /// Tracks the sync status of Firestore writes and the overall offline
 /// cache health.
@@ -19,10 +19,8 @@ import 'package:flutter/foundation.dart';
 /// - Provides a manual [refresh] that re-checks pending writes by
 ///   querying with `includeMetadataChanges`.
 ///
-/// Usage:
-///   final sync = OfflineSyncService();
-///   sync.status; // → SyncStatus
-///   sync.statusStream.listen((status) { ... });
+/// Uses conditional platform_connectivity import for cross-platform
+/// browser event access (dart:html on web, stub on mobile).
 class OfflineSyncService extends ChangeNotifier {
   OfflineSyncService._internal();
   static final OfflineSyncService _instance = OfflineSyncService._internal();
@@ -31,6 +29,7 @@ class OfflineSyncService extends ChangeNotifier {
   StreamSubscription? _userSub;
   StreamSubscription? _pharmaciesSub;
   StreamSubscription? _productsSub;
+  StreamSubscription? _onlineSub;
 
   int _pendingWriteCount = 0;
   bool _isSyncing = false;
@@ -57,7 +56,7 @@ class OfflineSyncService extends ChangeNotifier {
 
   /// Initialise the service. Safe to call multiple times.
   ///
-/// On web, this sets up metadata-aware listeners on the current user's
+  /// On web, this sets up metadata-aware listeners on the current user's
   /// document and a few key subcollections. Each snapshot tells us
   /// whether there are pending writes that haven't been acknowledged
   /// by the server yet.
@@ -66,35 +65,24 @@ class OfflineSyncService extends ChangeNotifier {
     _initialized = true;
 
     // Hook into the browser's online event to trigger a sync check
-    // the moment connectivity is restored.
-    if (kIsWeb) {
-      try {
-        html.window.onOnline.listen((_) {
-          _isSyncing = true;
-          _emit();
-          notifyListeners();
-          // Give Firestore a moment to flush, then re-check.
-          Future.delayed(const Duration(seconds: 2), () {
-            _isSyncing = false;
-            _lastSyncedAt = DateTime.now();
-            _emit();
-            notifyListeners();
-          });
-        });
-      } catch (_) {
-        // ignore
-      }
-    }
+    // the moment connectivity is restored. Uses conditional import
+    // so this compiles on both web and mobile.
+    _onlineSub = onOnline.listen((_) {
+      _isSyncing = true;
+      _emit();
+      notifyListeners();
+      // Give Firestore a moment to flush, then re-check.
+      Future.delayed(const Duration(seconds: 2), () {
+        _isSyncing = false;
+        _lastSyncedAt = DateTime.now();
+        _emit();
+        notifyListeners();
+      });
+    });
 
     // Mark initial sync time if we're online.
-    if (kIsWeb) {
-      try {
-        if (html.window.navigator.onLine ?? true) {
-          _lastSyncedAt = DateTime.now();
-        }
-      } catch (_) {
-        // ignore
-      }
+    if (isOnline) {
+      _lastSyncedAt = DateTime.now();
     }
   }
 
@@ -153,6 +141,7 @@ class OfflineSyncService extends ChangeNotifier {
     _userSub?.cancel();
     _pharmaciesSub?.cancel();
     _productsSub?.cancel();
+    _onlineSub?.cancel();
     _statusController.close();
     super.dispose();
   }

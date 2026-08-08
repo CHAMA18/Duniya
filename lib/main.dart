@@ -35,8 +35,9 @@ void main() async {
   // the banner reflects the correct state from the very first frame.
   OfflineConnectivityService().initialize();
 
-  // Offline sync service temporarily disabled to fix null check crash.
-  // OfflineSyncService().initialize();
+  // Initialise offline sync service so Firestore pending-write
+  // tracking is available from the first frame.
+  OfflineSyncService().initialize();
 
   await FlutterFlowTheme.initialize();
 
@@ -162,11 +163,11 @@ class _MyAppState extends State<MyApp> {
     userStream = mediTrackerFirebaseUserStream()
       ..listen((user) {
         _appStateNotifier.update(user);
-        // Auto-warm and sync tracking temporarily disabled to fix
-        // null check crash. Will re-enable after root cause is found.
-        // if (user?.loggedIn == true) {
-        //   _onUserSignedIn();
-        // }
+        // Auto-warm and sync tracking — re-enabled after fixing
+        // the double-listener infinite rebuild loop in OfflineStatusChip.
+        if (user?.loggedIn == true) {
+          _onUserSignedIn();
+        }
       });
     jwtTokenStream.listen((_) {});
     Future.delayed(
@@ -180,23 +181,29 @@ class _MyAppState extends State<MyApp> {
   /// the background so the user can start using the app immediately).
   void _onUserSignedIn() {
     try {
+      // Guard: ensure both the user document and reference are available
+      // before setting up sync tracking. The authenticatedUserStream can
+      // fire before the Firestore UserRecord has been fetched.
+      final userDoc = currentUserDocument;
+      final userRef = currentUserReference;
+      if (userDoc == null || userRef == null) {
+        debugPrint('[main] _onUserSignedIn: user document not yet loaded, skipping sync setup');
+        return;
+      }
       // Watch the user's collections for pending writes.
       // This populates the OfflineStatusChip with real sync data.
-      final userDoc = currentUserDocument;
-      if (userDoc != null) {
-        // Note: Uses inline role check (no BuildContext available for AccessControl).
-        // See /lib/rbac/ for the centralized RBAC system.
-        final ownerRef = valueOrDefault(userDoc.role, '') == 'Owner'
-            ? currentUserReference
-            : userDoc.ownerRef;
-        if (ownerRef != null) {
-          OfflineSyncService().watchCollection(
-            FirebaseFirestore.instance
-                .collection('User')
-                .doc(ownerRef.id)
-                .collection('Pharmacy'),
-          );
-        }
+      // Note: Uses inline role check (no BuildContext available for AccessControl).
+      // See /lib/rbac/ for the centralized RBAC system.
+      final ownerRef = valueOrDefault(userDoc.role, '') == 'Owner'
+          ? userRef
+          : userDoc.ownerRef;
+      if (ownerRef != null) {
+        OfflineSyncService().watchCollection(
+          FirebaseFirestore.instance
+              .collection('User')
+              .doc(ownerRef.id)
+              .collection('Pharmacy'),
+        );
       }
       // Auto-warm the cache in the background (non-blocking).
       // We delay slightly so the app's first frame isn't delayed.
@@ -393,6 +400,6 @@ class _MyAppState extends State<MyApp> {
     // the "You're offline" notice overlays every screen in the app.
     // The banner is non-blocking — it just informs users that writes
     // are being queued and will sync when connectivity returns.
-    return app; // OfflineIndicatorBanner temporarily removed
+    return OfflineIndicatorBanner(child: app);
   }
 }

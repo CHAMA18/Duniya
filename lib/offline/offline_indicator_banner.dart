@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/offline/offline_connectivity_service.dart';
+import '/offline/offline_status_widget.dart';
 
 /// A slim banner that slides in from the top of the screen whenever the
 /// device loses network connectivity, and slides out when it's restored.
@@ -86,9 +87,8 @@ class _OfflineIndicatorBannerState extends State<OfflineIndicatorBanner>
           children: [
             // Main app
             Positioned.fill(child: widget.child),
-            // NOTE: OfflineStatusChip temporarily removed to fix
-            // stack overflow crash. Will re-add after fixing the
-            // infinite rebuild loop in the chip's AnimatedBuilder.
+            // Floating sync-status chip (bottom-right corner)
+            const OfflineStatusChip(),
             // Offline banner (overlays the top)
             if (height > 0.5)
               Positioned(
