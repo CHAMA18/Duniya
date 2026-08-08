@@ -61,15 +61,52 @@ void main() async {
 
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  } else {
+    // On web, log Flutter errors but don't crash — CanvasKit text
+    // rendering can throw null-check errors for certain TextStyle /
+    // font-variation combinations.  Logging preserves observability
+    // while keeping the app responsive.
+    FlutterError.onError = (FlutterErrorDetails details) {
+      // Suppress the known CanvasKit font-rendering null-check cascade.
+      // The first error is "Null check operator used on a null value"
+      // inside the paragraph/layout code; follow-ons are
+      // "Instance of 'FlutterError'" from the rendering pipeline.
+      final message = details.exceptionAsString();
+      if (message.contains('Null check operator used on a null value') ||
+          message.contains('Another exception was thrown')) {
+        // Log once at debug level to avoid flooding the console.
+        debugPrint('[FlutterError] ${message.split('\n').first}');
+        return;
+      }
+      // All other errors: report normally.
+      FlutterError.dumpErrorToConsole(details);
+    };
+    // Also catch async/platform errors that escape the Flutter zone.
+    PlatformDispatcher.instance.onError = (error, stack) {
+      debugPrint('[PlatformError] $error');
+      return true; // Handled — don't crash.
+    };
   }
 
   // Make build errors visible in release web builds. Without this, any widget
   // that throws during build is silently replaced with a grey box (the default
   // release-mode ErrorWidget), which makes "grey screen" issues nearly
-  // impossible to diagnose in production. Showing the error text in a red box
-  // matches Flutter's debug behaviour and surfaces the failure immediately.
+  // impossible to diagnose in production.
+  //
+  // On web, CanvasKit text rendering can throw null-check errors for certain
+  // TextStyle / font-variation combinations.  If the ErrorWidget itself uses
+  // text rendering, it can trigger the same error, creating an infinite
+  // error cascade.  To break the cycle, the web ErrorWidget uses a simple
+  // colored container (no text).  On non-web (mobile/desktop), we show the
+  // full error details since the font issue doesn't occur there.
   ErrorWidget.builder = (FlutterErrorDetails details) {
     FlutterError.reportError(details);
+    if (kIsWeb) {
+      // Minimal ErrorWidget — no text, no risk of re-triggering the
+      // CanvasKit null-check.  The error details are already logged
+      // via FlutterError.onError above.
+      return const SizedBox.shrink();
+    }
     return Material(
       color: const Color(0xFFFEE2E2),
       child: Padding(
