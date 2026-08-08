@@ -1,7 +1,7 @@
-import 'dart:io' show Platform;
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
+import 'revenue_cat_platform.dart' show platformIsIOS, platformIsAndroid;
 
 export 'package:purchases_flutter/purchases_flutter.dart'
     show Package, Offering;
@@ -41,9 +41,9 @@ Future initialize(
         return;
       }
       configuration = PurchasesConfiguration(webKey);
-    } else if (Platform.isIOS) {
+    } else if (platformIsIOS()) {
       configuration = PurchasesConfiguration(appStoreKey);
-    } else if (Platform.isAndroid) {
+    } else if (platformIsAndroid()) {
       configuration = PurchasesConfiguration(playStoreKey);
     } else {
       print("RevenueCat is not supported on this platform.");
@@ -89,11 +89,13 @@ Future<bool> purchasePackage(String package) async {
   }
 }
 
-List<String> get activeEntitlementIds => _customerInfo != null
-    ? _customerInfo!.entitlements.active.values
-        .map((e) => e.identifier)
-        .toList()
-    : [];
+List<String> get activeEntitlementIds {
+  final info = _customerInfo;
+  if (info == null) return [];
+  return info.entitlements.active.values
+      .map((e) => e.identifier)
+      .toList();
+}
 
 Future loadOfferings() async {
   if (!_isConfigured) {
@@ -127,8 +129,9 @@ Future<bool?> isEntitled(String entitlementId) async {
     return false;
   }
   try {
-    customerInfo = await Purchases.getCustomerInfo();
-    return customerInfo!.entitlements.all[entitlementId]?.isActive ?? false;
+    final info = await Purchases.getCustomerInfo();
+    customerInfo = info;
+    return info.entitlements.all[entitlementId]?.isActive ?? false;
   } on Exception catch (e) {
     print("Unable to check RevenueCat entitlements: $e");
     return null;

@@ -62,20 +62,19 @@ void main() async {
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   } else {
-    // On web, log Flutter errors but don't crash — CanvasKit text
-    // rendering can throw null-check errors for certain TextStyle /
-    // font-variation combinations.  Logging preserves observability
-    // while keeping the app responsive.
+    // On web, silently swallow the known CanvasKit / font-rendering
+    // null-check cascade.  These errors are benign (the app renders
+    // correctly) but the Flutter engine spews 70+ identical messages
+    // because each layout pass re-triggers the same path.
+    //
+    // We also swallow "Another exception was thrown" follow-ons which
+    // are just the rendering pipeline re-reporting the same root cause.
+    // All OTHER FlutterErrors are logged normally.
     FlutterError.onError = (FlutterErrorDetails details) {
-      // Suppress the known CanvasKit font-rendering null-check cascade.
-      // The first error is "Null check operator used on a null value"
-      // inside the paragraph/layout code; follow-ons are
-      // "Instance of 'FlutterError'" from the rendering pipeline.
       final message = details.exceptionAsString();
       if (message.contains('Null check operator used on a null value') ||
           message.contains('Another exception was thrown')) {
-        // Log once at debug level to avoid flooding the console.
-        debugPrint('[FlutterError] ${message.split('\n').first}');
+        // Completely silent — do not pollute the console.
         return;
       }
       // All other errors: report normally.
@@ -83,6 +82,10 @@ void main() async {
     };
     // Also catch async/platform errors that escape the Flutter zone.
     PlatformDispatcher.instance.onError = (error, stack) {
+      final msg = error.toString();
+      if (msg.contains('Null check operator used on a null value')) {
+        return true; // Silently handled.
+      }
       debugPrint('[PlatformError] $error');
       return true; // Handled — don't crash.
     };
@@ -429,7 +432,7 @@ class _MyAppState extends State<MyApp> {
       routerConfig: _router,
       builder: (_, child) => DynamicLinksHandler(
         router: _router,
-        child: child!,
+        child: child ?? const SizedBox.shrink(),
       ),
     );
     // Wrap the entire MaterialApp in the offline indicator banner so

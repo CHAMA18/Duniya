@@ -102,12 +102,16 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
   }
 
   Set<T> get currentValues {
-    if (!isMultiSelect || multiSelectController.value == null) {
+    if (!isMultiSelect) {
+      return {};
+    }
+    final values = multiSelectController.value;
+    if (values == null) {
       return {};
     }
     return widget.options
         .toSet()
-        .intersection(multiSelectController.value!.toSet());
+        .intersection(values.toSet());
   }
 
   Map<T, String> get optionLabels => Map.fromEntries(
@@ -258,9 +262,12 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
                   multiSelectController.value?.contains(item) ?? false;
               return InkWell(onTap: () {
                 multiSelectController.value ??= [];
-                isSelected
-                    ? multiSelectController.value!.remove(item)
-                    : multiSelectController.value!.add(item);
+                final currentList = multiSelectController.value;
+                if (currentList != null) {
+                  isSelected
+                      ? currentList.remove(item)
+                      : currentList.add(item);
+                }
                 multiSelectController.update();
                 // This rebuilds the StatefulWidget to update the button's text.
                 setState(() {});

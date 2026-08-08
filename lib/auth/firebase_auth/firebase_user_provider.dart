@@ -45,10 +45,11 @@ class MediTrackerFirebaseUser extends BaseAuthUser {
   bool get emailVerified {
     // Reloads the user when checking in order to get the most up to date
     // email verified status.
-    if (loggedIn && !user!.emailVerified) {
+    final u = user;
+    if (u != null && !u.emailVerified) {
       refreshUser();
     }
-    return user?.emailVerified ?? false;
+    return u?.emailVerified ?? false;
   }
 
   @override
@@ -71,10 +72,11 @@ Stream<BaseAuthUser> mediTrackerFirebaseUserStream() => FirebaseAuth.instance
             : Stream.value(user))
         .map<BaseAuthUser>(
       (user) {
-        currentUser = MediTrackerFirebaseUser(user);
+        final authUser = MediTrackerFirebaseUser(user);
+        currentUser = authUser;
         if (!kIsWeb) {
           FirebaseCrashlytics.instance.setUserIdentifier(user?.uid ?? '');
         }
-        return currentUser!;
+        return authUser;
       },
     );

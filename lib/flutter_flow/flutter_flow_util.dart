@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -13,6 +11,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'revenue_cat_platform.dart' show platformIsAndroid, platformIsIOS;
 import '../main.dart';
 import '/components/loading_spinner_widget.dart';
 
@@ -377,8 +376,8 @@ Rect? getWidgetBoundingBox(BuildContext context) {
   }
 }
 
-bool get isAndroid => !kIsWeb && Platform.isAndroid;
-bool get isiOS => !kIsWeb && Platform.isIOS;
+bool get isAndroid => platformIsAndroid();
+bool get isiOS => platformIsIOS();
 bool get isWeb => kIsWeb;
 
 const kBreakpointSmall = 479.0;

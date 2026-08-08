@@ -45,9 +45,14 @@ if ('serviceWorker' in navigator) {
 
 _flutter.loader.load({
   onEntrypointLoaded: async function (engineInitializer) {
-    // Initialize the Flutter engine
+    // Initialize the Flutter engine.
+    // Force the HTML renderer on web to avoid CanvasKit null-check
+    // errors caused by font/TextStyle interactions with Skia text
+    // rendering.  The HTML renderer is lighter (smaller bundle, lower
+    // RAM) and fully compatible with Duniya's UI.
     let appRunner = await engineInitializer.initializeEngine({
       useColorEmoji: true,
+      renderer: 'html',
     });
     // Run the app
     await appRunner.runApp();
