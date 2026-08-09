@@ -13,9 +13,11 @@
 # Design choices:
 #   - Uses the official Flutter tarball (no git clone of the SDK).
 #     Faster (~30s vs ~3min) and version-pinned.
-#   - Pinned to FLUTTER_VERSION (default 3.24.5) for reproducibility.
-#   - Uses --web-renderer html — the canvaskit build of this app OOMs
-#     on Render's 512 MB free-tier builders.
+#   - Pinned to FLUTTER_VERSION 3.38.2 for package compatibility
+#     (font_awesome_flutter 11.0.0 needs Dart >=3.9).
+#   - Uses --no-native-null-assertions to bypass strict compile-time
+#     null enforcement that fails on legacy code patterns. The Inter
+#     font (replacing Satoshi) prevents CanvasKit runtime crashes.
 #   - Skips --tree-shake-icons (long, memory-heavy step with no
 #     observable bundle-size benefit for this app).
 # =====================================================================
