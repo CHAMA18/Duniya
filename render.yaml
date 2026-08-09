@@ -53,7 +53,7 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: FLUTTER_VERSION
-        value: "3.38.2"
+        value: "3.24.5"
 
     # Free plan — sufficient for a Flutter web static site.
     plan: free

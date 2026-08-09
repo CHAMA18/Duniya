@@ -21,7 +21,7 @@
 # =====================================================================
 set -euo pipefail
 
-FLUTTER_VERSION="3.38.2"  # Pinned — hardcoded to override any stale env var
+FLUTTER_VERSION="3.24.5"  # Pinned — matches Dockerfile; 3.38.2 caused --native-null-assertions compilation failures
 FLUTTER_CHANNEL="${FLUTTER_CHANNEL:-stable}"
 
 echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
@@ -66,9 +66,10 @@ flutter pub get
 # ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
-echo "==> flutter build web (default renderer — HTML renderer removed in Flutter 3.29+)"
+echo "==> flutter build web (HTML renderer — avoids CanvasKit null-check crashes with custom fonts)"
 flutter build web --release \
-  --no-tree-shake-icons
+  --no-tree-shake-icons \
+  --web-renderer html
 
 echo "==> Build complete. Output: $(pwd)/build/web"
 ls -la build/web | head -20
