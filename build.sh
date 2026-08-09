@@ -153,3 +153,11 @@ if [[ -d "web/fonts" ]]; then
   cp web/fonts/* build/web/fonts/
   echo "==> Copied web/fonts/ -> build/web/fonts/ (landing page fonts)"
 fi
+
+# Copy multi-size favicon files (generated from the real Duniya logo)
+for favfile in favicon-16x16.png favicon-32x32.png apple-touch-icon.png; do
+  if [[ -f "web/${favfile}" ]]; then
+    cp "web/${favfile}" "build/web/${favfile}"
+    echo "==> Copied web/${favfile} -> build/web/${favfile}"
+  fi
+done
