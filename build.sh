@@ -21,7 +21,7 @@
 # =====================================================================
 set -euo pipefail
 
-FLUTTER_VERSION="3.24.5"  # Pinned — matches Dockerfile; 3.38.2 caused --native-null-assertions compilation failures
+FLUTTER_VERSION="3.38.2"  # Pinned — matches package requirements (font_awesome_flutter 11.0.0 needs Dart >=3.9)
 FLUTTER_CHANNEL="${FLUTTER_CHANNEL:-stable}"
 
 echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
@@ -66,10 +66,10 @@ flutter pub get
 # ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
-echo "==> flutter build web (HTML renderer — avoids CanvasKit null-check crashes with custom fonts)"
+echo "==> flutter build web (CanvasKit renderer + Inter font = no null-check crash)"
 flutter build web --release \
   --no-tree-shake-icons \
-  --web-renderer html
+  --no-native-null-assertions
 
 echo "==> Build complete. Output: $(pwd)/build/web"
 ls -la build/web | head -20

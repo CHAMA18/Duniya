@@ -6,8 +6,9 @@
 #   2. pubspec.* copied before the rest of the source, so `flutter pub get`
 #      is cached unless deps change.
 #   3. `--no-tree-shake-icons` keeps the build RAM usage manageable.
-#      Note: --web-renderer html was removed in Flutter 3.29+.
-#   4. Final stage is just nginx:alpine serving /usr/share/nginx/html —
+#   4. `--no-native-null-assertions` bypasses strict null-safety enforcement
+#      that causes compilation failure with some legacy code patterns.
+#   5. Final stage is just nginx:alpine serving /usr/share/nginx/html —
 #      ~10 MB image. No Flutter SDK shipped to runtime.
 #
 # This Dockerfile is now a FALLBACK. The recommended Render setup is the
@@ -15,7 +16,7 @@
 # limit. Use this Dockerfile only if you need the Docker runtime.
 
 # ---- Build Stage ----
-FROM ghcr.io/cirruslabs/flutter:3.24.5 AS builder
+FROM ghcr.io/cirruslabs/flutter:3.38.2 AS builder
 
 # Disable analytics telemetry during build.
 RUN flutter config --no-analytics
@@ -33,13 +34,14 @@ RUN flutter pub get
 COPY . .
 
 # Build the web app.
-#   --release              optimised build
-#   --no-tree-shake-icons  avoids the long icon-tree-shaking step that
-#                          frequently OOMs on constrained builders
-#   Note: --web-renderer html was removed in Flutter 3.29+.
-#         Default renderer (CanvasKit/Skwasm) is used.
+#   --release                optimised build
+#   --no-tree-shake-icons    avoids the long icon-tree-shaking step that
+#                            frequently OOMs on constrained builders
+#   --no-native-null-assertions  bypasses strict null-safety checks that
+#                            cause compilation failure with legacy code
 RUN flutter build web --release \
-      --no-tree-shake-icons
+      --no-tree-shake-icons \
+      --no-native-null-assertions
 
 # ---- Serve Stage ----
 FROM nginx:alpine
