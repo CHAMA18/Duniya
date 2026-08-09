@@ -79,10 +79,21 @@
   <!-- Cache-bust: force fresh flutter_bootstrap.js on every deploy -->
   <!-- Build version: %%BUILD_VERSION%% (injected by build.sh) -->
 
-
-
+  <!-- Wait for fonts to be ready before starting Flutter.
+       CanvasKit's font manager needs the Inter font to be fully loaded
+       before it can measure/render text. Without this, the first frame
+       triggers "Cannot read properties of null (reading 'w')" because
+       the font lookup returns null for fonts that haven't loaded yet. -->
   <script>
-    {{flutter_bootstrap_js}}
+    (async function() {
+      // Wait for all declared fonts to finish loading
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+        console.log('[Duniya] Fonts ready — starting Flutter engine');
+      }
+      // Now load and start Flutter
+      {{flutter_bootstrap_js}}
+    })();
   </script>
 </body>
 </html>
