@@ -61,82 +61,11 @@ void main() async {
 
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  } else {
-    // On web, log ALL FlutterErrors to console for debugging.
-    // TEMPORARILY: don't swallow null-check errors so we can see if
-    // they're the root cause of the blank screen.
-    FlutterError.onError = (FlutterErrorDetails details) {
-      // Log everything to console — don't suppress anything.
-      FlutterError.dumpErrorToConsole(details);
-    };
-    // Also catch async/platform errors that escape the Flutter zone.
-    // TEMPORARILY: return false (not handled) so errors propagate to JS
-    // console for debugging. Once we identify the root cause, we can
-    // make this return true again.
-    PlatformDispatcher.instance.onError = (error, stack) {
-      debugPrint('[PlatformError] $error');
-      return false; // NOT handled — let it propagate to JS console.
-    };
   }
-
-  // Make build errors visible in release web builds. Without this, any widget
-  // that throws during build is silently replaced with a grey box (the default
-  // release-mode ErrorWidget), which makes "grey screen" issues nearly
-  // impossible to diagnose in production.
-  //
-  // On web, we show a RED container with NO text content. This is critical:
-  //   - If we use Text() in the ErrorWidget, and the root error is a
-  //     CanvasKit font-rendering null-check, the Text widget re-triggers
-  //     the same error → another ErrorWidget → infinite cascade → hang.
-  //   - A fixed-size colored Container is visible (non-zero) so the app
-  //     doesn't collapse to 0x0, but it can't trigger font rendering.
-  //   - The actual error details are logged via FlutterError.onError above
-  //     and appear in the browser console (with [PlatformError] prefix).
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    FlutterError.reportError(details);
-    if (kIsWeb) {
-      // Fixed-size red container — visible but can't trigger font errors.
-      // Error details are in the browser console via FlutterError.onError.
-      return Container(
-        color: const Color(0xFFFEE2E2),
-        constraints: const BoxConstraints(minWidth: 50, minHeight: 50),
-      );
-    }
-    return Material(
-      color: const Color(0xFFFEE2E2),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: DefaultTextStyle(
-          style: const TextStyle(
-            color: Color(0xFF991B1B),
-            fontSize: 12.0,
-            fontFamily: 'monospace',
-            height: 1.4,
-          ),
-          child: Scrollbar(
-            thumbVisibility: true,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'A widget failed to build.',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(details.exceptionAsString()),
-                  if (details.stack != null) ...[
-                    const SizedBox(height: 8.0),
-                    Text(details.stack.toString().split('\n').take(15).join('\n')),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  };
+  // On web: use Flutter's DEFAULT error handling. The original app
+  // rendered correctly with CanvasKit despite the null-check errors —
+  // they were just console noise. Custom handlers interfered with
+  // Flutter's internal error recovery, causing the blank screen.
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
