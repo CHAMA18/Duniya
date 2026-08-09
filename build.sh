@@ -66,9 +66,10 @@ flutter pub get
 # ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
-echo "==> flutter build web"
+echo "==> flutter build web (HTML renderer — avoids CanvasKit null-check errors)"
 flutter build web --release \
-  --no-tree-shake-icons
+  --no-tree-shake-icons \
+  --web-renderer html
 
 echo "==> Build complete. Output: $(pwd)/build/web"
 ls -la build/web | head -20
@@ -100,16 +101,29 @@ if [[ -f "build/web/duniya_service_worker.js" ]]; then
   echo "==> Injected version into duniya_service_worker.js"
 fi
 
-# Replace the DEV placeholder in index.html with the build version.
+# Replace the DEV placeholder and %%BUILD_VERSION%% in index.html with the build version.
 if [[ -f "build/web/index.html" ]]; then
   sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/index.html
-  echo "==> Injected version into index.html meta tag"
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/index.html
+  echo "==> Injected version into index.html"
 fi
 
 # Replace the placeholder in manifest.json with the build version.
 if [[ -f "build/web/manifest.json" ]]; then
   sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/manifest.json
   echo "==> Injected version into manifest.json start_url"
+fi
+
+# Inject version into flutter_bootstrap.js for cache busting.
+if [[ -f "build/web/flutter_bootstrap.js" ]]; then
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/flutter_bootstrap.js
+  echo "==> Injected version into flutter_bootstrap.js"
+fi
+
+# Inject version into landing.html for cache busting.
+if [[ -f "build/web/landing.html" ]]; then
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/landing.html
+  echo "==> Injected version into landing.html"
 fi
 
 # ---------------------------------------------------------------------

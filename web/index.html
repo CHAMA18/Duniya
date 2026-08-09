@@ -22,8 +22,10 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <!-- Build version — injected by build.sh at deploy time -->
+  <!-- Build version — injected by build.sh at deploy time (cache busting) -->
   <meta name="build-version" content="DEV">
+  <!-- Cache-busting version — forces browsers/CDNs to fetch fresh manifest -->
+  <meta name="cache-version" content="%%BUILD_VERSION%%">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -51,7 +53,7 @@
 
   <title>Duniya</title>
 
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json?v=%%BUILD_VERSION%%">
 
   <!-- Satoshi Font — global application font -->
   <style>
@@ -79,6 +81,9 @@
 <body>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-HDfLffnuYVQUL4aR6DDPNqFWr5navE&loading=async" async></script>
+
+  <!-- Cache-bust: force fresh flutter_bootstrap.js on every deploy -->
+  <!-- Build version: %%BUILD_VERSION%% (injected by build.sh) -->
 
 
 

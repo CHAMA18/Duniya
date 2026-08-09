@@ -7,8 +7,10 @@
 # Strategy:
 #   - index.html (the SPA shell): NEVER cache — always revalidate.
 #     This ensures users always get the latest JS bundle references.
+#   - flutter_bootstrap.js / duniya_service_worker.js: NEVER cache —
+#     these change on every deploy (version injected by build.sh).
 #   - _redirects / _headers: never cache (admin files).
-#   - manifest.json / service worker: short cache (may change).
+#   - manifest.json: short cache (may change each deploy).
 #   - Flutter JS/CSS bundles (hashed filenames): long cache —
 #     Flutter's build already adds content hashes to filenames
 #     (e.g. main.dart.js → main.dart.js?hash=abc123), so they are
@@ -27,6 +29,22 @@
   Pragma: no-cache
   Expires: 0
 
+# ─── Per-deploy files: must NEVER be cached ─────────────────────────
+# These files change on every deploy (version injected by build.sh).
+# Without no-cache, the /*.js rule below would cache them for a year.
+
+/flutter_bootstrap.js
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+/duniya_service_worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+# ─── Admin / config files ───────────────────────────────────────────
+
 /_redirects
   Cache-Control: no-cache, no-store, must-revalidate
 
@@ -35,6 +53,12 @@
 
 /manifest.json
   Cache-Control: public, max-age=3600
+
+# ─── Content-hashed bundles (safe to cache long-term) ───────────────
+# Flutter adds content hashes to these filenames on build, so the
+# filename changes whenever the content does — making aggressive
+# caching safe. The per-deploy files above are EXCLUDED by being
+# listed first (Render uses first-match-wins).
 
 /*.js
   Cache-Control: public, max-age=31536000, immutable

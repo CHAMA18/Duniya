@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Cache-busting: prevent browser/CDN from caching the landing page -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <!-- Build version — injected by build.sh at deploy time (cache busting) -->
+  <meta name="build-version" content="%%BUILD_VERSION%%">
   <meta name="theme-color" content="#0A0A0F">
   <meta name="description" content="Duniya — The VMI platform that transforms how pharmacies manage inventory, dispense medication, and protect patients.">
   <meta name="keywords" content="duniya, pharmacy, VMI, inventory, stock, health, management, SaaS, dispensing, cold chain">

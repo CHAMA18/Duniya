@@ -26,14 +26,16 @@ const RUNTIME_CACHE = `duniya-runtime-${CACHE_VERSION}`;
 // The exact filenames may include content hashes, so we use a
 // cache-first strategy with runtime population rather than hard-coding
 // every asset URL. The install step pre-caches the static shell.
+// Version query params ensure CDN/browsers don't serve stale copies.
 const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/favicon.svg',
-  '/favicon.png',
-  '/icons/Icon-192.png',
-  '/icons/Icon-512.png',
+  `/`,
+  `/index.html?v=${CACHE_VERSION}`,
+  `/manifest.json?v=${CACHE_VERSION}`,
+  `/flutter_bootstrap.js?v=${CACHE_VERSION}`,
+  `/favicon.svg`,
+  `/favicon.png`,
+  `/icons/Icon-192.png`,
+  `/icons/Icon-512.png`,
 ];
 
 // Files that should always be served cache-first (they're either
