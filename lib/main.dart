@@ -29,7 +29,8 @@ import '/rbac/rbac.dart';
 // Web font: use Inter instead of Satoshi. Satoshi TTF causes null-check
 // errors in CanvasKit's Skia text renderer (font variation table issue).
 // Inter is visually similar and fully web-compatible.
-const String kAppFontFamily = kIsWeb ? 'Inter' : kAppFontFamily;
+// Note: Must not self-reference — Dart const evaluator rejects circular deps.
+const String kAppFontFamily = kIsWeb ? 'Inter' : 'Satoshi';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
