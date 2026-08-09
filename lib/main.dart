@@ -62,33 +62,20 @@ void main() async {
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   } else {
-    // On web, silently swallow the known CanvasKit / font-rendering
-    // null-check cascade.  These errors are benign (the app renders
-    // correctly) but the Flutter engine spews 70+ identical messages
-    // because each layout pass re-triggers the same path.
-    //
-    // We also swallow "Another exception was thrown" follow-ons which
-    // are just the rendering pipeline re-reporting the same root cause.
-    // All OTHER FlutterErrors are logged normally.
+    // On web, log ALL FlutterErrors to console for debugging.
+    // TEMPORARILY: don't swallow null-check errors so we can see if
+    // they're the root cause of the blank screen.
     FlutterError.onError = (FlutterErrorDetails details) {
-      final message = details.exceptionAsString();
-      if (message.contains('Null check operator used on a null value') ||
-          message.contains('Another exception was thrown')) {
-        // Completely silent — do not pollute the console.
-        return;
-      }
-      // All other errors: report normally.
+      // Log everything to console — don't suppress anything.
       FlutterError.dumpErrorToConsole(details);
     };
     // Also catch async/platform errors that escape the Flutter zone.
+    // TEMPORARILY: return false (not handled) so errors propagate to JS
+    // console for debugging. Once we identify the root cause, we can
+    // make this return true again.
     PlatformDispatcher.instance.onError = (error, stack) {
-      final msg = error.toString();
-      if (msg.contains('Null check operator used on a null value')) {
-        return true; // Silently handled (CanvasKit font rendering).
-      }
-      // Log all other platform errors so they're visible in the console.
       debugPrint('[PlatformError] $error');
-      return true; // Handled — don't crash.
+      return false; // NOT handled — let it propagate to JS console.
     };
   }
 
