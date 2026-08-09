@@ -64,11 +64,25 @@ void main() async {
 
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  } else {
+    // On web: capture Flutter errors with FULL stack traces for debugging.
+    // The default handler swallows details; this ensures we can see the
+    // exact source of null-check crashes in the browser console.
+    final originalOnError = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails details) {
+      // Print the FULL error with stack trace to the browser console
+      debugPrint('── FlutterError ──────────────────────────────');
+      debugPrint('Exception: ${details.exception}');
+      debugPrint('Library: ${details.library}');
+      debugPrint('Context: ${details.context}');
+      if (details.stack != null) {
+        debugPrint('Stack:\n${details.stack}');
+      }
+      debugPrint('──────────────────────────────────────────────');
+      // Also call the original handler so Flutter's error screen works
+      originalOnError?.call(details);
+    };
   }
-  // On web: use Flutter's DEFAULT error handling. The original app
-  // rendered correctly with CanvasKit despite the null-check errors —
-  // they were just console noise. Custom handlers interfered with
-  // Flutter's internal error recovery, causing the blank screen.
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
