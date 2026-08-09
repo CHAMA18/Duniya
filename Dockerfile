@@ -5,9 +5,8 @@
 #      removes a flaky network dependency from the build).
 #   2. pubspec.* copied before the rest of the source, so `flutter pub get`
 #      is cached unless deps change.
-#   3. `--no-tree-shake-icons --web-renderer html` keeps the build RAM
-#      usage under ~1.5 GB (canvaskit builds of this app OOM at 512 MB,
-#      which is Render free-tier build limit).
+#   3. `--no-tree-shake-icons` keeps the build RAM usage manageable.
+#      Note: --web-renderer html was removed in Flutter 3.29+.
 #   4. Final stage is just nginx:alpine serving /usr/share/nginx/html —
 #      ~10 MB image. No Flutter SDK shipped to runtime.
 #
@@ -37,12 +36,10 @@ COPY . .
 #   --release              optimised build
 #   --no-tree-shake-icons  avoids the long icon-tree-shaking step that
 #                          frequently OOMs on constrained builders
-#   --web-renderer html    lighter renderer, smaller bundle, lower build
-#                          RAM (~1.5 GB vs ~3 GB for canvaskit)
+#   Note: --web-renderer html was removed in Flutter 3.29+.
+#         Default renderer (CanvasKit/Skwasm) is used.
 RUN flutter build web --release \
-      --no-tree-shake-icons \
-      --web-renderer html \
-      --dart-define=FLUTTER_WEB_USE_SKIA=false
+      --no-tree-shake-icons
 
 # ---- Serve Stage ----
 FROM nginx:alpine

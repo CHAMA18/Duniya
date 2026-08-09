@@ -54,10 +54,8 @@ if ('serviceWorker' in navigator) {
 _flutter.loader.load({
   onEntrypointLoaded: async function (engineInitializer) {
     // Initialize the Flutter engine.
-    // Note: the renderer is chosen at BUILD time via --web-renderer html
-    // in the Dockerfile.  We do NOT force renderer: 'html' here because
-    // if the build only includes CanvasKit, requesting HTML at runtime
-    // would crash.  The build-time flag is the correct approach.
+    // Note: HTML renderer was removed in Flutter 3.29+.
+    // The default renderer (CanvasKit/Skwasm) is determined at build time.
     let appRunner = await engineInitializer.initializeEngine({
       useColorEmoji: true,
     });

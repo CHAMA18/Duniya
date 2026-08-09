@@ -66,10 +66,9 @@ flutter pub get
 # ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
-echo "==> flutter build web (HTML renderer — avoids CanvasKit null-check errors)"
+echo "==> flutter build web (default renderer — HTML renderer removed in Flutter 3.29+)"
 flutter build web --release \
-  --no-tree-shake-icons \
-  --web-renderer html
+  --no-tree-shake-icons
 
 echo "==> Build complete. Output: $(pwd)/build/web"
 ls -la build/web | head -20
