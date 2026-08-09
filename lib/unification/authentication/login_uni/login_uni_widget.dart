@@ -742,7 +742,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             child: Text(
                               'OR',
                               style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 11.0,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.12,
@@ -890,7 +890,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                               Text(
                                 'Sign in with Google',
                                 style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w600,
                                   height: 1.5,

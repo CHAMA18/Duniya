@@ -178,7 +178,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                       Text(
                         trendText,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w500,
                           letterSpacing: -0.01,
@@ -195,7 +195,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
             Text(
               label,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.08,
@@ -207,7 +207,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
             Text(
               value,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 26.0,
                 fontWeight: FontWeight.w600,
                 letterSpacing: -0.02,
@@ -252,7 +252,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                     Text(
                       'Revenue Analytics',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 18.0,
                         fontWeight: FontWeight.w600,
                         letterSpacing: -0.01,
@@ -264,7 +264,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                     Text(
                       'Real-time revenue movement across sales and dispensing.',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 12.0,
                         fontWeight: FontWeight.w400,
                         color: _onSurfaceVariant,
@@ -301,7 +301,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                           child: Text(
                             period,
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 12.0,
                               fontWeight: FontWeight.w500,
                               letterSpacing: 0.08,
@@ -378,7 +378,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
       child: Text(
         status,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 12.0,
           fontWeight: FontWeight.w500,
           color: textColor,
@@ -515,7 +515,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                 Text(
                                                   'Finances',
                                                   style: TextStyle(
-                                                    fontFamily: 'Satoshi',
+                                                    fontFamily: kAppFontFamily,
                                                     fontSize: 30.0,
                                                     fontWeight: FontWeight.w700,
                                                     letterSpacing: -0.02,
@@ -527,7 +527,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                 Text(
                                                   'Real-time revenue analytics and operational expenditure.',
                                                   style: TextStyle(
-                                                    fontFamily: 'Satoshi',
+                                                    fontFamily: kAppFontFamily,
                                                     fontSize: 14.0,
                                                     fontWeight: FontWeight.w400,
                                                     height: 1.6,
@@ -563,7 +563,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                 child: Text(
                                                   'Export Report',
                                                   style: TextStyle(
-                                                    fontFamily: 'Satoshi',
+                                                    fontFamily: kAppFontFamily,
                                                     fontSize: 12.0,
                                                     fontWeight: FontWeight.w500,
                                                     letterSpacing: 0.08,
@@ -605,7 +605,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                     Text(
                                                       'Point of Sale',
                                                       style: TextStyle(
-                                                        fontFamily: 'Satoshi',
+                                                        fontFamily: kAppFontFamily,
                                                         fontSize: 12.0,
                                                         fontWeight:
                                                             FontWeight.w500,
@@ -744,7 +744,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                   Text(
                                                     'Recent Transactions',
                                                     style: TextStyle(
-                                                      fontFamily: 'Satoshi',
+                                                      fontFamily: kAppFontFamily,
                                                       fontSize: 18.0,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -761,7 +761,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                           'View All',
                                                           style: TextStyle(
                                                             fontFamily:
-                                                                'Satoshi',
+                                                                kAppFontFamily,
                                                             fontSize: 12.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
@@ -848,7 +848,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                   Text(
                     'No transactions yet',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                       color: _onSurface,
@@ -858,7 +858,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                   Text(
                     'Sales will appear here once recorded',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w400,
                       color: _onSurfaceVariant,
@@ -978,7 +978,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 12.0,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.08,
@@ -995,7 +995,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 14.0,
           fontWeight: fontWeight,
           letterSpacing: -0.01,
@@ -1084,7 +1084,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                         const SizedBox(width: 12.0),
                         Text('Pending Approvals',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.01,
@@ -1102,7 +1102,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               borderRadius: BorderRadius.circular(9999.0)),
                           child: Text('${pendingPharmacies.length} Pharmacies',
                               style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w600,
                                   color: const Color(0xFF9900FF))),
@@ -1117,7 +1117,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                           child: Text(
                               '${pendingDuniyaUsers.length} Duniya Users',
                               style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w600,
                                   color: const Color(0xFF854D0E))),
@@ -1140,14 +1140,14 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                         const SizedBox(height: 12.0),
                         Text('All accounts are approved',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.w500,
                                 color: _onSurfaceVariant)),
                         const SizedBox(height: 4.0),
                         Text('No pending approvals at this time',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 13.0,
                                 color:
                                     _onSurfaceVariant.withValues(alpha: 0.7))),
@@ -1184,7 +1184,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                       .substring(0, 1)
                                       .toUpperCase(),
                                   style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w700,
                                       color: isPharmacy
@@ -1201,14 +1201,14 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                       ? user.displayName
                                       : user.email,
                                   style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w600,
                                       color: _onSurface)),
                               const SizedBox(height: 2.0),
                               Text(user.email,
                                   style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 12.0,
                                       color: _onSurfaceVariant)),
                             ])),
@@ -1222,7 +1222,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               borderRadius: BorderRadius.circular(9999.0)),
                           child: Text(isPharmacy ? 'Pharmacy' : 'Duniya',
                               style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w600,
                                   color: isPharmacy
@@ -1245,7 +1245,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                   horizontal: 16.0, vertical: 6.0)),
                           child: Text('Approve',
                               style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.w600)),
                         ),
@@ -1304,7 +1304,7 @@ class _RevenueChartPainter extends CustomPainter {
 
     if (dataPoints.isEmpty) {
       final emptyStyle = TextStyle(
-        fontFamily: 'Satoshi',
+        fontFamily: kAppFontFamily,
         fontSize: 12.0,
         fontWeight: FontWeight.w600,
         color: labelColor,
@@ -1349,7 +1349,7 @@ class _RevenueChartPainter extends CustomPainter {
 
     // Draw Y-axis labels
     final labelStyle = TextStyle(
-      fontFamily: 'Satoshi',
+      fontFamily: kAppFontFamily,
       fontSize: 10.0,
       fontWeight: FontWeight.w500,
       color: labelColor,
@@ -1372,7 +1372,7 @@ class _RevenueChartPainter extends CustomPainter {
 
     // Draw X-axis labels
     final xLabelStyle = TextStyle(
-      fontFamily: 'Satoshi',
+      fontFamily: kAppFontFamily,
       fontSize: 10.0,
       fontWeight: FontWeight.w500,
       color: labelColor,
@@ -1461,7 +1461,7 @@ class _RevenueChartPainter extends CustomPainter {
       final tooltipSpan = TextSpan(
         text: tooltipText,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 12.0,
           fontWeight: FontWeight.w500,
           color: Colors.white,

@@ -448,7 +448,7 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                           style: FlutterFlowTheme.of(context)
                                                                               .bodySmall
                                                                               .override(
-                                                                                font: TextStyle(fontFamily: 'Satoshi', 
+                                                                                font: TextStyle(fontFamily: kAppFontFamily, 
                                                                                   fontWeight: FontWeight.normal,
                                                                                   fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                                                                 ),
@@ -476,7 +476,7 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .titleMedium
                                                                             .override(
-                                                                              font: TextStyle(fontFamily: 'Satoshi', 
+                                                                              font: TextStyle(fontFamily: kAppFontFamily, 
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontStyle: FlutterFlowTheme.of(context).titleMedium.fontStyle,
                                                                               ),
@@ -503,7 +503,7 @@ class _StoresWidgetState extends State<StoresWidget> {
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodySmall
                                                                             .override(
-                                                                              font: TextStyle(fontFamily: 'Satoshi', 
+                                                                              font: TextStyle(fontFamily: kAppFontFamily, 
                                                                                 fontWeight: FontWeight.normal,
                                                                                 fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                                                               ),

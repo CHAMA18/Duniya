@@ -25,12 +25,9 @@ import '/offline/offline_status_widget.dart';
 import '/onboarding/onboarding_service.dart';
 import '/rbac/rbac.dart';
 
+// kAppFontFamily is defined in flutter_flow_util.dart (imported above).
+// It resolves to 'Inter' on web (CanvasKit-safe) and 'Satoshi' on native.
 
-// Web font: use Inter instead of Satoshi. Satoshi TTF causes null-check
-// errors in CanvasKit's Skia text renderer (font variation table issue).
-// Inter is visually similar and fully web-compatible.
-// Note: Must not self-reference — Dart const evaluator rejects circular deps.
-const String kAppFontFamily = kIsWeb ? 'Inter' : 'Satoshi';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;

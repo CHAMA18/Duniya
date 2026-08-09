@@ -280,7 +280,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               const SizedBox(width: 12.0),
               Text('Email already in use',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary,
                       fontSize: 18.0)),
@@ -292,7 +292,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               'Another staff member is already using this email address. '
               'Please use a different email or remove the existing account.',
               style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 14.0,
                   color: _textSecondary,
                   height: 1.5),
@@ -313,7 +313,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               ),
               child: Text('Got it',
                   style: TextStyle(
-                      fontFamily: 'Satoshi', fontWeight: FontWeight.w600)),
+                      fontFamily: kAppFontFamily, fontWeight: FontWeight.w600)),
             ),
           ],
         ),
@@ -387,7 +387,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   title: Text(
                     'Add Staff Member',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       fontSize: 18.0,
                       color: _textPrimary,
@@ -720,7 +720,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   child: Text(
                     initials,
                     style: const TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w800,
                       fontSize: 28.0,
                       color: Colors.white,
@@ -754,7 +754,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                             Text(
                               'NEW STAFF MEMBER',
                               style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 11.0,
                                 color: Colors.white,
@@ -768,7 +768,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       const Text(
                         'Add Staff Member',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontWeight: FontWeight.w800,
                           fontSize: 28.0,
                           color: Colors.white,
@@ -781,7 +781,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         'Create a new staff account for your pharmacy team. '
                         'Fill in the details below — they\'ll be able to log in immediately.',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           color: Colors.white70,
                           height: 1.5,
@@ -825,7 +825,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             children: [
               Text(title,
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       fontSize: 16.0,
                       color: _textPrimary,
@@ -833,7 +833,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               const SizedBox(height: 2.0),
               Text(subtitle,
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: _textSecondary,
                       height: 1.4)),
@@ -899,7 +899,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           children: [
             Text(label,
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 13.0,
                     color: _textPrimary)),
@@ -907,7 +907,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               const SizedBox(width: 4.0),
               Text('*',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: _dangerColor,
                       fontWeight: FontWeight.w700,
                       fontSize: 14.0)),
@@ -921,14 +921,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           keyboardType: keyboardType,
           textCapitalization: capitalization,
           style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 14.0,
               color: _textPrimary,
               fontWeight: FontWeight.w500),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 14.0,
                 color: _textSecondary.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w400),
@@ -957,7 +957,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ),
             errorText: hasError ? errorText : null,
             errorStyle: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 11.0,
                 color: _dangerColor,
                 height: 1.2),
@@ -1005,7 +1005,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 alignment: Alignment.center,
                 child: Text(initials,
                     style: const TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontWeight: FontWeight.w800,
                         fontSize: 16.0,
                         color: Colors.white)),
@@ -1018,7 +1018,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   children: [
                     Text('Live preview',
                         style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 10.0,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.6,
@@ -1028,7 +1028,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontWeight: FontWeight.w700,
                             fontSize: 14.0,
                             color: _textPrimary)),
@@ -1051,7 +1051,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 11.5,
                               color: _textSecondary)),
                     ),
@@ -1063,7 +1063,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     const SizedBox(width: 6.0),
                     Text(role,
                         style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.5,
                             color: _textSecondary,
                             fontWeight: FontWeight.w500)),
@@ -1074,7 +1074,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           else
             Text('Start typing to see the staff card preview.',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 11.5,
                     color: _textSecondary.withValues(alpha: 0.7),
                     fontStyle: FontStyle.italic)),
@@ -1095,14 +1095,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           children: [
             Text('Role',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 13.0,
                     color: _textPrimary)),
             const SizedBox(width: 4.0),
             Text('*',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     color: _dangerColor,
                     fontWeight: FontWeight.w700,
                     fontSize: 14.0)),
@@ -1160,7 +1160,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       const SizedBox(width: 8.0),
                       Text(role,
                           style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontWeight: FontWeight.w600,
                               fontSize: 13.0,
                               color: isSelected
@@ -1195,14 +1195,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           children: [
             Text('Pharmacy',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 13.0,
                     color: _textPrimary)),
             const SizedBox(width: 4.0),
             Text('*',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     color: _dangerColor,
                     fontWeight: FontWeight.w700,
                     fontSize: 14.0)),
@@ -1274,7 +1274,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 width: double.infinity,
                 height: 56.0,
                 textStyle: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   color: _textPrimary,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w500,
@@ -1310,7 +1310,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               child: Text(
                 'The staff member will only see data for the pharmacy you select here.',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 11.5,
                     color: _textSecondary.withValues(alpha: 0.8),
                     height: 1.4),
@@ -1345,7 +1345,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           children: [
             Text(label,
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 13.0,
                     color: _textPrimary)),
@@ -1353,7 +1353,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               const SizedBox(width: 4.0),
               Text('*',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: _dangerColor,
                       fontWeight: FontWeight.w700,
                       fontSize: 14.0)),
@@ -1366,14 +1366,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           focusNode: focusNode,
           obscureText: !visible,
           style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 14.0,
               color: _textPrimary,
               fontWeight: FontWeight.w500),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 14.0,
                 color: _textSecondary.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w400),
@@ -1465,7 +1465,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             if (label.isNotEmpty)
               Text(label,
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 11.0,
                       fontWeight: FontWeight.w600,
                       color: color)),
@@ -1508,7 +1508,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           const SizedBox(width: 4.0),
           Text(label,
               style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 10.0,
                   fontWeight: FontWeight.w600,
                   color: met ? _successColor : _textSecondary)),
@@ -1533,7 +1533,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         Text(
           isMatch ? 'Passwords match' : 'Passwords do not match',
           style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 11.5,
               fontWeight: FontWeight.w600,
               color: isMatch ? _successColor : _dangerColor),
@@ -1590,7 +1590,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 ? Icon(Icons.check_rounded, color: _successColor, size: 20.0)
                 : Text('$metCount/$requiredCount',
                     style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 11.0,
                         fontWeight: FontWeight.w700,
                         color: _duniyaPurpleDark)),
@@ -1606,7 +1606,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       ? 'Ready to save'
                       : 'Complete $requiredCount required fields',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary),
@@ -1617,7 +1617,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       ? 'Click Save to add this staff member.'
                       : 'Fill in the remaining $requiredCount - $metCount field${requiredCount - metCount == 1 ? '' : 's'} to enable Save.',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 11.5,
                       color: _textSecondary,
                       height: 1.3),
@@ -1640,7 +1640,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ),
             child: Text('Cancel',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 13.0)),
           ),
@@ -1696,7 +1696,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       Text(
                         _model.isSubmitting ? 'Saving…' : 'Save Staff Member',
                         style: const TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontWeight: FontWeight.w700,
                             fontSize: 13.0,
                             color: Colors.white),
@@ -1810,14 +1810,14 @@ class _BrandedToastState extends State<_BrandedToast>
                           children: [
                             Text(widget.title,
                                 style: const TextStyle(
-                                    fontFamily: 'Satoshi',
+                                    fontFamily: kAppFontFamily,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14.0,
                                     color: Color(0xFF0B1C30))),
                             const SizedBox(height: 2.0),
                             Text(widget.message,
                                 style: const TextStyle(
-                                    fontFamily: 'Satoshi',
+                                    fontFamily: kAppFontFamily,
                                     fontSize: 12.5,
                                     color: Color(0xFF64748B),
                                     height: 1.4)),

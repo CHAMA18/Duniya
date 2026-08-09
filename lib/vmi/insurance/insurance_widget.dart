@@ -174,7 +174,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
               Text(
                 value,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 24.0,
                   fontWeight: FontWeight.w800,
                   color: textColor,
@@ -187,7 +187,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
               color: textColor,
@@ -230,7 +230,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                     Text(
                       claim.claimId,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 15.0,
                         fontWeight: FontWeight.w700,
                         color: _textPrimary,
@@ -240,7 +240,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                     Text(
                       claim.memberName,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         color: _textSecondary,
                       ),
@@ -254,7 +254,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                 child: Text(
                   claim.scheme,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     fontWeight: FontWeight.w500,
                     color: _textPrimary,
@@ -268,7 +268,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                 child: Text(
                   claim.amount,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary,
@@ -290,7 +290,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                     Text(
                       claim.status,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,
                         color: txtCol,
@@ -306,7 +306,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                 child: Text(
                   claim.dateSubmitted,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 12.0,
                     color: _textSecondary,
                   ),
@@ -360,7 +360,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
           children: [
             SpinKitRing(color: _duniyaPurple, size: 48.0),
             const SizedBox(height: 16.0),
-            Text('Loading claims...', style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
+            Text('Loading claims...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
           ],
         ),
       ),
@@ -381,9 +381,9 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
               child: Icon(Icons.lock_outline, color: _rejectedText, size: 32.0),
             ),
             const SizedBox(height: 16.0),
-            Text('Access Denied', style: TextStyle(fontFamily: 'Satoshi', fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+            Text('Access Denied', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
             const SizedBox(height: 8.0),
-            Text('You do not have permission to view the Insurance module.', style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
+            Text('You do not have permission to view the Insurance module.', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
           ],
         ),
       ),
@@ -482,7 +482,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               Text(
                                                 'Insurance / Claims',
                                                 style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 32.0,
                                                   fontWeight: FontWeight.w700,
                                                   letterSpacing: -0.02,
@@ -494,7 +494,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               Text(
                                                 'Manage medical aid claims, verify members, and track reimbursement statuses.',
                                                 style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 16.0,
                                                   fontWeight: FontWeight.w400,
                                                   height: 1.6,
@@ -601,7 +601,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 const SizedBox(width: 12.0),
                                                 Text('Member Verification',
                                                     style: TextStyle(
-                                                        fontFamily: 'Satoshi',
+                                                        fontFamily: kAppFontFamily,
                                                         fontSize: 18.0,
                                                         fontWeight: FontWeight.w700,
                                                         color: _textPrimary)),
@@ -616,7 +616,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                     focusNode: _model.memberIdFocusNode,
                                                     decoration: InputDecoration(
                                                       labelText: 'Member ID',
-                                                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                                                       focusedBorder: OutlineInputBorder(
                                                         borderRadius: BorderRadius.circular(12.0),
@@ -640,7 +640,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                                                     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                                                   ),
-                                                  child: Text('Verify', style: TextStyle(fontFamily: 'Satoshi', fontWeight: FontWeight.w600, fontSize: 14.0)),
+                                                  child: Text('Verify', style: TextStyle(fontFamily: kAppFontFamily, fontWeight: FontWeight.w600, fontSize: 14.0)),
                                                 ),
                                               ],
                                             ),
@@ -661,7 +661,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                         Icon(Icons.check_circle, color: _approvedText, size: 20.0),
                                                         const SizedBox(width: 8.0),
                                                         Text('Member Verified',
-                                                            style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, fontWeight: FontWeight.w600, color: _approvedText)),
+                                                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w600, color: _approvedText)),
                                                       ],
                                                     ),
                                                     const SizedBox(height: 12.0),
@@ -706,7 +706,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 const SizedBox(width: 12.0),
                                                 Text('Submit New Claim',
                                                     style: TextStyle(
-                                                        fontFamily: 'Satoshi',
+                                                        fontFamily: kAppFontFamily,
                                                         fontSize: 18.0,
                                                         fontWeight: FontWeight.w700,
                                                         color: _textPrimary)),
@@ -721,7 +721,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                     value: _model.claimSaleValue,
                                                     decoration: InputDecoration(
                                                       labelText: 'Sale / Invoice',
-                                                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                                                       focusedBorder: OutlineInputBorder(
                                                         borderRadius: BorderRadius.circular(12.0),
@@ -730,7 +730,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                       prefixIcon: Icon(Icons.receipt_long, color: _duniyaPurple, size: 20.0),
                                                     ),
                                                     items: ['INV-2024-0342', 'INV-2024-0341', 'INV-2024-0340']
-                                                        .map((v) => DropdownMenuItem(value: v, child: Text(v, style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0))))
+                                                        .map((v) => DropdownMenuItem(value: v, child: Text(v, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0))))
                                                         .toList(),
                                                     onChanged: (v) => safeSetState(() => _model.claimSaleValue = v),
                                                   ),
@@ -742,7 +742,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                     value: _model.claimMemberValue,
                                                     decoration: InputDecoration(
                                                       labelText: 'Member',
-                                                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                                                       focusedBorder: OutlineInputBorder(
                                                         borderRadius: BorderRadius.circular(12.0),
@@ -751,7 +751,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                       prefixIcon: Icon(Icons.person, color: _duniyaPurple, size: 20.0),
                                                     ),
                                                     items: ['Grace Phiri', 'Bwalya Chanda', 'Mwamba Kapata']
-                                                        .map((v) => DropdownMenuItem(value: v, child: Text(v, style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0))))
+                                                        .map((v) => DropdownMenuItem(value: v, child: Text(v, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0))))
                                                         .toList(),
                                                     onChanged: (v) => safeSetState(() => _model.claimMemberValue = v),
                                                   ),
@@ -769,7 +769,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                     keyboardType: TextInputType.number,
                                                     decoration: InputDecoration(
                                                       labelText: 'Claim Amount (K)',
-                                                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                                                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                                                       focusedBorder: OutlineInputBorder(
                                                         borderRadius: BorderRadius.circular(12.0),
@@ -832,7 +832,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                         children: [
                                           Text('Claims List',
                                               style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 18.0,
                                                   fontWeight: FontWeight.w700,
                                                   color: _textPrimary)),
@@ -867,7 +867,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                           Text(
                                                             tab,
                                                             style: TextStyle(
-                                                              fontFamily: 'Satoshi',
+                                                              fontFamily: kAppFontFamily,
                                                               fontSize: 13.0,
                                                               fontWeight: FontWeight.w600,
                                                               color: isActive ? Colors.white : _textSecondary,
@@ -883,7 +883,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                             child: Text(
                                                               count.toString(),
                                                               style: TextStyle(
-                                                                fontFamily: 'Satoshi',
+                                                                fontFamily: kAppFontFamily,
                                                                 fontSize: 11.0,
                                                                 fontWeight: FontWeight.w600,
                                                                 color: isActive ? Colors.white : _textSecondary,
@@ -908,9 +908,9 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                   children: [
                                                     Icon(Icons.description_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
                                                     const SizedBox(height: 16.0),
-                                                    Text('No claims found', style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                                                    Text('No claims found', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
                                                     const SizedBox(height: 8.0),
-                                                    Text('Try a different status filter or submit a new claim', style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
+                                                    Text('Try a different status filter or submit a new claim', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
                                                   ],
                                                 ),
                                               ),
@@ -959,10 +959,10 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
           SizedBox(
             width: 140.0,
             child: Text(label,
-                style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w500, color: _textSecondary)),
           ),
           Text(value,
-              style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+              style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w600, color: _textPrimary)),
         ],
       ),
     );

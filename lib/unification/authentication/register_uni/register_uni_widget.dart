@@ -212,7 +212,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
         Text(
           label,
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12.0,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.08,
@@ -230,7 +230,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
             keyboardType: keyboardType,
             validator: validator?.asValidator(context),
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 16.0,
               fontWeight: FontWeight.w400,
               height: 1.6,
@@ -239,7 +239,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
             decoration: InputDecoration(
               hintText: placeholder,
               hintStyle: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
                 color: _outline,
@@ -370,7 +370,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                       Text(
                                         'Duniya',
                                         style: TextStyle(
-                                          fontFamily: 'Satoshi',
+                                          fontFamily: kAppFontFamily,
                                           fontSize: 24.0,
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: -0.02,
@@ -384,7 +384,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           Text(
                                             'Join the Global Standard',
                                             style: TextStyle(
-                                              fontFamily: 'Satoshi',
+                                              fontFamily: kAppFontFamily,
                                               fontSize: 34.0,
                                               fontWeight: FontWeight.w600,
                                               height: 1.15,
@@ -396,7 +396,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           Text(
                                             'Pharmacy management has never been so easy. Track inventory, monitor staff and care for your patients all in one place.',
                                             style: TextStyle(
-                                              fontFamily: 'Satoshi',
+                                              fontFamily: kAppFontFamily,
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.w400,
                                               height: 1.65,
@@ -433,7 +433,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                             Text(
                                               'HIPAA Compliant  •  Bank-Level Security',
                                               style: TextStyle(
-                                                fontFamily: 'Satoshi',
+                                                fontFamily: kAppFontFamily,
                                                 fontSize: 13.0,
                                                 fontWeight: FontWeight.w500,
                                                 letterSpacing: 0.0,
@@ -517,7 +517,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           'Create your account',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: isDesktop ? 34.0 : 26.0,
                                             fontWeight: FontWeight.w600,
                                             height: 1.2,
@@ -532,7 +532,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           'Enter your professional details to access the command center.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: isDesktop ? 18.0 : 15.0,
                                             fontWeight: FontWeight.w400,
                                             height: 1.6,
@@ -698,7 +698,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                               Text(
                                                 'Sign up with Google',
                                                 style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 18.0,
                                                   fontWeight: FontWeight.w600,
                                                   height: 1.5,
@@ -729,7 +729,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                             child: Text(
                                               'OR SIGN UP WITH EMAIL',
                                               style: TextStyle(
-                                                fontFamily: 'Satoshi',
+                                                fontFamily: kAppFontFamily,
                                                 fontSize: 10.0,
                                                 fontWeight: FontWeight.w500,
                                                 letterSpacing: 0.08,
@@ -962,7 +962,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                               child: Text(
                                                 'Create Account',
                                                 style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 18.0,
                                                   fontWeight: FontWeight.w600,
                                                   height: 1.5,
@@ -997,7 +997,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                   text:
                                                       'Already have an account? ',
                                                   style: TextStyle(
-                                                    fontFamily: 'Satoshi',
+                                                    fontFamily: kAppFontFamily,
                                                     fontSize: 14.0,
                                                     fontWeight: FontWeight.w400,
                                                     height: 1.5,
@@ -1007,7 +1007,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                 TextSpan(
                                                   text: 'Log in here',
                                                   style: TextStyle(
-                                                    fontFamily: 'Satoshi',
+                                                    fontFamily: kAppFontFamily,
                                                     fontSize: 14.0,
                                                     fontWeight: FontWeight.w500,
                                                     height: 1.5,

@@ -345,7 +345,7 @@ class _ImportInventoryDialogWidgetState
                     Text(
                       'Import Inventory',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 20.0,
                         fontWeight: FontWeight.w600,
                         color: onSurface,
@@ -356,7 +356,7 @@ class _ImportInventoryDialogWidgetState
                     Text(
                       title,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         fontWeight: FontWeight.w400,
                         color: onSurfaceVariant,
@@ -438,7 +438,7 @@ class _ImportInventoryDialogWidgetState
                   child: Text(
                     '${index + 1}',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: textColor,
@@ -450,7 +450,7 @@ class _ImportInventoryDialogWidgetState
         Text(
           label,
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
             color: isDone || isCurrent ? onSurface : onSurfaceVariant,
@@ -517,7 +517,7 @@ class _ImportInventoryDialogWidgetState
                         ? 'Parsing your spreadsheet...'
                         : 'Drop your spreadsheet here, or click to browse',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                       color: onSurface,
@@ -528,7 +528,7 @@ class _ImportInventoryDialogWidgetState
                   Text(
                     'Supports .xlsx, .xls, and .csv up to 10 MB',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w400,
                       color: onSurfaceVariant,
@@ -594,7 +594,7 @@ class _ImportInventoryDialogWidgetState
                     Text(
                       'Recognized Column Headers',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         fontWeight: FontWeight.w600,
                         color: onSurface,
@@ -622,7 +622,7 @@ class _ImportInventoryDialogWidgetState
                 Text(
                   'Aliases are accepted — e.g. "Qty" → Quantity, "Unit Price" → Price, "Expiry" → ExpiryDate.',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 12.0,
                     color: onSurfaceVariant,
                     height: 1.5,
@@ -656,7 +656,7 @@ class _ImportInventoryDialogWidgetState
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 12.0,
               fontWeight: FontWeight.w500,
               color: required
@@ -669,7 +669,7 @@ class _ImportInventoryDialogWidgetState
             const Text(
               '· required',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 10.0,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF6A00D9),
@@ -709,7 +709,7 @@ class _ImportInventoryDialogWidgetState
               Text(
                 title,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 13.0,
                   fontWeight: FontWeight.w600,
                   color: onSurface,
@@ -721,7 +721,7 @@ class _ImportInventoryDialogWidgetState
           Text(
             body,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 12.0,
               color: onSurfaceVariant,
               height: 1.5,
@@ -738,7 +738,7 @@ class _ImportInventoryDialogWidgetState
                 child: Text(
                   actionLabel,
                   style: const TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 12.0,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFFA100FF),
@@ -830,7 +830,7 @@ class _ImportInventoryDialogWidgetState
                   child: Text(
                     '$invalidCount row(s) have issues and will be skipped. Only valid rows will be imported.',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 12.5,
                       color: onSurface,
                       height: 1.4,
@@ -868,63 +868,63 @@ class _ImportInventoryDialogWidgetState
                       DataColumn(
                         label: Text('#',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Status',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Name',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Category',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Qty',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Price',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Batch',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Expiry',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
                       DataColumn(
                         label: Text('Notes',
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600)),
                       ),
@@ -959,7 +959,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           '$rowNum',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             color: onSurfaceVariant,
           ),
@@ -975,7 +975,7 @@ class _ImportInventoryDialogWidgetState
             Text(
               status ? 'OK' : 'Skip',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: status
@@ -988,7 +988,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           row.name ?? '—',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: onSurface,
@@ -997,7 +997,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           row.category ?? '—',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             color: onSurfaceVariant,
           ),
@@ -1005,7 +1005,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           '${row.quantity ?? 0}',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             color: onSurface,
           ),
@@ -1013,7 +1013,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           row.price != null ? 'ZMK ${row.price!.toStringAsFixed(2)}' : '—',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             color: onSurface,
           ),
@@ -1021,7 +1021,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           row.batchNumber ?? '—',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             color: onSurfaceVariant,
           ),
@@ -1031,7 +1031,7 @@ class _ImportInventoryDialogWidgetState
               ? '${row.expiryDate!.year}-${row.expiryDate!.month.toString().padLeft(2, '0')}-${row.expiryDate!.day.toString().padLeft(2, '0')}'
               : '—',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12,
             color: onSurfaceVariant,
           ),
@@ -1039,7 +1039,7 @@ class _ImportInventoryDialogWidgetState
         DataCell(Text(
           row.errorReason ?? '',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 11,
             color: const Color(0xFFDC2626),
             fontStyle: FontStyle.italic,
@@ -1073,7 +1073,7 @@ class _ImportInventoryDialogWidgetState
               Text(
                 label,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 10,
                   color: onSurface.withValues(alpha: 0.7),
                   letterSpacing: 0.5,
@@ -1083,7 +1083,7 @@ class _ImportInventoryDialogWidgetState
               Text(
                 value,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: color,
@@ -1136,7 +1136,7 @@ class _ImportInventoryDialogWidgetState
                       Text(
                         '$percent%',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 26,
                           fontWeight: FontWeight.w700,
                           color: onSurface,
@@ -1146,7 +1146,7 @@ class _ImportInventoryDialogWidgetState
                       Text(
                         '${_model.importedCount + _model.failedCount} / ${_model.totalCount}',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 11,
                           color: onSurfaceVariant,
                         ),
@@ -1160,7 +1160,7 @@ class _ImportInventoryDialogWidgetState
             Text(
               'Importing inventory items...',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: onSurface,
@@ -1171,7 +1171,7 @@ class _ImportInventoryDialogWidgetState
               'Writing ${_model.totalCount} item${_model.totalCount == 1 ? '' : 's'} to your pharmacy inventory. Please keep this window open.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13,
                 color: onSurfaceVariant,
                 height: 1.5,
@@ -1195,7 +1195,7 @@ class _ImportInventoryDialogWidgetState
                     Text(
                       '${_model.failedCount} failed · continuing',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 12,
                         color: onSurface,
                       ),
@@ -1265,7 +1265,7 @@ class _ImportInventoryDialogWidgetState
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 22,
               fontWeight: FontWeight.w600,
               color: onSurface,
@@ -1276,7 +1276,7 @@ class _ImportInventoryDialogWidgetState
             subtitle,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 14,
               color: onSurfaceVariant,
               height: 1.5,
@@ -1343,7 +1343,7 @@ class _ImportInventoryDialogWidgetState
                       Text(
                         'Error details',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: onSurface,
@@ -1358,7 +1358,7 @@ class _ImportInventoryDialogWidgetState
                           child: Text(
                             'Row ${e.key + 1}: ${e.value}',
                             style: const TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 11,
                               color: Color(0xFF991B1B),
                             ),
@@ -1371,7 +1371,7 @@ class _ImportInventoryDialogWidgetState
                       child: Text(
                         '...and ${_model.importErrors.length - 8} more',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 11,
                           fontStyle: FontStyle.italic,
                           color: onSurfaceVariant,
@@ -1408,7 +1408,7 @@ class _ImportInventoryDialogWidgetState
           Text(
             value,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 26,
               fontWeight: FontWeight.w700,
               color: color,
@@ -1418,7 +1418,7 @@ class _ImportInventoryDialogWidgetState
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 11,
               color: onSurface.withValues(alpha: 0.7),
               letterSpacing: 0.3,
@@ -1454,7 +1454,7 @@ class _ImportInventoryDialogWidgetState
                 Text(
                   'Step 1 of 4 · Choose a file to begin',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 12,
                     color: onSurfaceVariant,
                   ),
@@ -1471,7 +1471,7 @@ class _ImportInventoryDialogWidgetState
                       Text(
                         'Choose different file',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: onSurfaceVariant,
@@ -1492,7 +1492,7 @@ class _ImportInventoryDialogWidgetState
                       const Text(
                         'Import another file',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: Color(0xFFA100FF),
@@ -1515,7 +1515,7 @@ class _ImportInventoryDialogWidgetState
                         child: Text(
                           'Cancel',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: onSurfaceVariant,
@@ -1581,7 +1581,7 @@ class _ImportInventoryDialogWidgetState
               Text(
                 label,
                 style: const TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,

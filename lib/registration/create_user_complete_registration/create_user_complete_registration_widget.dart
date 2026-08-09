@@ -229,7 +229,7 @@ class _CreateUserCompleteRegistrationWidgetState
                                                                     context)
                                                                 .primaryText,
                                                         pickerFontFamily:
-                                                            'Satoshi',
+                                                            kAppFontFamily,
                                                       );
                                                       if (selectedMedia !=
                                                               null &&

@@ -441,7 +441,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             Text(
               'Store Inventory',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 32.0,
                 fontWeight: FontWeight.w600,
                 color: onSurface,
@@ -453,7 +453,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             Text(
               'Manage and track your primary pharmacy stock.',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w400,
                 color: onSurfaceVariant,
@@ -482,7 +482,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Text(
                         'Add Product',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -511,7 +511,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       const Text(
                         'Import',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -544,7 +544,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Text(
                         'Template',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                           color: onSurface,
@@ -672,7 +672,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                     child: Text(
                                       'POINT OF SALE',
                                       style: TextStyle(
-                                        fontFamily: 'Satoshi',
+                                        fontFamily: kAppFontFamily,
                                         fontSize: 10.0,
                                         fontWeight: FontWeight.w700,
                                         color: Colors.white.withValues(alpha: 0.9),
@@ -686,7 +686,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                               Text(
                                 'Start Selling & Dispensing',
                                 style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -698,7 +698,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                               Text(
                                 'Quick sales, prescriptions, and dispensing — all in one place. Tap to begin a transaction.',
                                 style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white.withValues(alpha: 0.82),
@@ -749,7 +749,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                   Text(
                                     'Open POS',
                                     style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w700,
                                       color: primaryBlue,
@@ -805,7 +805,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                     child: Text(
                                       'POINT OF SALE',
                                       style: TextStyle(
-                                        fontFamily: 'Satoshi',
+                                        fontFamily: kAppFontFamily,
                                         fontSize: 9.0,
                                         fontWeight: FontWeight.w700,
                                         color: Colors.white.withValues(alpha: 0.9),
@@ -817,7 +817,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                   Text(
                                     'Start Selling & Dispensing',
                                     style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white,
@@ -834,7 +834,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Quick sales, prescriptions, and dispensing — all in one place. Tap to begin a transaction.',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                             color: Colors.white.withValues(alpha: 0.82),
@@ -879,7 +879,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                 Text(
                                   'Open POS',
                                   style: TextStyle(
-                                    fontFamily: 'Satoshi',
+                                    fontFamily: kAppFontFamily,
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.w700,
                                     color: primaryBlue,
@@ -932,7 +932,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
               Text(
                 label,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 13.0,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -941,7 +941,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
               Text(
                 value,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 11.0,
                   fontWeight: FontWeight.w400,
                   color: Colors.white.withValues(alpha: 0.7),
@@ -1006,7 +1006,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                   decoration: InputDecoration(
                     hintText: 'Search inventory, SKU, or batch...',
                     hintStyle: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: outline,
                     ),
@@ -1028,7 +1028,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     ),
                   ),
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     color: onSurface,
                   ),
@@ -1061,7 +1061,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         cat,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 13.0,
                           fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                           color: isSelected ? primaryBlue : onSurfaceVariant,
@@ -1092,7 +1092,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Filters',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 13.0,
                             fontWeight: FontWeight.w400,
                             color: onSurfaceVariant,
@@ -1112,7 +1112,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
               Text(
                 'Sort by:',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w400,
                   color: outline,
@@ -1131,7 +1131,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                   isDense: true,
                   icon: Icon(Icons.expand_more, size: 16.0),
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     fontWeight: FontWeight.w500,
                     color: onSurface,
@@ -1210,7 +1210,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Product & Manufacturer',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1226,7 +1226,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'SKU / Batch',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1242,7 +1242,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Stock Level',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1258,7 +1258,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Unit Price',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1275,7 +1275,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Status',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1292,7 +1292,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       child: Text(
                         'Actions',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: onSurfaceVariant,
@@ -1316,7 +1316,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'No stock items found',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                         color: onSurfaceVariant,
@@ -1326,7 +1326,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'Try adjusting your search or filter criteria',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                         color: outline,
@@ -1441,7 +1441,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                           Text(
                             stock.name.isNotEmpty ? stock.name : 'Unknown Product',
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 14.0,
                               fontWeight: FontWeight.w500,
                               color: onSurface.withValues(alpha: isOutOfStock ? 0.6 : 1.0),
@@ -1453,7 +1453,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                           Text(
                             '${stock.manufacturer.isNotEmpty ? stock.manufacturer : "Unknown"} • ${stock.category.isNotEmpty ? stock.category : "Uncategorized"}',
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 12.0,
                               fontWeight: FontWeight.w400,
                               color: outline,
@@ -1479,7 +1479,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       stock.batchNumber.isNotEmpty ? stock.batchNumber : 'N/A',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: onSurface,
@@ -1490,7 +1490,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                       Text(
                         'B-${stock.batchNumber.hashCode.abs().toRadixString(16).toUpperCase().padLeft(5, '0').substring(0, 5)}',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w400,
                           color: outline,
@@ -1514,7 +1514,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           '${stock.quantity} units',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 12.0,
                             fontWeight: FontWeight.w500,
                             color: isLowStock || isOutOfStock ? primaryBlue : onSurface,
@@ -1523,7 +1523,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           'Max: ${stock.initialQuantity.toInt()}',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 12.0,
                             fontWeight: FontWeight.w400,
                             color: outline,
@@ -1556,7 +1556,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'ZMK ${stock.price.toStringAsFixed(2)}',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: onSurface,
@@ -1566,7 +1566,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                     Text(
                       'Val: ZMK ${(stock.price * stock.quantity.toDouble()).toStringAsFixed(2)}',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 12.0,
                         fontWeight: FontWeight.w400,
                         color: outline,
@@ -1601,7 +1601,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                         Text(
                           status,
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w600,
                             color: statusColor,
@@ -1634,7 +1634,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                             child: Text(
                               'Reorder',
                               style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
@@ -1716,7 +1716,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                 ? 'Showing $startItem to $endItem of $totalFiltered entries'
                 : 'No entries to show',
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 12.0,
               fontWeight: FontWeight.w400,
               color: outline,
@@ -1805,7 +1805,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             child: Text(
               '$i',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: isCurrent ? FontWeight.w500 : FontWeight.w400,
                 color: isCurrent ? Colors.white : onSurfaceVariant,
@@ -1819,7 +1819,7 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     if (end < totalPages) {
       pages.add(Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text('...', style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, color: onSurfaceVariant)),
+        child: Text('...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, color: onSurfaceVariant)),
       ));
     }
 

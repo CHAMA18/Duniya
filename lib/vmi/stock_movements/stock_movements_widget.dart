@@ -323,7 +323,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             Text(
               'Stock Movements',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 22.0,
                 fontWeight: FontWeight.w600,
                 color: onSurface,
@@ -333,7 +333,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             Text(
               'Real-time tracking of all clinical inventory transitions.',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w400,
                 color: onSurfaceVariant,
@@ -636,7 +636,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     m.label,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 11.0,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.08,
@@ -651,7 +651,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             Text(
               m.value,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 32.0,
                 fontWeight: FontWeight.w700,
                 color: onSurface,
@@ -672,7 +672,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     m.detail,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w500,
                       color: m.detailColor,
@@ -733,7 +733,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     Text(
                       'Movement Analytics',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 16.0,
                         fontWeight: FontWeight.w600,
                         color: onSurface,
@@ -776,7 +776,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           child: Text(
                             period,
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 11.0,
                               fontWeight:
                                   isActive ? FontWeight.w600 : FontWeight.w500,
@@ -963,7 +963,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                   Text(
                     'Movement Ledger',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                       color: onSurface,
@@ -999,7 +999,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                   Text(
                     'Showing ${start + 1} to $end of ${movements.length} entries',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: onSurfaceVariant,
                     ),
@@ -1052,7 +1052,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                             child: Text(
                               '$page',
                               style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12.0,
                                 fontWeight: isActive
                                     ? FontWeight.w600
@@ -1299,7 +1299,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   }
 
   TextStyle _headerStyle(Color color) => TextStyle(
-        fontFamily: 'Satoshi',
+        fontFamily: kAppFontFamily,
         fontSize: 11.0,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.08,
@@ -1308,7 +1308,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
 
   TextStyle _cellStyle(Color color, {FontWeight weight = FontWeight.w400}) =>
       TextStyle(
-        fontFamily: 'Satoshi',
+        fontFamily: kAppFontFamily,
         fontSize: 13.0,
         fontWeight: weight,
         letterSpacing: -0.01,
@@ -1353,7 +1353,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         SizedBox(width: 4.0),
         Text(label,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
               color: color,
@@ -1375,7 +1375,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         ),
         child: Text('IN TRANSIT',
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 10.0,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.04,
@@ -1391,7 +1391,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       ),
       child: Text('COMPLETED',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 10.0,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.04,
@@ -1456,7 +1456,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               Text(
                 'No stock movements yet',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,
                   color: theme.primaryText,
@@ -1466,7 +1466,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               Text(
                 'Record your first stock movement to see data here.',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 14.0,
                   color: onSurfaceVariant,
                 ),
@@ -1496,7 +1496,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                       Text(
                         'Add Movement',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,

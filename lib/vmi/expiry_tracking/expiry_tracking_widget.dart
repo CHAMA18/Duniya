@@ -630,7 +630,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                       Text(
                         'Expiry Tracking Dashboard',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,
                           letterSpacing: -0.02,
@@ -642,7 +642,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                       Text(
                         'Visual timeline of expiring batches — 30 / 60 / 90 day outlook',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w400,
                           height: 1.5,
@@ -833,7 +833,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                   Text(
                     animatedCount.toString(),
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 32.0,
                       fontWeight: FontWeight.w800,
                       color: config.text,
@@ -847,7 +847,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               Text(
                 config.title,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 13.0,
                   fontWeight: FontWeight.w600,
                   color: config.text,
@@ -917,7 +917,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               Text(
                 'Expiry Timeline',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
                   color: _textPrimary,
@@ -927,7 +927,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               Text(
                 '$total batches total',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                   color: _textSecondary,
@@ -954,7 +954,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                           ? Text(
                               '${seg.count}',
                               style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
@@ -988,7 +988,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                   Text(
                     '${seg.label} (${seg.count})',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w500,
                       color: _textSecondary,
@@ -1033,7 +1033,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             decoration: InputDecoration(
               hintText: 'Search product, batch, or facility...',
               hintStyle: TextStyle(
-                  fontFamily: 'Satoshi', color: _textSecondary, fontSize: 14.0),
+                  fontFamily: kAppFontFamily, color: _textSecondary, fontSize: 14.0),
               prefixIcon:
                   Icon(Icons.search, color: _duniyaPurple, size: 20.0),
               border: InputBorder.none,
@@ -1041,7 +1041,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
             ),
             style: TextStyle(
-                fontFamily: 'Satoshi', fontSize: 14.0, color: _textPrimary),
+                fontFamily: kAppFontFamily, fontSize: 14.0, color: _textPrimary),
             onChanged: (val) => safeSetState(() {}),
           );
 
@@ -1067,7 +1067,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               width: 160.0,
               height: 40.0,
               textStyle: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 color: _duniyaPurple,
                 fontWeight: FontWeight.w500,
                 fontSize: 13.0,
@@ -1216,7 +1216,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                   child: Text(
                     batch.productName,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w600,
                       color: textColor,
@@ -1233,7 +1233,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             child: Text(
               batch.batchNumber,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
                 color: textColor,
@@ -1246,7 +1246,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             child: Text(
               '${batch.expiryDate.day}/${batch.expiryDate.month}/${batch.expiryDate.year}',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13.0,
                 color: textColor,
               ),
@@ -1258,7 +1258,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             child: Text(
               daysLeft < 0 ? '${daysLeft.abs()}d ago' : '${daysLeft}d',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w700,
                 color: textColor,
@@ -1271,7 +1271,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             child: Text(
               batch.quantity.toString(),
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
                 color: textColor,
@@ -1292,7 +1292,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 status,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 11.0,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -1365,7 +1365,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             Text(
               label,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 11.0,
                 fontWeight: FontWeight.w600,
                 color: fgColor,
@@ -1404,7 +1404,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               child: Text(
                 actionTitle,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontWeight: FontWeight.w700,
                   color: _textPrimary,
                   fontSize: 18.0,
@@ -1421,7 +1421,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             Text(
               message,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 14.0,
                 color: _textSecondary,
                 height: 1.5,
@@ -1442,7 +1442,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                     child: Text(
                       'This action will be logged in the audit trail.',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 12.0,
                         color: _duniyaPurpleDark,
                       ),
@@ -1458,7 +1458,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             onPressed: () => Navigator.pop(dialogContext),
             child: Text('Cancel',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     color: _textSecondary,
                     fontWeight: FontWeight.w500)),
           ),
@@ -1469,7 +1469,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 SnackBar(
                   content: Text(
                     '$actionTitle for ${batch.batchNumber} — recorded.',
-                    style: TextStyle(fontFamily: 'Satoshi'),
+                    style: TextStyle(fontFamily: kAppFontFamily),
                   ),
                   backgroundColor: _duniyaPurple,
                   behavior: SnackBarBehavior.floating,
@@ -1488,7 +1488,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             ),
             child: Text('Confirm',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 14.0)),
           ),
@@ -1521,7 +1521,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             Text(
               text,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.08,
@@ -1550,7 +1550,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 12.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.08,
@@ -1575,7 +1575,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             const SizedBox(height: 16.0),
             Text('No expiring batches found',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500,
                     color: _textSecondary)),
@@ -1583,7 +1583,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             Text(
                 'All inventory is within safe expiry windows.',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     color: _textSecondary.withValues(alpha: 0.7))),
           ],
@@ -1603,7 +1603,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             const SizedBox(height: 16.0),
             Text('Loading expiry data...',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 14.0,
                     color: _textSecondary)),
           ],
@@ -1632,7 +1632,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             const SizedBox(height: 20.0),
             Text('Access Restricted',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary)),
@@ -1641,7 +1641,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 'You don\'t have permission to view expiry tracking.\nContact your administrator for access.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 14.0,
                     color: _textSecondary,
                     height: 1.5)),

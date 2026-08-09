@@ -562,7 +562,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       Text(
                         'Drug Interaction Alerts',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,
                           letterSpacing: -0.02,
@@ -574,7 +574,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       Text(
                         'Flag dangerous drug combinations at POS dispensing',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w400,
                           height: 1.5,
@@ -628,7 +628,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         const SizedBox(width: 6.0),
         Text(label,
             style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 11.0,
                 fontWeight: FontWeight.w500,
                 color: _textSecondary)),
@@ -768,7 +768,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               const SizedBox(width: 10.0),
               Text(title,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     fontWeight: FontWeight.w500,
                     color: _textSecondary,
@@ -778,7 +778,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
           const SizedBox(height: 14.0),
           Text(value,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: isText ? 16.0 : 28.0,
                 fontWeight: FontWeight.w700,
                 color: _textPrimary,
@@ -787,7 +787,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
           const SizedBox(height: 4.0),
           Text(subtitle,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: _textSecondary,
@@ -834,7 +834,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               const SizedBox(width: 12.0),
               Text('Interaction Checker',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 18.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary,
@@ -842,7 +842,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               const Spacer(),
               Text('Enter two drugs to check for interactions',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     color: _textSecondary,
                   )),
@@ -860,7 +860,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   children: [
                     Text('Drug A',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: _textSecondary,
@@ -872,7 +872,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       decoration: InputDecoration(
                         hintText: 'e.g. Warfarin',
                         hintStyle: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           color: _textSecondary.withOpacity(0.5),
                         ),
@@ -896,7 +896,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         ),
                       ),
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         color: _textPrimary,
                       ),
@@ -926,7 +926,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   children: [
                     Text('Drug B',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600,
                           color: _textSecondary,
@@ -938,7 +938,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       decoration: InputDecoration(
                         hintText: 'e.g. Aspirin',
                         hintStyle: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           color: _textSecondary.withOpacity(0.5),
                         ),
@@ -962,7 +962,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         ),
                       ),
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         color: _textPrimary,
                       ),
@@ -990,7 +990,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         : Icon(Icons.shield_outlined, size: 18.0),
                     label: Text('Check',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w600,
                         )),
@@ -1025,7 +1025,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 children: [
                   Text('Check Results',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         fontWeight: FontWeight.w600,
                         color: _textSecondary,
@@ -1077,7 +1077,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   children: [
                     Text(interaction.pair,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w700,
                           color: _severityText(interaction.severity),
@@ -1093,7 +1093,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       ),
                       child: Text(_severityLabel(interaction.severity),
                           style: const TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 9.0,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -1112,7 +1112,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       ),
                       child: Text(interaction.interactionType,
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 9.0,
                             fontWeight: FontWeight.w500,
                             color: _textSecondary,
@@ -1124,7 +1124,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 const SizedBox(height: 6.0),
                 Text(interaction.description,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w400,
                       color: _severityText(interaction.severity).withOpacity(0.8),
@@ -1193,7 +1193,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               const SizedBox(width: 12.0),
               Text('Recent Alerts',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 18.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary,
@@ -1207,7 +1207,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 ),
                 child: Text('${filtered.length} alerts',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w600,
                       color: _duniyaPurple,
@@ -1224,7 +1224,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   decoration: InputDecoration(
                     hintText: 'Search alerts...',
                     hintStyle: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: _textSecondary.withOpacity(0.5),
                     ),
@@ -1246,7 +1246,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     ),
                   ),
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     color: _textPrimary,
                   ),
@@ -1267,7 +1267,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   width: 140.0,
                   height: 38.0,
                   textStyle: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     color: _textPrimary,
                   ),
@@ -1297,7 +1297,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     const SizedBox(height: 12.0),
                     Text('No interactions match your filter',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 14.0,
                           color: _textSecondary,
                         )),
@@ -1358,7 +1358,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   children: [
                     Text(alert.pair,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 15.0,
                           fontWeight: FontWeight.w700,
                           color: _textPrimary,
@@ -1374,7 +1374,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       ),
                       child: Text(_severityLabel(alert.severity),
                           style: const TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 9.0,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -1392,7 +1392,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       ),
                       child: Text(alert.interactionType,
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 9.0,
                             fontWeight: FontWeight.w500,
                             color: _duniyaPurple,
@@ -1404,7 +1404,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 const SizedBox(height: 6.0),
                 Text(alert.description,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w400,
                       color: _textSecondary,
@@ -1422,7 +1422,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
             children: [
               Text(_formatDate(alert.flaggedAt),
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 12.0,
                     fontWeight: FontWeight.w500,
                     color: _textSecondary,
@@ -1431,7 +1431,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               if (alert.flaggedBy != null)
                 Text(alert.flaggedBy!,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 11.0,
                       fontWeight: FontWeight.w400,
                       color: _textSecondary.withOpacity(0.7),
@@ -1482,7 +1482,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               const SizedBox(width: 12.0),
               Text('Rules Database',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 18.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary,
@@ -1496,7 +1496,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 ),
                 child: Text('${rules.length} rules',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w600,
                       color: _duniyaPurple,
@@ -1522,7 +1522,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   icon: const Icon(Icons.add, size: 16.0),
                   label: Text('Add Rule',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         fontWeight: FontWeight.w600,
                       )),
@@ -1591,7 +1591,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     width: 70.0,
                     child: Text(rule.id,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w500,
                           color: _textSecondary,
@@ -1602,7 +1602,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     width: 110.0,
                     child: Text(rule.drugA,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 13.0,
                           fontWeight: FontWeight.w600,
                           color: _textPrimary,
@@ -1613,7 +1613,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     width: 110.0,
                     child: Text(rule.drugB,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 13.0,
                           fontWeight: FontWeight.w600,
                           color: _textPrimary,
@@ -1632,7 +1632,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       child: Text(_severityLabel(rule.severity),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 9.0,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -1645,7 +1645,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     width: 120.0,
                     child: Text(rule.interactionType,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w400,
                           color: _textSecondary,
@@ -1655,7 +1655,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   Expanded(
                     child: Text(rule.description,
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w400,
                           color: _textPrimary,
@@ -1680,7 +1680,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         const SizedBox(width: 6.0),
                         Text(rule.isActive ? 'Active' : 'Inactive',
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 11.0,
                               fontWeight: FontWeight.w500,
                               color: rule.isActive ? Colors.green : Colors.grey,
@@ -1742,7 +1742,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   Widget _tableHeaderCell(String label, double? width) {
     final child = Text(label,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 11.0,
           fontWeight: FontWeight.w700,
           color: _textSecondary,
@@ -1798,7 +1798,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
             const SizedBox(height: 20.0),
             Text('Access Restricted',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary)),
@@ -1807,7 +1807,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 'You don\'t have permission to view drug interaction alerts.\nContact your administrator for access.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 14.0,
                     color: _textSecondary,
                     height: 1.5)),

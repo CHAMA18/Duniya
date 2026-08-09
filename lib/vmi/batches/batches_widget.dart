@@ -318,7 +318,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               Text(
                 count.toString(),
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 28.0,
                   fontWeight: FontWeight.w800,
                   color: textColor,
@@ -331,7 +331,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
               color: textColor,
@@ -370,7 +370,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               const SizedBox(width: 12.0),
               Text('Add New Batch',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
@@ -384,7 +384,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogBatchTextController,
                   decoration: InputDecoration(
                     labelText: 'Batch Number',
-                    labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
@@ -418,7 +418,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Expiry Date',
-                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       prefixIcon: Icon(Icons.calendar_today, color: _duniyaPurple, size: 20.0),
@@ -428,7 +428,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                           ? '${_model.dialogExpiryDate!.day}/${_model.dialogExpiryDate!.month}/${_model.dialogExpiryDate!.year}'
                           : 'Select date',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         color: _model.dialogExpiryDate != null
                             ? _textPrimary
                             : _textSecondary,
@@ -442,7 +442,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Quantity',
-                    labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
@@ -456,7 +456,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogFacilityTextController,
                   decoration: InputDecoration(
                     labelText: 'Facility Location',
-                    labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
@@ -473,7 +473,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               onPressed: () => Navigator.pop(dialogContext),
               child: Text('Cancel',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: _textSecondary,
                       fontWeight: FontWeight.w500)),
             ),
@@ -510,7 +510,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               ),
               child: Text('Add Batch',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0)),
             ),
@@ -546,7 +546,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               const SizedBox(width: 12.0),
               Text('Edit Batch',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
@@ -560,7 +560,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogBatchTextController,
                   decoration: InputDecoration(
                     labelText: 'Batch Number',
-                    labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
@@ -595,7 +595,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Expiry Date',
-                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       prefixIcon: Icon(Icons.calendar_today, color: _duniyaPurple, size: 20.0),
@@ -605,7 +605,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                           ? '${_model.dialogExpiryDate!.day}/${_model.dialogExpiryDate!.month}/${_model.dialogExpiryDate!.year}'
                           : 'Select date',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         color: _model.dialogExpiryDate != null
                             ? _textPrimary
                             : _textSecondary,
@@ -619,7 +619,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Quantity',
-                    labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
@@ -633,7 +633,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogFacilityTextController,
                   decoration: InputDecoration(
                     labelText: 'Facility Location',
-                    labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
@@ -650,7 +650,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               onPressed: () => Navigator.pop(dialogContext),
               child: Text('Cancel',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: _textSecondary,
                       fontWeight: FontWeight.w500)),
             ),
@@ -682,7 +682,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               ),
               child: Text('Save Changes',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0)),
             ),
@@ -712,7 +712,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             const SizedBox(width: 12.0),
             Text('Delete Batch',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary)),
           ],
@@ -720,14 +720,14 @@ class _BatchesWidgetState extends State<BatchesWidget> {
         content: Text(
           'Are you sure you want to delete batch "${batch.batchNumber}"? This action cannot be undone.',
           style: TextStyle(
-              fontFamily: 'Satoshi', fontSize: 15.0, color: _textSecondary),
+              fontFamily: kAppFontFamily, fontSize: 15.0, color: _textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text('Cancel',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     color: _textSecondary,
                     fontWeight: FontWeight.w500)),
           ),
@@ -747,7 +747,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             ),
             child: Text('Delete',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontWeight: FontWeight.w600,
                     fontSize: 14.0)),
           ),
@@ -827,7 +827,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                         Text(
                                           'Batch & Expiry Tracking',
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: 32.0,
                                             fontWeight: FontWeight.w700,
                                             letterSpacing: -0.02,
@@ -839,7 +839,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                         Text(
                                           'Monitor batch lifecycles and expiry alerts across all facilities.',
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.w400,
                                             height: 1.6,
@@ -1078,7 +1078,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                   decoration: InputDecoration(
                                                     hintText: 'Search batches...',
                                                     hintStyle: TextStyle(
-                                                        fontFamily: 'Satoshi',
+                                                        fontFamily: kAppFontFamily,
                                                         color: _textSecondary,
                                                         fontSize: 14.0),
                                                     prefixIcon: Icon(Icons.search,
@@ -1091,7 +1091,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                             vertical: 10.0),
                                                   ),
                                                   style: TextStyle(
-                                                      fontFamily: 'Satoshi',
+                                                      fontFamily: kAppFontFamily,
                                                       fontSize: 14.0,
                                                       color: _textPrimary),
                                                   onChanged: (val) =>
@@ -1128,7 +1128,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                     width: 160.0,
                                                     height: 40.0,
                                                     textStyle: TextStyle(
-                                                      fontFamily: 'Satoshi',
+                                                      fontFamily: kAppFontFamily,
                                                       color: _duniyaPurple,
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -1223,9 +1223,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                         children: [
                                                           Icon(Icons.inventory_2_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
                                                           const SizedBox(height: 16.0),
-                                                          Text('No batches found', style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                                                          Text('No batches found', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
                                                           const SizedBox(height: 8.0),
-                                                          Text('Click "Add Batch" to create your first batch entry', style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
+                                                          Text('Click "Add Batch" to create your first batch entry', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
                                                         ],
                                                       ),
                                                     ),
@@ -1250,7 +1250,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                               children: [
                                                                 Icon(_getExpiryIcon(batch.expiryDate), size: 16.0, color: _getExpiryBadgeBg(batch.expiryDate)),
                                                                 const SizedBox(width: 8.0),
-                                                                Text(batch.batchNumber, style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w600, color: _getExpiryTextColor(batch.expiryDate))),
+                                                                Text(batch.batchNumber, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w600, color: _getExpiryTextColor(batch.expiryDate))),
                                                               ],
                                                             ),
                                                           ),
@@ -1260,23 +1260,23 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                               batch.expiryDate != null
                                                                   ? '${batch.expiryDate!.day}/${batch.expiryDate!.month}/${batch.expiryDate!.year}'
                                                                   : '-',
-                                                              style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _getExpiryTextColor(batch.expiryDate)),
+                                                              style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _getExpiryTextColor(batch.expiryDate)),
                                                             ),
                                                           ),
                                                           Expanded(
                                                             flex: 7,
-                                                            child: Text(batch.quantity.toString(), style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, fontWeight: FontWeight.w500, color: _getExpiryTextColor(batch.expiryDate))),
+                                                            child: Text(batch.quantity.toString(), style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w500, color: _getExpiryTextColor(batch.expiryDate))),
                                                           ),
                                                           Expanded(
                                                             flex: 13,
-                                                            child: Text(batch.facilityLocation ?? '-', style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _getExpiryTextColor(batch.expiryDate)), overflow: TextOverflow.ellipsis),
+                                                            child: Text(batch.facilityLocation ?? '-', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _getExpiryTextColor(batch.expiryDate)), overflow: TextOverflow.ellipsis),
                                                           ),
                                                           Expanded(
                                                             flex: 9,
                                                             child: Container(
                                                               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                                                               decoration: BoxDecoration(color: _getExpiryBadgeBg(batch.expiryDate), borderRadius: BorderRadius.circular(9999.0)),
-                                                              child: Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Satoshi', fontSize: 11.0, fontWeight: FontWeight.w600, color: _getExpiryBadgeText(batch.expiryDate))),
+                                                              child: Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 11.0, fontWeight: FontWeight.w600, color: _getExpiryBadgeText(batch.expiryDate))),
                                                             ),
                                                           ),
                                                           Expanded(
@@ -1355,7 +1355,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
           children: [
             SpinKitRing(color: _duniyaPurple, size: 48.0),
             const SizedBox(height: 16.0),
-            Text('Loading batches...', style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
+            Text('Loading batches...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
           ],
         ),
       ),
@@ -1380,9 +1380,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               child: Icon(Icons.error_outline, color: _expiredBadge, size: 32.0),
             ),
             const SizedBox(height: 16.0),
-            Text('Something went wrong', style: TextStyle(fontFamily: 'Satoshi', fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+            Text('Something went wrong', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
             const SizedBox(height: 8.0),
-            Text('Unable to load batch data. Please try again later.', style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
+            Text('Unable to load batch data. Please try again later.', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
             const SizedBox(height: 20.0),
             ElevatedButton.icon(
               onPressed: () => safeSetState(() {}),
@@ -1406,7 +1406,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 12.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.08,

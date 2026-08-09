@@ -2003,7 +2003,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                               children: [
                                 Text('Add Stock Balance',
                                     style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white,
@@ -2012,7 +2012,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 Text(
                                     'Record opening & closing quantities for a product',
                                     style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 13.0,
                                       color: Colors.white.withAlpha(200),
                                     )),
@@ -2060,7 +2060,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                     width: double.infinity,
                                     height: 48.0,
                                     textStyle: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 14.0,
                                       color: theme.primaryText,
                                     ),
@@ -2096,7 +2096,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 width: double.infinity,
                                 height: 48.0,
                                 textStyle: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 14.0,
                                   color: theme.primaryText,
                                 ),
@@ -2118,7 +2118,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                           // Stock quantity fields in a grid
                           Text('Stock Quantities',
                               style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 13.0,
                                 fontWeight: FontWeight.w500,
                                 color: theme.primaryText,
@@ -2190,7 +2190,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                             onPressed: () => Navigator.pop(dialogContext),
                             child: Text('Cancel',
                                 style: TextStyle(
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   color: theme.secondaryText,
                                   fontWeight: FontWeight.w500,
                                 )),
@@ -2228,7 +2228,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 color: theme.primary,
                                 textStyle: TextStyle(
                                   color: Colors.white,
-                                  fontFamily: 'Satoshi',
+                                  fontFamily: kAppFontFamily,
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -2339,7 +2339,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
           text: TextSpan(
             text: label,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
               color: theme.primaryText,
@@ -2399,7 +2399,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             const SizedBox(width: 6.0),
             Text(label,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                   color: theme.secondaryText,
@@ -2412,14 +2412,14 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
           focusNode: focusNode,
           keyboardType: TextInputType.number,
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 14.0,
             color: theme.primaryText,
           ),
           decoration: InputDecoration(
             hintText: '0',
             hintStyle: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               color: theme.secondaryText.withValues(alpha: 0.5),
             ),
             filled: true,

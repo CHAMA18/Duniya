@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'flutter_flow_util.dart' show kAppFontFamily;
 
 const kThemeModeKey = '__theme_mode__';
 
@@ -252,7 +253,7 @@ TextStyle _satoshi({
   double? height,
 }) {
   return TextStyle(
-    fontFamily: 'Satoshi',
+    fontFamily: kAppFontFamily,
     color: color,
     fontWeight: fontWeight,
     fontSize: fontSize,
@@ -267,7 +268,7 @@ class MobileTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'Satoshi';
+  String get displayLargeFamily => kAppFontFamily;
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => _satoshi(
         color: theme.primaryText,
@@ -276,7 +277,7 @@ class MobileTypography extends Typography {
         height: 1.12,
         letterSpacing: -0.02,
       );
-  String get displayMediumFamily => 'Satoshi';
+  String get displayMediumFamily => kAppFontFamily;
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
@@ -285,7 +286,7 @@ class MobileTypography extends Typography {
         height: 1.16,
         letterSpacing: -0.02,
       );
-  String get displaySmallFamily => 'Satoshi';
+  String get displaySmallFamily => kAppFontFamily;
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
@@ -294,7 +295,7 @@ class MobileTypography extends Typography {
         height: 1.25,
         letterSpacing: -0.01,
       );
-  String get headlineLargeFamily => 'Satoshi';
+  String get headlineLargeFamily => kAppFontFamily;
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
@@ -303,7 +304,7 @@ class MobileTypography extends Typography {
         height: 1.25,
         letterSpacing: -0.02,
       );
-  String get headlineMediumFamily => 'Satoshi';
+  String get headlineMediumFamily => kAppFontFamily;
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
@@ -312,7 +313,7 @@ class MobileTypography extends Typography {
         height: 1.27,
         letterSpacing: -0.01,
       );
-  String get headlineSmallFamily => 'Satoshi';
+  String get headlineSmallFamily => kAppFontFamily;
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
@@ -321,7 +322,7 @@ class MobileTypography extends Typography {
         height: 1.3,
         letterSpacing: -0.01,
       );
-  String get titleLargeFamily => 'Satoshi';
+  String get titleLargeFamily => kAppFontFamily;
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
@@ -330,7 +331,7 @@ class MobileTypography extends Typography {
         height: 1.27,
         letterSpacing: -0.01,
       );
-  String get titleMediumFamily => 'Satoshi';
+  String get titleMediumFamily => kAppFontFamily;
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
@@ -339,7 +340,7 @@ class MobileTypography extends Typography {
         height: 1.33,
         letterSpacing: -0.005,
       );
-  String get titleSmallFamily => 'Satoshi';
+  String get titleSmallFamily => kAppFontFamily;
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
@@ -348,7 +349,7 @@ class MobileTypography extends Typography {
         height: 1.38,
         letterSpacing: -0.005,
       );
-  String get labelLargeFamily => 'Satoshi';
+  String get labelLargeFamily => kAppFontFamily;
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
@@ -357,7 +358,7 @@ class MobileTypography extends Typography {
         height: 1.43,
         letterSpacing: 0.02,
       );
-  String get labelMediumFamily => 'Satoshi';
+  String get labelMediumFamily => kAppFontFamily;
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
@@ -366,7 +367,7 @@ class MobileTypography extends Typography {
         height: 1.5,
         letterSpacing: 0.04,
       );
-  String get labelSmallFamily => 'Satoshi';
+  String get labelSmallFamily => kAppFontFamily;
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
@@ -375,7 +376,7 @@ class MobileTypography extends Typography {
         height: 1.45,
         letterSpacing: 0.06,
       );
-  String get bodyLargeFamily => 'Satoshi';
+  String get bodyLargeFamily => kAppFontFamily;
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
@@ -383,7 +384,7 @@ class MobileTypography extends Typography {
         fontSize: 16.0,
         height: 1.5,
       );
-  String get bodyMediumFamily => 'Satoshi';
+  String get bodyMediumFamily => kAppFontFamily;
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
@@ -391,7 +392,7 @@ class MobileTypography extends Typography {
         fontSize: 14.0,
         height: 1.5,
       );
-  String get bodySmallFamily => 'Satoshi';
+  String get bodySmallFamily => kAppFontFamily;
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
@@ -406,7 +407,7 @@ class TabletTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'Satoshi';
+  String get displayLargeFamily => kAppFontFamily;
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => _satoshi(
         color: theme.primaryText,
@@ -415,7 +416,7 @@ class TabletTypography extends Typography {
         height: 1.12,
         letterSpacing: -0.02,
       );
-  String get displayMediumFamily => 'Satoshi';
+  String get displayMediumFamily => kAppFontFamily;
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
@@ -424,7 +425,7 @@ class TabletTypography extends Typography {
         height: 1.16,
         letterSpacing: -0.02,
       );
-  String get displaySmallFamily => 'Satoshi';
+  String get displaySmallFamily => kAppFontFamily;
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
@@ -433,7 +434,7 @@ class TabletTypography extends Typography {
         height: 1.25,
         letterSpacing: -0.01,
       );
-  String get headlineLargeFamily => 'Satoshi';
+  String get headlineLargeFamily => kAppFontFamily;
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
@@ -442,7 +443,7 @@ class TabletTypography extends Typography {
         height: 1.25,
         letterSpacing: -0.02,
       );
-  String get headlineMediumFamily => 'Satoshi';
+  String get headlineMediumFamily => kAppFontFamily;
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
@@ -451,7 +452,7 @@ class TabletTypography extends Typography {
         height: 1.27,
         letterSpacing: -0.01,
       );
-  String get headlineSmallFamily => 'Satoshi';
+  String get headlineSmallFamily => kAppFontFamily;
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
@@ -460,7 +461,7 @@ class TabletTypography extends Typography {
         height: 1.3,
         letterSpacing: -0.01,
       );
-  String get titleLargeFamily => 'Satoshi';
+  String get titleLargeFamily => kAppFontFamily;
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
@@ -469,7 +470,7 @@ class TabletTypography extends Typography {
         height: 1.27,
         letterSpacing: -0.01,
       );
-  String get titleMediumFamily => 'Satoshi';
+  String get titleMediumFamily => kAppFontFamily;
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
@@ -478,7 +479,7 @@ class TabletTypography extends Typography {
         height: 1.33,
         letterSpacing: -0.005,
       );
-  String get titleSmallFamily => 'Satoshi';
+  String get titleSmallFamily => kAppFontFamily;
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
@@ -487,7 +488,7 @@ class TabletTypography extends Typography {
         height: 1.38,
         letterSpacing: -0.005,
       );
-  String get labelLargeFamily => 'Satoshi';
+  String get labelLargeFamily => kAppFontFamily;
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
@@ -496,7 +497,7 @@ class TabletTypography extends Typography {
         height: 1.43,
         letterSpacing: 0.02,
       );
-  String get labelMediumFamily => 'Satoshi';
+  String get labelMediumFamily => kAppFontFamily;
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
@@ -505,7 +506,7 @@ class TabletTypography extends Typography {
         height: 1.5,
         letterSpacing: 0.04,
       );
-  String get labelSmallFamily => 'Satoshi';
+  String get labelSmallFamily => kAppFontFamily;
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
@@ -514,7 +515,7 @@ class TabletTypography extends Typography {
         height: 1.45,
         letterSpacing: 0.06,
       );
-  String get bodyLargeFamily => 'Satoshi';
+  String get bodyLargeFamily => kAppFontFamily;
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
@@ -522,7 +523,7 @@ class TabletTypography extends Typography {
         fontSize: 16.0,
         height: 1.5,
       );
-  String get bodyMediumFamily => 'Satoshi';
+  String get bodyMediumFamily => kAppFontFamily;
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
@@ -530,7 +531,7 @@ class TabletTypography extends Typography {
         fontSize: 14.0,
         height: 1.5,
       );
-  String get bodySmallFamily => 'Satoshi';
+  String get bodySmallFamily => kAppFontFamily;
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
@@ -545,7 +546,7 @@ class DesktopTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get displayLargeFamily => 'Satoshi';
+  String get displayLargeFamily => kAppFontFamily;
   bool get displayLargeIsCustom => true;
   TextStyle get displayLarge => _satoshi(
         color: theme.primaryText,
@@ -554,7 +555,7 @@ class DesktopTypography extends Typography {
         height: 1.12,
         letterSpacing: -0.02,
       );
-  String get displayMediumFamily => 'Satoshi';
+  String get displayMediumFamily => kAppFontFamily;
   bool get displayMediumIsCustom => true;
   TextStyle get displayMedium => _satoshi(
         color: theme.primaryText,
@@ -563,7 +564,7 @@ class DesktopTypography extends Typography {
         height: 1.16,
         letterSpacing: -0.02,
       );
-  String get displaySmallFamily => 'Satoshi';
+  String get displaySmallFamily => kAppFontFamily;
   bool get displaySmallIsCustom => true;
   TextStyle get displaySmall => _satoshi(
         color: theme.primaryText,
@@ -572,7 +573,7 @@ class DesktopTypography extends Typography {
         height: 1.25,
         letterSpacing: -0.01,
       );
-  String get headlineLargeFamily => 'Satoshi';
+  String get headlineLargeFamily => kAppFontFamily;
   bool get headlineLargeIsCustom => true;
   TextStyle get headlineLarge => _satoshi(
         color: theme.primaryText,
@@ -581,7 +582,7 @@ class DesktopTypography extends Typography {
         height: 1.25,
         letterSpacing: -0.02,
       );
-  String get headlineMediumFamily => 'Satoshi';
+  String get headlineMediumFamily => kAppFontFamily;
   bool get headlineMediumIsCustom => true;
   TextStyle get headlineMedium => _satoshi(
         color: theme.secondaryText,
@@ -590,7 +591,7 @@ class DesktopTypography extends Typography {
         height: 1.27,
         letterSpacing: -0.01,
       );
-  String get headlineSmallFamily => 'Satoshi';
+  String get headlineSmallFamily => kAppFontFamily;
   bool get headlineSmallIsCustom => true;
   TextStyle get headlineSmall => _satoshi(
         color: theme.primaryText,
@@ -599,7 +600,7 @@ class DesktopTypography extends Typography {
         height: 1.3,
         letterSpacing: -0.01,
       );
-  String get titleLargeFamily => 'Satoshi';
+  String get titleLargeFamily => kAppFontFamily;
   bool get titleLargeIsCustom => true;
   TextStyle get titleLarge => _satoshi(
         color: theme.primaryText,
@@ -608,7 +609,7 @@ class DesktopTypography extends Typography {
         height: 1.27,
         letterSpacing: -0.01,
       );
-  String get titleMediumFamily => 'Satoshi';
+  String get titleMediumFamily => kAppFontFamily;
   bool get titleMediumIsCustom => true;
   TextStyle get titleMedium => _satoshi(
         color: theme.primaryText,
@@ -617,7 +618,7 @@ class DesktopTypography extends Typography {
         height: 1.33,
         letterSpacing: -0.005,
       );
-  String get titleSmallFamily => 'Satoshi';
+  String get titleSmallFamily => kAppFontFamily;
   bool get titleSmallIsCustom => true;
   TextStyle get titleSmall => _satoshi(
         color: theme.secondaryText,
@@ -626,7 +627,7 @@ class DesktopTypography extends Typography {
         height: 1.38,
         letterSpacing: -0.005,
       );
-  String get labelLargeFamily => 'Satoshi';
+  String get labelLargeFamily => kAppFontFamily;
   bool get labelLargeIsCustom => true;
   TextStyle get labelLarge => _satoshi(
         color: theme.primaryText,
@@ -635,7 +636,7 @@ class DesktopTypography extends Typography {
         height: 1.43,
         letterSpacing: 0.02,
       );
-  String get labelMediumFamily => 'Satoshi';
+  String get labelMediumFamily => kAppFontFamily;
   bool get labelMediumIsCustom => true;
   TextStyle get labelMedium => _satoshi(
         color: theme.primaryText,
@@ -644,7 +645,7 @@ class DesktopTypography extends Typography {
         height: 1.5,
         letterSpacing: 0.04,
       );
-  String get labelSmallFamily => 'Satoshi';
+  String get labelSmallFamily => kAppFontFamily;
   bool get labelSmallIsCustom => true;
   TextStyle get labelSmall => _satoshi(
         color: theme.primaryText,
@@ -653,7 +654,7 @@ class DesktopTypography extends Typography {
         height: 1.45,
         letterSpacing: 0.06,
       );
-  String get bodyLargeFamily => 'Satoshi';
+  String get bodyLargeFamily => kAppFontFamily;
   bool get bodyLargeIsCustom => true;
   TextStyle get bodyLarge => _satoshi(
         color: theme.primaryText,
@@ -661,7 +662,7 @@ class DesktopTypography extends Typography {
         fontSize: 16.0,
         height: 1.5,
       );
-  String get bodyMediumFamily => 'Satoshi';
+  String get bodyMediumFamily => kAppFontFamily;
   bool get bodyMediumIsCustom => true;
   TextStyle get bodyMedium => _satoshi(
         color: theme.primaryText,
@@ -669,7 +670,7 @@ class DesktopTypography extends Typography {
         fontSize: 14.0,
         height: 1.5,
       );
-  String get bodySmallFamily => 'Satoshi';
+  String get bodySmallFamily => kAppFontFamily;
   bool get bodySmallIsCustom => true;
   TextStyle get bodySmall => _satoshi(
         color: theme.secondaryText,
@@ -803,12 +804,12 @@ extension TextStyleHelper on TextStyle {
     // also avoids runtime HTTP fetches to fonts.googleapis.com which
     // would otherwise pull Plus Jakarta Sans / Roboto / Inter in.
     // ═════════════════════════════════════════════════════════════
-    const String brandFontFamily = 'Satoshi';
+    const String brandFontFamily = kAppFontFamily;
 
     // Case 1: caller explicitly named a fontFamily AND did NOT ask for
     // Google Fonts → honour that family (still Satoshi in practice,
     // because every FlutterFlowTheme *Family getter already returns
-    // 'Satoshi', but allow overrides if a caller truly wants another
+    // kAppFontFamily, but allow overrides if a caller truly wants another
     // bundled font).
     if (fontFamily != null && !useGoogleFonts) {
       return TextStyle(

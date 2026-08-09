@@ -202,7 +202,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           controller: _model.searchTextController,
                           focusNode: _model.searchFocusNode,
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w400,
                             color: _onSurface,
@@ -211,7 +211,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             hintText:
                                 'Scan barcode or search by generic name, brand, or SKU...',
                             hintStyle: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                               color: _onSurfaceVariant.withValues(alpha: 0.5),
@@ -236,7 +236,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           child: Text(
                             'Advanced',
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 14.0,
                               fontWeight: FontWeight.w600,
                               color: _duniyaPurple,
@@ -304,7 +304,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 14.0,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             color: isSelected ? Colors.white : _onSurface,
@@ -391,7 +391,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         child: Text(
                           stockLabel,
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w600,
                             letterSpacing: -0.01,
@@ -410,7 +410,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 14.0,
                     fontWeight: FontWeight.w600,
                     letterSpacing: -0.01,
@@ -424,7 +424,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 12.0,
                     fontWeight: FontWeight.w400,
                     height: 1.5,
@@ -449,7 +449,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                       Text(
                         'ZMK ${product.sellingPrice.toStringAsFixed(2)}',
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 18.0,
                           fontWeight: FontWeight.w700,
                           letterSpacing: -0.01,
@@ -574,7 +574,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                         Text(
                                           'Product Catalogue',
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: 24.0,
                                             fontWeight: FontWeight.w700,
                                             letterSpacing: -0.02,
@@ -585,7 +585,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                         Text(
                                           'Browse and manage your product master data',
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: 14.0,
                                             fontWeight: FontWeight.w400,
                                             color: _onSurfaceVariant,
@@ -610,7 +610,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           label: Text(
                                             'Download Template',
                                             style: TextStyle(
-                                              fontFamily: 'Satoshi',
+                                              fontFamily: kAppFontFamily,
                                               fontSize: 14.0,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -641,7 +641,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           label: Text(
                                             'Import Excel',
                                             style: TextStyle(
-                                              fontFamily: 'Satoshi',
+                                              fontFamily: kAppFontFamily,
                                               fontSize: 14.0,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -671,7 +671,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           label: Text(
                                             'Add Product',
                                             style: TextStyle(
-                                              fontFamily: 'Satoshi',
+                                              fontFamily: kAppFontFamily,
                                               fontSize: 14.0,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -773,7 +773,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                               Text(
                                                 'No products found',
                                                 style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 18.0,
                                                   fontWeight: FontWeight.w600,
                                                   color: _onSurface,
@@ -783,7 +783,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                               Text(
                                                 'Try adjusting your search or add a new product',
                                                 style: TextStyle(
-                                                  fontFamily: 'Satoshi',
+                                                  fontFamily: kAppFontFamily,
                                                   fontSize: 14.0,
                                                   fontWeight: FontWeight.w400,
                                                   color: _onSurfaceVariant,
@@ -873,7 +873,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 child: Text(
                   product.name,
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
                     color: _navy900,
@@ -929,7 +929,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               child: Text(
                 'Close',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   color: _onSurfaceVariant,
                 ),
               ),
@@ -951,7 +951,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             child: Text(
               label,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
                 color: _onSurfaceVariant,
@@ -962,7 +962,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             child: Text(
               value,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 13.0,
                 fontWeight: FontWeight.w400,
                 color: _onSurface,
@@ -987,7 +987,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 11.0,
               fontWeight: FontWeight.w500,
               color: _onSurfaceVariant,
@@ -997,7 +997,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           Text(
             value,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 16.0,
               fontWeight: FontWeight.w700,
               color: _onSurface,
@@ -1306,7 +1306,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               child: Text(
                 message,
                 style: const TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -1351,7 +1351,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   Text(
                     'Importing products…',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 18.0,
                       fontWeight: FontWeight.w700,
                       color: _navy900,
@@ -1362,7 +1362,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     'Processing $total row${total == 1 ? '' : 's'} from your spreadsheet',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: _onSurfaceVariant,
                     ),
@@ -1419,7 +1419,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         child: Text(
                           'Confirm Import',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 20.0,
                             fontWeight: FontWeight.w700,
                             color: _navy900,
@@ -1432,7 +1432,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   Text(
                     'File: $fileName',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                       color: _onSurface,
@@ -1442,7 +1442,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   Text(
                     '$rowCount product row${rowCount == 1 ? '' : 's'} will be added to your catalogue.',
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: _onSurfaceVariant,
                     ),
@@ -1464,7 +1464,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         Text(
                           'Detected columns (${detectedColumns.length})',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w700,
                             color: _onSurfaceVariant,
@@ -1492,7 +1492,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                   child: Text(
                                     c,
                                     style: TextStyle(
-                                      fontFamily: 'Satoshi',
+                                      fontFamily: kAppFontFamily,
                                       fontSize: 11.0,
                                       fontWeight: FontWeight.w600,
                                       color: _onSurface,
@@ -1518,7 +1518,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         child: Text(
                           'Each row needs a Name and SKU to be imported.',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.5,
                             color: _onSurfaceVariant,
                           ),
@@ -1546,7 +1546,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         child: Text(
                           'Cancel',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w600,
                           ),
@@ -1560,7 +1560,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         label: Text(
                           'Import $rowCount',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w700,
                           ),
@@ -1846,7 +1846,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 Text(
                   'Add New Product',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
@@ -1857,7 +1857,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 Text(
                   'Fill in the product details to add to your catalogue',
                   style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 13.0,
                     fontWeight: FontWeight.w400,
                     color: Colors.white.withValues(alpha: 0.75),
@@ -1888,7 +1888,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         Text(
           title,
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 13.0,
             fontWeight: FontWeight.w700,
             color: _duniyaPurpleDark,
@@ -1924,7 +1924,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             Text(
               label,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w600,
                 color: _onSurfaceVariant,
@@ -1951,7 +1951,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               ? const TextInputType.numberWithOptions(decimal: true)
               : TextInputType.text,
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
             color: _onSurface,
@@ -1959,7 +1959,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           decoration: InputDecoration(
             hintText: hint ?? label,
             hintStyle: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w400,
               color: _outline,
@@ -1975,7 +1975,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 : null,
             prefixText: prefix,
             prefixStyle: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w600,
               color: _duniyaPurpleDark,
@@ -2014,7 +2014,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         Text(
           'Category',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12.0,
             fontWeight: FontWeight.w600,
             color: _onSurfaceVariant,
@@ -2054,7 +2054,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             width: double.infinity,
             height: 48.0,
             textStyle: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
               color: _model.dialogCategoryValue != null ? _onSurface : _outline,
@@ -2140,7 +2140,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 ? 'Profit Margin: ${margin.toStringAsFixed(1)}%  (ZMK ${(selling - cost).toStringAsFixed(2)} per unit)'
                 : 'Enter cost and selling price to see margin',
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 12.0,
               fontWeight: FontWeight.w500,
               color: hasData
@@ -2180,7 +2180,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             child: Text(
               canSave ? 'Ready to save' : 'Product Name and SKU are required',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w500,
                 color: canSave ? const Color(0xFF059669) : _onSurfaceVariant,
@@ -2202,7 +2202,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             child: Text(
               'Cancel',
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 14.0,
                 fontWeight: FontWeight.w600,
               ),
@@ -2272,7 +2272,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               label: Text(
                 'Save Product',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w700,
                 ),

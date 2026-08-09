@@ -4539,7 +4539,7 @@ class _RealLineChartPainter extends CustomPainter {
         text: TextSpan(
           text: 'No revenue data available yet',
           style: TextStyle(
-            fontFamily: 'Satoshi',
+            fontFamily: kAppFontFamily,
             fontSize: 12.0,
             fontWeight: FontWeight.w600,
             color: labelColor,
@@ -4639,7 +4639,7 @@ class _RealLineChartPainter extends CustomPainter {
     }
 
     final labelStyle = const TextStyle(
-      fontFamily: 'Satoshi',
+      fontFamily: kAppFontFamily,
       fontSize: 10.0,
       fontWeight: FontWeight.w500,
     );

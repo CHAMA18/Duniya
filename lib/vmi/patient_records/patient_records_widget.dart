@@ -543,7 +543,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               Text(
                 'Patient Medication Records',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 32.0,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.02,
@@ -555,7 +555,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               Text(
                 'Track patient medication histories, adherence rates, and dispensing events.',
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w400,
                   height: 1.6,
@@ -592,7 +592,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             const SizedBox(height: 20.0),
             Text('Access Restricted',
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
                     color: _textPrimary)),
@@ -601,7 +601,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 'You don\'t have permission to view patient records.\nContact your administrator for access.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: 'Satoshi',
+                    fontFamily: kAppFontFamily,
                     fontSize: 14.0,
                     color: _textSecondary,
                     height: 1.5)),
@@ -739,7 +739,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               Text(
                 value,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 28.0,
                   fontWeight: FontWeight.w800,
                   color: textColor,
@@ -752,7 +752,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
               color: textColor,
@@ -792,7 +792,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             decoration: InputDecoration(
               hintText: 'Search by name, ID, or phone...',
               hintStyle: TextStyle(
-                  fontFamily: 'Satoshi', color: _textSecondary, fontSize: 14.0),
+                  fontFamily: kAppFontFamily, color: _textSecondary, fontSize: 14.0),
               prefixIcon:
                   Icon(Icons.search, color: _duniyaPurple, size: 20.0),
               border: InputBorder.none,
@@ -800,7 +800,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   horizontal: 12.0, vertical: 10.0),
             ),
             style: TextStyle(
-                fontFamily: 'Satoshi', fontSize: 14.0, color: _textPrimary),
+                fontFamily: kAppFontFamily, fontSize: 14.0, color: _textPrimary),
             onChanged: (val) => safeSetState(() {}),
           );
 
@@ -900,14 +900,14 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     const SizedBox(height: 16.0),
                     Text('No patients found',
                         style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                             color: _textSecondary)),
                     const SizedBox(height: 8.0),
                     Text('Try a different search term',
                         style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 13.0,
                             color: _textSecondary.withValues(alpha: 0.7))),
                   ],
@@ -973,7 +973,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                           child: Text(
                             patient.name.substring(0, 1),
                             style: TextStyle(
-                              fontFamily: 'Satoshi',
+                              fontFamily: kAppFontFamily,
                               fontSize: 14.0,
                               fontWeight: FontWeight.w700,
                               color: _duniyaPurple,
@@ -985,7 +985,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                       Expanded(
                         child: Text(patient.name,
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 13.0,
                                 fontWeight: FontWeight.w600,
                                 color: _textPrimary),
@@ -999,7 +999,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   flex: 8,
                   child: Text(patient.patientId,
                       style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 13.0,
                           color: _textSecondary,
                           fontWeight: FontWeight.w500)),
@@ -1009,7 +1009,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   flex: 5,
                   child: Text('${patient.age}',
                       style: TextStyle(
-                          fontFamily: 'Satoshi', fontSize: 13.0, color: _textPrimary)),
+                          fontFamily: kAppFontFamily, fontSize: 13.0, color: _textPrimary)),
                 ),
                 // Active meds
                 Expanded(
@@ -1024,7 +1024,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     child: Text('${patient.activeMeds} meds',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w600,
                             color: _duniyaPurple)),
@@ -1035,7 +1035,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   flex: 8,
                   child: Text(patient.lastVisit,
                       style: TextStyle(
-                          fontFamily: 'Satoshi', fontSize: 13.0, color: _textSecondary)),
+                          fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary)),
                 ),
                 // Adherence
                 Expanded(
@@ -1056,7 +1056,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         child: Text('${patient.adherencePercent}%',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 11.0,
                                 fontWeight: FontWeight.w600,
                                 color: _adherenceColor(
@@ -1132,14 +1132,14 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               const SizedBox(width: 10.0),
               Text('Medication History',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary)),
               const SizedBox(width: 8.0),
               Text('(${patient.dispensingHistory.length} events)',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       color: _textSecondary)),
             ],
@@ -1151,7 +1151,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               child: Center(
                 child: Text('No dispensing history available',
                     style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         color: _textSecondary)),
               ),
@@ -1209,7 +1209,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         Text(
                           '${event.date.day} ${_monthAbbr(event.date.month)} ${event.date.year}',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
                             color: _duniyaPurple,
@@ -1219,7 +1219,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         Text(
                           'Qty: ${event.quantity}',
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 11.0,
                             color: _textSecondary,
                           ),
@@ -1230,7 +1230,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     Text(
                       event.medication,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w600,
                         color: _textPrimary,
@@ -1243,7 +1243,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         const SizedBox(width: 4.0),
                         Text(event.dose,
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12.0,
                                 color: _textSecondary)),
                         const SizedBox(width: 16.0),
@@ -1251,7 +1251,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         const SizedBox(width: 4.0),
                         Text(event.prescriber,
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 12.0,
                                 color: _textSecondary)),
                       ],
@@ -1267,7 +1267,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         ),
                         child: Text(event.notes!,
                             style: TextStyle(
-                                fontFamily: 'Satoshi',
+                                fontFamily: kAppFontFamily,
                                 fontSize: 11.0,
                                 color: _duniyaPurpleDark)),
                       ),
@@ -1325,7 +1325,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               const SizedBox(width: 12.0),
               Text('Add New Patient',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
@@ -1366,7 +1366,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     decoration: InputDecoration(
                       labelText: 'Date of Birth',
                       labelStyle: TextStyle(
-                          fontFamily: 'Satoshi', color: _textSecondary),
+                          fontFamily: kAppFontFamily, color: _textSecondary),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       prefixIcon: Icon(Icons.calendar_today,
@@ -1377,7 +1377,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                           ? '${_model.dobDate!.day}/${_model.dobDate!.month}/${_model.dobDate!.year}'
                           : 'Select date',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         color: _model.dobDate != null
                             ? _textPrimary
                             : _textSecondary,
@@ -1412,7 +1412,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               onPressed: () => Navigator.pop(dialogContext),
               child: Text('Cancel',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: _textSecondary,
                       fontWeight: FontWeight.w500)),
             ),
@@ -1450,7 +1450,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               ),
               child: Text('Save',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0)),
             ),
@@ -1495,7 +1495,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               const SizedBox(width: 12.0),
               Text('Edit Patient',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
@@ -1537,7 +1537,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               onPressed: () => Navigator.pop(dialogContext),
               child: Text('Cancel',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: _textSecondary,
                       fontWeight: FontWeight.w500)),
             ),
@@ -1571,7 +1571,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               ),
               child: Text('Save Changes',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w600,
                       fontSize: 14.0)),
             ),
@@ -1597,7 +1597,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
       decoration: InputDecoration(
         labelText: label,
         labelStyle:
-            TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+            TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
@@ -1613,7 +1613,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: 'Satoshi',
+          fontFamily: kAppFontFamily,
           fontSize: 12.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.08,

@@ -409,7 +409,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
               Text(
                 value,
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 28.0,
                   fontWeight: FontWeight.w800,
                   color: textColor,
@@ -422,7 +422,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
           Text(
             title,
             style: TextStyle(
-              fontFamily: 'Satoshi',
+              fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
               color: textColor,
@@ -473,7 +473,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                       child: Text(
                         tabs[i],
                         style: TextStyle(
-                          fontFamily: 'Satoshi',
+                          fontFamily: kAppFontFamily,
                           fontSize: 13.0,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                           color: isSelected ? Colors.white : _textSecondary,
@@ -492,7 +492,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                         child: Text(
                           counts[i].toString(),
                           style: TextStyle(
-                            fontFamily: 'Satoshi',
+                            fontFamily: kAppFontFamily,
                             fontSize: 10.0,
                             fontWeight: FontWeight.w600,
                             color: isSelected ? Colors.white : _textSecondary,
@@ -552,7 +552,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     Text(
                       rx.rxNumber,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 15.0,
                         fontWeight: FontWeight.w700,
                         color: _textPrimary,
@@ -561,7 +561,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     Text(
                       '${rx.patientName}  •  ${rx.prescriber}',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         color: _textSecondary,
                       ),
@@ -585,7 +585,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     Text(
                       rx.statusLabel,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 11.0,
                         fontWeight: FontWeight.w600,
                         color: _statusText(rx.status),
@@ -610,7 +610,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                   child: Text(
                     med.summary,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontSize: 13.0,
                       fontWeight: FontWeight.w500,
                       color: _textPrimary,
@@ -638,7 +638,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     child: Text(
                       rx.notes!,
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 12.0,
                         color: _textSecondary,
                       ),
@@ -658,14 +658,14 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
               const SizedBox(width: 6.0),
               Text(
                 '${rx.date.day}/${rx.date.month}/${rx.date.year}',
-                style: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, color: _textSecondary),
+                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, color: _textSecondary),
               ),
               const SizedBox(width: 16.0),
               Icon(Icons.attach_money, size: 13.0, color: _textSecondary),
               Text(
                 rx.value.toStringAsFixed(2),
                 style: TextStyle(
-                  fontFamily: 'Satoshi',
+                  fontFamily: kAppFontFamily,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w600,
                   color: _textPrimary,
@@ -752,7 +752,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
             Text(
               label,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w600,
                 color: color,
@@ -792,7 +792,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
               const SizedBox(width: 12.0),
               Text('New Prescription',
                   style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       fontWeight: FontWeight.w700,
                       color: _textPrimary)),
             ],
@@ -827,7 +827,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                       const SizedBox(width: 8.0),
                       Text(
                         'Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                        style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _textSecondary),
+                        style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary),
                       ),
                     ],
                   ),
@@ -836,7 +836,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                   // Medication lines header
                   Text('Medications',
                       style: TextStyle(
-                        fontFamily: 'Satoshi',
+                        fontFamily: kAppFontFamily,
                         fontSize: 13.0,
                         fontWeight: FontWeight.w600,
                         color: _textPrimary,
@@ -861,7 +861,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                           Row(
                             children: [
                               Text('Line ${i + 1}',
-                                  style: TextStyle(fontFamily: 'Satoshi', fontSize: 11.0, fontWeight: FontWeight.w600, color: _duniyaPurple)),
+                                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 11.0, fontWeight: FontWeight.w600, color: _duniyaPurple)),
                               const Spacer(),
                               if (_formMedLines.length > 1)
                                 InkWell(
@@ -936,7 +936,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: 'Notes',
-                      labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
@@ -953,7 +953,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
               child: Text('Cancel',
-                  style: TextStyle(fontFamily: 'Satoshi', color: _textSecondary, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary, fontWeight: FontWeight.w500)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -984,7 +984,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               ),
               child: Text('Save & Submit',
-                  style: TextStyle(fontFamily: 'Satoshi', fontWeight: FontWeight.w600, fontSize: 14.0)),
+                  style: TextStyle(fontFamily: kAppFontFamily, fontWeight: FontWeight.w600, fontSize: 14.0)),
             ),
           ],
         ),
@@ -1003,7 +1003,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary),
+        labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -1017,7 +1017,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
   InputDecoration _medInputDec(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(fontFamily: 'Satoshi', fontSize: 12.0, color: _textSecondary),
+      hintStyle: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, color: _textSecondary),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -1037,7 +1037,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
           children: [
             SpinKitRing(color: _duniyaPurple, size: 48.0),
             const SizedBox(height: 16.0),
-            Text('Loading prescriptions...', style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
+            Text('Loading prescriptions...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
           ],
         ),
       ),
@@ -1115,7 +1115,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                         Text(
                                           'Digital Prescriptions',
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: 32.0,
                                             fontWeight: FontWeight.w700,
                                             letterSpacing: -0.02,
@@ -1127,7 +1127,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                         Text(
                                           'Manage prescription lifecycle — create, verify, and fulfill prescriptions.',
                                           style: TextStyle(
-                                            fontFamily: 'Satoshi',
+                                            fontFamily: kAppFontFamily,
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.w400,
                                             height: 1.6,
@@ -1254,10 +1254,10 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                 focusNode: _model.searchFocusNode,
                                                 decoration: InputDecoration(
                                                   hintText: 'Search by patient name or Rx number...',
-                                                  hintStyle: TextStyle(fontFamily: 'Satoshi', color: _textSecondary, fontSize: 14.0),
+                                                  hintStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary, fontSize: 14.0),
                                                   border: InputBorder.none,
                                                 ),
-                                                style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textPrimary),
+                                                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textPrimary),
                                                 onChanged: (val) => safeSetState(() {}),
                                               ),
                                             ),
@@ -1286,9 +1286,9 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                               children: [
                                                 Icon(Icons.receipt_long_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
                                                 const SizedBox(height: 16.0),
-                                                Text('No prescriptions found', style: TextStyle(fontFamily: 'Satoshi', fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                                                Text('No prescriptions found', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
                                                 const SizedBox(height: 8.0),
-                                                Text('Click "New Prescription" to create one', style: TextStyle(fontFamily: 'Satoshi', fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
+                                                Text('Click "New Prescription" to create one', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
                                               ],
                                             ),
                                           ),
@@ -1347,10 +1347,10 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
             ),
             const SizedBox(height: 16.0),
             Text('Access Denied',
-                style: TextStyle(fontFamily: 'Satoshi', fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
             const SizedBox(height: 8.0),
             Text('You do not have permission to view prescriptions.',
-                style: TextStyle(fontFamily: 'Satoshi', fontSize: 14.0, color: _textSecondary)),
+                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
           ],
         ),
       ),

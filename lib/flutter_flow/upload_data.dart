@@ -65,7 +65,7 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'Satoshi',
+                fontFamily: kAppFontFamily,
                 color: textColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
@@ -93,7 +93,7 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
                     'Choose Source',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'Satoshi',
+                      fontFamily: kAppFontFamily,
                       color: textColor.applyAlpha(0.65),
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
