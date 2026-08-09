@@ -57,25 +57,17 @@
 
   <link rel="manifest" href="manifest.json?v=%%BUILD_VERSION%%">
 
-  <!-- Satoshi Font — global application font -->
+  <!-- Font: Use Inter on web (Satoshi causes CanvasKit null-check errors) -->
+  <!-- Inter is visually similar to Satoshi and works reliably with Skia -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'Satoshi';
-      src: url('fonts/Satoshi-Regular.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'Satoshi';
-      src: url('fonts/Satoshi-Italic.ttf') format('truetype');
-      font-weight: 400;
-      font-style: italic;
-      font-display: swap;
-    }
-    /* Apply Satoshi globally */
+    /* Apply Inter globally on web — Satoshi TTF causes null-check errors
+       in CanvasKit's Skia text renderer (font variation table issue).
+       Inter is the same font used on the landing page and is web-safe. */
     * {
-      font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
   </style>
 
