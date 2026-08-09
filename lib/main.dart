@@ -84,8 +84,9 @@ void main() async {
     PlatformDispatcher.instance.onError = (error, stack) {
       final msg = error.toString();
       if (msg.contains('Null check operator used on a null value')) {
-        return true; // Silently handled.
+        return true; // Silently handled (CanvasKit font rendering).
       }
+      // Log all other platform errors so they're visible in the console.
       debugPrint('[PlatformError] $error');
       return true; // Handled — don't crash.
     };
@@ -96,19 +97,44 @@ void main() async {
   // release-mode ErrorWidget), which makes "grey screen" issues nearly
   // impossible to diagnose in production.
   //
-  // On web, CanvasKit text rendering can throw null-check errors for certain
-  // TextStyle / font-variation combinations.  If the ErrorWidget itself uses
-  // text rendering, it can trigger the same error, creating an infinite
-  // error cascade.  To break the cycle, the web ErrorWidget uses a simple
-  // colored container (no text).  On non-web (mobile/desktop), we show the
-  // full error details since the font issue doesn't occur there.
+  // On web, we show a RED container with the error message using a web-safe
+  // font (monospace) and basic Container widget (no TextStyle that could
+  // re-trigger CanvasKit null-check errors). This makes build errors
+  // VISIBLE in production instead of silently collapsing to 0x0.
   ErrorWidget.builder = (FlutterErrorDetails details) {
     FlutterError.reportError(details);
     if (kIsWeb) {
-      // Minimal ErrorWidget — no text, no risk of re-triggering the
-      // CanvasKit null-check.  The error details are already logged
-      // via FlutterError.onError above.
-      return const SizedBox.shrink();
+      // Visible ErrorWidget — uses Container (not Text with TextStyle) to
+      // avoid re-triggering CanvasKit font-rendering null-check errors.
+      // The red background makes it obvious when a widget fails to build.
+      return Container(
+        color: const Color(0xFFFEE2E2),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '⚠ Widget build error',
+              style: TextStyle(
+                color: Color(0xFF991B1B),
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              details.exceptionAsString(),
+              style: const TextStyle(
+                color: Color(0xFF991B1B),
+                fontSize: 11.0,
+                fontFamily: 'monospace',
+              ),
+            ),
+          ],
+        ),
+      );
     }
     return Material(
       color: const Color(0xFFFEE2E2),
