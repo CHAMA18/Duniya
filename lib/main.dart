@@ -97,43 +97,22 @@ void main() async {
   // release-mode ErrorWidget), which makes "grey screen" issues nearly
   // impossible to diagnose in production.
   //
-  // On web, we show a RED container with the error message using a web-safe
-  // font (monospace) and basic Container widget (no TextStyle that could
-  // re-trigger CanvasKit null-check errors). This makes build errors
-  // VISIBLE in production instead of silently collapsing to 0x0.
+  // On web, we show a RED container with NO text content. This is critical:
+  //   - If we use Text() in the ErrorWidget, and the root error is a
+  //     CanvasKit font-rendering null-check, the Text widget re-triggers
+  //     the same error → another ErrorWidget → infinite cascade → hang.
+  //   - A fixed-size colored Container is visible (non-zero) so the app
+  //     doesn't collapse to 0x0, but it can't trigger font rendering.
+  //   - The actual error details are logged via FlutterError.onError above
+  //     and appear in the browser console (with [PlatformError] prefix).
   ErrorWidget.builder = (FlutterErrorDetails details) {
     FlutterError.reportError(details);
     if (kIsWeb) {
-      // Visible ErrorWidget — uses Container (not Text with TextStyle) to
-      // avoid re-triggering CanvasKit font-rendering null-check errors.
-      // The red background makes it obvious when a widget fails to build.
+      // Fixed-size red container — visible but can't trigger font errors.
+      // Error details are in the browser console via FlutterError.onError.
       return Container(
         color: const Color(0xFFFEE2E2),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '⚠ Widget build error',
-              style: TextStyle(
-                color: Color(0xFF991B1B),
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'monospace',
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              details.exceptionAsString(),
-              style: const TextStyle(
-                color: Color(0xFF991B1B),
-                fontSize: 11.0,
-                fontFamily: 'monospace',
-              ),
-            ),
-          ],
-        ),
+        constraints: const BoxConstraints(minWidth: 50, minHeight: 50),
       );
     }
     return Material(
