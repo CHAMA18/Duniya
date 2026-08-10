@@ -1211,7 +1211,10 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       color: _textPrimary,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      fontFamily: 'Roboto Mono',
+                      // 'Roboto Mono' is not bundled in FontManifest — using
+                      // an unregistered family crashes the CanvasKit text
+                      // renderer on web (null typeface). Use the app font.
+                      fontFamily: kAppFontFamily,
                     ),
                   ),
                 ),

@@ -140,6 +140,25 @@ fi
 echo "==> Cache busting complete. Build version: ${BUILD_VERSION}"
 
 # ---------------------------------------------------------------------
+# 6b. Strip native-only fonts from the web FontManifest.
+#     The web app requests 'Inter' (bundled in pubspec); Satoshi /
+#     EraerRegular / GrutchShaded are only used on native and their TTFs
+#     can trip CanvasKit's text renderer. Remove them from the WEB
+#     manifest only (native builds are unaffected).
+# ---------------------------------------------------------------------
+if [[ -f "build/web/assets/FontManifest.json" ]]; then
+  # Failing the filter (e.g. 'Inter' missing from the manifest) means the
+  # web app would ship broken — abort the deploy in that case.
+  if "${FLUTTER_HOME}/bin/cache/dart-sdk/bin/dart" \
+    tool/filter_web_font_manifest.dart build/web/assets/FontManifest.json; then
+    echo "==> Web FontManifest filtered: native-only fonts removed, Inter kept"
+  else
+    echo "==> ERROR: font manifest filter failed — aborting deploy"
+    exit 1
+  fi
+fi
+
+# ---------------------------------------------------------------------
 # 7. Copy landing page to build output.
 #    The landing page is a standalone HTML file that serves as the
 #    marketing/download page for Duniya. It's accessible at /landing.html.

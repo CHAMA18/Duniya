@@ -368,15 +368,22 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: _themeMode,
       routerConfig: _router,
+      // The offline banner must live INSIDE the MaterialApp (via builder)
+      // so it inherits Directionality / Theme / Localizations. When it
+      // wrapped the app from OUTSIDE, its Text/Icon widgets had no
+      // Directionality ancestor, which crashed the web (CanvasKit)
+      // build with "Null check operator used on a null value" /
+      // "Cannot read properties of null (reading 'textDirection')"
+      // on every frame — blank page.
       builder: (_, child) => DynamicLinksHandler(
         router: _router,
-        child: child ?? const SizedBox.shrink(),
+        child: OfflineIndicatorBanner(
+          child: child ?? const SizedBox.shrink(),
+        ),
       ),
     );
-    // Wrap the entire MaterialApp in the offline indicator banner so
-    // the "You're offline" notice overlays every screen in the app.
     // The banner is non-blocking — it just informs users that writes
     // are being queued and will sync when connectivity returns.
-    return OfflineIndicatorBanner(child: app);
+    return app;
   }
 }

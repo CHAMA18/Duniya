@@ -9,11 +9,16 @@ import '/offline/offline_status_widget.dart';
 /// Also overlays the [OfflineStatusChip] (bottom-right floating sync
 /// indicator) so users always know their sync status.
 ///
-/// Wrap the app's body in this widget to get app-wide offline awareness:
+/// Usage: place INSIDE the MaterialApp (via its `builder:` param) so it
+/// inherits Directionality / Theme / Localizations:
 ///
-///   OfflineIndicatorBanner(
-///     child: MaterialApp.router(...),
+///   MaterialApp.router(
+///     builder: (_, child) => OfflineIndicatorBanner(child: child!),
+///     ...
 ///   )
+///
+/// (It also supplies its own Directionality, so it won't crash if ever
+/// built outside a MaterialApp, but Theme/Localizations fall back then.)
 class OfflineIndicatorBanner extends StatefulWidget {
   const OfflineIndicatorBanner({
     super.key,
@@ -31,8 +36,7 @@ class _OfflineIndicatorBannerState extends State<OfflineIndicatorBanner>
   late AnimationController _controller;
   late Animation<double> _heightAnimation;
   late Animation<double> _opacityAnimation;
-  final OfflineConnectivityService _connectivity =
-      OfflineConnectivityService();
+  final OfflineConnectivityService _connectivity = OfflineConnectivityService();
 
   @override
   void initState() {
@@ -75,90 +79,96 @@ class _OfflineIndicatorBannerState extends State<OfflineIndicatorBanner>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final theme = Theme.of(context);
-        final expandedHeight = 40.0;
-        final height = _heightAnimation.value * expandedHeight;
-        final opacity = _opacityAnimation.value;
+    // Self-sufficient Directionality: this widget is designed to wrap the
+    // app and is therefore built in a context that may be OUTSIDE any
+    // MaterialApp (e.g. main.dart's builder). Without this, its Text/Icon
+    // widgets crash with "Directionality.of() returned null" on web.
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final expandedHeight = 40.0;
+          final height = _heightAnimation.value * expandedHeight;
+          final opacity = _opacityAnimation.value;
 
-        return Stack(
-          children: [
-            // Main app
-            Positioned.fill(child: widget.child),
-            // Floating sync-status chip (bottom-right corner)
-            const OfflineStatusChip(),
-            // Offline banner (overlays the top)
-            if (height > 0.5)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: height,
-                child: Opacity(
-                  opacity: opacity,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            const Color(0xFFF59E0B), // Amber 500
-                            const Color(0xFFD97706), // Amber 600
+          return Stack(
+            children: [
+              // Main app
+              Positioned.fill(child: widget.child),
+              // Floating sync-status chip (bottom-right corner)
+              const OfflineStatusChip(),
+              // Offline banner (overlays the top)
+              if (height > 0.5)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: height,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              const Color(0xFFF59E0B), // Amber 500
+                              const Color(0xFFD97706), // Amber 600
+                            ],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withAlpha(40),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
                           ],
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withAlpha(40),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: SafeArea(
-                        bottom: false,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Row(
-                            children: [
-                              // Pulsing icon
-                              _PulsingDot(
-                                color: Colors.white,
-                                size: _heightAnimation.value * 8.0,
-                              ),
-                              const SizedBox(width: 10.0),
-                              Expanded(
-                                child: Text(
-                                  'You\'re offline — changes will sync automatically when you\'re back',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.1,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                        child: SafeArea(
+                          bottom: false,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            child: Row(
+                              children: [
+                                // Pulsing icon
+                                _PulsingDot(
+                                  color: Colors.white,
+                                  size: _heightAnimation.value * 8.0,
                                 ),
-                              ),
-                              Icon(
-                                Icons.cloud_off_rounded,
-                                color: Colors.white.withAlpha(220),
-                                size: 16.0,
-                              ),
-                            ],
+                                const SizedBox(width: 10.0),
+                                Expanded(
+                                  child: Text(
+                                    'You\'re offline — changes will sync automatically when you\'re back',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.1,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.cloud_off_rounded,
+                                  color: Colors.white.withAlpha(220),
+                                  size: 16.0,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-          ],
-        );
-      },
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -208,8 +218,8 @@ class _PulsingDotState extends State<_PulsingDot>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: widget.color.withAlpha(
-                      (100 + 100 * _controller.value).round()),
+                  color: widget.color
+                      .withAlpha((100 + 100 * _controller.value).round()),
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),
