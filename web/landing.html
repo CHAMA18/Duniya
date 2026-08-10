@@ -263,6 +263,8 @@
 
     /* ── Platform downloads ─────────────────────────────────────── */
     .platforms { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    /* Compensate for the fixed navbar when navigating to #download via URL fragment. */
+    #download { scroll-margin-top: calc(var(--nav-h) + 24px); }
     .platforms-label { font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-3); font-weight: 600; }
     .platform-btns { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; justify-content: center; }
     .dl-btn {
@@ -575,6 +577,7 @@
         <a href="#product">Product</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
+        <a href="#download">Download</a>
       </nav>
       <div class="nav-actions">
         <a class="btn btn-ghost" href="https://ivm.duniyahealthcare.com/loginUni">Log in</a>
@@ -591,6 +594,7 @@
     <a href="#product">Product</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
+    <a href="#download">Download</a>
     <a class="btn btn-primary" href="https://ivm.duniyahealthcare.com/loginUni">Get Started — it's free</a>
   </div>
 
@@ -618,7 +622,7 @@
       </div>
 
       <!-- Platform downloads -->
-      <div class="platforms reveal d4">
+      <div class="platforms reveal d4" id="download">
         <span class="platforms-label">Available on every device</span>
         <div class="platform-btns">
           <a class="dl-btn" href="https://ivm.duniyahealthcare.com/loginUni" title="Use Duniya in your browser">
@@ -1022,6 +1026,7 @@
             <li><a href="#features">Features</a></li>
             <li><a href="#product">Product tour</a></li>
             <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#download">Download apps</a></li>
             <li><a href="https://ivm.duniyahealthcare.com/loginUni">Web app</a></li>
           </ul>
         </div>
@@ -1193,7 +1198,8 @@
           var target = document.querySelector(id);
           if (!target) return;
           ev.preventDefault();
-          var y = target.getBoundingClientRect().top + window.scrollY - 70;
+          /* 100px = nav height (76px) + breathing room — matches the #download scroll-margin-top. */
+          var y = target.getBoundingClientRect().top + window.scrollY - 100;
           window.scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
         });
       });
