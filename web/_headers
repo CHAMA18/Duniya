@@ -54,6 +54,16 @@
 /manifest.json
   Cache-Control: public, max-age=3600
 
+# main.dart.js is NOT content-hashed (same filename every build) — it
+# must never be served from a stale immutable HTTP cache after a deploy.
+# The service worker additionally cache-busts it with a per-deploy query
+# param. Must stay ABOVE the /*.js immutable rule (first-match-wins).
+
+/main.dart.js
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
 # ─── Content-hashed bundles (safe to cache long-term) ───────────────
 # Flutter adds content hashes to these filenames on build, so the
 # filename changes whenever the content does — making aggressive

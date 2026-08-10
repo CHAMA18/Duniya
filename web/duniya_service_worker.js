@@ -185,8 +185,10 @@ self.addEventListener('fetch', (event) => {
         const cache = await caches.open(RUNTIME_CACHE);
         const cached = await cache.match(request);
         if (cached) {
-          // Refresh in background.
-          fetch(request)
+          // Refresh in background — cache-busted so CDN/browser HTTP caches
+          // can never pin a stale immutable copy of e.g. main.dart.js from
+          // a previous deploy.
+          fetchWithBust(request)
             .then((response) => {
               if (response.ok) {
                 cache.put(request, response.clone()).catch(() => {});
@@ -195,9 +197,9 @@ self.addEventListener('fetch', (event) => {
             .catch(() => {});
           return cached;
         }
-        // Not in cache — fetch and cache.
+        // Not in cache — fetch and cache (cache-busted).
         try {
-          const networkResponse = await fetch(request);
+          const networkResponse = await fetchWithBust(request);
           if (networkResponse.ok) {
             cache.put(request, networkResponse.clone()).catch(() => {});
           }
@@ -230,6 +232,17 @@ self.addEventListener('fetch', (event) => {
     })()
   );
 });
+
+// Fetch a URL with a per-deploy cache-busting query param so immutable /
+// long-lived HTTP caches can never pin a stale bundle (main.dart.js is
+// served with `Cache-Control: immutable` but its filename does NOT change
+// between builds). CACHE_VERSION changes on every deploy, so this always
+// pulls the freshest file from the CDN.
+function fetchWithBust(request) {
+  const bustUrl = new URL(request.url);
+  bustUrl.searchParams.set('_v', CACHE_VERSION);
+  return fetch(bustUrl.href, { cache: 'no-cache', credentials: 'same-origin' });
+}
 
 // ─── Message handler: allow the app to trigger updates ────────────
 self.addEventListener('message', (event) => {
