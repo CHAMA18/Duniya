@@ -87,6 +87,16 @@ if [[ -f "web/_redirects" ]]; then
 fi
 
 # ---------------------------------------------------------------------
+# 4b. LANDING-FIRST: serve the marketing landing page at "/" and move
+#     the Flutter SPA shell to /app.html (deep links route via _redirects).
+# ---------------------------------------------------------------------
+if [[ -f "build/web/index.html" && -f "web/landing.html" ]]; then
+  cp build/web/index.html build/web/app.html
+  cp web/landing.html build/web/index.html
+  echo "==> Landing-first: / = landing page, Flutter app shell at /app.html"
+fi
+
+# ---------------------------------------------------------------------
 # 5. Cache busting — inject build version into built files.
 # ---------------------------------------------------------------------
 # Generate a version string from the git commit hash (short) + timestamp.
@@ -103,11 +113,19 @@ if [[ -f "build/web/duniya_service_worker.js" ]]; then
   echo "==> Injected version into duniya_service_worker.js"
 fi
 
-# Replace the DEV placeholder and %%BUILD_VERSION%% in index.html with the build version.
+# Replace the DEV placeholder and %%BUILD_VERSION%% in index.html (now the
+# landing page) with the build version.
 if [[ -f "build/web/index.html" ]]; then
   sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/index.html
   sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/index.html
-  echo "==> Injected version into index.html"
+  echo "==> Injected version into index.html (landing page)"
+fi
+
+# Inject the version into the Flutter app shell (renamed to app.html).
+if [[ -f "build/web/app.html" ]]; then
+  sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/app.html
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/app.html
+  echo "==> Injected version into app.html (Flutter app shell)"
 fi
 
 # Replace the placeholder in manifest.json with the build version.
@@ -159,13 +177,14 @@ if [[ -f "build/web/assets/FontManifest.json" ]]; then
 fi
 
 # ---------------------------------------------------------------------
-# 7. Copy landing page to build output.
+# 7. Copy the landing page to build output.
 #    The landing page is a standalone HTML file that serves as the
-#    marketing/download page for Duniya. It's accessible at /landing.html.
+#    marketing/download page for Duniya. Copy the version-injected copy
+#    (build/web/index.html) so /landing.html matches the root page.
 # ---------------------------------------------------------------------
-if [[ -f "web/landing.html" ]]; then
-  cp web/landing.html build/web/landing.html
-  echo "==> Copied web/landing.html -> build/web/landing.html (download landing page)"
+if [[ -f "build/web/index.html" ]]; then
+  cp build/web/index.html build/web/landing.html
+  echo "==> Copied build/web/index.html -> build/web/landing.html"
 fi
 
 # Copy fonts directory for the landing page

@@ -27,7 +27,10 @@ on:
         default: ''
 
 env:
-  FLUTTER_VERSION: '3.24.5'
+  # Must match build.sh — pubspec deps (font_awesome_flutter 11.0.0 etc.)
+  # require Dart >= 3.9, which needs Flutter 3.38.x. Older Flutter (3.24.x)
+  # fails `flutter pub get` resolution.
+  FLUTTER_VERSION: '3.38.2'
   JAVA_VERSION: '17'
 
 jobs:
@@ -70,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Duniya-Windows
-          path: build/windows/x64/runner/Release/
+          path: installer/Output/
           retention-days: 5
 
   # -------------------------------------------------------------------
@@ -97,11 +100,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Install CocoaPods
-        run: |
-          cd macos
-          pod install --repo-update
-          cd ..
+      # Note: no `pod install` step — the project uses Flutter's modern
+      # Swift Package Manager integration (no Podfile; flutter build macos
+      # resolves plugin packages automatically). Explicitly enabling SPM
+      # keeps the build deterministic across Flutter versions.
+
+      - name: Enable Swift Package Manager
+        run: flutter config --enable-swift-package-manager
 
       - name: Build macOS app
         run: |
@@ -165,8 +170,8 @@ jobs:
             ## Duniya ${{ github.ref_name }}
 
             ### Downloads
-            - **Windows**: Download `Duniya-Setup-${{ github.ref_name }}.zip` — extract and run `Duniya.exe`
-            - **macOS**: Download `Duniya-${{ github.ref_name }}.dmg` — open and drag to Applications
+            - **Windows**: Download `Duniya-Setup-${{ github.ref_name }}.zip` — extract and run `Duniya-Setup.exe`, then follow the installer wizard
+            - **macOS**: Download `Duniya-${{ github.ref_name }}.dmg` — open and drag Duniya to Applications
 
             ### System Requirements
             - Windows 10+ (64-bit) or macOS 12+ (Apple Silicon & Intel)

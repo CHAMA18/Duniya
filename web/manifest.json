@@ -2,7 +2,7 @@
   "name": "Duniya — Pharmacy Operations",
   "short_name": "Duniya",
   "description": "Duniya — pharmacy and inventory management for modern health teams. Works offline.",
-  "start_url": "/?v=%%BUILD_VERSION%%",
+  "start_url": "/app.html?v=%%BUILD_VERSION%%",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],

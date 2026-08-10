@@ -29,6 +29,14 @@
   Pragma: no-cache
   Expires: 0
 
+# Flutter SPA shell (renamed from index.html by build.sh) — changes every
+# deploy, must never be cached stale.
+
+/app.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
 # ─── Per-deploy files: must NEVER be cached ─────────────────────────
 # These files change on every deploy (version injected by build.sh).
 # Without no-cache, the /*.js rule below would cache them for a year.

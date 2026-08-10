@@ -1,12 +1,12 @@
-# Render Static Site SPA fallback.
-# Format is the same as Netlify _redirects.
+# Render Static Site routing (Netlify-style _redirects).
 #
-# `/* /index.html 200` tells Render: for ANY path that doesn't match a
-# real file, serve /index.html with HTTP 200. This lets the Flutter
-# router handle all client-side routes (e.g. /loginUni, /resetPasswordUni)
-# instead of returning 404.
+# The site is LANDING-FIRST:
+#   - "/"        → index.html  = the marketing landing page (a real file, so it
+#                 wins over the redirect below)
+#   - "/app.html"→ the Flutter web app shell (renamed by build.sh)
+#   - every other path that isn't a real file (e.g. /loginUni, /resetPasswordUni)
+#     → app.html, so the Flutter SPA router handles client-side routes.
 #
 # This file MUST live in the published directory (build/web/_redirects).
-# Render reads it at deploy time. We copy it into build/web after the
-# Flutter build via build.sh.
-/*    /index.html   200
+# build.sh copies it in after `flutter build web`.
+/*    /app.html   200
