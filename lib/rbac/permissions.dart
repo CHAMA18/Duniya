@@ -125,6 +125,10 @@ enum Permission {
   auditLogsView,
   auditLogsExport,
 
+  // ─── Pulse User Management ───────────────────────────────────────
+  userManagementView,
+  userManagementManage,
+
   // ─── Notifications ────────────────────────────────────────────────
   notificationsView,
 

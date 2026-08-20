@@ -1217,6 +1217,67 @@ exports.dispatchGoodsToPharmacy = functions
     return { success: true, receiptId: receiptRef.id, pharmacyName: pharmacy.Name || "" };
   });
 
+// Pulse network administrators can manage only other Pulse accounts. The
+// callable boundary prevents browser clients from changing roles or suspending
+// accounts by writing directly to Firestore.
+exports.managePulseUser = functions
+  .region("us-central1")
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError("unauthenticated", "Sign in to manage users.");
+    }
+
+    const firestore = admin.firestore();
+    const callerSnapshot = await firestore.collection("User").doc(context.auth.uid).get();
+    const caller = callerSnapshot.data() || {};
+    const callerRole = String(caller.role || "").trim().toLowerCase();
+    const isPulseAdmin = String(caller.account_type || "").trim().toLowerCase() === "pulse" &&
+      ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
+    if (!isPulseAdmin) {
+      throw new functions.https.HttpsError("permission-denied", "Only Pulse network administrators can manage Pulse users.");
+    }
+
+    const userId = String(data?.userId || "").trim();
+    const action = String(data?.action || "").trim();
+    if (!userId || !["setRole", "setStatus"].includes(action)) {
+      throw new functions.https.HttpsError("invalid-argument", "A user and supported management action are required.");
+    }
+    if (userId === context.auth.uid) {
+      throw new functions.https.HttpsError("failed-precondition", "You cannot change your own access from this screen.");
+    }
+
+    const targetRef = firestore.collection("User").doc(userId);
+    const targetSnapshot = await targetRef.get();
+    const target = targetSnapshot.data() || {};
+    if (!targetSnapshot.exists || String(target.account_type || "").trim().toLowerCase() !== "pulse") {
+      throw new functions.https.HttpsError("not-found", "The selected account is not a Pulse user.");
+    }
+
+    if (action === "setRole") {
+      const role = String(data?.role || "").trim().toLowerCase();
+      if (!['admin', 'staff'].includes(role)) {
+        throw new functions.https.HttpsError("invalid-argument", "Pulse users can be assigned Admin or Staff roles.");
+      }
+      await targetRef.update({ role: role === "admin" ? "Admin" : "Staff", updated_at: admin.firestore.FieldValue.serverTimestamp() });
+    } else {
+      const suspended = Boolean(data?.suspended);
+      await admin.auth().updateUser(userId, { disabled: suspended });
+      await targetRef.update({ account_status: suspended ? "suspended" : "active", updated_at: admin.firestore.FieldValue.serverTimestamp() });
+    }
+
+    await firestore.collection("AuditLogs").add({
+      actorId: context.auth.uid,
+      actorEmail: caller.email || "",
+      actorName: caller.display_name || "",
+      scopeId: "Pulse",
+      eventName: `pulse_user_${action}`,
+      parameters: { targetUserId: userId, action },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      clientCreatedAt: admin.firestore.Timestamp.now(),
+    });
+    return { success: true };
+  });
+
 // ══════════════════════════════════════════════════════════════
 // Existing Functions
 // ══════════════════════════════════════════════════════════════

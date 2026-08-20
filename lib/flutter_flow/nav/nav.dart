@@ -647,6 +647,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           requireAuth: true,
           builder: (context, params) => AuditLogsWidget(),
         ),
+        FFRoute(
+          name: PulseUserManagementWidget.routeName,
+          path: PulseUserManagementWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => PulseUserManagementWidget(),
+        ),
         // New feature routes
         FFRoute(
           name: DrugInteractionsWidget.routeName,

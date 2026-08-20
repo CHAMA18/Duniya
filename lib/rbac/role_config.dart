@@ -430,6 +430,10 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   // DUNIYA ADMIN — Full network administrative access
   // ═══════════════════════════════════════════════════════════════════
   AppRole.duniyaAdmin: {
+    Permission.catalogueView,
+    Permission.catalogueCreate,
+    Permission.catalogueEdit,
+    Permission.catalogueDelete,
     Permission.duniyaPharmaciesView,
     Permission.duniyaStockBalancesView,
     Permission.duniyaOnboardingView,
@@ -444,6 +448,8 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.financesViewBilling,
     Permission.auditLogsView,
     Permission.auditLogsExport,
+    Permission.userManagementView,
+    Permission.userManagementManage,
     Permission.settingsView,
     Permission.settingsManage,
     Permission.notificationsView,
@@ -459,6 +465,7 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   // DUNIYA STAFF — Operational staff within the Pulse network
   // ═══════════════════════════════════════════════════════════════════
   AppRole.duniyaStaff: {
+    Permission.catalogueView,
     Permission.duniyaPharmaciesView,
     Permission.duniyaStockBalancesView,
     Permission.duniyaOnboardingView,
@@ -679,6 +686,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   // ═══ Pulse Admin ═══
   AppRole.duniyaAdmin: {
     NavItem.home,
+    NavItem.productCatalogue,
     NavItem.goodsReceived,
     NavItem.finances,
     NavItem.pendingApprovals,
@@ -687,12 +695,14 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.duniyaOnboardingRequests,
     NavItem.duniyaNetworkAnalytics,
     NavItem.auditLogs,
+    NavItem.userManagement,
     NavItem.settings,
   },
 
   // ═══ Pulse Staff ═══
   AppRole.duniyaStaff: {
     NavItem.home,
+    NavItem.productCatalogue,
     NavItem.goodsReceived,
     NavItem.finances,
     NavItem.pendingApprovals,

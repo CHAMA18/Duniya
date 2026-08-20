@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../auth/firebase_auth/auth_util.dart';
+import '../../rbac/roles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 const kMaxEventNameLength = 40;
@@ -13,7 +14,9 @@ void _writeAuditLog(String eventName, Map<String, Object> parameters) {
   final uid = currentUserUid;
   if (uid.isEmpty) return;
 
-  final scopeId = currentUserDocument?.ownerRef?.path ?? 'User/$uid';
+  final scopeId = AppRole.isDuniyaAccountType(currentUserDocument?.accountType)
+      ? 'Pulse'
+      : currentUserDocument?.ownerRef?.path ?? 'User/$uid';
   final payload = <String, Object?>{
     'actorId': uid,
     'actorEmail': currentUserEmail,

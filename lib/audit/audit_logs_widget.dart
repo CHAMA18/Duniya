@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
+import '/rbac/rbac.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,12 +43,12 @@ class _AuditLogsWidgetState extends State<AuditLogsWidget> {
 
   Query<Map<String, dynamic>>? _auditQuery() {
     if (currentUserUid.isEmpty) return null;
-    final scopeId =
-        currentUserDocument?.ownerRef?.path ?? 'User/$currentUserUid';
+    final scopeId = AccessControl.isDuniyaUser(context)
+        ? 'Pulse'
+        : currentUserDocument?.ownerRef?.path ?? 'User/$currentUserUid';
     return FirebaseFirestore.instance
         .collection('AuditLogs')
         .where('scopeId', isEqualTo: scopeId)
-        .orderBy('createdAt', descending: true)
         .limit(250);
   }
 
@@ -137,7 +138,8 @@ class _AuditLogsWidgetState extends State<AuditLogsWidget> {
         final entries = snapshot.data!.docs
             .map(_AuditEntry.fromDocument)
             .where(_matchesFilter)
-            .toList();
+            .toList()
+          ..sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
 
         return _buildWorkspace(
           theme,

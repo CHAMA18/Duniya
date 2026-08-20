@@ -148,3 +148,4 @@ export '/duniya/network_analytics/network_analytics_widget.dart'
 
 // Audit pages
 export '/audit/audit_logs_widget.dart' show AuditLogsWidget;
+export '/duniya/user_management/user_management_widget.dart' show PulseUserManagementWidget;

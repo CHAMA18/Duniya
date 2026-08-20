@@ -379,35 +379,37 @@ class _SideNavWidgetState extends State<SideNavWidget> {
       NavItem.finances,
       NavItem.pendingApprovals,
     ]);
-    final hasInventory = _hasAnyNav([
+    // Pulse/Duniya network users should never see pharmacy-specific sections.
+    final isPulseNetwork = _isDuniyaUser;
+    final hasInventory = !isPulseNetwork && _hasAnyNav([
       NavItem.storeInventory,
       NavItem.productCatalogue,
     ]);
-    final hasStock = _hasAnyNav([
+    final hasStock = !isPulseNetwork && _hasAnyNav([
       NavItem.stockBalances,
       NavItem.stockMovements,
       NavItem.stockCounts,
     ]);
-    final hasOperations = _hasAnyNav([
+    final hasOperations = !isPulseNetwork && _hasAnyNav([
       NavItem.goodsReceived,
       NavItem.salesDispensing,
       NavItem.pointOfSale,
     ]);
-    final hasMonitoring = _hasAnyNav([
+    final hasMonitoring = !isPulseNetwork && _hasAnyNav([
       NavItem.batchesExpiry,
       NavItem.expiryTracking,
       NavItem.lowStockAlerts,
       NavItem.replenishment,
       NavItem.coldChain,
     ]);
-    final hasClinical = _hasAnyNav([
+    final hasClinical = !isPulseNetwork && _hasAnyNav([
       NavItem.prescriptions,
       NavItem.insurance,
       NavItem.patientRecords,
       NavItem.drugInteractions,
     ]);
-    final hasProcurement = _hasAnyNav([NavItem.purchaseOrders]);
-    final hasAdmin = _hasAnyNav([NavItem.auditLogs]);
+    final hasProcurement = !isPulseNetwork && _hasAnyNav([NavItem.purchaseOrders]);
+    final hasAdmin = _hasAnyNav([NavItem.auditLogs, NavItem.userManagement]);
     final hasPulseNetwork = _hasAnyNav([
       NavItem.duniyaPharmacies,
       NavItem.duniyaStockBalances,
@@ -1853,6 +1855,23 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             ),
+                            if (_canSee(NavItem.userManagement))
+                              Tooltip(
+                                message: 'User Management',
+                                preferBelow: false,
+                                child: InkWell(
+                                  onTap: () {
+                                    context.goNamed(PulseUserManagementWidget.routeName);
+                                    FFAppState().SelectedPage = 'User Management';
+                                  },
+                                  child: SidebarLinkWidget(
+                                    linkText: 'User Management',
+                                    activeIcon: Icon(Icons.manage_accounts_rounded, color: FlutterFlowTheme.of(context).primary),
+                                    inactiveIcon: Icon(Icons.manage_accounts_outlined, color: FlutterFlowTheme.of(context).secondaryText),
+                                    isActive: FFAppState().SelectedPage == 'User Management',
+                                  ),
+                                ),
+                              ),
                           ],
 
                           // ─── Divider ───
