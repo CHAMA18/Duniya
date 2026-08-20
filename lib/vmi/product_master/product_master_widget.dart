@@ -64,8 +64,10 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   String _mapToFilterCategory(String? firestoreCategory) {
     if (firestoreCategory == null) return 'Other';
     final cat = firestoreCategory.toLowerCase();
-    if (cat.contains('antibiotic') || cat.contains('cardiovascular') ||
-        cat.contains('respiratory') || cat.contains('antimalarial')) {
+    if (cat.contains('antibiotic') ||
+        cat.contains('cardiovascular') ||
+        cat.contains('respiratory') ||
+        cat.contains('antimalarial')) {
       return 'Prescription (Rx)';
     }
     if (cat.contains('analgesic') || cat.contains('antipyretic')) {
@@ -74,7 +76,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     if (cat.contains('vitamin') || cat.contains('supplement')) {
       return 'Supplements';
     }
-    if (cat.contains('dermatology') || cat.contains('supply') ||
+    if (cat.contains('dermatology') ||
+        cat.contains('supply') ||
         cat.contains('medical')) {
       return 'Medical Supplies';
     }
@@ -212,7 +215,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             ),
                             border: InputBorder.none,
                             isDense: true,
-                            contentPadding: EdgeInsets.symmetric(vertical: 14.0),
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 14.0),
                           ),
                           onChanged: (value) => safeSetState(() {}),
                         ),
@@ -253,8 +257,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         child: _buildCategoryButton(
                           label: cat['label']!,
                           isSelected: isSelected,
-                          onTap: () =>
-                              safeSetState(() => _selectedCategory = cat['label']!),
+                          onTap: () => safeSetState(
+                              () => _selectedCategory = cat['label']!),
                         ),
                       );
                     }).toList(),
@@ -313,11 +317,10 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     // Determine stock status
     final minStock = product.minimumStockLevel;
     final isLowStock = minStock > 0 && minStock <= 10;
-    final stockLabel = isLowStock ? 'Low: $minStock left' : '$minStock in stock';
-    final stockBgColor =
-        isLowStock ? _errorContainer : _surfaceContainerHigh;
-    final stockTextColor =
-        isLowStock ? _errorColor : _duniyaPurple;
+    final stockLabel =
+        isLowStock ? 'Low: $minStock left' : '$minStock in stock';
+    final stockBgColor = isLowStock ? _errorContainer : _surfaceContainerHigh;
+    final stockTextColor = isLowStock ? _errorColor : _duniyaPurple;
 
     return Container(
       decoration: BoxDecoration(
@@ -612,8 +615,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           style: OutlinedButton.styleFrom(
                                             foregroundColor: _duniyaPurple,
                                             side: BorderSide(
-                                                color: _duniyaPurple
-                                                    .withValues(alpha: 0.4),
+                                                color: _duniyaPurple.withValues(
+                                                    alpha: 0.4),
                                                 width: 1.4),
                                             elevation: 0,
                                             padding: const EdgeInsets.symmetric(
@@ -643,8 +646,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                           style: OutlinedButton.styleFrom(
                                             foregroundColor: _duniyaPurple,
                                             side: BorderSide(
-                                                color: _duniyaPurple
-                                                    .withValues(alpha: 0.4),
+                                                color: _duniyaPurple.withValues(
+                                                    alpha: 0.4),
                                                 width: 1.4),
                                             elevation: 0,
                                             padding: const EdgeInsets.symmetric(
@@ -695,10 +698,40 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
                                 // Product Grid
                                 Expanded(
-                                  child: StreamBuilder<
-                                      List<ProductMasterRecord>>(
+                                  child:
+                                      StreamBuilder<List<ProductMasterRecord>>(
                                     stream: queryProductMasterRecord(),
                                     builder: (context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(24.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Icon(
+                                                  Icons.cloud_off_outlined,
+                                                  color: _errorColor,
+                                                  size: 42.0,
+                                                ),
+                                                const SizedBox(height: 12.0),
+                                                const Text(
+                                                  'Unable to load the product catalogue',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                const SizedBox(height: 6.0),
+                                                Text(
+                                                  'Check your connection and permissions, then try again.',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: _onSurfaceVariant,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
                                       if (!snapshot.hasData) {
                                         return Center(
                                           child: SpinKitRing(
@@ -715,12 +748,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                       String? search = _model
                                           .searchTextController?.text
                                           .toLowerCase();
-                                      if (search != null &&
-                                          search.isNotEmpty) {
+                                      if (search != null && search.isNotEmpty) {
                                         products = products
                                             .where((p) =>
-                                                p.name.toLowerCase().contains(
-                                                    search) ||
+                                                p.name
+                                                    .toLowerCase()
+                                                    .contains(search) ||
                                                 (p.genericName ?? '')
                                                     .toLowerCase()
                                                     .contains(search) ||
@@ -734,8 +767,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                       }
 
                                       // Filter by category
-                                      if (_selectedCategory !=
-                                          'All Products') {
+                                      if (_selectedCategory != 'All Products') {
                                         products = products
                                             .where((p) =>
                                                 _mapToFilterCategory(
@@ -789,8 +821,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                       }
 
                                       return GridView.builder(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 24.0),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 24.0),
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: gridColumns,
@@ -891,8 +923,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               Row(
                 children: [
                   Expanded(
-                    child: _detailValueBox(
-                        'Cost Price', 'ZMK ${product.costPrice.toStringAsFixed(2)}'),
+                    child: _detailValueBox('Cost Price',
+                        'ZMK ${product.costPrice.toStringAsFixed(2)}'),
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
@@ -905,8 +937,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               Row(
                 children: [
                   Expanded(
-                    child: _detailValueBox('Min Stock',
-                        '${product.minimumStockLevel}'),
+                    child: _detailValueBox(
+                        'Min Stock', '${product.minimumStockLevel}'),
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
@@ -1067,10 +1099,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   double? _parseDouble(dynamic v) {
     if (v == null) return null;
     if (v is num) return v.toDouble();
-    final cleaned = v
-        .toString()
-        .replaceAll(RegExp(r'[^0-9.\-]'), '')
-        .trim();
+    final cleaned = v.toString().replaceAll(RegExp(r'[^0-9.\-]'), '').trim();
     if (cleaned.isEmpty) return null;
     return double.tryParse(cleaned);
   }
@@ -1104,9 +1133,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
       final file = result.files.first;
       final bytes = file.bytes ??
-          (file.path != null
-              ? await _readFileBytes(file.path!)
-              : null);
+          (file.path != null ? await _readFileBytes(file.path!) : null);
 
       if (bytes == null) {
         _showImportToast(
@@ -1173,8 +1200,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
       // Confirm with the user before writing.
       final dataRows = rows.skip(1).where((r) {
         // Skip fully empty rows.
-        return r.any((c) =>
-            c != null && c.toString().trim().isNotEmpty);
+        return r.any((c) => c != null && c.toString().trim().isNotEmpty);
       }).toList();
 
       if (dataRows.isEmpty) {
@@ -1525,12 +1551,10 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       OutlinedButton(
-                        onPressed: () =>
-                            Navigator.pop(dialogContext, false),
+                        onPressed: () => Navigator.pop(dialogContext, false),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: _onSurfaceVariant,
-                          side: BorderSide(
-                              color: _outlineVariant, width: 1.2),
+                          side: BorderSide(color: _outlineVariant, width: 1.2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
@@ -1548,8 +1572,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
-                        onPressed: () =>
-                            Navigator.pop(dialogContext, true),
+                        onPressed: () => Navigator.pop(dialogContext, true),
                         icon: const Icon(Icons.check_rounded, size: 18),
                         label: Text(
                           'Import $rowCount',
@@ -1639,12 +1662,14 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                       // ── Form Body ──
                       Flexible(
                         child: SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(28.0, 24.0, 28.0, 8.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(28.0, 24.0, 28.0, 8.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Section: Product Identity
-                              _buildSectionLabel('Product Identity', Icons.tag_rounded),
+                              _buildSectionLabel(
+                                  'Product Identity', Icons.tag_rounded),
                               const SizedBox(height: 12.0),
                               _buildPremiumField(
                                 controller: _model.nameTextController!,
@@ -1657,7 +1682,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               Row(children: [
                                 Expanded(
                                   child: _buildPremiumField(
-                                    controller: _model.genericNameTextController!,
+                                    controller:
+                                        _model.genericNameTextController!,
                                     label: 'Generic Name',
                                     hint: 'e.g. Amoxicillin',
                                     icon: Icons.science_rounded,
@@ -1677,7 +1703,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               const SizedBox(height: 24.0),
 
                               // Section: Formulation Details
-                              _buildSectionLabel('Formulation', Icons.grain_rounded),
+                              _buildSectionLabel(
+                                  'Formulation', Icons.grain_rounded),
                               const SizedBox(height: 12.0),
                               Row(children: [
                                 Expanded(
@@ -1691,7 +1718,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                 const SizedBox(width: 14.0),
                                 Expanded(
                                   child: _buildPremiumField(
-                                    controller: _model.dosageFormTextController!,
+                                    controller:
+                                        _model.dosageFormTextController!,
                                     label: 'Dosage Form',
                                     hint: 'e.g. Capsule',
                                     icon: Icons.category_rounded,
@@ -1729,7 +1757,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               const SizedBox(height: 24.0),
 
                               // Section: Pricing
-                              _buildSectionLabel('Pricing', Icons.payments_rounded),
+                              _buildSectionLabel(
+                                  'Pricing', Icons.payments_rounded),
                               const SizedBox(height: 12.0),
                               Row(children: [
                                 Expanded(
@@ -1745,7 +1774,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                 const SizedBox(width: 14.0),
                                 Expanded(
                                   child: _buildPremiumField(
-                                    controller: _model.sellingPriceTextController!,
+                                    controller:
+                                        _model.sellingPriceTextController!,
                                     label: 'Selling Price',
                                     hint: '0.00',
                                     icon: Icons.arrow_upward_rounded,
@@ -1762,7 +1792,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               const SizedBox(height: 24.0),
 
                               // Section: Inventory Control
-                              _buildSectionLabel('Inventory Control', Icons.warehouse_rounded),
+                              _buildSectionLabel(
+                                  'Inventory Control', Icons.warehouse_rounded),
                               const SizedBox(height: 12.0),
                               Row(children: [
                                 Expanded(
@@ -1777,7 +1808,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                 const SizedBox(width: 14.0),
                                 Expanded(
                                   child: _buildPremiumField(
-                                    controller: _model.reorderLevelTextController!,
+                                    controller:
+                                        _model.reorderLevelTextController!,
                                     label: 'Reorder Level',
                                     hint: '0',
                                     icon: Icons.autorenew_rounded,
@@ -1828,7 +1860,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(14.0),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1.0),
+              border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.3), width: 1.0),
             ),
             child: Icon(Icons.add_rounded, color: Colors.white, size: 26.0),
           ),
@@ -1961,7 +1994,9 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             prefixIcon: icon != null
                 ? Padding(
                     padding: const EdgeInsets.only(left: 14.0, right: 10.0),
-                    child: Icon(icon, size: 18.0, color: _duniyaPurple.withValues(alpha: 0.6)),
+                    child: Icon(icon,
+                        size: 18.0,
+                        color: _duniyaPurple.withValues(alpha: 0.6)),
                   )
                 : null,
             prefixIconConstraints: icon != null
@@ -1976,14 +2011,17 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             ),
             filled: true,
             fillColor: const Color(0xFFFAFAFE),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 13.0),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 14.0, vertical: 13.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: _outlineVariant.withValues(alpha: 0.6), width: 1.0),
+              borderSide: BorderSide(
+                  color: _outlineVariant.withValues(alpha: 0.6), width: 1.0),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: _outlineVariant.withValues(alpha: 0.6), width: 1.0),
+              borderSide: BorderSide(
+                  color: _outlineVariant.withValues(alpha: 0.6), width: 1.0),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -1991,7 +2029,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: const BorderSide(color: Color(0xFFE53E3E), width: 1.2),
+              borderSide:
+                  const BorderSide(color: Color(0xFFE53E3E), width: 1.2),
             ),
           ),
           onChanged: (_) => safeSetState(() {}),
@@ -2073,9 +2112,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
   // ── Live margin indicator ──
   Widget _buildMarginIndicator() {
-    final cost = double.tryParse(_model.costPriceTextController?.text ?? '') ?? 0;
-    final selling = double.tryParse(_model.sellingPriceTextController?.text ?? '') ?? 0;
-    final margin = selling > 0 && cost > 0 ? ((selling - cost) / selling * 100) : 0.0;
+    final cost =
+        double.tryParse(_model.costPriceTextController?.text ?? '') ?? 0;
+    final selling =
+        double.tryParse(_model.sellingPriceTextController?.text ?? '') ?? 0;
+    final margin =
+        selling > 0 && cost > 0 ? ((selling - cost) / selling * 100) : 0.0;
     final hasData = cost > 0 && selling > 0;
 
     return AnimatedContainer(
@@ -2164,7 +2206,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          top: BorderSide(color: _outlineVariant.withValues(alpha: 0.5), width: 1.0),
+          top: BorderSide(
+              color: _outlineVariant.withValues(alpha: 0.5), width: 1.0),
         ),
       ),
       child: Row(
@@ -2191,7 +2234,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 13.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 13.0),
             ),
             child: Text(
               'Cancel',
@@ -2212,7 +2256,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                       await ProductMasterRecord.collection.doc().set(
                             createProductMasterRecordData(
                               name: _model.nameTextController?.text,
-                              genericName: _model.genericNameTextController?.text,
+                              genericName:
+                                  _model.genericNameTextController?.text,
                               brandName: _model.brandNameTextController?.text,
                               strength: _model.strengthTextController?.text,
                               dosageForm: _model.dosageFormTextController?.text,
@@ -2222,11 +2267,13 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               costPrice: double.tryParse(
                                   _model.costPriceTextController?.text ?? '0'),
                               sellingPrice: double.tryParse(
-                                  _model.sellingPriceTextController?.text ?? '0'),
+                                  _model.sellingPriceTextController?.text ??
+                                      '0'),
                               minimumStockLevel: int.tryParse(
                                   _model.minStockTextController?.text ?? '0'),
                               reorderLevel: int.tryParse(
-                                  _model.reorderLevelTextController?.text ?? '0'),
+                                  _model.reorderLevelTextController?.text ??
+                                      '0'),
                               isActive: true,
                               createdAt: getCurrentTimestamp,
                               updatedAt: getCurrentTimestamp,
@@ -2248,7 +2295,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         SnackBar(
                           content: Row(
                             children: [
-                              Icon(Icons.check_circle_rounded, color: Colors.white, size: 20.0),
+                              Icon(Icons.check_circle_rounded,
+                                  color: Colors.white, size: 20.0),
                               const SizedBox(width: 10.0),
                               Text('Product added successfully'),
                             ],
@@ -2281,7 +2329,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 13.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 28.0, vertical: 13.0),
               ),
             ),
           ),
