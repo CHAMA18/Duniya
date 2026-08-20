@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show debugPaintBaselinesEnabled;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,6 +31,8 @@ import '/rbac/rbac.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Prevent Flutter inspector baseline guides from leaking into the UI.
+  debugPaintBaselinesEnabled = false;
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 
@@ -166,7 +169,8 @@ class _MyAppState extends State<MyApp> {
       final userDoc = currentUserDocument;
       final userRef = currentUserReference;
       if (userDoc == null || userRef == null) {
-        debugPrint('[main] _onUserSignedIn: user document not yet loaded, skipping sync setup');
+        debugPrint(
+            '[main] _onUserSignedIn: user document not yet loaded, skipping sync setup');
         return;
       }
       // Watch the user's collections for pending writes.

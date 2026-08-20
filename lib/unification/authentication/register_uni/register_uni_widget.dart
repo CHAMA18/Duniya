@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/success/success_widget.dart';
 import '/index.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
@@ -29,6 +30,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late VideoPlayerController _videoController;
   bool _videoInitialized = false;
+  bool _isCreatingAccount = false;
   int _selectedMode = 0;
 
   // Design tokens from the HTML source
@@ -59,6 +61,9 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
 
     _model.passwordTextController ??= TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
+
+    _model.confirmPasswordTextController ??= TextEditingController();
+    _model.confirmPasswordFocusNode ??= FocusNode();
 
     _videoController = VideoPlayerController.asset(
       'assets/videos/medicine_bg.mp4',
@@ -107,6 +112,98 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
         );
       },
     );
+  }
+
+  Future<void> _createAccount() async {
+    if (_isCreatingAccount) return;
+
+    final email = _model.emailAddressTextController!.text.trim().toLowerCase();
+    final password = _model.passwordTextController!.text;
+    final confirmPassword = _model.confirmPasswordTextController!.text;
+
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all required fields')),
+      );
+      return;
+    }
+    if (!email.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid email address')),
+      );
+      return;
+    }
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password must be at least 6 characters')),
+      );
+      return;
+    }
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    setState(() => _isCreatingAccount = true);
+    GoRouter.of(context).prepareAuthEvent();
+
+    try {
+      final user = await authManager.createAccountWithEmail(
+        context,
+        email,
+        password,
+      );
+      if (user == null) return;
+
+      final displayName =
+          '${_model.firstNameTextController!.text} ${_model.lastNameTextController!.text}'
+              .trim();
+      await UserRecord.collection.doc(user.uid).set(
+            createUserRecordData(
+              createdTime: getCurrentTimestamp,
+              role: _selectedMode == 0
+                  ? AppRole.duniyaAdmin.firestoreValue
+                  : AppRole.owner.firestoreValue,
+              accountType: _selectedMode == 0
+                  ? AppRole.duniyaAdmin.accountTypeValue
+                  : AppRole.owner.accountTypeValue,
+              displayName: displayName.isNotEmpty ? displayName : null,
+              email: email,
+            ),
+            SetOptions(merge: true),
+          );
+
+      await authManager.sendEmailVerification();
+      await _showEmailVerificationSentDialog(email);
+      await authManager.signOut();
+      if (!mounted) return;
+      context.goNamed(LoginUniWidget.routeName);
+    } catch (_) {
+      // Account creation can succeed before profile or verification setup.
+      // Avoid inviting a retry that would then report a false duplicate email.
+      final createdUser = FirebaseAuth.instance.currentUser;
+      if (createdUser?.email?.toLowerCase() == email) {
+        await authManager.signOut();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text('Your account was created. Please log in to continue.'),
+          ),
+        );
+        context.goNamed(LoginUniWidget.routeName);
+        return;
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Unable to create account. Please try again.')),
+      );
+    } finally {
+      if (mounted) setState(() => _isCreatingAccount = false);
+    }
   }
 
   /// Builds the Google logo from the uploaded asset
@@ -613,21 +710,29 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                         .doc(user.uid)
                                                         .set(
                                                             createUserRecordData(
-                                                      email: user.email,
-                                                      displayName:
-                                                          user.displayName,
-                                                      photoUrl: user.photoURL,
-                                                      uid: user.uid,
-                                                      createdTime:
-                                                          getCurrentTimestamp,
-                                                      role: _selectedMode == 0
-                                                          ? AppRole.duniyaAdmin.firestoreValue
-                                                          : AppRole.owner.firestoreValue,
-                                                      accountType:
-                                                          _selectedMode == 0
-                                                              ? AppRole.duniyaAdmin.accountTypeValue
-                                                              : AppRole.owner.accountTypeValue,
-                                                    ));
+                                                          email: user.email,
+                                                          displayName:
+                                                              user.displayName,
+                                                          photoUrl:
+                                                              user.photoURL,
+                                                          uid: user.uid,
+                                                          createdTime:
+                                                              getCurrentTimestamp,
+                                                          role: _selectedMode ==
+                                                                  0
+                                                              ? AppRole
+                                                                  .duniyaAdmin
+                                                                  .firestoreValue
+                                                              : AppRole.owner
+                                                                  .firestoreValue,
+                                                          accountType: _selectedMode ==
+                                                                  0
+                                                              ? AppRole
+                                                                  .duniyaAdmin
+                                                                  .accountTypeValue
+                                                              : AppRole.owner
+                                                                  .accountTypeValue,
+                                                        ));
                                                   }
 
                                                   await showModalBottomSheet(
@@ -840,6 +945,47 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                         },
                                       ),
 
+                                      const SizedBox(height: 16.0),
+
+                                      // ── Confirm Password ──
+                                      _buildTextFormField(
+                                        controller: _model
+                                            .confirmPasswordTextController!,
+                                        focusNode:
+                                            _model.confirmPasswordFocusNode!,
+                                        label: 'Confirm Password',
+                                        placeholder: '••••••••',
+                                        prefixIcon: Icons.lock_outline,
+                                        obscureText:
+                                            !_model.confirmPasswordVisibility,
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _model.confirmPasswordVisibility
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            size: 18.0,
+                                            color: _outline,
+                                          ),
+                                          onPressed: () {
+                                            safeSetState(() => _model
+                                                    .confirmPasswordVisibility =
+                                                !_model
+                                                    .confirmPasswordVisibility);
+                                          },
+                                        ),
+                                        validator: (context, value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please confirm your password';
+                                          }
+                                          if (value !=
+                                              _model.passwordTextController
+                                                  ?.text) {
+                                            return 'Passwords do not match';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+
                                       const SizedBox(height: 24.0),
 
                                       // ── Create Account Button ──
@@ -847,94 +993,17 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                         width: double.infinity,
                                         height: 44.0,
                                         child: ElevatedButton(
-                                          onPressed: () async {
-                                            logFirebaseEvent(
-                                                'REGISTER_UNI_CREATE_ACCOUNT_BTN_ON_TAP');
-                                            logFirebaseEvent('Button_auth');
-                                            GoRouter.of(context)
-                                                .prepareAuthEvent();
-
-                                            // Validate fields
-                                            if (_model
-                                                    .emailAddressTextController
-                                                    .text
-                                                    .isEmpty ||
-                                                _model.passwordTextController
-                                                    .text.isEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Please fill in all required fields'),
-                                                ),
-                                              );
-                                              return;
-                                            }
-
-                                            final user = await authManager
-                                                .createAccountWithEmail(
-                                              context,
-                                              _model.emailAddressTextController
-                                                  .text,
-                                              _model
-                                                  .passwordTextController.text,
-                                            );
-                                            if (user == null) {
-                                              return;
-                                            }
-
-                                            // Combine first + last name for displayName
-                                            final displayName =
-                                                '${_model.firstNameTextController.text} ${_model.lastNameTextController.text}'
-                                                    .trim();
-
-                                            await UserRecord.collection
-                                                .doc(user.uid)
-                                                .update(createUserRecordData(
-                                                  createdTime:
-                                                      getCurrentTimestamp,
-                                                  role: _selectedMode == 0
-                                                      ? AppRole.duniyaAdmin.firestoreValue
-                                                      : AppRole.owner.firestoreValue,
-                                                  accountType:
-                                                      _selectedMode == 0
-                                                          ? AppRole.duniyaAdmin.accountTypeValue
-                                                          : AppRole.owner.accountTypeValue,
-                                                  displayName:
-                                                      displayName.isNotEmpty
-                                                          ? displayName
-                                                          : null,
-                                                  email: _model
-                                                      .emailAddressTextController
-                                                      .text,
-                                                ));
-
-                                            logFirebaseEvent(
-                                                'Button_backend_call');
-
-                                            await currentUserReference!
-                                                .update(createUserRecordData(
-                                              email: _model
-                                                  .emailAddressTextController
-                                                  .text,
-                                              displayName:
-                                                  displayName.isNotEmpty
-                                                      ? displayName
-                                                      : null,
-                                            ));
-
-                                            await authManager
-                                                .sendEmailVerification();
-                                            await _showEmailVerificationSentDialog(
-                                              _model.emailAddressTextController.text,
-                                            );
-                                            await authManager.signOut();
-                                            if (!context.mounted) {
-                                              return;
-                                            }
-                                            context.goNamed(
-                                                LoginUniWidget.routeName);
-                                          },
+                                          onPressed: _isCreatingAccount
+                                              ? null
+                                              : () async {
+                                                  logFirebaseEvent(
+                                                      'REGISTER_UNI_CREATE_ACCOUNT_BTN_ON_TAP');
+                                                  logFirebaseEvent(
+                                                      'Button_auth');
+                                                  logFirebaseEvent(
+                                                      'Button_backend_call');
+                                                  await _createAccount();
+                                                },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: _primaryBlue,
                                             foregroundColor: Colors.white,
@@ -961,7 +1030,9 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                             child: Container(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                'Create Account',
+                                                _isCreatingAccount
+                                                    ? 'Creating account...'
+                                                    : 'Create Account',
                                                 style: TextStyle(
                                                   fontFamily: kAppFontFamily,
                                                   fontSize: 18.0,

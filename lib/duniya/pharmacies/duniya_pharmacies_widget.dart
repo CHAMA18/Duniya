@@ -6,6 +6,9 @@ import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import '/index.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:excel/excel.dart' hide Border;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'duniya_pharmacies_model.dart';
@@ -27,8 +30,7 @@ class DuniyaPharmaciesWidget extends StatefulWidget {
   static String routePath = '/duniyaPharmacies';
 
   @override
-  State<DuniyaPharmaciesWidget> createState() =>
-      _DuniyaPharmaciesWidgetState();
+  State<DuniyaPharmaciesWidget> createState() => _DuniyaPharmaciesWidgetState();
 }
 
 class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
@@ -110,6 +112,185 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
     final day = dt.day.toString().padLeft(2, '0');
     final month = dt.month.toString().padLeft(2, '0');
     return '$day/$month/${dt.year}';
+  }
+
+  DateTime _reconciliationDateFromFileName(String fileName) {
+    const months = {
+      'JAN': 1,
+      'FEB': 2,
+      'MAR': 3,
+      'APR': 4,
+      'MAY': 5,
+      'JUN': 6,
+      'JUL': 7,
+      'AUG': 8,
+      'SEP': 9,
+      'OCT': 10,
+      'NOV': 11,
+      'DEC': 12,
+    };
+    final match = RegExp(r'(\d{1,2})\s*([A-Z]{3,})', caseSensitive: false)
+        .firstMatch(fileName);
+    final month = match == null
+        ? null
+        : months[match.group(2)!.toUpperCase().substring(0, 3)];
+    final day = match == null ? null : int.tryParse(match.group(1)!);
+    if (month != null && day != null && day >= 1 && day <= 31) {
+      return DateTime.utc(DateTime.now().year, month, day, 12);
+    }
+    return DateTime.utc(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day, 12);
+  }
+
+  Future<void> _importSosMpiloReconciliation() async {
+    try {
+      final selection = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const ['xlsx'],
+        withData: true,
+      );
+      if (selection == null || selection.files.isEmpty) return;
+
+      final file = selection.files.single;
+      final reconciliationDate = _reconciliationDateFromFileName(file.name);
+      final bytes = file.bytes;
+      if (bytes == null)
+        throw StateError('The selected workbook could not be read.');
+
+      final workbook = Excel.decodeBytes(bytes);
+      final sheet = workbook.tables['Recon Final'] ??
+          (workbook.tables.isEmpty ? null : workbook.tables.values.first);
+      if (sheet == null || sheet.rows.isEmpty) {
+        throw StateError('The reconciliation worksheet is empty.');
+      }
+
+      String cellValue(dynamic cell) => cell?.value?.toString().trim() ?? '';
+      String headerKey(dynamic cell) =>
+          cellValue(cell).toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
+      final header = sheet.rows.first;
+      final columns = <String, int>{};
+      for (var index = 0; index < header.length; index++) {
+        final key = headerKey(header[index]);
+        if (key.isNotEmpty) columns[key] = index;
+      }
+      const required = [
+        'product name',
+        'description',
+        'opening stock',
+        'stock supplied',
+        'total available',
+        'physical count',
+        'units dispensed',
+        'transfer unit price',
+      ];
+      if (required.any((key) => !columns.containsKey(key))) {
+        throw StateError(
+            'Use the Recon Final sheet with the approved reconciliation columns.');
+      }
+
+      String valueAt(List<dynamic> row, String key) {
+        final index = columns[key]!;
+        return index < row.length ? cellValue(row[index]) : '';
+      }
+
+      int integerAt(List<dynamic> row, String key) =>
+          int.tryParse(valueAt(row, key).replaceAll(RegExp(r'[^0-9-]'), '')) ??
+          -1;
+      double decimalAt(List<dynamic> row, String key) =>
+          double.tryParse(
+              valueAt(row, key).replaceAll(RegExp(r'[^0-9.-]'), '')) ??
+          -1;
+
+      final records = <Map<String, dynamic>>[];
+      for (final row in sheet.rows.skip(1)) {
+        final name = valueAt(row, 'product name');
+        if (name.isEmpty) continue;
+        final openingStock = integerAt(row, 'opening stock');
+        final stockSupplied = integerAt(row, 'stock supplied');
+        final totalAvailable = integerAt(row, 'total available');
+        final physicalCount = integerAt(row, 'physical count');
+        final unitsDispensed = integerAt(row, 'units dispensed');
+        final unitCost = decimalAt(row, 'transfer unit price');
+        if ([
+              openingStock,
+              stockSupplied,
+              totalAvailable,
+              physicalCount,
+              unitsDispensed
+            ].any((value) => value < 0) ||
+            unitCost < 0 ||
+            totalAvailable != openingStock + stockSupplied ||
+            unitsDispensed != totalAvailable - physicalCount) {
+          throw StateError(
+              'Invalid totals in product "$name". Fix the workbook before import.');
+        }
+        records.add({
+          'name': name,
+          'description': valueAt(row, 'description'),
+          'openingStock': openingStock,
+          'stockSupplied': stockSupplied,
+          'totalAvailable': totalAvailable,
+          'physicalCount': physicalCount,
+          'unitsDispensed': unitsDispensed,
+          'unitCost': unitCost,
+        });
+      }
+      if (records.isEmpty)
+        throw StateError('No reconciliation records were found.');
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          icon: const Icon(Icons.fact_check_rounded, color: Color(0xFF9900FF)),
+          title: const Text('Import SOS Mpilo reconciliation?'),
+          content: Text(
+            '${records.length} product lines will create or update SOS Mpilo Pharmacy, its product catalogue, stock balances, movements, and a dated stock-count record for ${_formatDate(reconciliationDate)}. Re-importing this source updates the same historical records.',
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: const Text('Cancel')),
+            FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                child: const Text('Import reconciliation')),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+
+      final response = await FirebaseFunctions.instance
+          .httpsCallable('importHistoricalReconciliation')
+          .call({
+        'pharmacyName': 'SOS Mpilo Pharmacy',
+        'reconciliationDate': reconciliationDate.millisecondsSinceEpoch,
+        'sourceFileName': file.name,
+        'records': records,
+      });
+      final count = (response.data as Map?)?['productLines'] ?? records.length;
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'SOS Mpilo Pharmacy imported with $count reconciliation lines.'),
+            behavior: SnackBarBehavior.floating),
+      );
+    } on FirebaseFunctionsException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(error.message ?? 'The reconciliation import failed.'),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(error.toString().replaceFirst('Bad state: ', '')),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating),
+      );
+    }
   }
 
   /// Fetches a map of `ownerRef.path → UserRecord` for all unique owner refs
@@ -365,6 +546,9 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                 phone: false,
                 tablet: false,
               )) ...[
+                _heroAction(Icons.upload_file_rounded, 'Import reconciliation',
+                    _importSosMpiloReconciliation),
+                const SizedBox(width: 10.0),
                 _heroAction(Icons.refresh_rounded, 'Refresh',
                     () => safeSetState(() {})),
               ],
@@ -382,13 +566,11 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         onTap: onTap,
         borderRadius: BorderRadius.circular(10.0),
         child: Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
           decoration: BoxDecoration(
             color: Colors.white.withAlpha(25),
             borderRadius: BorderRadius.circular(10.0),
-            border:
-                Border.all(color: Colors.white.withAlpha(50), width: 1.0),
+            border: Border.all(color: Colors.white.withAlpha(50), width: 1.0),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -421,8 +603,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         if (!snapshot.hasData) {
           return _buildLoadingState();
         }
-        final allPharmacies =
-            snapshot.data!.where((p) => !p.deleted).toList();
+        final allPharmacies = snapshot.data!.where((p) => !p.deleted).toList();
         if (allPharmacies.isEmpty) {
           return _buildEmptyState();
         }
@@ -458,11 +639,9 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
 
   Widget _buildKpiRow(List<PharmacyRecord> pharmacies) {
     final total = pharmacies.length;
-    final active =
-        pharmacies.where((p) => p.networkStatus == 'active').length;
-    final pending = pharmacies
-        .where((p) => p.networkStatus == 'pending_approval')
-        .length;
+    final active = pharmacies.where((p) => p.networkStatus == 'active').length;
+    final pending =
+        pharmacies.where((p) => p.networkStatus == 'pending_approval').length;
     final rejected =
         pharmacies.where((p) => p.networkStatus == 'rejected').length;
 
@@ -602,8 +781,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         (_model.searchTextController?.text ?? '').isNotEmpty ||
             _statusFilter != 'All';
     return Container(
-      padding:
-          const EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
+      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(14.0),
@@ -641,17 +819,16 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                 ),
                 prefixIcon: Icon(Icons.search_rounded,
                     color: theme.secondaryText, size: 20.0),
-                suffixIcon:
-                    (_model.searchTextController?.text ?? '').isNotEmpty
-                        ? IconButton(
-                            icon: Icon(Icons.close_rounded,
-                                color: theme.secondaryText, size: 18.0),
-                            onPressed: () {
-                              _model.searchTextController?.clear();
-                              safeSetState(() {});
-                            },
-                          )
-                        : null,
+                suffixIcon: (_model.searchTextController?.text ?? '').isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.close_rounded,
+                            color: theme.secondaryText, size: 18.0),
+                        onPressed: () {
+                          _model.searchTextController?.clear();
+                          safeSetState(() {});
+                        },
+                      )
+                    : null,
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -695,11 +872,9 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
   Widget _buildStatusPills(List<PharmacyRecord> pharmacies) {
     final theme = FlutterFlowTheme.of(context);
     final all = pharmacies.length;
-    final active =
-        pharmacies.where((p) => p.networkStatus == 'active').length;
-    final pending = pharmacies
-        .where((p) => p.networkStatus == 'pending_approval')
-        .length;
+    final active = pharmacies.where((p) => p.networkStatus == 'active').length;
+    final pending =
+        pharmacies.where((p) => p.networkStatus == 'pending_approval').length;
     final rejected =
         pharmacies.where((p) => p.networkStatus == 'rejected').length;
 
@@ -722,14 +897,13 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
               onTap: () => safeSetState(() => _statusFilter = label),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 14.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
                 decoration: BoxDecoration(
                   color: selected ? color : theme.secondaryBackground,
                   borderRadius: BorderRadius.circular(20.0),
                   border: Border.all(
-                      color: selected ? color : theme.alternate,
-                      width: 1.0),
+                      color: selected ? color : theme.alternate, width: 1.0),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -737,8 +911,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                     Text(
                       label,
                       style: TextStyle(
-                        color:
-                            selected ? Colors.white : theme.primaryText,
+                        color: selected ? Colors.white : theme.primaryText,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -756,9 +929,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                       child: Text(
                         '$count',
                         style: TextStyle(
-                          color: selected
-                              ? Colors.white
-                              : theme.secondaryText,
+                          color: selected ? Colors.white : theme.secondaryText,
                           fontSize: 11.0,
                           fontWeight: FontWeight.w700,
                         ),
@@ -795,9 +966,8 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
           ),
         ),
         Column(
-          children: pharmacies
-              .map((p) => _buildPharmacyCard(p, ownerMap))
-              .toList(),
+          children:
+              pharmacies.map((p) => _buildPharmacyCard(p, ownerMap)).toList(),
         ),
       ],
     );
@@ -839,8 +1009,8 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
             );
           },
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(
-                16.0, 14.0, 16.0, 14.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(16.0, 14.0, 16.0, 14.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -887,8 +1057,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                               color: statusBg,
                               borderRadius: BorderRadius.circular(8.0),
                               border: Border.all(
-                                  color: statusColor.withAlpha(60),
-                                  width: 1.0),
+                                  color: statusColor.withAlpha(60), width: 1.0),
                             ),
                             child: Text(
                               _statusLabel(status).toUpperCase(),
@@ -907,8 +1076,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                         Row(
                           children: [
                             Icon(Icons.location_on_outlined,
-                                size: 13.0,
-                                color: theme.secondaryText),
+                                size: 13.0, color: theme.secondaryText),
                             const SizedBox(width: 4.0),
                             Expanded(
                               child: Text(

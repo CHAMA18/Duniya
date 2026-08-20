@@ -1,6 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const axios = require("axios").default;
+const crypto = require("crypto");
 admin.initializeApp();
 
 // ══════════════════════════════════════════════════════════════
@@ -493,18 +494,23 @@ async function resolveProductName(productIdOrRef) {
 // ══════════════════════════════════════════════════════════════
 
 function welcomeTemplate(displayName) {
+  const portalUrl = getConfiguredPortalUrl();
   return `
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
 <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5">
 <div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-  <div style="background:#7c3aed;padding:32px;text-align:center">
+  <div style="background:linear-gradient(135deg,#9900FF,#7C3AED);padding:32px;text-align:center">
     <h1 style="color:#fff;margin:0;font-size:24px">Welcome to Pulse</h1>
   </div>
   <div style="padding:32px">
     <p style="font-size:16px;color:#333">Hi ${displayName},</p>
     <p style="font-size:15px;color:#555;line-height:1.6">Welcome to Pulse — your pharmacy and inventory management platform. You're all set to get started.</p>
+    <p style="font-size:15px;color:#555;line-height:1.6">You can log in anytime to manage your pharmacy, track inventory, process sales, and more.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td align="center">
+      <a href="${portalUrl}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#9900FF,#7C3AED);color:#fff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px">Open Pulse →</a>
+    </td></tr></table>
     <p style="font-size:15px;color:#555;line-height:1.6">If you have any questions, our support team is here to help.</p>
     <p style="font-size:15px;color:#555;margin-top:24px">Best regards,<br>The Pulse Team</p>
   </div>
@@ -1217,6 +1223,160 @@ exports.dispatchGoodsToPharmacy = functions
     return { success: true, receiptId: receiptRef.id, pharmacyName: pharmacy.Name || "" };
   });
 
+// Imports a verified historical pharmacy reconciliation. This is deliberately
+// server-side so only Pulse administrators can create pharmacy workspaces and
+// backdated stock records.
+exports.importHistoricalReconciliation = functions
+  .region("us-central1")
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError("unauthenticated", "Sign in to import a reconciliation.");
+    }
+
+    const firestore = admin.firestore();
+    const callerRef = firestore.collection("User").doc(context.auth.uid);
+    const callerSnapshot = await callerRef.get();
+    const caller = callerSnapshot.data() || {};
+    const callerRole = String(caller.role || "").trim().toLowerCase();
+    const isPulseAdmin = String(caller.account_type || "").trim().toLowerCase() === "pulse" &&
+      ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
+    if (!isPulseAdmin) {
+      throw new functions.https.HttpsError("permission-denied", "Only Pulse administrators can import reconciliation data.");
+    }
+
+    const pharmacyName = String(data?.pharmacyName || "").trim();
+    const reconciliationDateMs = Number(data?.reconciliationDate);
+    const sourceFileName = String(data?.sourceFileName || "").trim();
+    const records = Array.isArray(data?.records) ? data.records : [];
+    if (!pharmacyName || !Number.isFinite(reconciliationDateMs) || records.length === 0 || records.length > 400) {
+      throw new functions.https.HttpsError("invalid-argument", "A pharmacy, reconciliation date, and 1-400 reconciliation lines are required.");
+    }
+
+    const normalizedRecords = records.map((record, index) => {
+      const name = String(record?.name || "").trim();
+      const description = String(record?.description || "").trim();
+      const openingStock = Number(record?.openingStock || 0);
+      const stockSupplied = Number(record?.stockSupplied || 0);
+      const totalAvailable = Number(record?.totalAvailable || 0);
+      const physicalCount = Number(record?.physicalCount || 0);
+      const unitsDispensed = Number(record?.unitsDispensed || 0);
+      const unitCost = Number(record?.unitCost || 0);
+      if (!name || [openingStock, stockSupplied, totalAvailable, physicalCount, unitsDispensed, unitCost]
+        .every(Number.isFinite) === false || [openingStock, stockSupplied, totalAvailable, physicalCount, unitsDispensed]
+        .some((value) => !Number.isInteger(value) || value < 0) || unitCost < 0 ||
+        totalAvailable !== openingStock + stockSupplied || unitsDispensed !== totalAvailable - physicalCount) {
+        throw new functions.https.HttpsError("invalid-argument", `Invalid reconciliation line ${index + 1}.`);
+      }
+      return { name, description, openingStock, stockSupplied, totalAvailable, physicalCount, unitsDispensed, unitCost };
+    });
+
+    const date = admin.firestore.Timestamp.fromMillis(reconciliationDateMs);
+    const pharmacyKey = pharmacyName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const ownerRef = firestore.collection("User").doc(`imported-pharmacy-${pharmacyKey}`);
+    const pharmacyRef = ownerRef.collection("Pharmacy").doc(pharmacyKey);
+    const reconciliationKey = new Date(reconciliationDateMs).toISOString().slice(0, 10);
+    const stockCountRef = ownerRef.collection("StockCount").doc(`reconciliation-${reconciliationKey}`);
+    const sourceLabel = `Historical reconciliation: ${sourceFileName || pharmacyName}`;
+    const writes = [];
+
+    writes.push({ ref: ownerRef, data: {
+      uid: ownerRef.id,
+      display_name: pharmacyName,
+      pharmacy_name: pharmacyName,
+      role: "Owner",
+      account_type: "Pharmacy",
+      approved_by_duniya: true,
+      account_status: "imported",
+      created_time: date,
+      updated_at: admin.firestore.FieldValue.serverTimestamp(),
+      ImportSource: sourceLabel,
+    }});
+    writes.push({ ref: pharmacyRef, data: {
+      Name: pharmacyName,
+      UserID: ownerRef,
+      deleted: false,
+      NetworkStatus: "active",
+      RegisteredAt: date,
+      ImportSource: sourceLabel,
+      ReconciliationDate: date,
+      UpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }});
+    writes.push({ ref: stockCountRef, data: {
+      OutletId: pharmacyRef,
+      CountedById: callerRef,
+      CountDate: date,
+      Status: "IMPORTED_RECONCILIATION",
+      Notes: `${sourceLabel}. Imported by Pulse on ${new Date().toISOString()}.`,
+      CreatedAt: date,
+      UpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }});
+
+    for (const record of normalizedRecords) {
+      const productKey = `${record.name}|${record.description}`.toLowerCase();
+      const productHash = crypto.createHash("sha256").update(productKey).digest("hex").slice(0, 20);
+      const productRef = firestore.collection("ProductMaster").doc(`recon-${productHash}`);
+      const stockRef = ownerRef.collection("Stock").doc(`recon-${productHash}`);
+      const itemRef = stockCountRef.collection("StockCountItem").doc(`recon-${productHash}`);
+      writes.push({ ref: productRef, data: {
+        Name: record.name,
+        PackSize: record.description || null,
+        UnitOfMeasure: record.description || null,
+        SKU: `SOS-${productHash.toUpperCase()}`,
+        CostPrice: record.unitCost,
+        IsActive: true,
+        CreatedAt: date,
+        UpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        ImportSource: sourceLabel,
+      }});
+      writes.push({ ref: stockRef, data: {
+        Name: record.name,
+        Description: record.description || null,
+        Quantity: record.physicalCount,
+        Price: record.unitCost,
+        CostOfGoods: record.unitCost,
+        Pharmacy: pharmacyName,
+        UserId: ownerRef,
+        InitialQuantity: record.totalAvailable,
+        LimitNotice: 0,
+        ImportSource: sourceLabel,
+        ReconciliationDate: date,
+      }});
+      writes.push({ ref: itemRef, data: {
+        ProductId: productRef,
+        SystemQuantity: record.totalAvailable,
+        CountedQuantity: record.physicalCount,
+        Variance: -record.unitsDispensed,
+        Explanation: `Imported from ${reconciliationKey} reconciliation.`,
+      }});
+      if (record.totalAvailable > 0) {
+        writes.push({ ref: ownerRef.collection("StockMovement").doc(`recon-received-${reconciliationKey}-${productHash}`), data: {
+          ProductId: productRef, OutletId: pharmacyRef, Quantity: record.totalAvailable,
+          MovementType: "RECEIVED", Reason: "HISTORICAL_RECONCILIATION_BASELINE",
+          MovementReference: stockCountRef.path, RecordedById: callerRef, CreatedAt: date,
+        }});
+      }
+      if (record.unitsDispensed > 0) {
+        writes.push({ ref: ownerRef.collection("StockMovement").doc(`recon-sold-${reconciliationKey}-${productHash}`), data: {
+          ProductId: productRef, OutletId: pharmacyRef, Quantity: record.unitsDispensed,
+          MovementType: "SOLD", Reason: "HISTORICAL_RECONCILIATION_DISPENSED",
+          MovementReference: stockCountRef.path, RecordedById: callerRef, CreatedAt: date,
+        }});
+      }
+    }
+
+    for (let start = 0; start < writes.length; start += 450) {
+      const batch = firestore.batch();
+      for (const write of writes.slice(start, start + 450)) batch.set(write.ref, write.data, { merge: true });
+      await batch.commit();
+    }
+    await firestore.collection("AuditLogs").add({
+      action: "historical_reconciliation_imported", actorId: context.auth.uid,
+      pharmacyRef, pharmacyName, reconciliationDate: date, sourceFileName: sourceFileName || null,
+      productLines: normalizedRecords.length, createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return { success: true, pharmacyPath: pharmacyRef.path, productLines: normalizedRecords.length, stockCountPath: stockCountRef.path };
+  });
+
 // Pulse network administrators can manage only other Pulse accounts. The
 // callable boundary prevents browser clients from changing roles or suspending
 // accounts by writing directly to Firestore.
@@ -1276,6 +1436,115 @@ exports.managePulseUser = functions
       clientCreatedAt: admin.firestore.Timestamp.now(),
     });
     return { success: true };
+  });
+
+// Creates a Pulse-only account and sends a password-setup invitation. Keeping
+// the operation callable ensures browser clients never create privileged users
+// or choose their account type directly in Firestore.
+exports.invitePulseUser = functions
+  .region("us-central1")
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError("unauthenticated", "Sign in to invite Pulse users.");
+    }
+
+    const firestore = admin.firestore();
+    const callerSnapshot = await firestore.collection("User").doc(context.auth.uid).get();
+    const caller = callerSnapshot.data() || {};
+    const callerRole = String(caller.role || "").trim().toLowerCase();
+    const isPulseAdmin = String(caller.account_type || "").trim().toLowerCase() === "pulse" &&
+      ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
+    if (!isPulseAdmin) {
+      throw new functions.https.HttpsError("permission-denied", "Only Pulse network administrators can invite Pulse users.");
+    }
+
+    const displayName = String(data?.displayName || "").trim().replace(/\s+/g, " ");
+    const email = String(data?.email || "").trim().toLowerCase();
+    const role = String(data?.role || "staff").trim().toLowerCase();
+    if (displayName.length < 2 || displayName.length > 100) {
+      throw new functions.https.HttpsError("invalid-argument", "Enter the user's full name.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new functions.https.HttpsError("invalid-argument", "Enter a valid email address.");
+    }
+    if (!["admin", "staff"].includes(role)) {
+      throw new functions.https.HttpsError("invalid-argument", "Choose either the Admin or Staff role.");
+    }
+    if (!functions.config().resend?.key) {
+      throw new functions.https.HttpsError("failed-precondition", "The Pulse email service is not configured.");
+    }
+
+    try {
+      await admin.auth().getUserByEmail(email);
+      throw new functions.https.HttpsError("already-exists", "An account already exists for this email address.");
+    } catch (error) {
+      if (error instanceof functions.https.HttpsError) throw error;
+      if (error.code !== "auth/user-not-found") throw error;
+    }
+
+    const user = await admin.auth().createUser({
+      email,
+      displayName,
+      // A cryptographically-random secret prevents sign-in until the invitee
+      // chooses a password through the invitation link.
+      password: crypto.randomBytes(32).toString("base64url"),
+    });
+    const userRef = firestore.collection("User").doc(user.uid);
+    const now = admin.firestore.FieldValue.serverTimestamp();
+    await userRef.set({
+      uid: user.uid,
+      email,
+      display_name: displayName,
+      role: role === "admin" ? "Admin" : "Staff",
+      account_type: "Pulse",
+      approved_by_duniya: true,
+      account_status: "invited",
+      invitation_status: "sending",
+      invited_by: firestore.collection("User").doc(context.auth.uid),
+      created_time: now,
+      updated_at: now,
+    }, { merge: true });
+
+    try {
+      const setupLink = await admin.auth().generatePasswordResetLink(email, {
+        url: getConfiguredPortalUrl(),
+        handleCodeInApp: false,
+      });
+      const safeName = displayName.replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
+      }[character]));
+      const response = await axios.post(`${RESEND_API_URL}/emails`, {
+        from: getConfiguredResendFrom(),
+        to: [email],
+        subject: "You're invited to Pulse",
+        html: `<!doctype html><html><body style="margin:0;background:#f7f4ff;font-family:Arial,sans-serif;color:#15182b"><div style="max-width:560px;margin:32px auto;background:#fff;border-radius:20px;overflow:hidden;border:1px solid #e8ddff"><div style="padding:32px;background:linear-gradient(135deg,#9900ff,#2563eb);color:#fff"><div style="font-size:28px;font-weight:800">Welcome to Pulse</div><div style="margin-top:8px;font-size:16px;opacity:.9">Your network workspace is ready.</div></div><div style="padding:32px"><p style="font-size:16px;line-height:1.6">Hi ${safeName},</p><p style="font-size:16px;line-height:1.6">You've been invited to Pulse as a <strong>${role === "admin" ? "Network Administrator" : "Network Staff member"}</strong>. Set a secure password to activate your account.</p><p style="margin:28px 0"><a href="${setupLink}" style="display:inline-block;padding:14px 22px;background:#9900ff;border-radius:10px;color:#fff;font-weight:700;text-decoration:none">Set up your account</a></p><p style="font-size:13px;line-height:1.5;color:#667085">If you were not expecting this invitation, you can safely ignore this email.</p></div></div></body></html>`,
+        text: `Hi ${displayName},\n\nYou've been invited to Pulse as ${role === "admin" ? "a Network Administrator" : "a Network Staff member"}. Set up your account: ${setupLink}`,
+      }, {
+        headers: { Authorization: `Bearer ${functions.config().resend.key}`, "Content-Type": "application/json" },
+      });
+      await userRef.update({
+        invitation_status: "sent",
+        invitation_sent_at: now,
+        resend_message_id: response.data?.id || null,
+        updated_at: now,
+      });
+    } catch (error) {
+      console.error("Unable to deliver Pulse invitation:", error);
+      await userRef.update({ invitation_status: "failed", updated_at: now });
+      throw new functions.https.HttpsError("internal", "The account was created, but the invitation could not be delivered.");
+    }
+
+    await firestore.collection("AuditLogs").add({
+      actorId: context.auth.uid,
+      actorEmail: caller.email || "",
+      actorName: caller.display_name || "",
+      scopeId: "Pulse",
+      eventName: "pulse_user_invited",
+      parameters: { targetUserId: user.uid, email, role },
+      createdAt: now,
+      clientCreatedAt: admin.firestore.Timestamp.now(),
+    });
+    return { success: true, userId: user.uid };
   });
 
 // ══════════════════════════════════════════════════════════════

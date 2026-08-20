@@ -30,6 +30,7 @@ const RUNTIME_CACHE = `pulse-runtime-${CACHE_VERSION}`;
 const APP_SHELL = [
   `/`,
   `/index.html?v=${CACHE_VERSION}`,
+  `/app.html?v=${CACHE_VERSION}`,
   `/manifest.json?v=${CACHE_VERSION}`,
   `/flutter_bootstrap.js?v=${CACHE_VERSION}`,
   `/favicon.svg`,

@@ -49,8 +49,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
   /// Recalculate replenishment recommendations
   Future<void> _recalculate() async {
     final products = await queryProductMasterRecordOnce();
-    final ownerRef = AccessControl.parentRef(context) ??
-        currentUserReference!;
+    final ownerRef = AccessControl.parentRef(context) ?? currentUserReference!;
     final pharmacies = await queryPharmacyRecordOnce(parent: ownerRef);
 
     for (var pharmacy in pharmacies) {
@@ -79,8 +78,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
 
           double avgWeeklySales = 0.0;
           if (movements.isNotEmpty) {
-            int totalSold =
-                movements.fold(0, (sum, m) => sum + m.quantity);
+            int totalSold = movements.fold(0, (sum, m) => sum + m.quantity);
             avgWeeklySales = totalSold / 4.0;
           }
 
@@ -107,6 +105,235 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     }
   }
 
+  Future<void> _showCreatePoDialog() async {
+    final supplierController = TextEditingController();
+    final referenceController = TextEditingController();
+    final notesController = TextEditingController();
+    DateTime expectedDate = DateTime.now().add(const Duration(days: 7));
+    String? selectedPharmacy;
+    String? validationMessage;
+
+    final pharmacyParent = AccessControl.isDuniyaUser(context)
+        ? null
+        : AccessControl.parentRef(context) ?? currentUserReference;
+    final pharmacies = await queryPharmacyRecordOnce(parent: pharmacyParent);
+    if (!mounted) return;
+    if (!AccessControl.isDuniyaUser(context) && pharmacies.isNotEmpty) {
+      selectedPharmacy = pharmacies.first.name;
+    }
+
+    await showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.56),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => Dialog(
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640, maxHeight: 760),
+            child: Material(
+              color: Colors.white,
+              elevation: 24,
+              shadowColor: Colors.black.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(26),
+              clipBehavior: Clip.antiAlias,
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 24, 18, 20),
+                  child: Row(children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFF1EAFE),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: const Icon(Icons.add_shopping_cart_rounded,
+                          color: Color(0xFF9900FF), size: 27),
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          Text('Create purchase order',
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF111827))),
+                          SizedBox(height: 3),
+                          Text('Start a clean procurement draft for review.',
+                              style: TextStyle(
+                                  fontSize: 13, color: Color(0xFF667085))),
+                        ])),
+                    IconButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        icon: const Icon(Icons.close_rounded),
+                        tooltip: 'Close'),
+                  ]),
+                ),
+                const Divider(height: 1),
+                Flexible(
+                    child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(28),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _poDialogField(
+                            supplierController,
+                            'Supplier',
+                            'e.g. MediSupply Zambia',
+                            Icons.local_shipping_outlined),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          key: ValueKey(selectedPharmacy),
+                          initialValue: selectedPharmacy,
+                          isExpanded: true,
+                          decoration: _poDialogDecoration(
+                              'Deliver to pharmacy', Icons.storefront_outlined),
+                          items: pharmacies
+                              .map((pharmacy) => DropdownMenuItem(
+                                  value: pharmacy.name,
+                                  child: Text(pharmacy.name)))
+                              .toList(),
+                          onChanged: (value) =>
+                              setDialogState(() => selectedPharmacy = value),
+                        ),
+                        const SizedBox(height: 16),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(14),
+                          onTap: () async {
+                            final picked = await showDatePicker(
+                                context: dialogContext,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime.now()
+                                    .add(const Duration(days: 730)),
+                                initialDate: expectedDate);
+                            if (picked != null)
+                              setDialogState(() => expectedDate = picked);
+                          },
+                          child: InputDecorator(
+                            decoration: _poDialogDecoration('Expected delivery',
+                                Icons.calendar_today_outlined),
+                            child: Text(
+                                '${expectedDate.day.toString().padLeft(2, '0')}/${expectedDate.month.toString().padLeft(2, '0')}/${expectedDate.year}'),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _poDialogField(
+                            referenceController,
+                            'Supplier reference (optional)',
+                            'Quote or reference number',
+                            Icons.tag_outlined),
+                        const SizedBox(height: 16),
+                        TextField(
+                            controller: notesController,
+                            minLines: 2,
+                            maxLines: 4,
+                            decoration: _poDialogDecoration(
+                                'Procurement notes (optional)',
+                                Icons.notes_outlined)),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                              color: const Color(0xFFF8F6FF),
+                              borderRadius: BorderRadius.circular(14),
+                              border:
+                                  Border.all(color: const Color(0xFFE7DCFF))),
+                          child: const Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Icons.info_outline_rounded,
+                                    size: 20, color: Color(0xFF7C3AED)),
+                                SizedBox(width: 10),
+                                Expanded(
+                                    child: Text(
+                                        'After creating the draft, add line items and submit it for approval in the Purchase Orders workspace.',
+                                        style: TextStyle(
+                                            fontSize: 12.5,
+                                            height: 1.45,
+                                            color: Color(0xFF5B4B85)))),
+                              ]),
+                        ),
+                        if (validationMessage != null) ...[
+                          const SizedBox(height: 14),
+                          Text(validationMessage!,
+                              style: const TextStyle(
+                                  color: Color(0xFFB42318),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13)),
+                        ],
+                      ]),
+                )),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(28, 16, 28, 20),
+                  decoration: const BoxDecoration(
+                      border: Border(top: BorderSide(color: Color(0xFFEEEAF5))),
+                      color: Color(0xFFFCFBFF)),
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: const Text('Cancel')),
+                    const SizedBox(width: 10),
+                    FilledButton.icon(
+                      onPressed: () {
+                        if (supplierController.text.trim().isEmpty ||
+                            selectedPharmacy == null) {
+                          setDialogState(() => validationMessage =
+                              'Choose a supplier and target pharmacy before continuing.');
+                          return;
+                        }
+                        Navigator.pop(dialogContext);
+                        context.goNamed(PurchaseOrdersWidget.routeName);
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text(
+                                'Purchase order workspace opened. Add line items to complete the draft.'),
+                            behavior: SnackBarBehavior.floating));
+                      },
+                      icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                      label: const Text('Continue to PO'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: const Color(0xFF9900FF),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 14)),
+                    ),
+                  ]),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      ),
+    );
+    supplierController.dispose();
+    referenceController.dispose();
+    notesController.dispose();
+  }
+
+  InputDecoration _poDialogDecoration(String label, IconData icon) =>
+      InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: const Color(0xFF9900FF)),
+        filled: true,
+        fillColor: const Color(0xFFFCFBFF),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE0D7F7))),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFF9900FF), width: 2)),
+      );
+
+  Widget _poDialogField(TextEditingController controller, String label,
+          String hint, IconData icon) =>
+      TextField(
+        controller: controller,
+        decoration: _poDialogDecoration(label, icon).copyWith(hintText: hint),
+      );
+
   @override
   Widget build(BuildContext context) {
     final theme = FlutterFlowTheme.of(context);
@@ -115,19 +342,26 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     // Design tokens — Black + White theme
     final primaryBlue = theme.primary; // Black
     final primaryContainer = theme.primary.withValues(alpha: 0.08);
-    final secondaryAccent = theme.secondary; // Gray 700
     final onSurface = theme.primaryText;
-    final onSurfaceVariant = isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151);
+    final onSurfaceVariant =
+        isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151);
     final outline = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF374151);
     final outlineVariant = theme.lineColor;
-    final surfaceContainerLow = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
-    final surfaceContainerHigh = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
-    final surfaceContainerHighest = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
+    final surfaceContainerLow =
+        isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
+    final surfaceContainerHigh =
+        isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
+    final surfaceContainerHighest =
+        isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
     final cardBg = theme.secondaryBackground; // White cards
-    final surfaceBg = theme.primaryBackground; // White in light, gray-900 in dark
-    final surfaceBright = isDark ? const Color(0xFF1F2937) : const Color(0xFFFFFFFF);
-    final surfaceDim = isDark ? const Color(0xFF111827) : const Color(0xFFF3F4F6);
-    final rowHoverBg = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
+    final surfaceBg =
+        theme.primaryBackground; // White in light, gray-900 in dark
+    final surfaceBright =
+        isDark ? const Color(0xFF1F2937) : const Color(0xFFFFFFFF);
+    final surfaceDim =
+        isDark ? const Color(0xFF111827) : const Color(0xFFF3F4F6);
+    final rowHoverBg =
+        isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
     final headerBg = isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB);
 
     return Title(
@@ -309,16 +543,19 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 borderRadius: BorderRadius.circular(8.0),
                 onTap: () => _recalculate(),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     color: surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
+                    border: Border.all(
+                        color: outlineVariant.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.auto_awesome_outlined, color: onSurface, size: 18.0),
+                      Icon(Icons.auto_awesome_outlined,
+                          color: onSurface, size: 18.0),
                       SizedBox(width: 8.0),
                       Text(
                         'Auto-Generate Orders',
@@ -341,11 +578,10 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
               borderRadius: BorderRadius.circular(8.0),
               child: InkWell(
                 borderRadius: BorderRadius.circular(8.0),
-                onTap: () {
-                  // Create PO action
-                },
+                onTap: _showCreatePoDialog,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     color: primaryBlue,
                     borderRadius: BorderRadius.circular(8.0),
@@ -405,10 +641,15 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
           final records = snapshot.data!;
           pendingOrders = records.length;
           // Estimate value based on suggested qty * average unit cost
-          estValue = records.fold(0.0, (sum, r) => sum + (r.suggestedOrderQty * 50.0));
+          estValue =
+              records.fold(0.0, (sum, r) => sum + (r.suggestedOrderQty * 50.0));
           // Calculate auto-replen health: % of items where current stock > reorder point
-          int healthyItems = records.where((r) => r.currentStock >= r.targetStockLevel * 0.5).length;
-          healthPercent = records.isNotEmpty ? (healthyItems / records.length * 100) : 100.0;
+          int healthyItems = records
+              .where((r) => r.currentStock >= r.targetStockLevel * 0.5)
+              .length;
+          healthPercent = records.isNotEmpty
+              ? (healthyItems / records.length * 100)
+              : 100.0;
           // Used in forecast calculation above
         }
 
@@ -438,22 +679,42 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(child: Text('Pending Orders',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Flexible(
+                            child: Text('Pending Orders',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: onSurfaceVariant,
+                                    letterSpacing: 0.08))),
                         Container(
-                          width: 32.0, height: 32.0,
-                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                          child: Icon(Icons.shopping_cart_outlined, color: primaryBlue, size: 18.0),
+                          width: 32.0,
+                          height: 32.0,
+                          decoration: BoxDecoration(
+                              color: primaryContainer,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.shopping_cart_outlined,
+                              color: primaryBlue, size: 18.0),
                         ),
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('$pendingOrders', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('$pendingOrders',
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.w600,
+                            color: onSurface,
+                            height: 1.2)),
                     SizedBox(height: 4.0),
                     Text('Est. Value: ZMK ${_formatNumber(estValue)}',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            color: onSurfaceVariant)),
                   ],
                 ),
               ),
@@ -468,26 +729,47 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(child: Text('Auto-Replen Health',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Flexible(
+                            child: Text('Auto-Replen Health',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: onSurfaceVariant,
+                                    letterSpacing: 0.08))),
                         Container(
-                          width: 32.0, height: 32.0,
-                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                          child: Icon(Icons.health_and_safety_outlined, color: primaryBlue, size: 18.0),
+                          width: 32.0,
+                          height: 32.0,
+                          decoration: BoxDecoration(
+                              color: primaryContainer,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.health_and_safety_outlined,
+                              color: primaryBlue, size: 18.0),
                         ),
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('${healthPercent.toStringAsFixed(1)}%', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('${healthPercent.toStringAsFixed(1)}%',
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.w600,
+                            color: onSurface,
+                            height: 1.2)),
                     SizedBox(height: 4.0),
                     Row(
                       children: [
                         Icon(Icons.trending_up, color: primaryBlue, size: 14.0),
                         SizedBox(width: 4.0),
-                        Flexible(child: Text('+2.1% from last month',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w500, color: primaryBlue))),
+                        Flexible(
+                            child: Text('+2.1% from last month',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: primaryBlue))),
                       ],
                     ),
                   ],
@@ -504,22 +786,42 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(child: Text('Inventory Coverage',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Flexible(
+                            child: Text('Inventory Coverage',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: onSurfaceVariant,
+                                    letterSpacing: 0.08))),
                         Container(
-                          width: 32.0, height: 32.0,
-                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                          child: Icon(Icons.calendar_month_outlined, color: primaryBlue, size: 18.0),
+                          width: 32.0,
+                          height: 32.0,
+                          decoration: BoxDecoration(
+                              color: primaryContainer,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.calendar_month_outlined,
+                              color: primaryBlue, size: 18.0),
                         ),
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('$coverageDays Days', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('$coverageDays Days',
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.w600,
+                            color: onSurface,
+                            height: 1.2)),
                     SizedBox(height: 4.0),
                     Text('Avg. across essential lines',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            color: onSurfaceVariant)),
                   ],
                 ),
               ),
@@ -534,22 +836,42 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(child: Text('Forecasted Spend',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, fontWeight: FontWeight.w500, color: onSurfaceVariant, letterSpacing: 0.08))),
+                        Flexible(
+                            child: Text('Forecasted Spend',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: onSurfaceVariant,
+                                    letterSpacing: 0.08))),
                         Container(
-                          width: 32.0, height: 32.0,
-                          decoration: BoxDecoration(color: primaryContainer, borderRadius: BorderRadius.circular(8.0)),
-                          child: Icon(Icons.payments_outlined, color: primaryBlue, size: 18.0),
+                          width: 32.0,
+                          height: 32.0,
+                          decoration: BoxDecoration(
+                              color: primaryContainer,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Icon(Icons.payments_outlined,
+                              color: primaryBlue, size: 18.0),
                         ),
                       ],
                     ),
                     SizedBox(height: 12.0),
-                    Text('ZMK ${_formatNumber(forecastedSpend)}', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 28.0, fontWeight: FontWeight.w600, color: onSurface, height: 1.2)),
+                    Text('ZMK ${_formatNumber(forecastedSpend)}',
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.w600,
+                            color: onSurface,
+                            height: 1.2)),
                     SizedBox(height: 4.0),
                     Text('Projected for this month',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            color: onSurfaceVariant)),
                   ],
                 ),
               ),
@@ -670,7 +992,10 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 20.0,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: ClipRRect(
@@ -680,10 +1005,13 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
           children: [
             // Table header bar
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               decoration: BoxDecoration(
                 color: surfaceBright,
-                border: Border(bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.3))),
+                border: Border(
+                    bottom: BorderSide(
+                        color: outlineVariant.withValues(alpha: 0.3))),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -708,9 +1036,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                           borderRadius: BorderRadius.circular(8.0),
                           onTap: () {},
                           child: Container(
-                            width: 32.0, height: 32.0,
+                            width: 32.0,
+                            height: 32.0,
                             alignment: Alignment.center,
-                            child: Icon(Icons.filter_list, color: onSurfaceVariant, size: 20.0),
+                            child: Icon(Icons.filter_list,
+                                color: onSurfaceVariant, size: 20.0),
                           ),
                         ),
                       ),
@@ -721,9 +1051,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                           borderRadius: BorderRadius.circular(8.0),
                           onTap: () {},
                           child: Container(
-                            width: 32.0, height: 32.0,
+                            width: 32.0,
+                            height: 32.0,
                             alignment: Alignment.center,
-                            child: Icon(Icons.more_vert, color: onSurfaceVariant, size: 20.0),
+                            child: Icon(Icons.more_vert,
+                                color: onSurfaceVariant, size: 20.0),
                           ),
                         ),
                       ),
@@ -739,12 +1071,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 if (!snapshot.hasData) {
                   return Container(
                     padding: const EdgeInsets.all(48.0),
-                    child: Center(child: SpinKitRing(color: primaryBlue, size: 40.0)),
+                    child: Center(
+                        child: SpinKitRing(color: primaryBlue, size: 40.0)),
                   );
                 }
 
                 List<ReplenishmentRecord> records = snapshot.data!;
-                records.sort((a, b) => b.suggestedOrderQty.compareTo(a.suggestedOrderQty));
+                records.sort((a, b) =>
+                    b.suggestedOrderQty.compareTo(a.suggestedOrderQty));
 
                 if (records.isEmpty) {
                   return Container(
@@ -752,13 +1086,22 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.shopping_cart_outlined, size: 48.0, color: outlineVariant),
+                        Icon(Icons.shopping_cart_outlined,
+                            size: 48.0, color: outlineVariant),
                         SizedBox(height: 16.0),
                         Text('No replenishment recommendations',
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: onSurfaceVariant)),
+                            style: TextStyle(
+                                fontFamily: kAppFontFamily,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                                color: onSurfaceVariant)),
                         SizedBox(height: 8.0),
                         Text('Click Auto-Generate Orders to calculate',
-                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: outline)),
+                            style: TextStyle(
+                                fontFamily: kAppFontFamily,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400,
+                                color: outline)),
                       ],
                     ),
                   );
@@ -770,7 +1113,8 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     if (!productSnapshot.hasData) {
                       return Container(
                         padding: const EdgeInsets.all(48.0),
-                        child: Center(child: SpinKitRing(color: primaryBlue, size: 40.0)),
+                        child: Center(
+                            child: SpinKitRing(color: primaryBlue, size: 40.0)),
                       );
                     }
 
@@ -785,12 +1129,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                         child: Column(
                           children: [
                             // Table header row
-                            _buildTableHeaderRow(headerBg, onSurfaceVariant, outlineVariant),
+                            _buildTableHeaderRow(
+                                headerBg, onSurfaceVariant, outlineVariant),
                             // Data rows
                             ...records.asMap().entries.map((entry) {
                               final idx = entry.key;
                               final record = entry.value;
-                              final product = productMap[record.productId?.path];
+                              final product =
+                                  productMap[record.productId?.path];
                               return _buildTableRow(
                                 idx,
                                 record,
@@ -820,12 +1166,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
   }
 
   // ===== TABLE HEADER ROW =====
-  Widget _buildTableHeaderRow(Color headerBg, Color onSurfaceVariant, Color outlineVariant) {
+  Widget _buildTableHeaderRow(
+      Color headerBg, Color onSurfaceVariant, Color outlineVariant) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       decoration: BoxDecoration(
         color: headerBg,
-        border: Border(bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.3))),
+        border: Border(
+            bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.3))),
       ),
       child: Row(
         children: [
@@ -842,7 +1190,8 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     );
   }
 
-  Widget _headerCell(String text, int flex, Color color, {bool alignRight = false}) {
+  Widget _headerCell(String text, int flex, Color color,
+      {bool alignRight = false}) {
     return Expanded(
       flex: flex,
       child: Padding(
@@ -888,7 +1237,8 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
         padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
         decoration: BoxDecoration(
           color: isSelected ? rowHoverBg : Colors.transparent,
-          border: Border(bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.2))),
+          border: Border(
+              bottom: BorderSide(color: outlineVariant.withValues(alpha: 0.2))),
         ),
         child: Row(
           children: [
@@ -917,7 +1267,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   sku.isNotEmpty ? sku : 'N/A',
-                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: onSurfaceVariant),
                 ),
               ),
             ),
@@ -929,7 +1283,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Text(
                   '${record.currentStock}',
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w500, color: onSurface),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
+                      color: onSurface),
                 ),
               ),
             ),
@@ -941,7 +1299,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Text(
                   '${record.targetStockLevel}',
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: onSurfaceVariant),
                 ),
               ),
             ),
@@ -953,7 +1315,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Text(
                   '${record.suggestedOrderQty}',
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w600, color: onSurface),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: onSurface),
                 ),
               ),
             ),
@@ -964,7 +1330,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   supplier,
-                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: onSurfaceVariant),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -978,7 +1348,9 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
-                    color: isCritical ? primaryBlue.withValues(alpha: 0.1) : surfaceContainerHigh,
+                    color: isCritical
+                        ? primaryBlue.withValues(alpha: 0.1)
+                        : surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: Text(
@@ -1036,7 +1408,8 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     Color cardBg,
     Color surfaceContainerLow,
   ) {
-    final parentRef = _getParentRef();
+    final parentRef =
+        AccessControl.isDuniyaUser(context) ? null : _getParentRef();
 
     return Container(
       decoration: BoxDecoration(
@@ -1044,7 +1417,10 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 20.0, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 20.0,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Padding(
@@ -1087,66 +1463,71 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
             ),
             SizedBox(height: 16.0),
             // Shipment items
-            parentRef != null
-                ? StreamBuilder<List<GoodsReceivedRecord>>(
-                    stream: queryGoodsReceivedRecord(
-                      parent: parentRef,
-                      queryBuilder: (q) => q.orderBy('CreatedAt', descending: true).limit(5),
+            StreamBuilder<List<GoodsReceivedRecord>>(
+              stream: queryGoodsReceivedRecord(
+                parent: parentRef,
+                queryBuilder: (q) =>
+                    q.orderBy('CreatedAt', descending: true).limit(5),
+              ),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: SpinKitRing(color: primaryBlue, size: 24.0),
                     ),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: SpinKitRing(color: primaryBlue, size: 24.0),
-                          ),
-                        );
-                      }
+                  );
+                }
 
-                      final shipments = snapshot.data!;
+                final shipments = snapshot.data!;
 
-                      if (shipments.isEmpty) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Column(
-                              children: [
-                                Icon(Icons.local_shipping_outlined, size: 32.0, color: outlineVariant),
-                                SizedBox(height: 8.0),
-                                Text('No recent shipments',
-                                    style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: onSurfaceVariant)),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
+                if (shipments.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        children: [
+                          Icon(Icons.local_shipping_outlined,
+                              size: 32.0, color: outlineVariant),
+                          SizedBox(height: 8.0),
+                          Text('No recent shipments',
+                              style: TextStyle(
+                                  fontFamily: kAppFontFamily,
+                                  fontSize: 14.0,
+                                  color: onSurfaceVariant)),
+                        ],
+                      ),
+                    ),
+                  );
+                }
 
-                      return Column(
-                        children: shipments.asMap().entries.map((entry) {
-                          final idx = entry.key;
-                          final shipment = entry.value;
-                          final isLast = idx == shipments.length - 1;
-                          final isArriving = shipment.status == 'Pending' || shipment.status == 'In Transit';
-                          final isDelivered = shipment.status == 'Delivered' || shipment.status == 'Received';
+                return Column(
+                  children: shipments.asMap().entries.map((entry) {
+                    final idx = entry.key;
+                    final shipment = entry.value;
+                    final isLast = idx == shipments.length - 1;
+                    final isArriving = shipment.status == 'Pending' ||
+                        shipment.status == 'In Transit';
+                    final isDelivered = shipment.status == 'Delivered' ||
+                        shipment.status == 'Received';
 
-                          return _buildShipmentTimelineItem(
-                            shipment,
-                            isLast,
-                            isArriving,
-                            isDelivered,
-                            primaryBlue,
-                            onSurface,
-                            onSurfaceVariant,
-                            outline,
-                            outlineVariant,
-                            surfaceContainerHighest,
-                            surfaceContainerLow,
-                          );
-                        }).toList(),
-                      );
-                    },
-                  )
-                : _buildPlaceholderShipments(primaryBlue, onSurface, onSurfaceVariant, outlineVariant, surfaceContainerHighest, surfaceContainerLow),
+                    return _buildShipmentTimelineItem(
+                      shipment,
+                      isLast,
+                      isArriving,
+                      isDelivered,
+                      primaryBlue,
+                      onSurface,
+                      onSurfaceVariant,
+                      outline,
+                      outlineVariant,
+                      surfaceContainerHighest,
+                      surfaceContainerLow,
+                    );
+                  }).toList(),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -1175,8 +1556,14 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     if (isArriving) {
       statusText = 'In Transit';
     } else if (isDelivered) {
-      final daysAgo = DateTime.now().difference(shipment.createdAt ?? DateTime.now()).inDays;
-      statusText = daysAgo == 0 ? 'Delivered Today' : daysAgo == 1 ? 'Delivered Yesterday' : 'Delivered ${daysAgo}d ago';
+      final daysAgo = DateTime.now()
+          .difference(shipment.createdAt ?? DateTime.now())
+          .inDays;
+      statusText = daysAgo == 0
+          ? 'Delivered Today'
+          : daysAgo == 1
+              ? 'Delivered Yesterday'
+              : 'Delivered ${daysAgo}d ago';
     } else {
       statusText = shipment.status.isNotEmpty ? shipment.status : 'Processing';
     }
@@ -1194,12 +1581,19 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   width: 32.0,
                   height: 32.0,
                   decoration: BoxDecoration(
-                    color: isArriving ? surfaceContainerHighest : surfaceContainerLow,
+                    color: isArriving
+                        ? surfaceContainerHighest
+                        : surfaceContainerLow,
                     shape: BoxShape.circle,
-                    border: !isArriving ? Border.all(color: outlineVariant.withValues(alpha: 0.3)) : null,
+                    border: !isArriving
+                        ? Border.all(
+                            color: outlineVariant.withValues(alpha: 0.3))
+                        : null,
                   ),
                   child: Icon(
-                    isArriving ? Icons.local_shipping_outlined : Icons.inventory_2_outlined,
+                    isArriving
+                        ? Icons.local_shipping_outlined
+                        : Icons.inventory_2_outlined,
                     color: isArriving ? primaryBlue : onSurfaceVariant,
                     size: 16.0,
                   ),
@@ -1234,7 +1628,11 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                   SizedBox(height: 2.0),
                   Text(
                     'Shipment • ${shipment.deliveryNoteNumber.isNotEmpty ? shipment.deliveryNoteNumber : "N/A"}',
-                    style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant),
+                    style: TextStyle(
+                        fontFamily: kAppFontFamily,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                        color: onSurfaceVariant),
                   ),
                   SizedBox(height: 4.0),
                   Text(
@@ -1242,7 +1640,8 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
                     style: TextStyle(
                       fontFamily: kAppFontFamily,
                       fontSize: 12.0,
-                      fontWeight: isArriving ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight:
+                          isArriving ? FontWeight.w700 : FontWeight.w500,
                       color: isArriving ? primaryBlue : onSurfaceVariant,
                       letterSpacing: 0.08,
                     ),
@@ -1256,104 +1655,19 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     );
   }
 
-  // ===== PLACEHOLDER SHIPMENTS (when no parent ref) =====
-  Widget _buildPlaceholderShipments(
-    Color primaryBlue,
-    Color onSurface,
-    Color onSurfaceVariant,
-    Color outlineVariant,
-    Color surfaceContainerHighest,
-    Color surfaceContainerLow,
-  ) {
-    return Column(
-      children: [
-        _buildPlaceholderItem('PO-2023-8902', 'PharmaCore Dist. • 14 items', 'Arriving Today', true, false,
-            primaryBlue, onSurface, onSurfaceVariant, outlineVariant, surfaceContainerHighest, surfaceContainerLow),
-        SizedBox(height: 16.0),
-        _buildPlaceholderItem('PO-2023-8895', 'MediSupply Co. • 8 items', 'Delivered Yesterday', false, false,
-            primaryBlue, onSurface, onSurfaceVariant, outlineVariant, surfaceContainerHighest, surfaceContainerLow),
-        SizedBox(height: 16.0),
-        _buildPlaceholderItem('PO-2023-8880', 'GenericMeds Inc. • 42 items', 'Delivered Oct 24', false, true,
-            primaryBlue, onSurface, onSurfaceVariant, outlineVariant, surfaceContainerHighest, surfaceContainerLow),
-      ],
-    );
-  }
-
-  Widget _buildPlaceholderItem(
-    String poNumber,
-    String description,
-    String statusText,
-    bool isArriving,
-    bool isLast,
-    Color primaryBlue,
-    Color onSurface,
-    Color onSurfaceVariant,
-    Color outlineVariant,
-    Color surfaceContainerHighest,
-    Color surfaceContainerLow,
-  ) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 32.0,
-            child: Column(
-              children: [
-                Container(
-                  width: 32.0, height: 32.0,
-                  decoration: BoxDecoration(
-                    color: isArriving ? surfaceContainerHighest : surfaceContainerLow,
-                    shape: BoxShape.circle,
-                    border: !isArriving ? Border.all(color: outlineVariant.withValues(alpha: 0.3)) : null,
-                  ),
-                  child: Icon(
-                    isArriving ? Icons.local_shipping_outlined : Icons.inventory_2_outlined,
-                    color: isArriving ? primaryBlue : onSurfaceVariant,
-                    size: 16.0,
-                  ),
-                ),
-                if (!isLast)
-                  Expanded(child: Container(width: 1.0, color: outlineVariant.withValues(alpha: 0.3))),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 16.0, left: 12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(poNumber, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w500, color: onSurface, letterSpacing: -0.01)),
-                  SizedBox(height: 2.0),
-                  Text(description, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w400, color: onSurfaceVariant)),
-                  SizedBox(height: 4.0),
-                  Text(statusText,
-                      style: TextStyle(
-                        fontFamily: kAppFontFamily,
-                        fontSize: 12.0,
-                        fontWeight: isArriving ? FontWeight.w700 : FontWeight.w500,
-                        color: isArriving ? primaryBlue : onSurfaceVariant,
-                        letterSpacing: 0.08,
-                      )),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ===== CARD =====
-  Widget _buildGlassCard({required Widget child, required Color cardBg, required Color outlineVariant}) {
+  Widget _buildGlassCard(
+      {required Widget child,
+      required Color cardBg,
+      required Color outlineVariant}) {
     return Card(
       elevation: 2.0,
       color: cardBg,
       shadowColor: Colors.black.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        side: BorderSide(color: outlineVariant.withValues(alpha: 0.5), width: 0.5),
+        side: BorderSide(
+            color: outlineVariant.withValues(alpha: 0.5), width: 0.5),
       ),
       margin: EdgeInsets.zero,
       child: Padding(

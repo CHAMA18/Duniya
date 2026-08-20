@@ -27,9 +27,17 @@ class RegisterUniModel extends FlutterFlowModel<RegisterUniWidget> {
   late bool passwordVisibility;
   String? Function(BuildContext, String?)? passwordTextControllerValidator;
 
+  // State field(s) for confirmPassword widget.
+  FocusNode? confirmPasswordFocusNode;
+  TextEditingController? confirmPasswordTextController;
+  late bool confirmPasswordVisibility;
+  String? Function(BuildContext, String?)?
+      confirmPasswordTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     passwordVisibility = false;
+    confirmPasswordVisibility = false;
   }
 
   @override
@@ -45,5 +53,8 @@ class RegisterUniModel extends FlutterFlowModel<RegisterUniWidget> {
 
     passwordFocusNode?.dispose();
     passwordTextController?.dispose();
+
+    confirmPasswordFocusNode?.dispose();
+    confirmPasswordTextController?.dispose();
   }
 }
