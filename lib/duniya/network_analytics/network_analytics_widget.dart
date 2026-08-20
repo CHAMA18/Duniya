@@ -1,9 +1,7 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -16,7 +14,7 @@ export 'network_analytics_model.dart';
 /// ═══════════════════════════════════════════════════════════════
 ///   DUNIYA — NETWORK ANALYTICS
 ///
-///   Aggregate KPIs across every active pharmacy on the Duniya
+///   Aggregate KPIs across every active pharmacy on the Pulse
 ///   network: total pharmacies, total stock value, products
 ///   tracked, stock movements this month, low stock alerts, and
 ///   average days of stock remaining. Below the KPI grid, a list
@@ -203,7 +201,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
   @override
   Widget build(BuildContext context) {
     return Title(
-      title: 'Network Analytics — Duniya',
+      title: 'Network Analytics — Pulse',
       color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
       child: GestureDetector(
         onTap: () {
@@ -327,7 +325,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
               Icon(Icons.chevron_right,
                   color: Colors.white.withAlpha(120), size: 14),
               Text(
-                'Duniya Network',
+                'Pulse Network',
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
@@ -384,7 +382,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      'Real-time aggregate KPIs across every active pharmacy on the Duniya network — stock value, products tracked, movements, and low-stock alerts.',
+                      'Real-time aggregate KPIs across every active pharmacy on the Pulse network — stock value, products tracked, movements, and low-stock alerts.',
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
@@ -539,8 +537,8 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
               title: 'Active Pharmacies',
               value: '${stats.activePharmacies}',
               subtitle: stats.activePharmacies == 1
-                  ? 'pharmacy live on Duniya'
-                  : 'pharmacies live on Duniya',
+                  ? 'pharmacy live on Pulse'
+                  : 'pharmacies live on Pulse',
               icon: Icons.storefront_rounded,
               color: FlutterFlowTheme.of(context).primary,
               bgColor: FlutterFlowTheme.of(context).primary.withAlpha(20),
@@ -1036,7 +1034,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
           ),
           const SizedBox(height: 8.0),
           Text(
-            'Once pharmacies are approved on the Duniya network, their aggregate KPIs will be computed and shown here in real-time.',
+            'Once pharmacies are approved on the Pulse network, their aggregate KPIs will be computed and shown here in real-time.',
             textAlign: TextAlign.center,
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,

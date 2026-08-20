@@ -849,7 +849,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
               border: Border.all(color: theme.alternate, width: 1.0),
             ),
             child: DropdownButtonFormField<String>(
-              value: _sortColumn,
+              initialValue: _sortColumn,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.sort_rounded,
                     color: theme.secondaryText, size: 18.0),
@@ -1097,7 +1097,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             child: SingleChildScrollView(
               child: DataTable(
                 headingRowColor:
-                    MaterialStateProperty.all(theme.secondaryBackground),
+                    WidgetStateProperty.all(theme.secondaryBackground),
                 dataRowMinHeight: 56.0,
                 dataRowMaxHeight: 72.0,
                 dividerThickness: 1.0,
@@ -1172,8 +1172,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                       _stockHealthPercent(row.balance.closingStock, row.product.reorderLevel);
 
                   return DataRow(
-                    color: MaterialStateProperty.resolveWith<Color?>(
-                        (states) => states.contains(MaterialState.hovered)
+                    color: WidgetStateProperty.resolveWith<Color?>(
+                        (states) => states.contains(WidgetState.hovered)
                             ? theme.primaryBackground
                             : null),
                     cells: [

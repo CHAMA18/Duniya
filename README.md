@@ -12,7 +12,7 @@ FlutterFlow projects are built to run on the Flutter _stable_ release.
 
 **NEVER rebuild from source and deploy without verifying the purple theme is preserved.**
 
-The deployed app uses a `#9900FF` purple theme (Duniya brand). This theme was originally applied via surgical JS edits to the compiled `main.dart.js`. The source code has now been updated to include the purple theme (see `flutter_flow_theme.dart` and `main.dart`), but:
+The deployed app uses a `#9900FF` purple theme (Pulse brand). This theme was originally applied via surgical JS edits to the compiled `main.dart.js`. The source code has now been updated to include the purple theme (see `flutter_flow_theme.dart` and `main.dart`), but:
 
 1. The **live deployed build** at `medi-tracker-deploy/public/main.dart.js` is the source of truth
 2. Any new build from source MUST be verified to include the purple theme before deployment
@@ -32,7 +32,7 @@ If you must rebuild:
 
 ### Current setup: Static Site (no instance-hour limit)
 
-`render.yaml` deploys Duniya as a **Render Static Site** (`runtime: static`). This is the correct service type for a Flutter web app, which produces only static HTML/JS/CSS.
+`render.yaml` deploys Pulse as a **Render Static Site** (`runtime: static`). This is the correct service type for a Flutter web app, which produces only static HTML/JS/CSS.
 
 Why not the previous Docker web service:
 - Render free **web services** get 750 instance-hours/month — a 24/7 service consumes ~720 of those just staying alive, leaving almost no headroom for rebuilds. Partway through the month deploys would fail with "pipeline exhausted".

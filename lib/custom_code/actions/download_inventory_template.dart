@@ -152,7 +152,7 @@ Future<void> downloadInventoryTemplate() async {
 
   await save(
     bytes: Uint8List.fromList(bytes),
-    fileName: 'Duniya_Inventory_Template.xlsx',
+    fileName: 'Pulse_Inventory_Template.xlsx',
     mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   );
 }

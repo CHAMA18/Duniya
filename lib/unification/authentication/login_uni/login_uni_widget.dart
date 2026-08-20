@@ -1,12 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/auth/firebase_auth/google_auth.dart' as google_auth;
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
+import '/components/pulse_logo_widget.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
 import 'login_uni_model.dart';
@@ -34,11 +35,10 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
   static const Color _line = Color(0xFFD8DCE2);
 
   Widget _buildBrandLogo({double size = 44.0}) {
-    return Image.asset(
-      'assets/images/duniya_logo.png',
-      width: size,
-      height: size,
-      fit: BoxFit.contain,
+    return PulseLogoWidget(
+      size: size,
+      showWordmark: true,
+      color: _primary,
     );
   }
 
@@ -179,7 +179,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
   @override
   Widget build(BuildContext context) {
     return Title(
-      title: 'Duniya',
+      title: 'Pulse',
       color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
       child: GestureDetector(
         onTap: () {
@@ -244,7 +244,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                           children: [
                             Expanded(
                               child: _buildModeTab(
-                                label: 'Duniya',
+                                label: 'Pulse',
                                 icon: Icons.person_outline_rounded,
                                 selected: _selectedMode == 0,
                                 onTap: () =>
@@ -468,75 +468,12 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                 'LOGIN_UNI_PAGE_SIGN_IN_BTN_ON_TAP');
                             var _shouldSetState = false;
 
-                            logFirebaseEvent('Button_firestore_query');
-                            _model.tuk = await queryStaffRecordOnce(
-                              queryBuilder: (staffRecord) => staffRecord.where(
-                                'Email',
-                                isEqualTo:
-                                    _model.emailAddressTextController.text,
-                              ),
-                              singleRecord: true,
-                            ).then((s) => s.firstOrNull);
-                            _shouldSetState = true;
-                            logFirebaseEvent('Button_firestore_query');
-                            _model.staff = await queryStaffRecordCount(
-                              queryBuilder: (staffRecord) => staffRecord.where(
-                                'Email',
-                                isEqualTo:
-                                    _model.emailAddressTextController.text,
-                              ),
-                            );
-                            _shouldSetState = true;
-                            if (_model.staff == 0) {
+                            // Staff records are a legacy Pharmacy-only login
+                            // path. Pulse users authenticate through Firebase
+                            // directly and must not be queried before auth.
+                            if (_selectedMode == 1) {
                               logFirebaseEvent('Button_firestore_query');
-                              _model.usercheak = await queryUserRecordCount(
-                                queryBuilder: (userRecord) => userRecord
-                                    .where(
-                                      'email',
-                                      isEqualTo: _model
-                                          .emailAddressTextController.text,
-                                    )
-                                    .where(
-                                      'role',
-                                      isEqualTo: 'Owner',
-                                    ),
-                              );
-                              _shouldSetState = true;
-                              if (_model.usercheak.toString() == '0') {
-                                logFirebaseEvent('Button_alert_dialog');
-                                await showDialog(
-                                  context: context,
-                                  builder: (alertDialogContext) {
-                                    return WebViewAware(
-                                      child: AlertDialog(
-                                        title: Text('Error '),
-                                        content: Text('Try Again'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                alertDialogContext),
-                                            child: Text('Ok'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                                if (_shouldSetState) safeSetState(() {});
-                                return;
-                              }
-                            } else {
-                              logFirebaseEvent('Button_firestore_query');
-                              _model.user = await queryUserRecordCount(
-                                queryBuilder: (userRecord) => userRecord.where(
-                                  'email',
-                                  isEqualTo:
-                                      _model.emailAddressTextController.text,
-                                ),
-                              );
-                              _shouldSetState = true;
-                              logFirebaseEvent('Button_firestore_query');
-                              _model.pcheck = await queryStaffRecordOnce(
+                              _model.tuk = await queryStaffRecordOnce(
                                 queryBuilder: (staffRecord) =>
                                     staffRecord.where(
                                   'Email',
@@ -546,28 +483,40 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                 singleRecord: true,
                               ).then((s) => s.firstOrNull);
                               _shouldSetState = true;
-                              if (_model.user == 0) {
-                                if (_model.passwordTextController.text ==
-                                    _model.pcheck?.password) {
-                                  logFirebaseEvent('Button_navigate_to');
-                                  context.pushNamedAuth(
-                                    StaffRegisterWidget.routeName,
-                                    context.mounted,
-                                    queryParameters: {
-                                      'staffId': serializeParam(
-                                        _model.tuk?.reference,
-                                        ParamType.DocumentReference,
+                              logFirebaseEvent('Button_firestore_query');
+                              _model.staff = await queryStaffRecordCount(
+                                queryBuilder: (staffRecord) =>
+                                    staffRecord.where(
+                                  'Email',
+                                  isEqualTo:
+                                      _model.emailAddressTextController.text,
+                                ),
+                              );
+                              _shouldSetState = true;
+                              if (_model.staff == 0) {
+                                logFirebaseEvent('Button_firestore_query');
+                                _model.usercheak = await queryUserRecordCount(
+                                  queryBuilder: (userRecord) => userRecord
+                                      .where(
+                                        'email',
+                                        isEqualTo: _model
+                                            .emailAddressTextController.text,
+                                      )
+                                      .where(
+                                        'role',
+                                        isEqualTo: AppRole.owner.firestoreValue,
                                       ),
-                                    }.withoutNulls,
-                                  );
-                                } else {
+                                );
+                                _shouldSetState = true;
+                                if (_model.usercheak.toString() == '0') {
                                   logFirebaseEvent('Button_alert_dialog');
                                   await showDialog(
                                     context: context,
                                     builder: (alertDialogContext) {
                                       return WebViewAware(
                                         child: AlertDialog(
-                                          title: Text('Wrong Password'),
+                                          title: Text('Error '),
+                                          content: Text('Try Again'),
                                           actions: [
                                             TextButton(
                                               onPressed: () => Navigator.pop(
@@ -579,44 +528,103 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                       );
                                     },
                                   );
+                                  if (_shouldSetState) safeSetState(() {});
+                                  return;
                                 }
                               } else {
-                                if (_model.passwordTextController.text ==
-                                    _model.pcheck?.password) {
-                                  logFirebaseEvent('Button_navigate_to');
-                                  context.pushNamedAuth(
-                                    StaffLoginWidget.routeName,
-                                    context.mounted,
-                                    queryParameters: {
-                                      'staffId': serializeParam(
-                                        _model.tuk?.reference,
-                                        ParamType.DocumentReference,
-                                      ),
-                                    }.withoutNulls,
-                                  );
-                                } else {
-                                  logFirebaseEvent('Button_alert_dialog');
-                                  await showDialog(
-                                    context: context,
-                                    builder: (alertDialogContext) {
-                                      return WebViewAware(
-                                        child: AlertDialog(
-                                          title: Text('Wrong Password'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  alertDialogContext),
-                                              child: Text('Ok'),
-                                            ),
-                                          ],
+                                logFirebaseEvent('Button_firestore_query');
+                                _model.user = await queryUserRecordCount(
+                                  queryBuilder: (userRecord) =>
+                                      userRecord.where(
+                                    'email',
+                                    isEqualTo:
+                                        _model.emailAddressTextController.text,
+                                  ),
+                                );
+                                _shouldSetState = true;
+                                logFirebaseEvent('Button_firestore_query');
+                                _model.pcheck = await queryStaffRecordOnce(
+                                  queryBuilder: (staffRecord) =>
+                                      staffRecord.where(
+                                    'Email',
+                                    isEqualTo:
+                                        _model.emailAddressTextController.text,
+                                  ),
+                                  singleRecord: true,
+                                ).then((s) => s.firstOrNull);
+                                _shouldSetState = true;
+                                if (_model.user == 0) {
+                                  if (_model.passwordTextController.text ==
+                                      _model.pcheck?.password) {
+                                    logFirebaseEvent('Button_navigate_to');
+                                    context.pushNamedAuth(
+                                      StaffRegisterWidget.routeName,
+                                      context.mounted,
+                                      queryParameters: {
+                                        'staffId': serializeParam(
+                                          _model.tuk?.reference,
+                                          ParamType.DocumentReference,
                                         ),
-                                      );
-                                    },
-                                  );
+                                      }.withoutNulls,
+                                    );
+                                  } else {
+                                    logFirebaseEvent('Button_alert_dialog');
+                                    await showDialog(
+                                      context: context,
+                                      builder: (alertDialogContext) {
+                                        return WebViewAware(
+                                          child: AlertDialog(
+                                            title: Text('Wrong Password'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext),
+                                                child: Text('Ok'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                } else {
+                                  if (_model.passwordTextController.text ==
+                                      _model.pcheck?.password) {
+                                    logFirebaseEvent('Button_navigate_to');
+                                    context.pushNamedAuth(
+                                      StaffLoginWidget.routeName,
+                                      context.mounted,
+                                      queryParameters: {
+                                        'staffId': serializeParam(
+                                          _model.tuk?.reference,
+                                          ParamType.DocumentReference,
+                                        ),
+                                      }.withoutNulls,
+                                    );
+                                  } else {
+                                    logFirebaseEvent('Button_alert_dialog');
+                                    await showDialog(
+                                      context: context,
+                                      builder: (alertDialogContext) {
+                                        return WebViewAware(
+                                          child: AlertDialog(
+                                            title: Text('Wrong Password'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    alertDialogContext),
+                                                child: Text('Ok'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
                                 }
+                                if (_shouldSetState) safeSetState(() {});
+                                return;
                               }
-                              if (_shouldSetState) safeSetState(() {});
-                              return;
                             }
 
                             logFirebaseEvent('Button_auth');
@@ -655,13 +663,18 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                 UserRecord.collection.doc(user.uid),
                               );
                               final selectedAccountType =
-                                  _selectedMode == 0 ? 'Duniya' : 'Pharmacy';
-                              final storedAccountType =
-                                  userDoc.accountType.isNotEmpty
-                                      ? userDoc.accountType
-                                      : 'Duniya'; // default for legacy users
+                                  _selectedMode == 0 ? 'Pulse' : 'Pharmacy';
+                              final storedAccountType = userDoc.accountType
+                                      .trim()
+                                      .isNotEmpty
+                                  ? userDoc.accountType.trim()
+                                  : (AppRole.fromFirestoreValue(userDoc.role)
+                                          .isDuniyaRole
+                                      ? 'Pulse'
+                                      : 'Pharmacy');
 
-                              if (storedAccountType != selectedAccountType) {
+                              if (storedAccountType.toLowerCase() !=
+                                  selectedAccountType.toLowerCase()) {
                                 // Wrong account type — sign out and inform user
                                 await authManager.signOut();
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -699,7 +712,11 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
 
                             logFirebaseEvent('Button_navigate_to');
                             context.goNamedAuth(
-                                WelcomeWidget.routeName, context.mounted);
+                              _selectedMode == 0
+                                  ? DuniyaPharmaciesWidget.routeName
+                                  : WelcomeWidget.routeName,
+                              context.mounted,
+                            );
                             if (_shouldSetState) safeSetState(() {});
                           },
                           text: 'Sign In',
@@ -738,7 +755,8 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Text(
                               'OR',
                               style: TextStyle(
@@ -786,18 +804,20 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                     await UserRecord.collection
                                         .doc(user.uid)
                                         .set(createUserRecordData(
-                                      email: user.email,
-                                      displayName: user.displayName,
-                                      photoUrl: user.photoURL,
-                                      uid: user.uid,
-                                      createdTime: getCurrentTimestamp,
-                                      role: _selectedMode == 0
-                                          ? 'admin'
-                                          : 'Owner',
-                                      accountType: _selectedMode == 0
-                                          ? 'Duniya'
-                                          : 'Pharmacy',
-                                    ));
+                                          email: user.email,
+                                          displayName: user.displayName,
+                                          photoUrl: user.photoURL,
+                                          uid: user.uid,
+                                          createdTime: getCurrentTimestamp,
+                                          role: _selectedMode == 0
+                                              ? AppRole
+                                                  .duniyaAdmin.firestoreValue
+                                              : AppRole.owner.firestoreValue,
+                                          accountType: _selectedMode == 0
+                                              ? AppRole
+                                                  .duniyaAdmin.accountTypeValue
+                                              : AppRole.owner.accountTypeValue,
+                                        ));
                                   } else {
                                     // ═══════════════════════════════════════
                                     //   ACCOUNT TYPE VALIDATION (Google)
@@ -808,12 +828,12 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                     // ═══════════════════════════════════════
                                     final selectedAccountType =
                                         _selectedMode == 0
-                                            ? 'Duniya'
+                                            ? 'Pulse'
                                             : 'Pharmacy';
-                                    final storedAccountType = userDoc
-                                            .accountType.isNotEmpty
-                                        ? userDoc.accountType
-                                        : 'Duniya';
+                                    final storedAccountType =
+                                        userDoc.accountType.isNotEmpty
+                                            ? userDoc.accountType
+                                            : 'Pulse';
 
                                     if (storedAccountType !=
                                         selectedAccountType) {
@@ -825,8 +845,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                             content: Row(
                                               children: [
                                                 const Icon(
-                                                    Icons
-                                                        .error_outline_rounded,
+                                                    Icons.error_outline_rounded,
                                                     color: Colors.white,
                                                     size: 18.0),
                                                 const SizedBox(width: 8.0),
@@ -840,8 +859,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                             ),
                                             backgroundColor:
                                                 const Color(0xFFEF4444),
-                                            behavior:
-                                                SnackBarBehavior.floating,
+                                            behavior: SnackBarBehavior.floating,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
@@ -857,8 +875,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                   }
 
                                   if (context.mounted) {
-                                    context.goNamedAuth(
-                                        WelcomeWidget.routeName,
+                                    context.goNamedAuth(WelcomeWidget.routeName,
                                         context.mounted);
                                   }
                                 }
@@ -866,8 +883,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content:
-                                      Text('Google sign in failed: $e'),
+                                  content: Text('Google sign in failed: $e'),
                                 ),
                               );
                             }
@@ -903,37 +919,6 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                         ),
                       ),
 
-                      const SizedBox(height: 18.0),
-                      if (kDebugMode)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 14.0),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12.0),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF5F3FF),
-                              borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(
-                                color: const Color(0xFFE9D5FF),
-                              ),
-                            ),
-                            child: Text(
-                              'Use your real pharmacy credentials to continue.',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodySmall
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .bodySmallFamily,
-                                    color: const Color(0xFF6D28D9),
-                                    fontWeight: FontWeight.w600,
-                                    useGoogleFonts:
-                                        !FlutterFlowTheme.of(context)
-                                            .bodySmallIsCustom,
-                                  ),
-                            ),
-                          ),
-                        ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

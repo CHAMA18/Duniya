@@ -1271,21 +1271,18 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                               SaleitemRecord>(
                                                         pagingController: _model
                                                             .setListViewController1(
-                                                                SaleitemRecord.collection(AccessControl.parentRef(context) ?? currentUserReference)
+                                                                SaleitemRecord.collection(
+                                                                        AccessControl.parentRef(context) ??
+                                                                            currentUserReference)
                                                                     .where(
                                                                   'StockID',
                                                                   isEqualTo:
                                                                       widget
                                                                           .stock,
                                                                 ),
-                                                                parent: valueOrDefault(
-                                                                            currentUserDocument
-                                                                                ?.role,
-                                                                            '') ==
-                                                                        'Owner'
-                                                                    ? currentUserReference
-                                                                    : currentUserDocument
-                                                                        ?.ownerRef),
+                                                                parent: AccessControl
+                                                                    .parentRef(
+                                                                        context)),
                                                         padding:
                                                             EdgeInsets.zero,
                                                         shrinkWrap: true,
@@ -1660,32 +1657,14 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                               DamagedStockRecord>>(
                                                     stream:
                                                         queryDamagedStockRecord(
-                                                      parent: () {
-                                                        if (valueOrDefault(
-                                                                currentUserDocument
-                                                                    ?.role,
-                                                                '') ==
-                                                            'Owner') {
-                                                          return currentUserReference;
-                                                        } else if (valueOrDefault(
-                                                                currentUserDocument
-                                                                    ?.role,
-                                                                '') !=
-                                                            'Owner') {
-                                                          return currentUserDocument
-                                                              ?.ownerRef;
-                                                        } else {
-                                                          return currentUserDocument
-                                                              ?.ownerRef;
-                                                        }
-                                                      }(),
+                                                      parent: AccessControl
+                                                          .parentRef(context),
                                                       queryBuilder:
                                                           (damagedStockRecord) =>
                                                               damagedStockRecord
                                                                   .where(
                                                         'StockId',
-                                                        isEqualTo:
-                                                            widget.stock,
+                                                        isEqualTo: widget.stock,
                                                       ),
                                                     ),
                                                     builder:

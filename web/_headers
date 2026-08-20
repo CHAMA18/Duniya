@@ -1,5 +1,5 @@
 # =====================================================================
-# Duniya — Cache-busting headers for Render static site
+# Pulse — Cache-busting headers for Render static site
 # =====================================================================
 # Render serves this file like Netlify: path patterns on the left,
 # headers on the right.

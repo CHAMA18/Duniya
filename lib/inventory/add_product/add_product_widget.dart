@@ -450,7 +450,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                   String>(
                                                             key: const ValueKey(
                                                                 'addProduct_category_dropdown'),
-                                                            value: _model
+                                                            initialValue: _model
                                                                 .categoryValue,
                                                             items: [
                                                               'Medicine',
@@ -632,14 +632,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                         PharmacyRecord>>(
                                                               stream:
                                                                   queryPharmacyRecord(
-                                                                parent: valueOrDefault(
-                                                                            currentUserDocument
-                                                                                ?.role,
-                                                                            '') ==
-                                                                        'Owner'
-                                                                    ? currentUserReference
-                                                                    : currentUserDocument
-                                                                        ?.ownerRef,
+                                                                parent: AccessControl.parentRef(context),
                                                               ),
                                                               builder: (context,
                                                                   snapshot) {
@@ -779,11 +772,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                           4.0),
                                                                   hidesUnderline:
                                                                       true,
-                                                                  disabled: valueOrDefault(
-                                                                          currentUserDocument
-                                                                              ?.role,
-                                                                          '') !=
-                                                                      'Owner',
+                                                                  disabled: !AccessControl.isOwner(context),
                                                                   isSearchable:
                                                                       false,
                                                                   isMultiSelect:

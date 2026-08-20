@@ -107,10 +107,4 @@ class FFAppState extends ChangeNotifier {
   set SelectedPharmacy(String value) {
     _SelectedPharmacy = value;
   }
-
-  String _SelectedOutlet = '';
-  String get SelectedOutlet => _SelectedOutlet;
-  set SelectedOutlet(String value) {
-    _SelectedOutlet = value;
-  }
 }

@@ -9,7 +9,6 @@ import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'low_stock_alerts_model.dart';
@@ -1394,7 +1393,7 @@ class _LowStockAlertsWidgetState extends State<LowStockAlertsWidget> {
                         ),
                         const SizedBox(height: 2.0),
                         Text(
-                          'Duniya is monitoring your inventory 24/7 and will alert you the moment any product drops below its reorder level.',
+                          'Pulse is monitoring your inventory 24/7 and will alert you the moment any product drops below its reorder level.',
                           style: theme.bodySmall.override(
                             fontFamily: theme.bodySmallFamily,
                             color: const Color(0xFF047857),

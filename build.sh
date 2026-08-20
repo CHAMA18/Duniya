@@ -26,7 +26,7 @@ set -euo pipefail
 FLUTTER_VERSION="3.38.2"  # Pinned — matches package requirements (font_awesome_flutter 11.0.0 needs Dart >=3.9)
 FLUTTER_CHANNEL="${FLUTTER_CHANNEL:-stable}"
 
-echo "==> Building Duniya web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
+echo "==> Building Pulse web app with Flutter ${FLUTTER_VERSION} (${FLUTTER_CHANNEL})"
 
 # ---------------------------------------------------------------------
 # 1. Install Flutter SDK
@@ -179,7 +179,7 @@ fi
 # ---------------------------------------------------------------------
 # 7. Copy the landing page to build output.
 #    The landing page is a standalone HTML file that serves as the
-#    marketing/download page for Duniya. Copy the version-injected copy
+#    marketing/download page for Pulse. Copy the version-injected copy
 #    (build/web/index.html) so /landing.html matches the root page.
 # ---------------------------------------------------------------------
 if [[ -f "build/web/index.html" ]]; then
@@ -194,7 +194,7 @@ if [[ -d "web/fonts" ]]; then
   echo "==> Copied web/fonts/ -> build/web/fonts/ (landing page fonts)"
 fi
 
-# Copy multi-size favicon files (generated from the real Duniya logo)
+# Copy multi-size favicon files (generated from the real Pulse logo)
 for favfile in favicon-16x16.png favicon-32x32.png apple-touch-icon.png; do
   if [[ -f "web/${favfile}" ]]; then
     cp "web/${favfile}" "build/web/${favfile}"

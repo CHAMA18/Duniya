@@ -172,7 +172,7 @@ class _HrTableWidgetState extends State<HrTableWidget> {
                     Expanded(
                       flex: 1,
                       child: Text(
-                        'ASSIGNED OUTLET',
+                        'ASSIGNED PHARMACY',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodyMediumFamily,

@@ -40,6 +40,89 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  static const List<AppRole> _pharmacyRoleOptions = [
+    AppRole.cashier,
+    AppRole.salesAssistant,
+    AppRole.pharmacyTechnician,
+    AppRole.pharmacist,
+    AppRole.outletManager,
+    AppRole.owner,
+  ];
+
+  DocumentReference? _initializedStaffRef;
+  String? _selectedRole;
+  int _roleFieldRevision = 0;
+
+  String _roleLabel(String role) {
+    final parsedRole = AppRole.fromFirestoreValue(role);
+    return parsedRole == AppRole.unknown ? role.trim() : parsedRole.displayName;
+  }
+
+  List<String> _availableRoleLabels(String currentRole) {
+    final options = _pharmacyRoleOptions
+        .where(
+            (role) => AccessControl.isOwner(context) || role != AppRole.owner)
+        .map((role) => role.displayName)
+        .toList();
+    final currentLabel = _roleLabel(currentRole);
+    if (currentLabel.isNotEmpty && !options.contains(currentLabel)) {
+      options.insert(0, currentLabel);
+    }
+    return options;
+  }
+
+  void _initializeRole(StaffRecord record) {
+    if (_initializedStaffRef == record.reference) return;
+
+    _initializedStaffRef = record.reference;
+    final roleLabel = _roleLabel(record.role);
+    _selectedRole = roleLabel.isEmpty ? null : roleLabel;
+    _model.roleTextController ??= TextEditingController(text: _selectedRole);
+  }
+
+  Future<void> _handleRoleSelection(String nextRole) async {
+    final previousRole = _selectedRole ?? '';
+    if (nextRole == previousRole) return;
+
+    final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => WebViewAware(
+            child: AlertDialog(
+              icon: Icon(
+                Icons.admin_panel_settings_outlined,
+                color: FlutterFlowTheme.of(context).primary,
+                size: 32.0,
+              ),
+              title: const Text('Change staff role?'),
+              content: Text(
+                'Change this staff member from $previousRole to $nextRole? '
+                'Their permissions will update when you save.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: const Text('Keep current role'),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(dialogContext, true),
+                  child: const Text('Change role'),
+                ),
+              ],
+            ),
+          ),
+        ) ??
+        false;
+
+    if (!mounted) return;
+    safeSetState(() {
+      _roleFieldRevision++;
+      if (confirmed) {
+        _selectedRole = nextRole;
+        _model.roleTextController?.text = nextRole;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -104,6 +187,7 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
         }
 
         final viewUserStaffRecord = snapshot.data!;
+        _initializeRole(viewUserStaffRecord);
 
         return Title(
             title: 'ViewUser',
@@ -195,9 +279,6 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                 ),
                               );
                             }
-                            final mainContentColumnWrapperDrugsResponse =
-                                snapshot.data!;
-
                             return Column(
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,20 +307,30 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Container(
+                                            margin: const EdgeInsetsDirectional
+                                                .fromSTEB(0.0, 24.0, 0.0, 24.0),
                                             decoration: BoxDecoration(
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryBackground,
                                               borderRadius:
-                                                  BorderRadius.circular(8.0),
+                                                  BorderRadius.circular(24.0),
                                               border: Border.all(
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .alternate,
                                               ),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color(0x120F172A),
+                                                  blurRadius: 28.0,
+                                                  offset: Offset(0.0, 12.0),
+                                                ),
+                                              ],
                                             ),
                                             child: Padding(
-                                              padding: EdgeInsets.all(20.0),
+                                              padding:
+                                                  const EdgeInsets.all(28.0),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 crossAxisAlignment:
@@ -250,26 +341,86 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                     phone: false,
                                                     tablet: false,
                                                   ))
-                                                    Text(
-                                                      FFLocalizations.of(
-                                                              context)
-                                                          .getText(
-                                                        '7z7afd13' /* Staff Memeber */,
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .displaySmall
-                                                          .override(
-                                                            fontFamily:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .displaySmallFamily,
-                                                            letterSpacing: 0.0,
-                                                            useGoogleFonts:
-                                                                !FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .displaySmallIsCustom,
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .only(
+                                                              bottom: 20.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 52.0,
+                                                            height: 52.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FlutterFlowTheme
+                                                                      .of(
+                                                                          context)
+                                                                  .primary
+                                                                  .withAlpha(
+                                                                      20),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16.0),
+                                                            ),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .badge_outlined,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              size: 28.0,
+                                                            ),
                                                           ),
+                                                          const SizedBox(
+                                                              width: 16.0),
+                                                          Expanded(
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  'Staff member',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .displaySmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).displaySmallFamily,
+                                                                        fontSize:
+                                                                            28.0,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).displaySmallIsCustom,
+                                                                      ),
+                                                                ),
+                                                                const SizedBox(
+                                                                    height:
+                                                                        4.0),
+                                                                Text(
+                                                                  'Manage contact details, access, and pharmacy assignment.',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .secondaryText,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                                                                      ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   Column(
                                                     mainAxisSize:
@@ -891,60 +1042,67 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                 width: double
                                                                     .infinity,
                                                                 child:
-                                                                    TextFormField(
-                                                                  controller: _model
-                                                                          .roleTextController ??=
-                                                                      TextEditingController(
-                                                                    text: viewUserStaffRecord
-                                                                        .role,
-                                                                  ),
+                                                                    DropdownButtonFormField<
+                                                                        String>(
+                                                                  key: ValueKey(
+                                                                      'role-$_roleFieldRevision'),
+                                                                  initialValue:
+                                                                      _selectedRole,
                                                                   focusNode: _model
                                                                       .roleFocusNode,
-                                                                  autofocus:
-                                                                      true,
-                                                                  obscureText:
-                                                                      false,
+                                                                  items: _availableRoleLabels(
+                                                                          viewUserStaffRecord
+                                                                              .role)
+                                                                      .map(
+                                                                        (role) =>
+                                                                            DropdownMenuItem<String>(
+                                                                          value:
+                                                                              role,
+                                                                          child:
+                                                                              Text(role),
+                                                                        ),
+                                                                      )
+                                                                      .toList(),
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    if (value !=
+                                                                        null) {
+                                                                      _handleRoleSelection(
+                                                                          value);
+                                                                    }
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .keyboard_arrow_down_rounded,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                  ),
                                                                   decoration:
                                                                       InputDecoration(
-                                                                    labelStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .labelMedium
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          useGoogleFonts:
-                                                                              !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                                                                        ),
-                                                                    hintText: FFLocalizations.of(
-                                                                            context)
-                                                                        .getText(
-                                                                      'tor0wemz' /* Cashier */,
+                                                                    prefixIcon:
+                                                                        Icon(
+                                                                      Icons
+                                                                          .badge_outlined,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
                                                                     ),
-                                                                    hintStyle: FlutterFlowTheme.of(
+                                                                    filled:
+                                                                        true,
+                                                                    fillColor: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .labelMedium
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).labelMediumFamily,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          useGoogleFonts:
-                                                                              !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                                                                        ),
+                                                                        .primaryBackground,
                                                                     enabledBorder:
                                                                         OutlineInputBorder(
                                                                       borderSide:
                                                                           BorderSide(
                                                                         color: FlutterFlowTheme.of(context)
                                                                             .alternate,
-                                                                        width:
-                                                                            1.0,
                                                                       ),
                                                                       borderRadius:
                                                                           BorderRadius.circular(
-                                                                              8.0),
+                                                                              12.0),
                                                                     ),
                                                                     focusedBorder:
                                                                         OutlineInputBorder(
@@ -953,43 +1111,20 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                         color: FlutterFlowTheme.of(context)
                                                                             .primary,
                                                                         width:
-                                                                            1.0,
+                                                                            1.5,
                                                                       ),
                                                                       borderRadius:
                                                                           BorderRadius.circular(
-                                                                              8.0),
+                                                                              12.0),
                                                                     ),
-                                                                    errorBorder:
-                                                                        OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .error,
-                                                                        width:
-                                                                            1.0,
-                                                                      ),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
+                                                                    contentPadding:
+                                                                        const EdgeInsetsDirectional
+                                                                            .fromSTEB(
+                                                                      16.0,
+                                                                      18.0,
+                                                                      16.0,
+                                                                      18.0,
                                                                     ),
-                                                                    focusedErrorBorder:
-                                                                        OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .error,
-                                                                        width:
-                                                                            1.0,
-                                                                      ),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0),
-                                                                    ),
-                                                                    filled:
-                                                                        true,
-                                                                    fillColor: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primaryBackground,
                                                                   ),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
@@ -997,15 +1132,21 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                       .override(
                                                                         fontFamily:
                                                                             FlutterFlowTheme.of(context).bodyMediumFamily,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryText,
+                                                                        fontSize:
+                                                                            15.0,
                                                                         letterSpacing:
                                                                             0.0,
                                                                         useGoogleFonts:
                                                                             !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                                                                       ),
-                                                                  validator: _model
-                                                                      .roleTextControllerValidator
-                                                                      .asValidator(
-                                                                          context),
+                                                                  validator: (value) => value ==
+                                                                              null ||
+                                                                          value
+                                                                              .isEmpty
+                                                                      ? 'Select a role'
+                                                                      : null,
                                                                 ),
                                                               ),
                                                             ),
@@ -1287,9 +1428,10 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                               name: _model
                                                                   .nameTextController
                                                                   .text,
-                                                              role: _model
-                                                                  .roleTextController
-                                                                  .text,
+                                                              role: _selectedRole ??
+                                                                  _model
+                                                                      .roleTextController
+                                                                      .text,
                                                               phone: _model
                                                                   .phoneTextController
                                                                   .text,
@@ -1312,9 +1454,10 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                   .text,
                                                               // Sync role to UserRecord so RBAC
                                                               // reads the latest value.
-                                                              role: _model
-                                                                  .roleTextController
-                                                                  .text,
+                                                              role: _selectedRole ??
+                                                                  _model
+                                                                      .roleTextController
+                                                                      .text,
                                                             ));
                                                             logFirebaseEvent(
                                                                 'Button_show_snack_bar');
@@ -1351,7 +1494,7 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                         ),
                                                         options:
                                                             FFButtonOptions(
-                                                          height: 40.0,
+                                                          height: 48.0,
                                                           padding:
                                                               EdgeInsetsDirectional
                                                                   .fromSTEB(
@@ -1385,7 +1528,7 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                         !FlutterFlowTheme.of(context)
                                                                             .titleSmallIsCustom,
                                                                   ),
-                                                          elevation: 0.0,
+                                                          elevation: 2.0,
                                                           borderSide:
                                                               BorderSide(
                                                             color: Colors
@@ -1395,7 +1538,7 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                                      8.0),
+                                                                      14.0),
                                                         ),
                                                       ),
                                                       FFButtonWidget(
@@ -1482,7 +1625,7 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                         ),
                                                         options:
                                                             FFButtonOptions(
-                                                          height: 40.0,
+                                                          height: 48.0,
                                                           padding:
                                                               EdgeInsetsDirectional
                                                                   .fromSTEB(
@@ -1499,7 +1642,8 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                       0.0),
                                                           color: FlutterFlowTheme
                                                                   .of(context)
-                                                              .error,
+                                                              .error
+                                                              .withAlpha(16),
                                                           textStyle:
                                                               FlutterFlowTheme.of(
                                                                       context)
@@ -1508,8 +1652,9 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                                     fontFamily:
                                                                         FlutterFlowTheme.of(context)
                                                                             .titleSmallFamily,
-                                                                    color: Colors
-                                                                        .white,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .error,
                                                                     letterSpacing:
                                                                         0.0,
                                                                     useGoogleFonts:
@@ -1519,14 +1664,15 @@ class _ViewUserWidgetState extends State<ViewUserWidget> {
                                                           elevation: 0.0,
                                                           borderSide:
                                                               BorderSide(
-                                                            color: Colors
-                                                                .transparent,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
                                                             width: 1.0,
                                                           ),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                                      8.0),
+                                                                      14.0),
                                                         ),
                                                       ),
                                                     ].divide(

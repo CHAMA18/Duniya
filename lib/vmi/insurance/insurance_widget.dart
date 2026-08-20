@@ -53,15 +53,16 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
-  static const Color _bgColor = Color(0xFFF8F9FF);
-  static const Color _surfaceColor = Colors.white;
-  static const Color _textPrimary = Color(0xFF0B1C30);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _borderColor = Color(0xFFE2E8F0);
+  // Use the shared application theme so this page follows light/dark mode,
+  // brand color changes, and the same surface hierarchy as the rest of Pulse.
+  Color get _duniyaPurple => FlutterFlowTheme.of(context).primary;
+  Color get _duniyaPurpleLight =>
+      FlutterFlowTheme.of(context).primary.withValues(alpha: 0.10);
+  Color get _bgColor => FlutterFlowTheme.of(context).primaryBackground;
+  Color get _surfaceColor => FlutterFlowTheme.of(context).secondaryBackground;
+  Color get _textPrimary => FlutterFlowTheme.of(context).primaryText;
+  Color get _textSecondary => FlutterFlowTheme.of(context).secondaryText;
+  Color get _borderColor => FlutterFlowTheme.of(context).lineColor;
 
   // Claim status colors
   static const Color _draftBg = Color(0xFFF3F4F6);
@@ -79,20 +80,95 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
   static const Color _paidBadge = Color(0xFF059669);
 
   // ── Mock Claims Data (10+) ──
-  static final List<_ClaimRecord> _mockClaims = [
-    _ClaimRecord(claimId: 'CLM-2024-0089', memberName: 'Grace Phiri', scheme: 'Prima Health Plus5K', amount: 'K7,850.00', status: 'Under Review', dateSubmitted: '12 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0090', memberName: 'Bwalya Chanda', scheme: 'Family Care 10K', amount: 'K12,400.00', status: 'Approved', dateSubmitted: '08 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0091', memberName: 'Mwamba Kapata', scheme: 'Prima Health Plus5K', amount: 'K3,200.00', status: 'Submitted', dateSubmitted: '14 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0092', memberName: 'Nkole Bwalya', scheme: 'Basic Health 2K', amount: 'K1,850.00', status: 'Paid', dateSubmitted: '02 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0093', memberName: 'Tembo Mulenga', scheme: 'Family Care 10K', amount: 'K9,600.00', status: 'Rejected', dateSubmitted: '05 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0094', memberName: 'Chisha Mwango', scheme: 'Prima Health Plus5K', amount: 'K4,500.00', status: 'Draft', dateSubmitted: '-'),
-    _ClaimRecord(claimId: 'CLM-2024-0095', memberName: 'Daka Sampa', scheme: 'Basic Health 2K', amount: 'K2,100.00', status: 'Under Review', dateSubmitted: '11 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0096', memberName: 'Lunda Chisenga', scheme: 'Family Care 10K', amount: 'K15,000.00', status: 'Submitted', dateSubmitted: '13 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0097', memberName: 'Musonda Kasonde', scheme: 'Prima Health Plus5K', amount: 'K6,300.00', status: 'Approved', dateSubmitted: '06 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0098', memberName: 'Phiri Chilufya', scheme: 'Basic Health 2K', amount: 'K1,950.00', status: 'Paid', dateSubmitted: '01 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0099', memberName: 'Simwinga Mwelwa', scheme: 'Family Care 10K', amount: 'K8,750.00', status: 'Under Review', dateSubmitted: '10 Jan 2025'),
-    _ClaimRecord(claimId: 'CLM-2024-0100', memberName: 'Kalombo Justin', scheme: 'Prima Health Plus5K', amount: 'K5,400.00', status: 'Rejected', dateSubmitted: '07 Jan 2025'),
+  // Claims are loaded from the backend when persistence is connected.
+  static final List<_ClaimRecord> _mockClaims = <_ClaimRecord>[];
+  /* Legacy seed records removed from runtime.
+    _ClaimRecord(
+        claimId: 'CLM-2024-0089',
+        memberName: 'Grace Phiri',
+        scheme: 'Prima Health Plus5K',
+        amount: 'K7,850.00',
+        status: 'Under Review',
+        dateSubmitted: '12 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0090',
+        memberName: 'Bwalya Chanda',
+        scheme: 'Family Care 10K',
+        amount: 'K12,400.00',
+        status: 'Approved',
+        dateSubmitted: '08 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0091',
+        memberName: 'Mwamba Kapata',
+        scheme: 'Prima Health Plus5K',
+        amount: 'K3,200.00',
+        status: 'Submitted',
+        dateSubmitted: '14 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0092',
+        memberName: 'Nkole Bwalya',
+        scheme: 'Basic Health 2K',
+        amount: 'K1,850.00',
+        status: 'Paid',
+        dateSubmitted: '02 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0093',
+        memberName: 'Tembo Mulenga',
+        scheme: 'Family Care 10K',
+        amount: 'K9,600.00',
+        status: 'Rejected',
+        dateSubmitted: '05 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0094',
+        memberName: 'Chisha Mwango',
+        scheme: 'Prima Health Plus5K',
+        amount: 'K4,500.00',
+        status: 'Draft',
+        dateSubmitted: '-'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0095',
+        memberName: 'Daka Sampa',
+        scheme: 'Basic Health 2K',
+        amount: 'K2,100.00',
+        status: 'Under Review',
+        dateSubmitted: '11 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0096',
+        memberName: 'Lunda Chisenga',
+        scheme: 'Family Care 10K',
+        amount: 'K15,000.00',
+        status: 'Submitted',
+        dateSubmitted: '13 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0097',
+        memberName: 'Musonda Kasonde',
+        scheme: 'Prima Health Plus5K',
+        amount: 'K6,300.00',
+        status: 'Approved',
+        dateSubmitted: '06 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0098',
+        memberName: 'Phiri Chilufya',
+        scheme: 'Basic Health 2K',
+        amount: 'K1,950.00',
+        status: 'Paid',
+        dateSubmitted: '01 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0099',
+        memberName: 'Simwinga Mwelwa',
+        scheme: 'Family Care 10K',
+        amount: 'K8,750.00',
+        status: 'Under Review',
+        dateSubmitted: '10 Jan 2025'),
+    _ClaimRecord(
+        claimId: 'CLM-2024-0100',
+        memberName: 'Kalombo Justin',
+        scheme: 'Prima Health Plus5K',
+        amount: 'K5,400.00',
+        status: 'Rejected',
+        dateSubmitted: '07 Jan 2025'),
   ];
+  */
 
   @override
   void initState() {
@@ -118,25 +194,25 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
   // ── Status badge colors ──
   (Color, Color) _statusColors(String status) {
     return switch (status) {
-      'Draft'        => (_draftBg, _draftText),
-      'Submitted'    => (_submittedBg, _submittedText),
+      'Draft' => (_draftBg, _draftText),
+      'Submitted' => (_submittedBg, _submittedText),
       'Under Review' => (_underReviewBg, _underReviewText),
-      'Approved'     => (_approvedBg, _approvedText),
-      'Rejected'     => (_rejectedBg, _rejectedText),
-      'Paid'         => (_paidBg, _paidText),
-      _              => (_draftBg, _draftText),
+      'Approved' => (_approvedBg, _approvedText),
+      'Rejected' => (_rejectedBg, _rejectedText),
+      'Paid' => (_paidBg, _paidText),
+      _ => (_draftBg, _draftText),
     };
   }
 
   IconData _statusIcon(String status) {
     return switch (status) {
-      'Draft'        => Icons.edit_note,
-      'Submitted'    => Icons.send,
+      'Draft' => Icons.edit_note,
+      'Submitted' => Icons.send,
       'Under Review' => Icons.hourglass_top,
-      'Approved'     => Icons.check_circle,
-      'Rejected'     => Icons.cancel,
-      'Paid'         => Icons.paid,
-      _              => Icons.help_outline,
+      'Approved' => Icons.check_circle,
+      'Rejected' => Icons.cancel,
+      'Paid' => Icons.paid,
+      _ => Icons.help_outline,
     };
   }
 
@@ -153,8 +229,15 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(20.0),
         border: Border.all(color: iconColor.withValues(alpha: 0.2), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: iconColor.withValues(alpha: 0.07),
+            blurRadius: 24.0,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +290,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: _surfaceColor,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(20.0),
         border: Border.all(color: _borderColor, width: 1.0),
         boxShadow: [
           BoxShadow(
@@ -277,7 +360,8 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
               ),
               // Status badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                 decoration: BoxDecoration(
                   color: bgCol,
                   borderRadius: BorderRadius.circular(9999.0),
@@ -326,7 +410,8 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                         color: _duniyaPurpleLight,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: Icon(Icons.visibility_outlined, size: 16.0, color: _duniyaPurple),
+                      child: Icon(Icons.visibility_outlined,
+                          size: 16.0, color: _duniyaPurple),
                     ),
                   ),
                   const SizedBox(width: 6.0),
@@ -338,7 +423,8 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                         color: _duniyaPurpleLight,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: Icon(Icons.edit_outlined, size: 16.0, color: _duniyaPurple),
+                      child: Icon(Icons.edit_outlined,
+                          size: 16.0, color: _duniyaPurple),
                     ),
                   ),
                 ],
@@ -360,7 +446,11 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
           children: [
             SpinKitRing(color: _duniyaPurple, size: 48.0),
             const SizedBox(height: 16.0),
-            Text('Loading claims...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
+            Text('Loading claims...',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: _textSecondary)),
           ],
         ),
       ),
@@ -376,14 +466,25 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 64.0, height: 64.0,
-              decoration: BoxDecoration(color: _rejectedBg, shape: BoxShape.circle),
+              width: 64.0,
+              height: 64.0,
+              decoration:
+                  BoxDecoration(color: _rejectedBg, shape: BoxShape.circle),
               child: Icon(Icons.lock_outline, color: _rejectedText, size: 32.0),
             ),
             const SizedBox(height: 16.0),
-            Text('Access Denied', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+            Text('Access Denied',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                    color: _textPrimary)),
             const SizedBox(height: 8.0),
-            Text('You do not have permission to view the Insurance module.', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
+            Text('You do not have permission to view the Insurance module.',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: _textSecondary)),
           ],
         ),
       ),
@@ -395,23 +496,39 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
     context.watch<FFAppState>();
 
     // ── RBAC Gate ──
-    final canView = AccessControl.hasPermission(context, Permission.insuranceView);
-    final canVerify = AccessControl.hasPermission(context, Permission.insuranceVerifyMember);
-    final canSubmit = AccessControl.hasPermission(context, Permission.insuranceSubmitClaim);
+    final canView =
+        AccessControl.hasPermission(context, Permission.insuranceView);
+    final canVerify =
+        AccessControl.hasPermission(context, Permission.insuranceVerifyMember);
+    final canSubmit =
+        AccessControl.hasPermission(context, Permission.insuranceSubmitClaim);
 
     // ── Summary stats from mock data ──
     final submitted = _mockClaims.where((c) => c.status == 'Submitted').length;
-    final underReview = _mockClaims.where((c) => c.status == 'Under Review').length;
-    final approvedTotal = _mockClaims.where((c) => c.status == 'Approved').fold<double>(0.0, (sum, c) => sum + _parseAmount(c.amount));
+    final underReview =
+        _mockClaims.where((c) => c.status == 'Under Review').length;
+    final approvedTotal = _mockClaims
+        .where((c) => c.status == 'Approved')
+        .fold<double>(0.0, (sum, c) => sum + _parseAmount(c.amount));
     final rejected = _mockClaims.where((c) => c.status == 'Rejected').length;
-    final rejectionRate = _mockClaims.isNotEmpty ? ((rejected / _mockClaims.length) * 100).toStringAsFixed(1) : '0.0';
+    final rejectionRate = _mockClaims.isNotEmpty
+        ? ((rejected / _mockClaims.length) * 100).toStringAsFixed(1)
+        : '0.0';
 
     // ── Filtered claims ──
     final filtered = _model.statusFilter == 'All'
         ? _mockClaims
         : _mockClaims.where((c) => c.status == _model.statusFilter).toList();
 
-    final statusTabs = ['All', 'Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Paid'];
+    final statusTabs = [
+      'All',
+      'Draft',
+      'Submitted',
+      'Under Review',
+      'Approved',
+      'Rejected',
+      'Paid'
+    ];
 
     return Title(
       title: 'Insurance / Claims',
@@ -472,12 +589,15 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                   children: [
                                     // ── Header ──
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'Insurance / Claims',
@@ -524,7 +644,10 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                           runSpacing: cardSpacing,
                                           children: [
                                             SizedBox(
-                                              width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                              width: (constraints.maxWidth -
+                                                      cardSpacing *
+                                                          (cols - 1)) /
+                                                  cols,
                                               child: _buildStatCard(
                                                 title: 'Claims Submitted',
                                                 value: submitted.toString(),
@@ -535,7 +658,10 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               ),
                                             ),
                                             SizedBox(
-                                              width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                              width: (constraints.maxWidth -
+                                                      cardSpacing *
+                                                          (cols - 1)) /
+                                                  cols,
                                               child: _buildStatCard(
                                                 title: 'Under Review',
                                                 value: underReview.toString(),
@@ -546,10 +672,14 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               ),
                                             ),
                                             SizedBox(
-                                              width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                              width: (constraints.maxWidth -
+                                                      cardSpacing *
+                                                          (cols - 1)) /
+                                                  cols,
                                               child: _buildStatCard(
                                                 title: 'Approved Value',
-                                                value: 'K${_formatAmount(approvedTotal)}',
+                                                value:
+                                                    'K${_formatAmount(approvedTotal)}',
                                                 icon: Icons.check_circle,
                                                 bgColor: _approvedBg,
                                                 iconColor: _approvedText,
@@ -557,7 +687,10 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               ),
                                             ),
                                             SizedBox(
-                                              width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                              width: (constraints.maxWidth -
+                                                      cardSpacing *
+                                                          (cols - 1)) /
+                                                  cols,
                                               child: _buildStatCard(
                                                 title: 'Rejection Rate',
                                                 value: '$rejectionRate%',
@@ -582,28 +715,39 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                         padding: const EdgeInsets.all(24.0),
                                         decoration: BoxDecoration(
                                           color: _surfaceColor,
-                                          borderRadius: BorderRadius.circular(12.0),
-                                          border: Border.all(color: _borderColor, width: 1.0),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          border: Border.all(
+                                              color: _borderColor, width: 1.0),
                                         ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: [
                                                 Container(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   decoration: BoxDecoration(
                                                     color: _duniyaPurpleLight,
-                                                    borderRadius: BorderRadius.circular(10.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
                                                   ),
-                                                  child: Icon(Icons.verified_user, color: _duniyaPurple, size: 22.0),
+                                                  child: Icon(
+                                                      Icons.verified_user,
+                                                      color: _duniyaPurple,
+                                                      size: 22.0),
                                                 ),
                                                 const SizedBox(width: 12.0),
                                                 Text('Member Verification',
                                                     style: TextStyle(
-                                                        fontFamily: kAppFontFamily,
+                                                        fontFamily:
+                                                            kAppFontFamily,
                                                         fontSize: 18.0,
-                                                        fontWeight: FontWeight.w700,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                         color: _textPrimary)),
                                               ],
                                             ),
@@ -612,17 +756,36 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               children: [
                                                 Expanded(
                                                   child: TextField(
-                                                    controller: _model.memberIdTextController,
-                                                    focusNode: _model.memberIdFocusNode,
+                                                    controller: _model
+                                                        .memberIdTextController,
+                                                    focusNode: _model
+                                                        .memberIdFocusNode,
                                                     decoration: InputDecoration(
                                                       labelText: 'Member ID',
-                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
-                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(12.0),
-                                                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+                                                      labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              kAppFontFamily,
+                                                          color:
+                                                              _textSecondary),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0)),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12.0),
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                _duniyaPurple,
+                                                            width: 2.0),
                                                       ),
-                                                      prefixIcon: Icon(Icons.badge, color: _duniyaPurple, size: 20.0),
+                                                      prefixIcon: Icon(
+                                                          Icons.badge,
+                                                          color: _duniyaPurple,
+                                                          size: 20.0),
                                                     ),
                                                   ),
                                                 ),
@@ -630,45 +793,94 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     safeSetState(() {
-                                                      _model.memberVerified =
-                                                          _model.memberIdTextController?.text.isNotEmpty ?? false;
+                                                      _model
+                                                          .memberVerified = _model
+                                                              .memberIdTextController
+                                                              ?.text
+                                                              .isNotEmpty ??
+                                                          false;
                                                     });
                                                   },
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor: _duniyaPurple,
-                                                    foregroundColor: Colors.white,
-                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        _duniyaPurple,
+                                                    foregroundColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryBtnText,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0)),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 24.0,
+                                                        vertical: 16.0),
                                                   ),
-                                                  child: Text('Verify', style: TextStyle(fontFamily: kAppFontFamily, fontWeight: FontWeight.w600, fontSize: 14.0)),
+                                                  child: Text('Verify',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              kAppFontFamily,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14.0)),
                                                 ),
                                               ],
                                             ),
                                             if (_model.memberVerified) ...[
                                               const SizedBox(height: 20.0),
                                               Container(
-                                                padding: const EdgeInsets.all(16.0),
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
                                                 decoration: BoxDecoration(
                                                   color: _duniyaPurpleLight,
-                                                  borderRadius: BorderRadius.circular(12.0),
-                                                  border: Border.all(color: _duniyaPurple.withValues(alpha: 0.2), width: 1.0),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  border: Border.all(
+                                                      color: _duniyaPurple
+                                                          .withValues(
+                                                              alpha: 0.2),
+                                                      width: 1.0),
                                                 ),
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Icon(Icons.check_circle, color: _approvedText, size: 20.0),
-                                                        const SizedBox(width: 8.0),
+                                                        Icon(Icons.check_circle,
+                                                            color:
+                                                                _approvedText,
+                                                            size: 20.0),
+                                                        const SizedBox(
+                                                            width: 8.0),
                                                         Text('Member Verified',
-                                                            style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, fontWeight: FontWeight.w600, color: _approvedText)),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    kAppFontFamily,
+                                                                fontSize: 14.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color:
+                                                                    _approvedText)),
                                                       ],
                                                     ),
-                                                    const SizedBox(height: 12.0),
-                                                    _memberDetailRow('Name', 'Grace Phiri'),
-                                                    _memberDetailRow('Scheme', 'Prima Health Plus5K'),
-                                                    _memberDetailRow('Status', 'Active'),
-                                                    _memberDetailRow('Remaining Benefit', 'K4,250.00'),
+                                                    const SizedBox(
+                                                        height: 12.0),
+                                                    _memberDetailRow(
+                                                        'Name', 'Grace Phiri'),
+                                                    _memberDetailRow('Scheme',
+                                                        'Prima Health Plus5K'),
+                                                    _memberDetailRow(
+                                                        'Status', 'Active'),
+                                                    _memberDetailRow(
+                                                        'Remaining Benefit',
+                                                        'K4,250.00'),
                                                   ],
                                                 ),
                                               ),
@@ -687,28 +899,38 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                         padding: const EdgeInsets.all(24.0),
                                         decoration: BoxDecoration(
                                           color: _surfaceColor,
-                                          borderRadius: BorderRadius.circular(12.0),
-                                          border: Border.all(color: _borderColor, width: 1.0),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          border: Border.all(
+                                              color: _borderColor, width: 1.0),
                                         ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: [
                                                 Container(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   decoration: BoxDecoration(
                                                     color: _duniyaPurpleLight,
-                                                    borderRadius: BorderRadius.circular(10.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
                                                   ),
-                                                  child: Icon(Icons.add_circle, color: _duniyaPurple, size: 22.0),
+                                                  child: Icon(Icons.add_circle,
+                                                      color: _duniyaPurple,
+                                                      size: 22.0),
                                                 ),
                                                 const SizedBox(width: 12.0),
                                                 Text('Submit New Claim',
                                                     style: TextStyle(
-                                                        fontFamily: kAppFontFamily,
+                                                        fontFamily:
+                                                            kAppFontFamily,
                                                         fontSize: 18.0,
-                                                        fontWeight: FontWeight.w700,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                         color: _textPrimary)),
                                               ],
                                             ),
@@ -717,43 +939,110 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               children: [
                                                 // Sale/Invoice selector
                                                 Expanded(
-                                                  child: DropdownButtonFormField<String>(
-                                                    value: _model.claimSaleValue,
+                                                  child:
+                                                      DropdownButtonFormField<
+                                                          String>(
+                                                    initialValue:
+                                                        _model.claimSaleValue,
                                                     decoration: InputDecoration(
-                                                      labelText: 'Sale / Invoice',
-                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
-                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(12.0),
-                                                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+                                                      labelText:
+                                                          'Sale / Invoice',
+                                                      labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              kAppFontFamily,
+                                                          color:
+                                                              _textSecondary),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0)),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12.0),
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                _duniyaPurple,
+                                                            width: 2.0),
                                                       ),
-                                                      prefixIcon: Icon(Icons.receipt_long, color: _duniyaPurple, size: 20.0),
+                                                      prefixIcon: Icon(
+                                                          Icons.receipt_long,
+                                                          color: _duniyaPurple,
+                                                          size: 20.0),
                                                     ),
-                                                    items: ['INV-2024-0342', 'INV-2024-0341', 'INV-2024-0340']
-                                                        .map((v) => DropdownMenuItem(value: v, child: Text(v, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0))))
+                                                    items: [
+                                                      'INV-2024-0342',
+                                                      'INV-2024-0341',
+                                                      'INV-2024-0340'
+                                                    ]
+                                                        .map((v) => DropdownMenuItem(
+                                                            value: v,
+                                                            child: Text(v,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        kAppFontFamily,
+                                                                    fontSize:
+                                                                        13.0))))
                                                         .toList(),
-                                                    onChanged: (v) => safeSetState(() => _model.claimSaleValue = v),
+                                                    onChanged: (v) =>
+                                                        safeSetState(() => _model
+                                                            .claimSaleValue = v),
                                                   ),
                                                 ),
                                                 const SizedBox(width: 16.0),
                                                 // Member selector
                                                 Expanded(
-                                                  child: DropdownButtonFormField<String>(
-                                                    value: _model.claimMemberValue,
+                                                  child:
+                                                      DropdownButtonFormField<
+                                                          String>(
+                                                    initialValue:
+                                                        _model.claimMemberValue,
                                                     decoration: InputDecoration(
                                                       labelText: 'Member',
-                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
-                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(12.0),
-                                                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+                                                      labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              kAppFontFamily,
+                                                          color:
+                                                              _textSecondary),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0)),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12.0),
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                _duniyaPurple,
+                                                            width: 2.0),
                                                       ),
-                                                      prefixIcon: Icon(Icons.person, color: _duniyaPurple, size: 20.0),
+                                                      prefixIcon: Icon(
+                                                          Icons.person,
+                                                          color: _duniyaPurple,
+                                                          size: 20.0),
                                                     ),
-                                                    items: ['Grace Phiri', 'Bwalya Chanda', 'Mwamba Kapata']
-                                                        .map((v) => DropdownMenuItem(value: v, child: Text(v, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0))))
+                                                    items: [
+                                                      'Grace Phiri',
+                                                      'Bwalya Chanda',
+                                                      'Mwamba Kapata'
+                                                    ]
+                                                        .map((v) => DropdownMenuItem(
+                                                            value: v,
+                                                            child: Text(v,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        kAppFontFamily,
+                                                                    fontSize:
+                                                                        13.0))))
                                                         .toList(),
-                                                    onChanged: (v) => safeSetState(() => _model.claimMemberValue = v),
+                                                    onChanged: (v) =>
+                                                        safeSetState(() => _model
+                                                            .claimMemberValue = v),
                                                   ),
                                                 ),
                                               ],
@@ -764,18 +1053,39 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 // Amount
                                                 Expanded(
                                                   child: TextField(
-                                                    controller: _model.claimAmountTextController,
-                                                    focusNode: _model.claimAmountFocusNode,
-                                                    keyboardType: TextInputType.number,
+                                                    controller: _model
+                                                        .claimAmountTextController,
+                                                    focusNode: _model
+                                                        .claimAmountFocusNode,
+                                                    keyboardType:
+                                                        TextInputType.number,
                                                     decoration: InputDecoration(
-                                                      labelText: 'Claim Amount (K)',
-                                                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
-                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(12.0),
-                                                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+                                                      labelText:
+                                                          'Claim Amount (K)',
+                                                      labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              kAppFontFamily,
+                                                          color:
+                                                              _textSecondary),
+                                                      border: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12.0)),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12.0),
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                _duniyaPurple,
+                                                            width: 2.0),
                                                       ),
-                                                      prefixIcon: Icon(Icons.attach_money, color: _duniyaPurple, size: 20.0),
+                                                      prefixIcon: Icon(
+                                                          Icons.attach_money,
+                                                          color: _duniyaPurple,
+                                                          size: 20.0),
                                                     ),
                                                   ),
                                                 ),
@@ -784,13 +1094,28 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 Expanded(
                                                   child: OutlinedButton.icon(
                                                     onPressed: () {},
-                                                    icon: Icon(Icons.upload_file, size: 18.0),
-                                                    label: Text('Supporting Docs'),
-                                                    style: OutlinedButton.styleFrom(
-                                                      backgroundColor: Colors.white,
-                                                      side: BorderSide(color: _borderColor, width: 1.0),
-                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                                                    icon: Icon(
+                                                        Icons.upload_file,
+                                                        size: 18.0),
+                                                    label:
+                                                        Text('Supporting Docs'),
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          _surfaceColor,
+                                                      side: BorderSide(
+                                                          color: _borderColor,
+                                                          width: 1.0),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12.0)),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20.0,
+                                                          vertical: 16.0),
                                                     ),
                                                   ),
                                                 ),
@@ -801,13 +1126,24 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                               alignment: Alignment.centerRight,
                                               child: ElevatedButton.icon(
                                                 onPressed: () {},
-                                                icon: Icon(Icons.send, size: 18.0),
+                                                icon: Icon(Icons.send,
+                                                    size: 18.0),
                                                 label: Text('Submit Claim'),
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: _duniyaPurple,
-                                                  foregroundColor: Colors.white,
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14.0),
+                                                  backgroundColor:
+                                                      _duniyaPurple,
+                                                  foregroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primaryBtnText,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0)),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 28.0,
+                                                      vertical: 14.0),
                                                 ),
                                               ),
                                             ),
@@ -824,11 +1160,14 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                       padding: const EdgeInsets.all(24.0),
                                       decoration: BoxDecoration(
                                         color: _surfaceColor,
-                                        borderRadius: BorderRadius.circular(12.0),
-                                        border: Border.all(color: _borderColor, width: 1.0),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        border: Border.all(
+                                            color: _borderColor, width: 1.0),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text('Claims List',
                                               style: TextStyle(
@@ -842,51 +1181,101 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                             scrollDirection: Axis.horizontal,
                                             child: Row(
                                               children: statusTabs.map((tab) {
-                                                final isActive = _model.statusFilter == tab;
+                                                final isActive =
+                                                    _model.statusFilter == tab;
                                                 final count = tab == 'All'
                                                     ? _mockClaims.length
-                                                    : _mockClaims.where((c) => c.status == tab).length;
+                                                    : _mockClaims
+                                                        .where((c) =>
+                                                            c.status == tab)
+                                                        .length;
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(right: 8.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0),
                                                   child: InkWell(
-                                                    onTap: () => safeSetState(() => _model.statusFilter = tab),
-                                                    borderRadius: BorderRadius.circular(9999.0),
+                                                    onTap: () => safeSetState(
+                                                        () => _model
+                                                                .statusFilter =
+                                                            tab),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            9999.0),
                                                     child: Container(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16.0,
+                                                          vertical: 8.0),
                                                       decoration: BoxDecoration(
-                                                        color: isActive ? _duniyaPurple : Colors.transparent,
-                                                        borderRadius: BorderRadius.circular(9999.0),
+                                                        color: isActive
+                                                            ? _duniyaPurple
+                                                            : Colors
+                                                                .transparent,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    9999.0),
                                                         border: Border.all(
-                                                          color: isActive ? _duniyaPurple : _borderColor,
+                                                          color: isActive
+                                                              ? _duniyaPurple
+                                                              : _borderColor,
                                                           width: 1.0,
                                                         ),
                                                       ),
                                                       child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
                                                         children: [
                                                           Text(
                                                             tab,
                                                             style: TextStyle(
-                                                              fontFamily: kAppFontFamily,
+                                                              fontFamily:
+                                                                  kAppFontFamily,
                                                               fontSize: 13.0,
-                                                              fontWeight: FontWeight.w600,
-                                                              color: isActive ? Colors.white : _textSecondary,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              color: isActive
+                                                                  ? Colors.white
+                                                                  : _textSecondary,
                                                             ),
                                                           ),
-                                                          const SizedBox(width: 6.0),
+                                                          const SizedBox(
+                                                              width: 6.0),
                                                           Container(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                                                            decoration: BoxDecoration(
-                                                              color: isActive ? Colors.white.withValues(alpha: 0.2) : _draftBg,
-                                                              borderRadius: BorderRadius.circular(9999.0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        6.0,
+                                                                    vertical:
+                                                                        2.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: isActive
+                                                                  ? Colors.white
+                                                                      .withValues(
+                                                                          alpha:
+                                                                              0.2)
+                                                                  : _draftBg,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          9999.0),
                                                             ),
                                                             child: Text(
                                                               count.toString(),
                                                               style: TextStyle(
-                                                                fontFamily: kAppFontFamily,
+                                                                fontFamily:
+                                                                    kAppFontFamily,
                                                                 fontSize: 11.0,
-                                                                fontWeight: FontWeight.w600,
-                                                                color: isActive ? Colors.white : _textSecondary,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: isActive
+                                                                    ? Colors
+                                                                        .white
+                                                                    : _textSecondary,
                                                               ),
                                                             ),
                                                           ),
@@ -902,21 +1291,47 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                           // Claim cards
                                           if (filtered.isEmpty)
                                             Container(
-                                              padding: const EdgeInsets.all(60.0),
+                                              padding:
+                                                  const EdgeInsets.all(60.0),
                                               child: Center(
                                                 child: Column(
                                                   children: [
-                                                    Icon(Icons.description_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
-                                                    const SizedBox(height: 16.0),
-                                                    Text('No claims found', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                                                    Icon(
+                                                        Icons
+                                                            .description_outlined,
+                                                        size: 56.0,
+                                                        color: _textSecondary
+                                                            .withValues(
+                                                                alpha: 0.4)),
+                                                    const SizedBox(
+                                                        height: 16.0),
+                                                    Text('No claims found',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                kAppFontFamily,
+                                                            fontSize: 16.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                _textSecondary)),
                                                     const SizedBox(height: 8.0),
-                                                    Text('Try a different status filter or submit a new claim', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
+                                                    Text(
+                                                        'Try a different status filter or submit a new claim',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                kAppFontFamily,
+                                                            fontSize: 13.0,
+                                                            color: _textSecondary
+                                                                .withValues(
+                                                                    alpha:
+                                                                        0.7))),
                                                   ],
                                                 ),
                                               ),
                                             )
                                           else
-                                            ...filtered.map((claim) => _buildClaimCard(claim)),
+                                            ...filtered.map((claim) =>
+                                                _buildClaimCard(claim)),
                                         ],
                                       ),
                                     ),
@@ -959,10 +1374,18 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
           SizedBox(
             width: 140.0,
             child: Text(label,
-                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w500,
+                    color: _textSecondary)),
           ),
           Text(value,
-              style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+              style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w600,
+                  color: _textPrimary)),
         ],
       ),
     );
@@ -975,8 +1398,8 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
 
   String _formatAmount(double v) {
     return v.toStringAsFixed(2).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (m) => '${m[1]},',
-    );
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]},',
+        );
   }
 }

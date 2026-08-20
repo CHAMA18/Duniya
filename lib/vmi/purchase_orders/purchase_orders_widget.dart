@@ -1,13 +1,9 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'purchase_orders_model.dart';
@@ -51,8 +47,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   bool _showAutoPanel = false;
   List<_ReorderItem> _reorderItems = [];
 
-  // ── CREATE PO PANEL ──
-  bool _showCreatePanel = false;
+  // ── CREATE PO MODAL ──
+  int? _editingIndex;
   String? _selectedSupplier;
   List<_PoLineItem> _lineItems = [];
 
@@ -81,7 +77,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     );
     _progressAnimController.forward();
 
-    _purchaseOrders = _buildMockData();
+    _purchaseOrders = <_PurchaseOrder>[];
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -269,10 +265,12 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
             Expanded(child: Text(message)),
           ],
         ),
-        backgroundColor:
-            isError ? const Color(0xFFEF4444) : FlutterFlowTheme.of(context).primary,
+        backgroundColor: isError
+            ? const Color(0xFFEF4444)
+            : FlutterFlowTheme.of(context).primary,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         margin: const EdgeInsets.all(16.0),
         duration: const Duration(seconds: 2),
       ),
@@ -281,15 +279,26 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
 
   String _formatCurrency(double value) {
     return 'K${value.toStringAsFixed(2).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    )}';
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]},',
+        )}';
   }
 
   String _formatDate(DateTime date) {
     final months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${date.day} ${months[date.month]} ${date.year}';
   }
@@ -438,12 +447,106 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
       _kpiInTransit--;
       _kpiDeliveredMonth++;
     });
-    _showToast('PO ${_purchaseOrders[index].poNumber} delivered — update goods received');
+    _showToast(
+        'PO ${_purchaseOrders[index].poNumber} delivered — update goods received');
+  }
+
+  Future<void> _deletePo(int index) async {
+    final po = _purchaseOrders[index];
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete purchase order?'),
+        content: Text(
+          'This will permanently remove ${po.poNumber}. This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+    safeSetState(() => _purchaseOrders.removeAt(index));
+    _showToast('${po.poNumber} deleted');
   }
 
   // ═══════════════════════════════════════════════════════════════
   //   CREATE PO HELPERS
   // ═══════════════════════════════════════════════════════════════
+
+  void _clearCreatePoForm() {
+    for (final controller in _model.lineQtyControllers) {
+      controller.dispose();
+    }
+    for (final controller in _model.linePriceControllers) {
+      controller.dispose();
+    }
+    _model.lineQtyControllers.clear();
+    _model.linePriceControllers.clear();
+    _lineItems.clear();
+    _selectedSupplier = null;
+    _editingIndex = null;
+  }
+
+  Future<void> _openCreatePoDialog({int? editingIndex}) async {
+    _clearCreatePoForm();
+
+    if (editingIndex != null) {
+      final po = _purchaseOrders[editingIndex];
+      _editingIndex = editingIndex;
+      _selectedSupplier = po.supplier;
+      _lineItems = po.items
+          .map((product) => _PoLineItem(
+                product: product,
+                quantity: 1,
+                unitPrice:
+                    po.itemCount == 0 ? 0.0 : po.totalValue / po.itemCount,
+              ))
+          .toList();
+      for (final item in _lineItems) {
+        _model.lineQtyControllers
+            .add(TextEditingController(text: item.quantity.toString()));
+        _model.linePriceControllers.add(
+            TextEditingController(text: item.unitPrice.toStringAsFixed(2)));
+      }
+    }
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 24.0,
+          vertical: 24.0,
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 820.0,
+            maxHeight: MediaQuery.sizeOf(dialogContext).height - 48.0,
+          ),
+          child: SingleChildScrollView(
+            child: _buildCreatePoPanel(),
+          ),
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    _clearCreatePoForm();
+    safeSetState(() {});
+  }
 
   void _addLineItem() {
     _lineItems.add(_PoLineItem(
@@ -454,6 +557,10 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     _model.lineQtyControllers.add(TextEditingController(text: '1'));
     _model.linePriceControllers.add(TextEditingController(text: '0.00'));
     safeSetState(() {});
+  }
+
+  void _startEditing(int index) {
+    _openCreatePoDialog(editingIndex: index);
   }
 
   void _removeLineItem(int index) {
@@ -485,37 +592,37 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
       return;
     }
     final total = _calculateLineTotal();
-    _purchaseOrders.insert(
-      0,
-      _PurchaseOrder(
-        poNumber: 'PO-2024-${0049 + (_purchaseOrders.where((p) => p.poNumber.contains('0049')).length)}',
-        supplier: _selectedSupplier!,
-        itemCount: _lineItems.length,
-        totalValue: total,
-        status: submit ? 'Pending Approval' : 'Draft',
-        createdDate: DateTime.now(),
-        requestedBy: 'Manual',
-        fulfillment: 0.0,
-        items: _lineItems.map((i) => i.product.isEmpty ? 'Item' : i.product).toList(),
-      ),
+    final updatedPo = _PurchaseOrder(
+      poNumber: _editingIndex == null
+          ? 'PO-2024-${0049 + _purchaseOrders.length}'
+          : _purchaseOrders[_editingIndex!].poNumber,
+      supplier: _selectedSupplier!,
+      itemCount: _lineItems.length,
+      totalValue: total,
+      status: submit ? 'Pending Approval' : 'Draft',
+      createdDate: _editingIndex == null
+          ? DateTime.now()
+          : _purchaseOrders[_editingIndex!].createdDate,
+      requestedBy: _editingIndex == null
+          ? 'Manual'
+          : _purchaseOrders[_editingIndex!].requestedBy,
+      fulfillment: 0.0,
+      items: _lineItems
+          .map((i) => i.product.isEmpty ? 'Item' : i.product)
+          .toList(),
     );
-    _lineItems.clear();
-    for (final c in _model.lineQtyControllers) {
-      c.dispose();
+    if (_editingIndex == null) {
+      _purchaseOrders.insert(0, updatedPo);
+    } else {
+      _purchaseOrders[_editingIndex!] = updatedPo;
     }
-    for (final c in _model.linePriceControllers) {
-      c.dispose();
-    }
-    _model.lineQtyControllers.clear();
-    _model.linePriceControllers.clear();
-    _selectedSupplier = null;
+    _clearCreatePoForm();
     safeSetState(() {
-      _showCreatePanel = false;
       if (submit) _kpiPendingApproval++;
     });
-    _showToast(submit
-        ? 'PO created and submitted for approval'
-        : 'Draft PO saved');
+    Navigator.of(context).pop();
+    _showToast(
+        submit ? 'PO created and submitted for approval' : 'Draft PO saved');
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -524,10 +631,28 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
 
   @override
   Widget build(BuildContext context) {
-    final canView = AccessControl.hasPermission(context, Permission.purchaseOrdersView);
-    final canCreate = AccessControl.hasPermission(context, Permission.purchaseOrdersCreate);
-    final canApprove = AccessControl.hasPermission(context, Permission.purchaseOrdersApprove);
-    final canEdit = AccessControl.hasPermission(context, Permission.purchaseOrdersEdit);
+    final canView =
+        AccessControl.hasPermission(context, Permission.purchaseOrdersView);
+    final canCreate =
+        AccessControl.hasPermission(context, Permission.purchaseOrdersCreate);
+    final canApprove =
+        AccessControl.hasPermission(context, Permission.purchaseOrdersApprove);
+    final canEdit =
+        AccessControl.hasPermission(context, Permission.purchaseOrdersEdit);
+    final canDelete =
+        AccessControl.hasPermission(context, Permission.purchaseOrdersDelete);
+
+    if (!canView) {
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        body: Center(
+          child: Text(
+            'You do not have permission to view purchase orders.',
+            style: FlutterFlowTheme.of(context).bodyMedium,
+          ),
+        ),
+      );
+    }
 
     return Title(
       title: 'Purchase Orders',
@@ -606,18 +731,13 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                                 const SizedBox(height: 24.0),
                               ],
 
-                              // 4. CREATE PO PANEL (RBAC-gated)
-                              if (_showCreatePanel && canCreate) ...[
-                                _buildCreatePoPanel(),
-                                const SizedBox(height: 24.0),
-                              ],
-
-                              // 5. STATUS FILTER TABS
+                              // 4. STATUS FILTER TABS
                               _buildStatusTabs(),
                               const SizedBox(height: 16.0),
 
-                              // 6. PO LIST
-                              _buildPoList(canApprove, canEdit),
+                              // 5. PO LIST
+                              _buildPoList(
+                                  canApprove, canEdit, canCreate, canDelete),
                             ],
                           ),
                         ),
@@ -761,11 +881,11 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
               )) ...[
                 if (canCreate)
                   _heroAction(Icons.add_rounded, 'Create PO', () {
-                    safeSetState(() => _showCreatePanel = !_showCreatePanel);
+                    _openCreatePoDialog();
                   }),
                 const SizedBox(width: 8.0),
-                _heroAction(
-                    Icons.auto_mode_rounded, 'Auto-Generate', _scanReorderLevels),
+                _heroAction(Icons.auto_mode_rounded, 'Auto-Generate',
+                    _scanReorderLevels),
                 const SizedBox(width: 8.0),
                 _heroAction(Icons.refresh_rounded, 'Refresh', () {
                   safeSetState(() {});
@@ -821,7 +941,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
               children: [
                 if (canCreate)
                   _heroAction(Icons.add_rounded, 'Create PO', () {
-                    safeSetState(() => _showCreatePanel = !_showCreatePanel);
+                    _openCreatePoDialog();
                   }),
                 _heroAction(Icons.auto_mode_rounded, 'Auto-Generate',
                     _scanReorderLevels),
@@ -840,8 +960,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
         onTap: onTap,
         borderRadius: BorderRadius.circular(10.0),
         child: Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
           decoration: BoxDecoration(
             color: Colors.white.withAlpha(25),
             borderRadius: BorderRadius.circular(10.0),
@@ -882,8 +1001,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
         if (available < 1100) crossCount = 2;
         if (available < 600) crossCount = 1;
 
-        final cardWidth =
-            (available - 16.0 * (crossCount - 1)) / crossCount;
+        final cardWidth = (available - 16.0 * (crossCount - 1)) / crossCount;
 
         return Wrap(
           spacing: 16.0,
@@ -897,9 +1015,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                 icon: Icons.schedule_rounded,
                 accentColor: const Color(0xFFF59E0B),
                 accentBg: const Color(0xFFFEF3C7),
-                delta: _kpiPendingApproval > 0
-                    ? 'Action needed'
-                    : 'All clear',
+                delta: _kpiPendingApproval > 0 ? 'Action needed' : 'All clear',
                 deltaPositive: _kpiPendingApproval == 0,
                 deltaIsNeutral: _kpiPendingApproval == 0,
               ),
@@ -912,9 +1028,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                 icon: Icons.local_shipping_rounded,
                 accentColor: const Color(0xFF6366F1),
                 accentBg: const Color(0xFFE0E7FF),
-                delta: _kpiInTransit > 0
-                    ? 'On the way'
-                    : 'None in transit',
+                delta: _kpiInTransit > 0 ? 'On the way' : 'None in transit',
                 deltaPositive: true,
                 deltaIsNeutral: _kpiInTransit == 0,
               ),
@@ -927,9 +1041,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                 icon: Icons.task_alt_rounded,
                 accentColor: const Color(0xFF10B981),
                 accentBg: const Color(0xFFD1FAE5),
-                delta: _kpiDeliveredMonth > 0
-                    ? 'Received'
-                    : 'None yet',
+                delta: _kpiDeliveredMonth > 0 ? 'Received' : 'None yet',
                 deltaPositive: true,
                 deltaIsNeutral: _kpiDeliveredMonth == 0,
               ),
@@ -981,7 +1093,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
           // Header
           Container(
             width: double.infinity,
-            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 16.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 16.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -1096,7 +1209,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
           // Results
           if (_showAutoPanel && _reorderItems.isNotEmpty)
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1124,18 +1238,15 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                   ..._reorderItems.asMap().entries.map((entry) {
                     final idx = entry.key;
                     final item = entry.value;
-                    final stockRatio =
-                        item.currentStock / item.reorderLevel;
+                    final stockRatio = item.currentStock / item.reorderLevel;
                     return Container(
-                      margin: EdgeInsets.only(
-                          top: idx == 0 ? 0.0 : 8.0),
+                      margin: EdgeInsets.only(top: idx == 0 ? 0.0 : 8.0),
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           16.0, 12.0, 16.0, 12.0),
                       decoration: BoxDecoration(
                         color: theme.primaryBackground,
                         borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                            color: theme.alternate, width: 1.0),
+                        border: Border.all(color: theme.alternate, width: 1.0),
                       ),
                       child: Row(
                         children: [
@@ -1151,16 +1262,14 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                                     CircularProgressIndicator(
                                       value: 1.0,
                                       strokeWidth: 3.0,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
                                         theme.alternate,
                                       ),
                                     ),
                                     CircularProgressIndicator(
                                       value: stockRatio.clamp(0.0, 1.0),
                                       strokeWidth: 3.0,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
                                         const Color(0xFFEF4444),
                                       ),
                                     ),
@@ -1182,30 +1291,25 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                           // Product info
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   item.product,
                                   style: theme.bodyMedium.override(
-                                    fontFamily:
-                                        theme.bodyMediumFamily,
+                                    fontFamily: theme.bodyMediumFamily,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.0,
-                                    useGoogleFonts:
-                                        !theme.bodyMediumIsCustom,
+                                    useGoogleFonts: !theme.bodyMediumIsCustom,
                                   ),
                                 ),
                                 const SizedBox(height: 2.0),
                                 Text(
                                   'Stock: ${item.currentStock} / Reorder: ${item.reorderLevel} → Suggest: ${item.suggestedQty} units',
                                   style: theme.bodySmall.override(
-                                    fontFamily:
-                                        theme.bodySmallFamily,
+                                    fontFamily: theme.bodySmallFamily,
                                     color: theme.secondaryText,
                                     letterSpacing: 0.0,
-                                    useGoogleFonts:
-                                        !theme.bodySmallIsCustom,
+                                    useGoogleFonts: !theme.bodySmallIsCustom,
                                   ),
                                 ),
                               ],
@@ -1217,8 +1321,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                                 horizontal: 8.0, vertical: 4.0),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F0FF),
-                              borderRadius:
-                                  BorderRadius.circular(6.0),
+                              borderRadius: BorderRadius.circular(6.0),
                             ),
                             child: Text(
                               item.preferredSupplier,
@@ -1237,8 +1340,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                               fontFamily: theme.bodyMediumFamily,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.0,
-                              useGoogleFonts:
-                                  !theme.bodyMediumIsCustom,
+                              useGoogleFonts: !theme.bodyMediumIsCustom,
                             ),
                           ),
                         ],
@@ -1251,8 +1353,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                     children: [
                       ElevatedButton.icon(
                         onPressed: _generatePoFromReorder,
-                        icon: const Icon(Icons.shopping_cart_rounded,
-                            size: 16.0),
+                        icon:
+                            const Icon(Icons.shopping_cart_rounded, size: 16.0),
                         label: const Text('Generate PO'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF9900FF),
@@ -1326,7 +1428,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: const Color(0xFF9900FF).withAlpha(80), width: 1.5),
+        border: Border.all(
+            color: const Color(0xFF9900FF).withAlpha(80), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF9900FF).withAlpha(15),
@@ -1341,7 +1444,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
           // Panel header
           Container(
             width: double.infinity,
-            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 16.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 16.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -1372,7 +1476,9 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                 const SizedBox(width: 12.0),
                 Expanded(
                   child: Text(
-                    'Create Purchase Order',
+                    _editingIndex == null
+                        ? 'Create Purchase Order'
+                        : 'Edit Purchase Order',
                     style: theme.titleMedium.override(
                       fontFamily: theme.titleMediumFamily,
                       fontWeight: FontWeight.w700,
@@ -1383,7 +1489,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                   ),
                 ),
                 IconButton(
-                  onPressed: () => safeSetState(() => _showCreatePanel = false),
+                  onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(Icons.close_rounded, color: theme.secondaryText),
                   style: IconButton.styleFrom(
                     backgroundColor: theme.primaryBackground,
@@ -1394,7 +1500,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 20.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1521,7 +1628,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                         Expanded(
                           flex: 3,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             decoration: BoxDecoration(
                               color: theme.secondaryBackground,
                               borderRadius: BorderRadius.circular(8.0),
@@ -1537,22 +1645,20 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                                 hint: Text(
                                   'Product…',
                                   style: TextStyle(
-                                      fontSize: 12,
-                                      color: theme.secondaryText),
+                                      fontSize: 12, color: theme.secondaryText),
                                 ),
                                 isExpanded: true,
                                 items: products
                                     .map((p) => DropdownMenuItem(
                                           value: p,
                                           child: Text(p,
-                                              style:
-                                                  const TextStyle(fontSize: 12)),
+                                              style: const TextStyle(
+                                                  fontSize: 12)),
                                         ))
                                     .toList(),
-                                onChanged: (val) => safeSetState(
-                                    () => _lineItems[idx] =
-                                        _lineItems[idx].copyWith(
-                                            product: val ?? '')),
+                                onChanged: (val) => safeSetState(() =>
+                                    _lineItems[idx] = _lineItems[idx]
+                                        .copyWith(product: val ?? '')),
                               ),
                             ),
                           ),
@@ -1725,8 +1831,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                       ),
                       const SizedBox(width: 12.0),
                       TextButton(
-                        onPressed: () =>
-                            safeSetState(() => _showCreatePanel = false),
+                        onPressed: () => Navigator.of(context).pop(),
                         child: Text(
                           'Cancel',
                           style: theme.bodyMedium.override(
@@ -1781,9 +1886,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
 
             Color tabColor;
             if (isActive) {
-              tabColor = tab == 'All'
-                  ? theme.primary
-                  : _statusColor(tab);
+              tabColor = tab == 'All' ? theme.primary : _statusColor(tab);
             } else {
               tabColor = Colors.transparent;
             }
@@ -1810,9 +1913,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                         Text(
                           tab,
                           style: TextStyle(
-                            color: isActive
-                                ? Colors.white
-                                : theme.secondaryText,
+                            color:
+                                isActive ? Colors.white : theme.secondaryText,
                             fontSize: 13,
                             fontWeight:
                                 isActive ? FontWeight.w700 : FontWeight.w500,
@@ -1831,9 +1933,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                           child: Text(
                             '$count',
                             style: TextStyle(
-                              color: isActive
-                                  ? Colors.white
-                                  : theme.secondaryText,
+                              color:
+                                  isActive ? Colors.white : theme.secondaryText,
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
                             ),
@@ -1855,7 +1956,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   //   6. PURCHASE ORDERS LIST
   // ═══════════════════════════════════════════════════════════════
 
-  Widget _buildPoList(bool canApprove, bool canEdit) {
+  Widget _buildPoList(
+      bool canApprove, bool canEdit, bool canCreate, bool canDelete) {
     final theme = FlutterFlowTheme.of(context);
 
     // Filter
@@ -1917,14 +2019,15 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
         final po = entry.value;
         return Container(
           margin: const EdgeInsets.only(bottom: 12.0),
-          child: _buildPoCard(po, idx, canApprove, canEdit),
+          child:
+              _buildPoCard(po, idx, canApprove, canEdit, canCreate, canDelete),
         );
       }).toList(),
     );
   }
 
-  Widget _buildPoCard(
-      _PurchaseOrder po, int idx, bool canApprove, bool canEdit) {
+  Widget _buildPoCard(_PurchaseOrder po, int idx, bool canApprove, bool canEdit,
+      bool canCreate, bool canDelete) {
     final theme = FlutterFlowTheme.of(context);
     final statusCol = _statusColor(po.status);
     final statusBg = _statusBgColor(po.status);
@@ -1954,7 +2057,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
         children: [
           // Card top row
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 0.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(20.0, 16.0, 20.0, 0.0),
             child: Row(
               children: [
                 // PO number
@@ -1986,8 +2090,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(statusIcn,
-                                    size: 12.0, color: statusCol),
+                                Icon(statusIcn, size: 12.0, color: statusCol),
                                 const SizedBox(width: 4.0),
                                 Text(
                                   po.status,
@@ -2049,7 +2152,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
           // Fulfillment progress bar (for Ordered status)
           if (po.status == 'Ordered' && po.fulfillment > 0.0) ...[
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 0.0),
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -2084,8 +2188,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                       animation: _progressAnimController,
                       builder: (context, child) {
                         return LinearProgressIndicator(
-                          value: po.fulfillment *
-                              _progressAnimController.value,
+                          value: po.fulfillment * _progressAnimController.value,
                           minHeight: 6.0,
                           backgroundColor: const Color(0xFFE0E7FF),
                           valueColor: const AlwaysStoppedAnimation<Color>(
@@ -2103,7 +2206,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
           // Delivered checkmark bar
           if (po.status == 'Delivered') ...[
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 0.0),
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 0.0),
               child: Row(
                 children: [
                   const Icon(Icons.check_circle_rounded,
@@ -2124,7 +2228,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
 
           // Bottom row: meta + actions
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 16.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(20.0, 12.0, 20.0, 16.0),
             child: Row(
               children: [
                 // Meta info
@@ -2157,7 +2262,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                 ),
                 const Spacer(),
                 // Action buttons
-                ..._buildPoActions(po, idx, canApprove, canEdit),
+                ..._buildPoActions(
+                    po, idx, canApprove, canEdit, canCreate, canDelete),
               ],
             ),
           ),
@@ -2166,8 +2272,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     );
   }
 
-  List<Widget> _buildPoActions(
-      _PurchaseOrder po, int idx, bool canApprove, bool canEdit) {
+  List<Widget> _buildPoActions(_PurchaseOrder po, int idx, bool canApprove,
+      bool canEdit, bool canCreate, bool canDelete) {
     final theme = FlutterFlowTheme.of(context);
     final actions = <Widget>[];
 
@@ -2181,8 +2287,8 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
             onTap: onTap,
             borderRadius: BorderRadius.circular(8.0),
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0, vertical: 5.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               decoration: BoxDecoration(
                 color: color.withAlpha(15),
                 borderRadius: BorderRadius.circular(8.0),
@@ -2217,15 +2323,17 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
             Icons.edit_rounded,
             'Edit',
             const Color(0xFF6B7280),
-            () => _showToast('Editing ${po.poNumber}…'),
+            () => _startEditing(idx),
           ));
         }
-        actions.add(_actionChip(
-          Icons.send_rounded,
-          'Submit',
-          const Color(0xFFF59E0B),
-          () => _submitForApproval(idx),
-        ));
+        if (canCreate) {
+          actions.add(_actionChip(
+            Icons.send_rounded,
+            'Submit',
+            const Color(0xFFF59E0B),
+            () => _submitForApproval(idx),
+          ));
+        }
         break;
       case 'Pending Approval':
         if (canApprove) {
@@ -2236,29 +2344,44 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
             () => _approvePo(idx),
           ));
         }
-        actions.add(_actionChip(
-          Icons.close_rounded,
-          'Reject',
-          const Color(0xFFEF4444),
-          () => _rejectPo(idx),
-        ));
+        if (canApprove) {
+          actions.add(_actionChip(
+            Icons.close_rounded,
+            'Reject',
+            const Color(0xFFEF4444),
+            () => _rejectPo(idx),
+          ));
+        }
         break;
       case 'Approved':
-        actions.add(_actionChip(
-          Icons.local_shipping_rounded,
-          'Mark Ordered',
-          const Color(0xFF6366F1),
-          () => _markAsOrdered(idx),
-        ));
+        if (canEdit) {
+          actions.add(_actionChip(
+            Icons.local_shipping_rounded,
+            'Mark Ordered',
+            const Color(0xFF6366F1),
+            () => _markAsOrdered(idx),
+          ));
+        }
         break;
       case 'Ordered':
-        actions.add(_actionChip(
-          Icons.task_alt_rounded,
-          'Mark Delivered',
-          const Color(0xFF10B981),
-          () => _markAsDelivered(idx),
-        ));
+        if (canEdit) {
+          actions.add(_actionChip(
+            Icons.task_alt_rounded,
+            'Mark Delivered',
+            const Color(0xFF10B981),
+            () => _markAsDelivered(idx),
+          ));
+        }
         break;
+    }
+
+    if (canDelete) {
+      actions.add(_actionChip(
+        Icons.delete_outline_rounded,
+        'Delete',
+        const Color(0xFFEF4444),
+        () => _deletePo(idx),
+      ));
     }
 
     return actions;
@@ -2361,8 +2484,7 @@ class _KpiCard extends StatelessWidget {
           ),
           const SizedBox(height: 6.0),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
             decoration: BoxDecoration(
               color: deltaIsNeutral
                   ? theme.primaryBackground

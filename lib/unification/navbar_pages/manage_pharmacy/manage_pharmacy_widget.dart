@@ -43,6 +43,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
   List<BatchRecord> _batches = [];
   List<ReplenishmentRecord> _replenishments = [];
   List<LowStockAlertRecord> _lowStockAlerts = [];
+  // Legacy field retained for reading old records during migration. It is no
+  // longer loaded or exposed as a pharmacy concept in the UI.
   List<OutletRecord> _outlets = [];
   bool _isLoading = true;
   late TabController _tabController;
@@ -51,7 +53,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => ManagePharmacyModel());
-    _tabController = TabController(length: 7, vsync: this, initialIndex: 0);
+    _tabController = TabController(length: 6, vsync: this, initialIndex: 0);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         safeSetState(() {
@@ -101,8 +103,6 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         queryReplenishmentRecordOnce(),
         // Low Stock Alerts - top-level collection
         queryLowStockAlertRecordOnce(),
-        // Outlets - subcollection under User
-        queryOutletRecordOnce(parent: parent),
       ]);
 
       safeSetState(() {
@@ -112,7 +112,6 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         _batches = results[3] as List<BatchRecord>;
         _replenishments = results[4] as List<ReplenishmentRecord>;
         _lowStockAlerts = results[5] as List<LowStockAlertRecord>;
-        _outlets = results[6] as List<OutletRecord>;
         _isLoading = false;
       });
     } catch (e) {
@@ -131,7 +130,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
     final now = DateTime.now();
     final thirtyDays = now.add(const Duration(days: 30));
     return _batches
-        .where((b) => b.expiryDate != null && b.expiryDate!.isBefore(thirtyDays))
+        .where(
+            (b) => b.expiryDate != null && b.expiryDate!.isBefore(thirtyDays))
         .length;
   }
 
@@ -203,9 +203,11 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                                   vertical: 24,
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
-                                    _buildHeroHeader(theme, pharmName, pharmAddress),
+                                    _buildHeroHeader(
+                                        theme, pharmName, pharmAddress),
                                     const SizedBox(height: 24),
                                     _buildKPICards(theme),
                                     const SizedBox(height: 28),
@@ -268,7 +270,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               children: [
                 Text(
                   name,
-                  style: theme.headlineMedium?.override(
+                  style: theme.headlineMedium.override(
                     fontFamily: theme.headlineMediumFamily,
                     color: Colors.white,
                     fontSize: 26,
@@ -280,11 +282,12 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_rounded, color: Colors.white70, size: 14),
+                    const Icon(Icons.location_on_rounded,
+                        color: Colors.white70, size: 14),
                     const SizedBox(width: 4),
                     Text(
                       address.isNotEmpty ? address : 'No address set',
-                      style: theme.bodyMedium?.override(
+                      style: theme.bodyMedium.override(
                         fontFamily: theme.bodyMediumFamily,
                         color: Colors.white.withValues(alpha: 0.85),
                         fontSize: 14,
@@ -317,7 +320,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 const SizedBox(width: 8),
                 Text(
                   'Active',
-                  style: theme.bodySmall?.override(
+                  style: theme.bodySmall.override(
                     fontFamily: theme.bodySmallFamily,
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -371,16 +374,24 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
           value: '$_lowStockCount',
           subtitle: 'Items below reorder',
           icon: Icons.warning_amber_rounded,
-          color: _lowStockCount > 0 ? const Color(0xFFDC2626) : const Color(0xFF059669),
-          bgColor: _lowStockCount > 0 ? const Color(0xFFFEE2E2) : const Color(0xFFD1FAE5),
+          color: _lowStockCount > 0
+              ? const Color(0xFFDC2626)
+              : const Color(0xFF059669),
+          bgColor: _lowStockCount > 0
+              ? const Color(0xFFFEE2E2)
+              : const Color(0xFFD1FAE5),
         ),
         _KPIData(
           title: 'Expiring Soon',
           value: '$_expiringBatches',
           subtitle: 'Batches within 30 days',
           icon: Icons.event_busy_rounded,
-          color: _expiringBatches > 0 ? const Color(0xFFD97706) : const Color(0xFF059669),
-          bgColor: _expiringBatches > 0 ? const Color(0xFFFEF3C7) : const Color(0xFFD1FAE5),
+          color: _expiringBatches > 0
+              ? const Color(0xFFD97706)
+              : const Color(0xFF059669),
+          bgColor: _expiringBatches > 0
+              ? const Color(0xFFFEF3C7)
+              : const Color(0xFFD1FAE5),
         ),
       ];
 
@@ -393,19 +404,15 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       }
 
       return Row(
-        children: kpis
-            .asMap()
-            .entries
-            .map((entry) {
-              final isLast = entry.key == kpis.length - 1;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: isLast ? 0 : spacing),
-                  child: _buildKPICard(theme, entry.value, cardWidth),
-                ),
-              );
-            })
-            .toList(),
+        children: kpis.asMap().entries.map((entry) {
+          final isLast = entry.key == kpis.length - 1;
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: isLast ? 0 : spacing),
+              child: _buildKPICard(theme, entry.value, cardWidth),
+            ),
+          );
+        }).toList(),
       );
     });
   }
@@ -449,7 +456,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
           const SizedBox(height: 14),
           Text(
             kpi.value,
-            style: theme.headlineMedium?.override(
+            style: theme.headlineMedium.override(
               fontFamily: theme.headlineMediumFamily,
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -460,7 +467,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
           const SizedBox(height: 2),
           Text(
             kpi.title,
-            style: theme.bodyMedium?.override(
+            style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.0,
@@ -470,7 +477,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
           const SizedBox(height: 2),
           Text(
             kpi.subtitle,
-            style: theme.bodySmall?.override(
+            style: theme.bodySmall.override(
               fontFamily: theme.bodySmallFamily,
               color: theme.secondaryText,
               fontSize: 11,
@@ -492,8 +499,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       _TabData(label: 'Stock Movements', icon: Icons.swap_horiz_rounded),
       _TabData(label: 'Batch & Expiry', icon: Icons.batch_prediction_rounded),
       _TabData(label: 'Replenishment', icon: Icons.autorenew_rounded),
-      _TabData(label: 'Low Stock Alerts', icon: Icons.notification_important_rounded),
-      _TabData(label: 'Outlets', icon: Icons.store_rounded),
+      _TabData(
+          label: 'Low Stock Alerts',
+          icon: Icons.notification_important_rounded),
     ];
 
     return Column(
@@ -521,13 +529,13 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             isScrollable: true,
             labelColor: theme.primary,
             unselectedLabelColor: theme.secondaryText,
-            labelStyle: theme.bodyMedium?.override(
+            labelStyle: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodyMediumIsCustom,
             ),
-            unselectedLabelStyle: theme.bodyMedium?.override(
+            unselectedLabelStyle: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.0,
@@ -567,7 +575,6 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               _buildBatchExpiryTab(theme),
               _buildReplenishmentTab(theme),
               _buildLowStockAlertsTab(theme),
-              _buildOutletsTab(theme),
             ],
           ),
         ),
@@ -577,7 +584,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   // ── SECTION HEADER HELPER ──────────────────────────────────────────────
 
-  Widget _buildSectionHeader(FlutterFlowTheme theme, String title, IconData icon,
+  Widget _buildSectionHeader(
+      FlutterFlowTheme theme, String title, IconData icon,
       {Widget? trailing, String? count}) {
     return Row(
       children: [
@@ -594,7 +602,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         Expanded(
           child: Text(
             title,
-            style: theme.titleMedium?.override(
+            style: theme.titleMedium.override(
               fontFamily: theme.titleMediumFamily,
               fontWeight: FontWeight.w700,
               fontSize: 16,
@@ -612,7 +620,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             ),
             child: Text(
               count,
-              style: theme.bodySmall?.override(
+              style: theme.bodySmall.override(
                 fontFamily: theme.bodySmallFamily,
                 color: theme.primary,
                 fontWeight: FontWeight.w600,
@@ -629,7 +637,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   // ── EMPTY STATE HELPER ─────────────────────────────────────────────────
 
-  Widget _buildEmptyState(FlutterFlowTheme theme, String message, IconData icon) {
+  Widget _buildEmptyState(
+      FlutterFlowTheme theme, String message, IconData icon) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 60),
@@ -648,7 +657,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             const SizedBox(height: 16),
             Text(
               message,
-              style: theme.bodyMedium?.override(
+              style: theme.bodyMedium.override(
                 fontFamily: theme.bodyMediumFamily,
                 color: theme.secondaryText,
                 letterSpacing: 0.0,
@@ -663,9 +672,11 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   // ── DATA TABLE CARD HELPER ─────────────────────────────────────────────
 
-  Widget _buildDataTableCard(FlutterFlowTheme theme, {required List<Widget> children}) {
+  Widget _buildDataTableCard(FlutterFlowTheme theme,
+      {required List<Widget> children}) {
     return Container(
       width: double.infinity,
+      margin: const EdgeInsetsDirectional.fromSTEB(-16.0, 0.0, -16.0, 0.0),
       decoration: BoxDecoration(
         color: theme.secondaryBackground,
         borderRadius: BorderRadius.circular(16),
@@ -691,7 +702,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
     );
   }
 
-  Widget _buildTableHeader(FlutterFlowTheme theme, List<String> columns, List<double> widths) {
+  Widget _buildTableHeader(
+      FlutterFlowTheme theme, List<String> columns, List<double> widths,
+      {bool stretch = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
@@ -702,26 +715,30 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       ),
       child: Row(
         children: List.generate(columns.length, (i) {
-          return SizedBox(
-            width: widths[i],
-            child: Text(
-              columns[i],
-              style: theme.bodySmall?.override(
-                fontFamily: theme.bodySmallFamily,
-                color: theme.secondaryText,
-                fontWeight: FontWeight.w600,
-                fontSize: 11,
-                letterSpacing: 0.5,
-                useGoogleFonts: !theme.bodySmallIsCustom,
-              ),
+          final header = Text(
+            columns[i],
+            style: theme.bodySmall.override(
+              fontFamily: theme.bodySmallFamily,
+              color: theme.secondaryText,
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              letterSpacing: 0.5,
+              useGoogleFonts: !theme.bodySmallIsCustom,
             ),
           );
+          return stretch
+              ? Expanded(flex: widths[i].round(), child: header)
+              : SizedBox(width: widths[i], child: header);
         }),
       ),
     );
   }
 
-  Widget _buildTableRow(FlutterFlowTheme theme, List<Widget> cells, {bool isLast = false, Color? accentColor}) {
+  Widget _buildTableRow(FlutterFlowTheme theme, List<Widget> cells,
+      {bool isLast = false,
+      Color? accentColor,
+      bool stretch = false,
+      List<int>? flexes}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
@@ -731,13 +748,24 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               : BorderSide(color: theme.alternate.withValues(alpha: 0.2)),
         ),
       ),
-      child: Row(children: cells),
+      child: Row(
+        children: stretch
+            ? List.generate(
+                cells.length,
+                (index) => Expanded(
+                  flex: flexes?[index] ?? 1,
+                  child: cells[index],
+                ),
+              )
+            : cells,
+      ),
     );
   }
 
   // ── STATUS BADGE ───────────────────────────────────────────────────────
 
-  Widget _buildStatusBadge(FlutterFlowTheme theme, String label, Color color, Color bgColor) {
+  Widget _buildStatusBadge(
+      FlutterFlowTheme theme, String label, Color color, Color bgColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -746,7 +774,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       ),
       child: Text(
         label,
-        style: theme.bodySmall?.override(
+        style: theme.bodySmall.override(
           fontFamily: theme.bodySmallFamily,
           color: color,
           fontWeight: FontWeight.w600,
@@ -762,7 +790,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildInventoryTab(FlutterFlowTheme theme) {
     if (_inventory.isEmpty) {
-      return _buildEmptyState(theme, 'No inventory items found', Icons.inventory_2_outlined);
+      return _buildEmptyState(
+          theme, 'No inventory items found', Icons.inventory_2_outlined);
     }
 
     return Column(
@@ -787,7 +816,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               ..._inventory.asMap().entries.map((entry) {
                 final idx = entry.key;
                 final item = entry.value;
-                final isLow = item.quantity <= item.limitNotice && item.limitNotice > 0;
+                final isLow =
+                    item.quantity <= item.limitNotice && item.limitNotice > 0;
                 return _buildTableRow(
                   theme,
                   isLast: idx == _inventory.length - 1,
@@ -802,21 +832,25 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                              color: (isLow ? const Color(0xFFDC2626) : theme.primary)
+                              color: (isLow
+                                      ? const Color(0xFFDC2626)
+                                      : theme.primary)
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Icon(
                               Icons.medication_rounded,
                               size: 16,
-                              color: isLow ? const Color(0xFFDC2626) : theme.primary,
+                              color: isLow
+                                  ? const Color(0xFFDC2626)
+                                  : theme.primary,
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               item.name,
-                              style: theme.bodyMedium?.override(
+                              style: theme.bodyMedium.override(
                                 fontFamily: theme.bodyMediumFamily,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.0,
@@ -833,7 +867,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         item.category,
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: theme.secondaryText,
                           letterSpacing: 0.0,
@@ -847,7 +881,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 80,
                       child: Text(
                         '${item.quantity}',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           fontWeight: FontWeight.w700,
                           color: isLow ? const Color(0xFFDC2626) : null,
@@ -861,7 +895,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 100,
                       child: Text(
                         'ZMK ${item.price.toStringAsFixed(2)}',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -873,7 +907,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         item.batchNumber.isNotEmpty ? item.batchNumber : '-',
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: theme.secondaryText,
                           letterSpacing: 0.0,
@@ -885,8 +919,10 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     SizedBox(
                       width: 100,
                       child: isLow
-                          ? _buildStatusBadge(theme, 'Low Stock', const Color(0xFFDC2626), const Color(0xFFFEE2E2))
-                          : _buildStatusBadge(theme, 'In Stock', const Color(0xFF059669), const Color(0xFFD1FAE5)),
+                          ? _buildStatusBadge(theme, 'Low Stock',
+                              const Color(0xFFDC2626), const Color(0xFFFEE2E2))
+                          : _buildStatusBadge(theme, 'In Stock',
+                              const Color(0xFF059669), const Color(0xFFD1FAE5)),
                     ),
                   ],
                 );
@@ -902,7 +938,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildStockBalancesTab(FlutterFlowTheme theme) {
     if (_stockBalances.isEmpty) {
-      return _buildEmptyState(theme, 'No stock balance records found', Icons.scale_outlined);
+      return _buildEmptyState(
+          theme, 'No stock balance records found', Icons.scale_outlined);
     }
 
     return Column(
@@ -921,8 +958,17 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             children: [
               _buildTableHeader(
                 theme,
-                ['Period', 'Opening', 'Received', 'Dispensed', 'Closing', 'Value', 'DOS'],
+                [
+                  'Period',
+                  'Opening',
+                  'Received',
+                  'Dispensed',
+                  'Closing',
+                  'Value',
+                  'DOS'
+                ],
                 [100, 90, 90, 90, 90, 100, 80],
+                stretch: true,
               ),
               ..._stockBalances.asMap().entries.map((entry) {
                 final idx = entry.key;
@@ -930,12 +976,14 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 return _buildTableRow(
                   theme,
                   isLast: idx == _stockBalances.length - 1,
+                  stretch: true,
+                  flexes: const [100, 90, 90, 90, 90, 100, 80],
                   [
                     SizedBox(
                       width: 100,
                       child: Text(
                         bal.period.isNotEmpty ? bal.period : '-',
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.0,
@@ -945,30 +993,38 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     ),
                     SizedBox(
                       width: 90,
-                      child: Text('${bal.openingStock}', style: theme.bodySmall?.override(
-                        fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
-                        useGoogleFonts: !theme.bodySmallIsCustom,
-                      )),
+                      child: Text('${bal.openingStock}',
+                          style: theme.bodySmall.override(
+                            fontFamily: theme.bodySmallFamily,
+                            letterSpacing: 0.0,
+                            useGoogleFonts: !theme.bodySmallIsCustom,
+                          )),
                     ),
                     SizedBox(
                       width: 90,
-                      child: Text('${bal.stockReceived}', style: theme.bodySmall?.override(
-                        fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
-                        color: const Color(0xFF059669), useGoogleFonts: !theme.bodySmallIsCustom,
-                      )),
+                      child: Text('${bal.stockReceived}',
+                          style: theme.bodySmall.override(
+                            fontFamily: theme.bodySmallFamily,
+                            letterSpacing: 0.0,
+                            color: const Color(0xFF059669),
+                            useGoogleFonts: !theme.bodySmallIsCustom,
+                          )),
                     ),
                     SizedBox(
                       width: 90,
-                      child: Text('${bal.stockDispensed}', style: theme.bodySmall?.override(
-                        fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
-                        color: const Color(0xFF2563EB), useGoogleFonts: !theme.bodySmallIsCustom,
-                      )),
+                      child: Text('${bal.stockDispensed}',
+                          style: theme.bodySmall.override(
+                            fontFamily: theme.bodySmallFamily,
+                            letterSpacing: 0.0,
+                            color: const Color(0xFF2563EB),
+                            useGoogleFonts: !theme.bodySmallIsCustom,
+                          )),
                     ),
                     SizedBox(
                       width: 90,
                       child: Text(
                         '${bal.closingStock}',
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.0,
@@ -980,8 +1036,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 100,
                       child: Text(
                         'ZMK ${bal.stockValue.toStringAsFixed(2)}',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
                       ),
@@ -1002,18 +1059,22 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildDOSBadge(FlutterFlowTheme theme, double dos) {
     if (dos <= 7) {
-      return _buildStatusBadge(theme, '${dos.toStringAsFixed(0)}d', const Color(0xFFDC2626), const Color(0xFFFEE2E2));
+      return _buildStatusBadge(theme, '${dos.toStringAsFixed(0)}d',
+          const Color(0xFFDC2626), const Color(0xFFFEE2E2));
     } else if (dos <= 30) {
-      return _buildStatusBadge(theme, '${dos.toStringAsFixed(0)}d', const Color(0xFFD97706), const Color(0xFFFEF3C7));
+      return _buildStatusBadge(theme, '${dos.toStringAsFixed(0)}d',
+          const Color(0xFFD97706), const Color(0xFFFEF3C7));
     }
-    return _buildStatusBadge(theme, '${dos.toStringAsFixed(0)}d', const Color(0xFF059669), const Color(0xFFD1FAE5));
+    return _buildStatusBadge(theme, '${dos.toStringAsFixed(0)}d',
+        const Color(0xFF059669), const Color(0xFFD1FAE5));
   }
 
   // ━━ TAB 3: STOCK MOVEMENTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Widget _buildStockMovementsTab(FlutterFlowTheme theme) {
     if (_stockMovements.isEmpty) {
-      return _buildEmptyState(theme, 'No stock movement records found', Icons.swap_horiz_outlined);
+      return _buildEmptyState(
+          theme, 'No stock movement records found', Icons.swap_horiz_outlined);
     }
 
     return Column(
@@ -1048,8 +1109,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         mov.createdAt != null
                             ? '${mov.createdAt!.day}/${mov.createdAt!.month}/${mov.createdAt!.year}'
                             : '-',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
                       ),
@@ -1062,7 +1124,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 90,
                       child: Text(
                         '${mov.quantity}',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.0,
@@ -1073,9 +1135,12 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     SizedBox(
                       width: 140,
                       child: Text(
-                        mov.movementReference?.isNotEmpty == true ? mov.movementReference! : '-',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        mov.movementReference?.isNotEmpty == true
+                            ? mov.movementReference!
+                            : '-',
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           color: theme.secondaryText,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1086,8 +1151,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 180,
                       child: Text(
                         mov.reason?.isNotEmpty == true ? mov.reason! : '-',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           color: theme.secondaryText,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1096,7 +1162,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     ),
                     SizedBox(
                       width: 100,
-                      child: _buildStatusBadge(theme, 'Recorded', const Color(0xFF059669), const Color(0xFFD1FAE5)),
+                      child: _buildStatusBadge(theme, 'Recorded',
+                          const Color(0xFF059669), const Color(0xFFD1FAE5)),
                     ),
                   ],
                 );
@@ -1113,17 +1180,22 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       case 'in':
       case 'received':
       case 'receipt':
-        return _buildStatusBadge(theme, type, const Color(0xFF059669), const Color(0xFFD1FAE5));
+        return _buildStatusBadge(
+            theme, type, const Color(0xFF059669), const Color(0xFFD1FAE5));
       case 'out':
       case 'dispensed':
       case 'sale':
-        return _buildStatusBadge(theme, type, const Color(0xFF2563EB), const Color(0xFFDBEAFE));
+        return _buildStatusBadge(
+            theme, type, const Color(0xFF2563EB), const Color(0xFFDBEAFE));
       case 'transfer':
-        return _buildStatusBadge(theme, type, const Color(0xFF7C3AED), const Color(0xFFF3E8FF));
+        return _buildStatusBadge(
+            theme, type, const Color(0xFF7C3AED), const Color(0xFFF3E8FF));
       case 'adjustment':
-        return _buildStatusBadge(theme, type, const Color(0xFFD97706), const Color(0xFFFEF3C7));
+        return _buildStatusBadge(
+            theme, type, const Color(0xFFD97706), const Color(0xFFFEF3C7));
       default:
-        return _buildStatusBadge(theme, type, theme.secondaryText, theme.alternate.withValues(alpha: 0.2));
+        return _buildStatusBadge(theme, type, theme.secondaryText,
+            theme.alternate.withValues(alpha: 0.2));
     }
   }
 
@@ -1131,7 +1203,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildBatchExpiryTab(FlutterFlowTheme theme) {
     if (_batches.isEmpty) {
-      return _buildEmptyState(theme, 'No batch records found', Icons.batch_prediction_outlined);
+      return _buildEmptyState(
+          theme, 'No batch records found', Icons.batch_prediction_outlined);
     }
 
     final now = DateTime.now();
@@ -1163,17 +1236,27 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             children: [
               _buildTableHeader(
                 theme,
-                ['Batch No.', 'Quantity', 'Expiry Date', 'Days Left', 'Location', 'Status'],
+                [
+                  'Batch No.',
+                  'Quantity',
+                  'Expiry Date',
+                  'Days Left',
+                  'Location',
+                  'Status'
+                ],
                 [130, 90, 120, 100, 150, 110],
               ),
               ...sortedBatches.asMap().entries.map((entry) {
                 final idx = entry.key;
                 final batch = entry.value;
                 final expiry = batch.expiryDate;
-                final daysLeft = expiry != null ? expiry.difference(now).inDays : null;
+                final daysLeft =
+                    expiry != null ? expiry.difference(now).inDays : null;
                 final isExpired = daysLeft != null && daysLeft < 0;
-                final isExpiringSoon = daysLeft != null && daysLeft >= 0 && daysLeft <= 30;
-                final isNearExpiry = daysLeft != null && daysLeft > 30 && daysLeft <= 90;
+                final isExpiringSoon =
+                    daysLeft != null && daysLeft >= 0 && daysLeft <= 30;
+                final isNearExpiry =
+                    daysLeft != null && daysLeft > 30 && daysLeft <= 90;
 
                 Color statusColor;
                 Color statusBg;
@@ -1204,7 +1287,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 130,
                       child: Text(
                         batch.batchNumber.isNotEmpty ? batch.batchNumber : '-',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.0,
@@ -1216,7 +1299,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 90,
                       child: Text(
                         '${batch.quantity}',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.0,
@@ -1230,8 +1313,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         expiry != null
                             ? '${expiry.day}/${expiry.month}/${expiry.year}'
                             : 'N/A',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           color: isExpired ? const Color(0xFFDC2626) : null,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1241,8 +1325,10 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 100,
                       child: daysLeft != null
                           ? Text(
-                              isExpired ? '${daysLeft.abs()}d overdue' : '$daysLeft days',
-                              style: theme.bodySmall?.override(
+                              isExpired
+                                  ? '${daysLeft.abs()}d overdue'
+                                  : '$daysLeft days',
+                              style: theme.bodySmall.override(
                                 fontFamily: theme.bodySmallFamily,
                                 color: statusColor,
                                 fontWeight: FontWeight.w600,
@@ -1250,17 +1336,22 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                                 useGoogleFonts: !theme.bodySmallIsCustom,
                               ),
                             )
-                          : Text('-', style: theme.bodySmall?.override(
-                              fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
-                              useGoogleFonts: !theme.bodySmallIsCustom,
-                            )),
+                          : Text('-',
+                              style: theme.bodySmall.override(
+                                fontFamily: theme.bodySmallFamily,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !theme.bodySmallIsCustom,
+                              )),
                     ),
                     SizedBox(
                       width: 150,
                       child: Text(
-                        batch.facilityLocation?.isNotEmpty == true ? batch.facilityLocation! : '-',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        batch.facilityLocation?.isNotEmpty == true
+                            ? batch.facilityLocation!
+                            : '-',
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           color: theme.secondaryText,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1269,7 +1360,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     ),
                     SizedBox(
                       width: 110,
-                      child: _buildStatusBadge(theme, statusLabel, statusColor, statusBg),
+                      child: _buildStatusBadge(
+                          theme, statusLabel, statusColor, statusBg),
                     ),
                   ],
                 );
@@ -1285,7 +1377,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildReplenishmentTab(FlutterFlowTheme theme) {
     if (_replenishments.isEmpty) {
-      return _buildEmptyState(theme, 'No replenishment recommendations', Icons.autorenew_outlined);
+      return _buildEmptyState(
+          theme, 'No replenishment recommendations', Icons.autorenew_outlined);
     }
 
     // Sort by suggested order qty descending (most urgent first)
@@ -1308,7 +1401,14 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             children: [
               _buildTableHeader(
                 theme,
-                ['Product', 'Avg Weekly Sales', 'Current Stock', 'Target Level', 'Suggested Qty', 'Urgency'],
+                [
+                  'Product',
+                  'Avg Weekly Sales',
+                  'Current Stock',
+                  'Target Level',
+                  'Suggested Qty',
+                  'Urgency'
+                ],
                 [200, 130, 120, 120, 120, 110],
               ),
               ...sorted.asMap().entries.map((entry) {
@@ -1351,13 +1451,14 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                               color: urgencyColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Icon(Icons.shopping_cart_rounded, size: 16, color: urgencyColor),
+                            child: Icon(Icons.shopping_cart_rounded,
+                                size: 16, color: urgencyColor),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               'Product',
-                              style: theme.bodyMedium?.override(
+                              style: theme.bodyMedium.override(
                                 fontFamily: theme.bodyMediumFamily,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.0,
@@ -1373,8 +1474,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 130,
                       child: Text(
                         '${rep.averageWeeklySales.toStringAsFixed(1)}/wk',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
                       ),
@@ -1383,10 +1485,12 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         '${rep.currentStock} units',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           fontWeight: FontWeight.w700,
-                          color: urgencyRatio < 0.2 ? const Color(0xFFDC2626) : null,
+                          color: urgencyRatio < 0.2
+                              ? const Color(0xFFDC2626)
+                              : null,
                           letterSpacing: 0.0,
                           useGoogleFonts: !theme.bodyMediumIsCustom,
                         ),
@@ -1396,8 +1500,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         '${rep.targetStockLevel} units',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           color: theme.secondaryText,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1406,14 +1511,15 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     SizedBox(
                       width: 120,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           '+${rep.suggestedOrderQty}',
-                          style: theme.bodyMedium?.override(
+                          style: theme.bodyMedium.override(
                             fontFamily: theme.bodyMediumFamily,
                             color: const Color(0xFF7C3AED),
                             fontWeight: FontWeight.w700,
@@ -1425,7 +1531,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     ),
                     SizedBox(
                       width: 110,
-                      child: _buildStatusBadge(theme, urgencyLabel, urgencyColor, urgencyBg),
+                      child: _buildStatusBadge(
+                          theme, urgencyLabel, urgencyColor, urgencyBg),
                     ),
                   ],
                 );
@@ -1441,7 +1548,10 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
 
   Widget _buildLowStockAlertsTab(FlutterFlowTheme theme) {
     if (_lowStockAlerts.isEmpty) {
-      return _buildEmptyState(theme, 'No low stock alerts - all items are well stocked!', Icons.check_circle_outline);
+      return _buildEmptyState(
+          theme,
+          'No low stock alerts - all items are well stocked!',
+          Icons.check_circle_outline);
     }
 
     // Sort by urgency (most critical first)
@@ -1470,7 +1580,14 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             children: [
               _buildTableHeader(
                 theme,
-                ['Product', 'Current Stock', 'Reorder Level', 'Deficit', 'Suggested Qty', 'Alert Level'],
+                [
+                  'Product',
+                  'Current Stock',
+                  'Reorder Level',
+                  'Deficit',
+                  'Suggested Qty',
+                  'Alert Level'
+                ],
                 [200, 120, 120, 100, 120, 110],
               ),
               ...sorted.asMap().entries.map((entry) {
@@ -1519,7 +1636,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                           Expanded(
                             child: Text(
                               'Product',
-                              style: theme.bodyMedium?.override(
+                              style: theme.bodyMedium.override(
                                 fontFamily: theme.bodyMediumFamily,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.0,
@@ -1535,7 +1652,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         '${alert.currentStock} units',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           fontWeight: FontWeight.w700,
                           color: alertColor,
@@ -1548,8 +1665,9 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         '${alert.reorderLevel} units',
-                        style: theme.bodySmall?.override(
-                          fontFamily: theme.bodySmallFamily, letterSpacing: 0.0,
+                        style: theme.bodySmall.override(
+                          fontFamily: theme.bodySmallFamily,
+                          letterSpacing: 0.0,
                           color: theme.secondaryText,
                           useGoogleFonts: !theme.bodySmallIsCustom,
                         ),
@@ -1558,14 +1676,15 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     SizedBox(
                       width: 100,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                           color: const Color(0xFFDC2626).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           deficit > 0 ? '-$deficit' : '0',
-                          style: theme.bodySmall?.override(
+                          style: theme.bodySmall.override(
                             fontFamily: theme.bodySmallFamily,
                             color: const Color(0xFFDC2626),
                             fontWeight: FontWeight.w700,
@@ -1579,7 +1698,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       width: 120,
                       child: Text(
                         '+${alert.suggestedQuantity} units',
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: const Color(0xFF059669),
                           fontWeight: FontWeight.w600,
@@ -1590,7 +1709,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     ),
                     SizedBox(
                       width: 110,
-                      child: _buildStatusBadge(theme, alert.status, alertColor, alertBg),
+                      child: _buildStatusBadge(
+                          theme, alert.status, alertColor, alertBg),
                     ),
                   ],
                 );
@@ -1624,9 +1744,11 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 style: OutlinedButton.styleFrom(
                   foregroundColor: theme.primary,
                   side: BorderSide(color: theme.primary.withValues(alpha: 0.5)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-                  textStyle: theme.bodySmall?.override(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                  textStyle: theme.bodySmall.override(
                     fontFamily: theme.bodySmallFamily,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.0,
@@ -1639,7 +1761,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         ),
         const SizedBox(height: 16),
         if (_outlets.isEmpty)
-          _buildEmptyState(theme, 'No outlets configured yet', Icons.store_outlined)
+          _buildEmptyState(
+              theme, 'No outlets configured yet', Icons.store_outlined)
         else
           Expanded(
             child: _buildDataTableCard(
@@ -1647,7 +1770,14 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               children: [
                 _buildTableHeader(
                   theme,
-                  ['Outlet Name', 'Code', 'Address', 'Status', 'Created', 'Actions'],
+                  [
+                    'Outlet Name',
+                    'Code',
+                    'Address',
+                    'Status',
+                    'Created',
+                    'Actions'
+                  ],
                   [200, 120, 200, 110, 120, 100],
                 ),
                 ..._outlets.asMap().entries.map((entry) {
@@ -1684,7 +1814,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                             Expanded(
                               child: Text(
                                 outlet.name,
-                                style: theme.bodyMedium?.override(
+                                style: theme.bodyMedium.override(
                                   fontFamily: theme.bodyMediumFamily,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.0,
@@ -1700,14 +1830,15 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       SizedBox(
                         width: 120,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: theme.primary.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             outlet.code,
-                            style: theme.bodySmall?.override(
+                            style: theme.bodySmall.override(
                               fontFamily: theme.bodySmallFamily,
                               color: theme.primary,
                               fontWeight: FontWeight.w600,
@@ -1722,7 +1853,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                         width: 200,
                         child: Text(
                           outlet.hasAddress() ? outlet.address! : '-',
-                          style: theme.bodySmall?.override(
+                          style: theme.bodySmall.override(
                             fontFamily: theme.bodySmallFamily,
                             color: theme.secondaryText,
                             letterSpacing: 0.0,
@@ -1735,8 +1866,16 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                       SizedBox(
                         width: 110,
                         child: outlet.isActive
-                            ? _buildStatusBadge(theme, 'Active', const Color(0xFF059669), const Color(0xFFD1FAE5))
-                            : _buildStatusBadge(theme, 'Inactive', const Color(0xFF6B7280), const Color(0xFFF3F4F6)),
+                            ? _buildStatusBadge(
+                                theme,
+                                'Active',
+                                const Color(0xFF059669),
+                                const Color(0xFFD1FAE5))
+                            : _buildStatusBadge(
+                                theme,
+                                'Inactive',
+                                const Color(0xFF6B7280),
+                                const Color(0xFFF3F4F6)),
                       ),
                       // Created
                       SizedBox(
@@ -1745,7 +1884,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                           outlet.createdAt != null
                               ? '${outlet.createdAt!.day}/${outlet.createdAt!.month}/${outlet.createdAt!.year}'
                               : '-',
-                          style: theme.bodySmall?.override(
+                          style: theme.bodySmall.override(
                             fontFamily: theme.bodySmallFamily,
                             color: theme.secondaryText,
                             letterSpacing: 0.0,
@@ -1761,8 +1900,12 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                           children: [
                             _buildIconActionButton(
                               theme: theme,
-                              icon: outlet.isActive ? Icons.toggle_on_rounded : Icons.toggle_off_rounded,
-                              color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                              icon: outlet.isActive
+                                  ? Icons.toggle_on_rounded
+                                  : Icons.toggle_off_rounded,
+                              color: outlet.isActive
+                                  ? const Color(0xFF059669)
+                                  : const Color(0xFF6B7280),
                               onTap: () => _toggleOutletStatus(outlet),
                             ),
                             const SizedBox(width: 6),
@@ -1827,23 +1970,27 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.store_rounded, color: Color(0xFF7C3AED), size: 18),
+                child: const Icon(Icons.store_rounded,
+                    color: Color(0xFF7C3AED), size: 18),
               ),
               const SizedBox(width: 12),
               Text(
                 'Add Outlet',
-                style: FlutterFlowTheme.of(context).titleLarge?.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.2,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
-                ),
+                style: FlutterFlowTheme.of(context).titleLarge.override(
+                      fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.2,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).titleLargeIsCustom,
+                    ),
               ),
             ],
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           content: SizedBox(
-            width: MediaQuery.sizeOf(context).width > 440 ? 440 : double.infinity,
+            width:
+                MediaQuery.sizeOf(context).width > 440 ? 440 : double.infinity,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -1853,7 +2000,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     decoration: InputDecoration(
                       labelText: 'Outlet Name *',
                       prefixIcon: const Icon(Icons.label_rounded, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -1862,7 +2010,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     decoration: InputDecoration(
                       labelText: 'Outlet Code *',
                       prefixIcon: const Icon(Icons.qr_code_rounded, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -1871,8 +2020,10 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: 'Address',
-                      prefixIcon: const Icon(Icons.location_on_rounded, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      prefixIcon:
+                          const Icon(Icons.location_on_rounded, size: 18),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ],
@@ -1886,14 +2037,17 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
             ),
             FilledButton(
               onPressed: () async {
-                if (nameController.text.isEmpty || codeController.text.isEmpty) return;
+                if (nameController.text.isEmpty || codeController.text.isEmpty)
+                  return;
                 final ownerRef = _pharmacyParent();
                 if (ownerRef == null) return;
                 await OutletRecord.createDoc(ownerRef).set(
                   createOutletRecordData(
                     name: nameController.text,
                     code: codeController.text,
-                    address: addressController.text.isNotEmpty ? addressController.text : null,
+                    address: addressController.text.isNotEmpty
+                        ? addressController.text
+                        : null,
                     isActive: true,
                     createdAt: getCurrentTimestamp,
                     updatedAt: getCurrentTimestamp,
@@ -1907,7 +2061,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               },
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFF7C3AED),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
               ),
               child: const Text('Save'),
             ),
@@ -1930,12 +2085,16 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Outlet'),
-        content: Text('Are you sure you want to delete "${outlet.name}"? This action cannot be undone.'),
+        content: Text(
+            'Are you sure you want to delete "${outlet.name}"? This action cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFDC2626)),
+            style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFFDC2626)),
             child: const Text('Delete'),
           ),
         ],

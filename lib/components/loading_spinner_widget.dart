@@ -1,3 +1,4 @@
+import '/components/pulse_logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
@@ -112,16 +113,10 @@ class _LoadingSpinnerWidgetState extends State<LoadingSpinnerWidget>
                           ),
                           child: Center(
                             child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/duniya_logo.png',
-                                width: effectiveSize * 0.42,
-                                height: effectiveSize * 0.42,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => Icon(
-                                  Icons.local_pharmacy,
-                                  size: effectiveSize * 0.28,
-                                  color: FlutterFlowTheme.of(context).primary,
-                                ),
+                              child: PulseLogoWidget(
+                                size: effectiveSize * 0.42,
+                                showWordmark: false,
+                                color: FlutterFlowTheme.of(context).primary,
                               ),
                             ),
                           ),
@@ -147,16 +142,10 @@ class _LoadingSpinnerWidgetState extends State<LoadingSpinnerWidget>
                   return Transform.scale(
                     scale: scale,
                     child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/duniya_logo.png',
-                        width: effectiveSize * 0.48,
-                        height: effectiveSize * 0.48,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.local_pharmacy,
-                          size: effectiveSize * 0.32,
-                          color: FlutterFlowTheme.of(context).primary,
-                        ),
+                      child: PulseLogoWidget(
+                        size: effectiveSize * 0.48,
+                        showWordmark: false,
+                        color: FlutterFlowTheme.of(context).primary,
                       ),
                     ),
                   );

@@ -1,17 +1,17 @@
 /// ─────────────────────────────────────────────────────────────────────
-/// Duniya RBAC — Role Configuration (Permission Matrix)
+/// Pulse RBAC — Role Configuration (Permission Matrix)
 /// ─────────────────────────────────────────────────────────────────────
 /// This is the CENTRAL permission matrix. Every role-permission mapping
 /// is defined here. No other file should hardcode role-permission logic.
 ///
-/// Design principles:
+/// STRICT RBAC RULES:
+///   - Pharmacy users see Store Inventory (never Product Catalogue)
+///   - Pulse users see Product Catalogue (never Store Inventory)
+///   - Store Inventory and Product Catalogue NEVER appear simultaneously
+///   - Hiding a nav item is NOT sufficient security — enforce in widgets
 ///   - Principle of least privilege: roles start with minimal permissions
-///   - Owner has full pharmacy access; Duniya Admin has full network access
-///   - Staff roles are scoped to their operational responsibilities
-///   - Read permissions are generally granted more broadly than write
-///   - Financial/HR permissions are restricted to Owner & Outlet Manager
 ///
-/// To modify permissions for a role, edit ONLY this file.
+/// Last updated: 2026-08-19 — strict compliance with Pulse RBAC spec.
 /// ─────────────────────────────────────────────────────────────────────
 library;
 
@@ -22,18 +22,30 @@ import 'roles.dart';
 /// This is the single source of truth for the entire RBAC system.
 final Map<AppRole, Set<Permission>> rolePermissions = {
   // ═══════════════════════════════════════════════════════════════════
-  // PHARMACY OWNER — Full administrative access to their pharmacy
+  // PHARMACY OWNER — Full administrative access
+  // Main: Home, My Pharmacies, Human Resource, Finances, Pending Approvals
   // ═══════════════════════════════════════════════════════════════════
   AppRole.owner: {
-    // POS — full access
-    Permission.posView,
-    Permission.posCreateSale,
-    Permission.posEditSale,
-    Permission.posDeleteSale,
-    Permission.posApplyDiscount,
-    Permission.posVoidTransaction,
+    // ── Main ──
+    Permission.pharmaciesView,
+    Permission.pharmaciesCreate,
+    Permission.pharmaciesEdit,
+    Permission.pharmaciesDelete,
+    Permission.hrView,
+    Permission.hrCreateStaff,
+    Permission.hrEditStaff,
+    Permission.hrDeleteStaff,
+    Permission.hrAssignRoles,
+    Permission.hrViewStaffDetails,
+    Permission.financesView,
+    Permission.financesViewReports,
+    Permission.financesManageSubscriptions,
+    Permission.financesViewBilling,
+    Permission.pendingApprovalsView,
+    Permission.pendingApprovalsApprove,
+    Permission.pendingApprovalsReject,
 
-    // Inventory — full access
+    // ── Inventory ──
     Permission.inventoryView,
     Permission.inventoryCreate,
     Permission.inventoryEdit,
@@ -41,13 +53,7 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.inventoryImport,
     Permission.inventoryExport,
 
-    // Product Catalogue — full access
-    Permission.catalogueView,
-    Permission.catalogueCreate,
-    Permission.catalogueEdit,
-    Permission.catalogueDelete,
-
-    // Stock Management — full access
+    // ── Stock ──
     Permission.stockBalancesView,
     Permission.stockMovementsView,
     Permission.stockCountsView,
@@ -56,134 +62,15 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.stockCountsApprove,
     Permission.stockCountsDelete,
 
-    // Goods Received — full access
+    // ── Operations ──
     Permission.goodsReceivedView,
     Permission.goodsReceivedCreate,
     Permission.goodsReceivedEdit,
     Permission.goodsReceivedDelete,
-
-    // Batch & Expiry
-    Permission.batchesView,
-    Permission.batchesEdit,
-
-    // Low Stock Alerts
-    Permission.lowStockAlertsView,
-    Permission.lowStockAlertsManage,
-
-    // Replenishment
-    Permission.replenishmentView,
-    Permission.replenishmentCreate,
-    Permission.replenishmentApprove,
-
-    // Outlets
-    Permission.outletsView,
-    Permission.outletsCreate,
-    Permission.outletsEdit,
-    Permission.outletsDelete,
-
-    // HR — full access
-    Permission.hrView,
-    Permission.hrCreateStaff,
-    Permission.hrEditStaff,
-    Permission.hrDeleteStaff,
-    Permission.hrAssignRoles,
-    Permission.hrViewStaffDetails,
-
-    // Finances — full access
-    Permission.financesView,
-    Permission.financesViewReports,
-    Permission.financesManageSubscriptions,
-    Permission.financesViewBilling,
-
-    // My Pharmacies — full access
-    Permission.pharmaciesView,
-    Permission.pharmaciesCreate,
-    Permission.pharmaciesEdit,
-    Permission.pharmaciesDelete,
-
-    // Pending Approvals
-    Permission.pendingApprovalsView,
-    Permission.pendingApprovalsApprove,
-    Permission.pendingApprovalsReject,
-
-    // Sales / Dispensing
     Permission.salesView,
     Permission.salesCreate,
     Permission.salesEdit,
     Permission.salesDelete,
-
-    // Pharmacy Tools
-    Permission.pharmacyToolsView,
-    Permission.aiAssistantUse,
-    Permission.bmiCalculatorUse,
-
-    // Settings
-    Permission.settingsView,
-    Permission.settingsManage,
-
-    // Dashboard — full metrics
-    Permission.dashboardViewOwnerMetrics,
-    Permission.dashboardViewFinanceNetwork,
-    Permission.dashboardViewSalesAnalytics,
-    Permission.dashboardViewInventoryMix,
-
-    // Damaged Stock
-    Permission.damagedStockView,
-    Permission.damagedStockCreate,
-    Permission.damagedStockEdit,
-    Permission.damagedStockDelete,
-
-    // Audit Logs — full access
-    Permission.auditLogsView,
-    Permission.auditLogsExport,
-
-    // Notifications
-    Permission.notificationsView,
-
-    // Drug Interactions — full access
-    Permission.drugInteractionsView,
-    Permission.drugInteractionsCheck,
-    Permission.drugInteractionsManageRules,
-
-    // Expiry Tracking — full access
-    Permission.expiryTrackingView,
-    Permission.expiryTrackingExport,
-
-    // Purchase Orders — full access
-    Permission.purchaseOrdersView,
-    Permission.purchaseOrdersCreate,
-    Permission.purchaseOrdersEdit,
-    Permission.purchaseOrdersApprove,
-    Permission.purchaseOrdersDelete,
-
-    // Prescriptions — full access
-    Permission.prescriptionsView,
-    Permission.prescriptionsCreate,
-    Permission.prescriptionsVerify,
-    Permission.prescriptionsFulfill,
-
-    // Insurance — full access
-    Permission.insuranceView,
-    Permission.insuranceSubmitClaim,
-    Permission.insuranceVerifyMember,
-
-    // Cold Chain — full access
-    Permission.coldChainView,
-    Permission.coldChainManageSensors,
-    Permission.coldChainViewAlerts,
-
-    // Patient Records — full access
-    Permission.patientRecordsView,
-    Permission.patientRecordsCreate,
-    Permission.patientRecordsEdit,
-    Permission.patientRecordsViewHistory,
-  },
-
-  // ═══════════════════════════════════════════════════════════════════
-  // OUTLET MANAGER — Manages a specific outlet, can manage staff
-  // ═══════════════════════════════════════════════════════════════════
-  AppRole.outletManager: {
-    // POS — full access
     Permission.posView,
     Permission.posCreateSale,
     Permission.posEditSale,
@@ -191,17 +78,90 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.posApplyDiscount,
     Permission.posVoidTransaction,
 
-    // Inventory — view, create, edit (no delete/import/export)
+    // ── Monitoring ──
+    Permission.batchesView,
+    Permission.batchesEdit,
+    Permission.lowStockAlertsView,
+    Permission.lowStockAlertsManage,
+    Permission.replenishmentView,
+    Permission.replenishmentCreate,
+    Permission.replenishmentApprove,
+    Permission.coldChainView,
+    Permission.coldChainManageSensors,
+    Permission.coldChainViewAlerts,
+    Permission.expiryTrackingView,
+    Permission.expiryTrackingExport,
+
+    // ── Clinical ──
+    Permission.prescriptionsView,
+    Permission.prescriptionsCreate,
+    Permission.prescriptionsVerify,
+    Permission.prescriptionsFulfill,
+    Permission.insuranceView,
+    Permission.insuranceSubmitClaim,
+    Permission.insuranceVerifyMember,
+    Permission.patientRecordsView,
+    Permission.patientRecordsCreate,
+    Permission.patientRecordsEdit,
+    Permission.patientRecordsViewHistory,
+    Permission.drugInteractionsView,
+    Permission.drugInteractionsCheck,
+    Permission.drugInteractionsManageRules,
+
+    // ── Procurement ──
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+    Permission.purchaseOrdersEdit,
+    Permission.purchaseOrdersApprove,
+    Permission.purchaseOrdersDelete,
+
+    // ── Tools ──
+    Permission.pharmacyToolsView,
+    Permission.aiAssistantUse,
+    Permission.bmiCalculatorUse,
+
+    // ── Administration ──
+    Permission.auditLogsView,
+    Permission.auditLogsExport,
+    Permission.settingsView,
+    Permission.settingsManage,
+
+    // ── Dashboard ──
+    Permission.dashboardViewOwnerMetrics,
+    Permission.dashboardViewFinanceNetwork,
+    Permission.dashboardViewSalesAnalytics,
+    Permission.dashboardViewInventoryMix,
+
+    // ── Damaged Stock ──
+    Permission.damagedStockView,
+    Permission.damagedStockCreate,
+    Permission.damagedStockEdit,
+    Permission.damagedStockDelete,
+
+    // ── Notifications ──
+    Permission.notificationsView,
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PHARMACY MANAGER — Manages pharmacy operations & staff
+  // Main: Home, Human Resource, Finances
+  // NO: My Pharmacies, Pending Approvals
+  // ═══════════════════════════════════════════════════════════════════
+  AppRole.outletManager: {
+    // ── Main ──
+    Permission.hrView,
+    Permission.hrCreateStaff,
+    Permission.hrEditStaff,
+    Permission.hrViewStaffDetails,
+    Permission.financesView,
+    Permission.financesViewReports,
+
+    // ── Inventory ──
     Permission.inventoryView,
     Permission.inventoryCreate,
     Permission.inventoryEdit,
 
-    // Product Catalogue — view, create, edit
-    Permission.catalogueView,
-    Permission.catalogueCreate,
-    Permission.catalogueEdit,
-
-    // Stock Management — view, create, approve
+    // ── Stock (all stock items) ──
     Permission.stockBalancesView,
     Permission.stockMovementsView,
     Permission.stockCountsView,
@@ -209,483 +169,312 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.stockCountsEdit,
     Permission.stockCountsApprove,
 
-    // Goods Received — view, create, edit
+    // ── Operations ──
     Permission.goodsReceivedView,
     Permission.goodsReceivedCreate,
     Permission.goodsReceivedEdit,
-
-    // Batch & Expiry
-    Permission.batchesView,
-    Permission.batchesEdit,
-
-    // Low Stock Alerts
-    Permission.lowStockAlertsView,
-    Permission.lowStockAlertsManage,
-
-    // Replenishment
-    Permission.replenishmentView,
-    Permission.replenishmentCreate,
-    Permission.replenishmentApprove,
-
-    // Outlets — view only
-    Permission.outletsView,
-
-    // HR — can view & manage staff (no role assignment, no delete)
-    Permission.hrView,
-    Permission.hrCreateStaff,
-    Permission.hrEditStaff,
-    Permission.hrViewStaffDetails,
-
-    // Finances — view + reports
-    Permission.financesView,
-    Permission.financesViewReports,
-
-    // My Pharmacies — view only
-    Permission.pharmaciesView,
-
-    // Pending Approvals — view only
-    Permission.pendingApprovalsView,
-
-    // Sales / Dispensing — no delete
     Permission.salesView,
     Permission.salesCreate,
     Permission.salesEdit,
+    Permission.posView,
+    Permission.posCreateSale,
+    Permission.posEditSale,
+    Permission.posDeleteSale,
+    Permission.posApplyDiscount,
+    Permission.posVoidTransaction,
 
-    // Pharmacy Tools
+    // ── Monitoring (all) ──
+    Permission.batchesView,
+    Permission.batchesEdit,
+    Permission.lowStockAlertsView,
+    Permission.lowStockAlertsManage,
+    Permission.replenishmentView,
+    Permission.replenishmentCreate,
+    Permission.replenishmentApprove,
+    Permission.coldChainView,
+    Permission.coldChainManageSensors,
+    Permission.coldChainViewAlerts,
+    Permission.expiryTrackingView,
+    Permission.expiryTrackingExport,
+
+    // ── Tools ──
     Permission.pharmacyToolsView,
     Permission.aiAssistantUse,
     Permission.bmiCalculatorUse,
 
-    // Settings
+    // ── Administration ──
+    Permission.auditLogsView,
     Permission.settingsView,
 
-    // Dashboard — sales + inventory
+    // ── Dashboard ──
     Permission.dashboardViewSalesAnalytics,
     Permission.dashboardViewInventoryMix,
 
-    // Damaged Stock — view, create, edit
+    // ── Damaged Stock ──
     Permission.damagedStockView,
     Permission.damagedStockCreate,
     Permission.damagedStockEdit,
 
-    // Audit Logs — view
-    Permission.auditLogsView,
-
-    // Notifications
+    // ── Notifications ──
     Permission.notificationsView,
-
-    // Drug Interactions
-    Permission.drugInteractionsView,
-    Permission.drugInteractionsCheck,
-
-    // Expiry Tracking
-    Permission.expiryTrackingView,
-    Permission.expiryTrackingExport,
-
-    // Purchase Orders
-    Permission.purchaseOrdersView,
-    Permission.purchaseOrdersCreate,
-    Permission.purchaseOrdersEdit,
-    Permission.purchaseOrdersApprove,
-
-    // Prescriptions
-    Permission.prescriptionsView,
-    Permission.prescriptionsCreate,
-    Permission.prescriptionsVerify,
-    Permission.prescriptionsFulfill,
-
-    // Insurance
-    Permission.insuranceView,
-    Permission.insuranceSubmitClaim,
-    Permission.insuranceVerifyMember,
-
-    // Cold Chain
-    Permission.coldChainView,
-    Permission.coldChainViewAlerts,
-
-    // Patient Records
-    Permission.patientRecordsView,
-    Permission.patientRecordsCreate,
-    Permission.patientRecordsEdit,
-    Permission.patientRecordsViewHistory,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // PHARMACIST — Handles dispensing, POS, and clinical tools
+  // PHARMACIST — Clinical, dispensing, inventory, prescriptions
+  // Main: Home only
   // ═══════════════════════════════════════════════════════════════════
   AppRole.pharmacist: {
-    // POS — full access, no void/delete
+    // ── Inventory ──
+    Permission.inventoryView,
+    Permission.inventoryCreate,
+    Permission.inventoryEdit,
+
+    // ── Stock (Balances, Movements, Counts) ──
+    Permission.stockBalancesView,
+    Permission.stockMovementsView,
+    Permission.stockCountsView,
+    Permission.stockCountsCreate,
+    Permission.stockCountsEdit,
+
+    // ── Operations ──
+    Permission.goodsReceivedView,
+    Permission.goodsReceivedCreate,
+    Permission.salesView,
+    Permission.salesCreate,
+    Permission.salesEdit,
     Permission.posView,
     Permission.posCreateSale,
     Permission.posEditSale,
     Permission.posApplyDiscount,
 
-    // Inventory — view, create, edit
-    Permission.inventoryView,
-    Permission.inventoryCreate,
-    Permission.inventoryEdit,
-
-    // Product Catalogue — view, create, edit
-    Permission.catalogueView,
-    Permission.catalogueCreate,
-    Permission.catalogueEdit,
-
-    // Stock Management — view & create counts
-    Permission.stockBalancesView,
-    Permission.stockMovementsView,
-    Permission.stockCountsView,
-    Permission.stockCountsCreate,
-    Permission.stockCountsEdit,
-
-    // Goods Received — view & create
-    Permission.goodsReceivedView,
-    Permission.goodsReceivedCreate,
-
-    // Batch & Expiry — view
+    // ── Monitoring (Batches, Low Stock, Replenishment, Cold Chain) ──
     Permission.batchesView,
-
-    // Low Stock Alerts — view
     Permission.lowStockAlertsView,
-
-    // Replenishment — view
     Permission.replenishmentView,
-
-    // Outlets — view
-    Permission.outletsView,
-
-    // HR — no access
-
-    // Finances — view only
-    Permission.financesView,
-
-    // My Pharmacies — view
-    Permission.pharmaciesView,
-
-    // Pending Approvals — no access
-
-    // Sales / Dispensing
-    Permission.salesView,
-    Permission.salesCreate,
-    Permission.salesEdit,
-
-    // Pharmacy Tools — full access (core clinical tools)
-    Permission.pharmacyToolsView,
-    Permission.aiAssistantUse,
-    Permission.bmiCalculatorUse,
-
-    // Settings
-    Permission.settingsView,
-
-    // Dashboard — limited metrics
-    Permission.dashboardViewSalesAnalytics,
-
-    // Damaged Stock — view & report
-    Permission.damagedStockView,
-    Permission.damagedStockCreate,
-
-    // Notifications
-    Permission.notificationsView,
-
-    // Drug Interactions
-    Permission.drugInteractionsView,
-    Permission.drugInteractionsCheck,
-
-    // Expiry Tracking
+    Permission.coldChainView,
+    Permission.coldChainViewAlerts,
     Permission.expiryTrackingView,
 
-    // Purchase Orders
-    Permission.purchaseOrdersView,
-    Permission.purchaseOrdersCreate,
-
-    // Prescriptions
+    // ── Clinical (all clinical areas) ──
     Permission.prescriptionsView,
     Permission.prescriptionsCreate,
     Permission.prescriptionsVerify,
     Permission.prescriptionsFulfill,
-
-    // Insurance
     Permission.insuranceView,
     Permission.insuranceVerifyMember,
-
-    // Cold Chain
-    Permission.coldChainView,
-    Permission.coldChainViewAlerts,
-
-    // Patient Records
     Permission.patientRecordsView,
     Permission.patientRecordsCreate,
     Permission.patientRecordsEdit,
     Permission.patientRecordsViewHistory,
+    Permission.drugInteractionsView,
+    Permission.drugInteractionsCheck,
+
+    // ── Procurement ──
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+
+    // ── Tools ──
+    Permission.pharmacyToolsView,
+    Permission.aiAssistantUse,
+    Permission.bmiCalculatorUse,
+
+    // ── Administration ──
+    Permission.settingsView,
+
+    // ── Dashboard ──
+    Permission.dashboardViewSalesAnalytics,
+
+    // ── Damaged Stock ──
+    Permission.damagedStockView,
+    Permission.damagedStockCreate,
+
+    // ── Notifications ──
+    Permission.notificationsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // PHARMACY TECHNICIAN — Inventory & stock management focus
+  // PHARMACY TECHNICIAN — Inventory, receiving, stock, expiry
+  // Main: Home only
   // ═══════════════════════════════════════════════════════════════════
   AppRole.pharmacyTechnician: {
-    // POS — view only
-    Permission.posView,
-
-    // Inventory — view, create, edit
+    // ── Inventory ──
     Permission.inventoryView,
     Permission.inventoryCreate,
     Permission.inventoryEdit,
 
-    // Product Catalogue — view, create, edit
-    Permission.catalogueView,
-    Permission.catalogueCreate,
-    Permission.catalogueEdit,
-
-    // Stock Management — view & create counts
+    // ── Stock (Balances, Movements, Counts) ──
     Permission.stockBalancesView,
     Permission.stockMovementsView,
     Permission.stockCountsView,
     Permission.stockCountsCreate,
     Permission.stockCountsEdit,
 
-    // Goods Received — view & create
+    // ── Operations ──
     Permission.goodsReceivedView,
     Permission.goodsReceivedCreate,
 
-    // Batch & Expiry — view
+    // ── Monitoring (all inventory monitoring, Cold Chain) ──
     Permission.batchesView,
-
-    // Low Stock Alerts — view
+    Permission.batchesEdit,
     Permission.lowStockAlertsView,
-
-    // Replenishment — view & create
+    Permission.lowStockAlertsManage,
     Permission.replenishmentView,
     Permission.replenishmentCreate,
-
-    // Outlets — view
-    Permission.outletsView,
-
-    // Sales / Dispensing — view
-    Permission.salesView,
-
-    // Pharmacy Tools — limited
-    Permission.pharmacyToolsView,
-    Permission.bmiCalculatorUse,
-
-    // Settings
-    Permission.settingsView,
-
-    // Damaged Stock — view & report
-    Permission.damagedStockView,
-    Permission.damagedStockCreate,
-
-    // Notifications
-    Permission.notificationsView,
-
-    // Drug Interactions
-    Permission.drugInteractionsView,
-
-    // Expiry Tracking
+    Permission.coldChainView,
+    Permission.coldChainManageSensors,
+    Permission.coldChainViewAlerts,
     Permission.expiryTrackingView,
 
-    // Purchase Orders
+    // ── Clinical (Patient Records read-only) ──
+    Permission.patientRecordsView,
+
+    // ── Procurement ──
     Permission.purchaseOrdersView,
     Permission.purchaseOrdersCreate,
 
-    // Cold Chain
-    Permission.coldChainView,
-    Permission.coldChainViewAlerts,
+    // ── Tools ──
+    Permission.pharmacyToolsView,
+    Permission.bmiCalculatorUse,
 
-    // Patient Records
-    Permission.patientRecordsView,
+    // ── Administration ──
+    Permission.settingsView,
+
+    // ── Damaged Stock ──
+    Permission.damagedStockView,
+    Permission.damagedStockCreate,
+
+    // ── Notifications ──
+    Permission.notificationsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // CASHIER — POS transactions, sales, and basic inventory views
+  // CASHIER — POS, sales, basic inventory views
+  // Main: Home only
   // ═══════════════════════════════════════════════════════════════════
   AppRole.cashier: {
-    // POS — core access (primary responsibility)
+    // ── Inventory (view only) ──
+    Permission.inventoryView,
+
+    // ── Stock (Balances, Movements — no Counts) ──
+    Permission.stockBalancesView,
+    Permission.stockMovementsView,
+
+    // ── Operations ──
+    Permission.salesView,
+    Permission.salesCreate,
     Permission.posView,
     Permission.posCreateSale,
     Permission.posEditSale,
 
-    // Inventory — view only
-    Permission.inventoryView,
-
-    // Product Catalogue — view
-    Permission.catalogueView,
-
-    // Stock Management — view balances & movements
-    Permission.stockBalancesView,
-    Permission.stockMovementsView,
-
-    // Batch & Expiry — view
+    // ── Monitoring (Batches, Low Stock — no Replenishment/Cold Chain) ──
     Permission.batchesView,
-
-    // Low Stock Alerts — view
     Permission.lowStockAlertsView,
 
-    // Sales / Dispensing — view & create
-    Permission.salesView,
-    Permission.salesCreate,
+    // ── Clinical (Insurance verification, Drug Interactions read-only) ──
+    Permission.insuranceView,
+    Permission.insuranceVerifyMember,
+    Permission.drugInteractionsView,
 
-    // Pharmacy Tools — limited
+    // ── Tools ──
     Permission.pharmacyToolsView,
     Permission.bmiCalculatorUse,
 
-    // Settings
+    // ── Administration ──
     Permission.settingsView,
 
-    // Notifications
+    // ── Notifications ──
     Permission.notificationsView,
-
-    // Drug Interactions
-    Permission.drugInteractionsView,
-
-    // Insurance
-    Permission.insuranceView,
-    Permission.insuranceVerifyMember,
-
-    // Patient Records
-    Permission.patientRecordsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // SALES ASSISTANT — POS and basic sales operations
+  // SALES ASSISTANT — POS, sales, read-only inventory
+  // Main: Home only
   // ═══════════════════════════════════════════════════════════════════
   AppRole.salesAssistant: {
-    // POS — core access
+    // ── Inventory (view only) ──
+    Permission.inventoryView,
+
+    // ── Stock (Balances, Movements — no Counts) ──
+    Permission.stockBalancesView,
+    Permission.stockMovementsView,
+
+    // ── Operations ──
+    Permission.goodsReceivedView,
+    Permission.salesView,
+    Permission.salesCreate,
     Permission.posView,
     Permission.posCreateSale,
     Permission.posEditSale,
 
-    // Inventory — view only
-    Permission.inventoryView,
-
-    // Product Catalogue — view
-    Permission.catalogueView,
-
-    // Stock Management — view balances
-    Permission.stockBalancesView,
-    Permission.stockMovementsView,
-
-    // Goods Received — view
-    Permission.goodsReceivedView,
-
-    // Batch & Expiry — view
+    // ── Monitoring (Batches, Low Stock — no Replenishment/Cold Chain) ──
     Permission.batchesView,
-
-    // Low Stock Alerts — view
     Permission.lowStockAlertsView,
 
-    // Sales / Dispensing — view & create
-    Permission.salesView,
-    Permission.salesCreate,
+    // ── Clinical (Insurance verification, Drug Interactions read-only) ──
+    Permission.insuranceView,
+    Permission.insuranceVerifyMember,
+    Permission.drugInteractionsView,
 
-    // Pharmacy Tools — limited
+    // ── Tools ──
     Permission.pharmacyToolsView,
     Permission.bmiCalculatorUse,
 
-    // Settings
+    // ── Administration ──
     Permission.settingsView,
 
-    // Notifications
+    // ── Notifications ──
     Permission.notificationsView,
-
-    // Drug Interactions
-    Permission.drugInteractionsView,
-
-    // Insurance
-    Permission.insuranceView,
-    Permission.insuranceVerifyMember,
-
-    // Patient Records
-    Permission.patientRecordsView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
   // DUNIYA ADMIN — Full network administrative access
   // ═══════════════════════════════════════════════════════════════════
   AppRole.duniyaAdmin: {
-    // Duniya Network — full access
     Permission.duniyaPharmaciesView,
     Permission.duniyaStockBalancesView,
     Permission.duniyaOnboardingView,
     Permission.duniyaNetworkAnalyticsView,
     Permission.duniyaApprovePharmacies,
-
-    // Pending Approvals — full access
     Permission.pendingApprovalsView,
     Permission.pendingApprovalsApprove,
     Permission.pendingApprovalsReject,
-
-    // Finances — full access
     Permission.financesView,
     Permission.financesViewReports,
     Permission.financesManageSubscriptions,
     Permission.financesViewBilling,
-
-    // Dashboard — full network metrics
+    Permission.auditLogsView,
+    Permission.auditLogsExport,
+    Permission.settingsView,
+    Permission.settingsManage,
+    Permission.notificationsView,
     Permission.dashboardViewOwnerMetrics,
     Permission.dashboardViewFinanceNetwork,
     Permission.dashboardViewSalesAnalytics,
     Permission.dashboardViewInventoryMix,
-
-    // Audit Logs — full access
-    Permission.auditLogsView,
-    Permission.auditLogsExport,
-
-    // Settings
-    Permission.settingsView,
-    Permission.settingsManage,
-
-    // Notifications
-    Permission.notificationsView,
-
-    // Drug Interactions
-    Permission.drugInteractionsView,
-
-    // Expiry Tracking
-    Permission.expiryTrackingView,
-
-    // Purchase Orders
-    Permission.purchaseOrdersView,
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // DUNIYA STAFF — Operational staff within the Duniya network
+  // DUNIYA STAFF — Operational staff within the Pulse network
   // ═══════════════════════════════════════════════════════════════════
   AppRole.duniyaStaff: {
-    // Duniya Network — view access
     Permission.duniyaPharmaciesView,
     Permission.duniyaStockBalancesView,
     Permission.duniyaOnboardingView,
-
-    // Pending Approvals — view only
     Permission.pendingApprovalsView,
-
-    // Finances — view only
     Permission.financesView,
-
-    // Dashboard — limited
-    Permission.dashboardViewSalesAnalytics,
-
-    // Audit Logs — view
     Permission.auditLogsView,
-
-    // Settings
     Permission.settingsView,
-
-    // Notifications
     Permission.notificationsView,
+    Permission.dashboardViewSalesAnalytics,
   },
 
   // ═══════════════════════════════════════════════════════════════════
   // SUBSCRIBER — External user with limited read access
   // ═══════════════════════════════════════════════════════════════════
   AppRole.subscriber: {
-    // Finances — view own billing
     Permission.financesView,
     Permission.financesViewBilling,
-
-    // Settings
     Permission.settingsView,
-
-    // Notifications
     Permission.notificationsView,
   },
 
@@ -693,18 +482,30 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   // UNKNOWN — Minimal permissions (safety net)
   // ═══════════════════════════════════════════════════════════════════
   AppRole.unknown: {
-    // Settings — view only
     Permission.settingsView,
-
-    // Notifications
     Permission.notificationsView,
   },
 };
 
 /// ─────────────────────────────────────────────────────────────────────
 /// Navigation visibility matrix — which NavItems each role can see
+///
+/// RULES:
+///   - Pharmacy roles: Store Inventory ONLY (never Product Catalogue)
+///   - Pulse roles: Product Catalogue ONLY (never Store Inventory)
+///   - These are mutually exclusive by design
 /// ─────────────────────────────────────────────────────────────────────
 final Map<AppRole, Set<NavItem>> roleNavItems = {
+  // ═══ Owner ═══
+  // Main: Home, My Pharmacies, Human Resource, Finances, Pending Approvals
+  // Inventory: Store Inventory
+  // Stock: Balances, Movements, Counts
+  // Operations: Goods Received, Sales/Dispensing, POS
+  // Monitoring: Batches & Expiry, Low Stock, Replenishment, Cold Chain
+  // Clinical: Prescriptions, Insurance, Patient Records, Drug Interactions
+  // Procurement: Purchase Orders
+  // Tools: AI Assistant, BMI Calculator
+  // Admin: Audit Logs, Settings
   AppRole.owner: {
     NavItem.home,
     NavItem.myPharmacies,
@@ -712,85 +513,103 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
     NavItem.goodsReceived,
     NavItem.salesDispensing,
+    NavItem.pointOfSale,
     NavItem.batchesExpiry,
     NavItem.lowStockAlerts,
     NavItem.replenishment,
-    NavItem.pointOfSale,
-    NavItem.aiAssistant,
-    NavItem.bmiCalculator,
-    NavItem.vmiDashboard,
-    NavItem.auditLogs,
-    NavItem.settings,
-    NavItem.drugInteractions,
+    NavItem.coldChain,
     NavItem.expiryTracking,
-    NavItem.purchaseOrders,
     NavItem.prescriptions,
     NavItem.insurance,
-    NavItem.coldChain,
     NavItem.patientRecords,
+    NavItem.drugInteractions,
+    NavItem.purchaseOrders,
+    NavItem.aiAssistant,
+    NavItem.bmiCalculator,
+    NavItem.auditLogs,
+    NavItem.settings,
   },
+
+  // ═══ Pharmacy Manager ═══
+  // Main: Home, Human Resource, Finances
+  // Inventory: Store Inventory
+  // Stock: All stock items
+  // Operations: Goods Received, Sales/Dispensing, POS
+  // Monitoring: All monitoring
+  // Tools: AI Assistant, BMI Calculator
+  // Admin: Audit Logs, Settings
   AppRole.outletManager: {
     NavItem.home,
-    NavItem.finances,
     NavItem.humanResource,
+    NavItem.finances,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
     NavItem.goodsReceived,
     NavItem.salesDispensing,
+    NavItem.pointOfSale,
     NavItem.batchesExpiry,
     NavItem.lowStockAlerts,
     NavItem.replenishment,
-    NavItem.pointOfSale,
+    NavItem.coldChain,
+    NavItem.expiryTracking,
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
-    NavItem.vmiDashboard,
     NavItem.auditLogs,
     NavItem.settings,
-    NavItem.drugInteractions,
-    NavItem.expiryTracking,
-    NavItem.purchaseOrders,
-    NavItem.prescriptions,
-    NavItem.insurance,
-    NavItem.coldChain,
-    NavItem.patientRecords,
   },
+
+  // ═══ Pharmacist ═══
+  // Main: Home
+  // Inventory: Store Inventory
+  // Stock: Balances, Movements, Counts
+  // Operations: Goods Received, Sales/Dispensing, POS
+  // Monitoring: Batches, Low Stock, Replenishment, Cold Chain
+  // Clinical: All clinical areas
+  // Procurement: Purchase Orders
+  // Tools: AI Assistant, BMI Calculator
   AppRole.pharmacist: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
     NavItem.goodsReceived,
     NavItem.salesDispensing,
+    NavItem.pointOfSale,
     NavItem.batchesExpiry,
     NavItem.lowStockAlerts,
     NavItem.replenishment,
-    NavItem.pointOfSale,
+    NavItem.coldChain,
+    NavItem.expiryTracking,
+    NavItem.prescriptions,
+    NavItem.insurance,
+    NavItem.patientRecords,
+    NavItem.drugInteractions,
+    NavItem.purchaseOrders,
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
     NavItem.settings,
-    NavItem.drugInteractions,
-    NavItem.expiryTracking,
-    NavItem.purchaseOrders,
-    NavItem.prescriptions,
-    NavItem.insurance,
-    NavItem.coldChain,
-    NavItem.patientRecords,
   },
+
+  // ═══ Pharmacy Technician ═══
+  // Main: Home
+  // Inventory: Store Inventory
+  // Stock: Balances, Movements, Counts
+  // Operations: Goods Received
+  // Monitoring: All inventory monitoring, Cold Chain
+  // Clinical: Patient Records read-only
+  // Procurement: Purchase Orders
+  // Tools: BMI Calculator
   AppRole.pharmacyTechnician: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -798,43 +617,62 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.batchesExpiry,
     NavItem.lowStockAlerts,
     NavItem.replenishment,
+    NavItem.coldChain,
+    NavItem.expiryTracking,
+    NavItem.patientRecords,
+    NavItem.purchaseOrders,
     NavItem.bmiCalculator,
     NavItem.settings,
-    NavItem.expiryTracking,
-    NavItem.purchaseOrders,
-    NavItem.coldChain,
   },
+
+  // ═══ Cashier ═══
+  // Main: Home
+  // Inventory: Store Inventory
+  // Stock: Balances, Movements
+  // Operations: Sales/Dispensing, POS
+  // Monitoring: Batches, Low Stock
+  // Clinical: Insurance verification, Drug Interactions read-only
+  // Tools: BMI Calculator
   AppRole.cashier: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.salesDispensing,
+    NavItem.pointOfSale,
     NavItem.batchesExpiry,
     NavItem.lowStockAlerts,
-    NavItem.pointOfSale,
+    NavItem.insurance,
+    NavItem.drugInteractions,
     NavItem.bmiCalculator,
     NavItem.settings,
-    NavItem.drugInteractions,
-    NavItem.insurance,
   },
+
+  // ═══ Sales Assistant ═══
+  // Main: Home
+  // Inventory: Store Inventory
+  // Stock: Balances, Movements
+  // Operations: Sales/Dispensing, POS
+  // Monitoring: Batches, Low Stock
+  // Clinical: Insurance verification, Drug Interactions read-only
+  // Tools: BMI Calculator
   AppRole.salesAssistant: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
+    NavItem.goodsReceived,
     NavItem.salesDispensing,
+    NavItem.pointOfSale,
     NavItem.batchesExpiry,
     NavItem.lowStockAlerts,
-    NavItem.pointOfSale,
-    NavItem.bmiCalculator,
-    NavItem.vmiDashboard,
-    NavItem.settings,
-    NavItem.drugInteractions,
     NavItem.insurance,
+    NavItem.drugInteractions,
+    NavItem.bmiCalculator,
+    NavItem.settings,
   },
+
+  // ═══ Pulse Admin ═══
   AppRole.duniyaAdmin: {
     NavItem.home,
     NavItem.finances,
@@ -846,6 +684,8 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.auditLogs,
     NavItem.settings,
   },
+
+  // ═══ Pulse Staff ═══
   AppRole.duniyaStaff: {
     NavItem.home,
     NavItem.finances,
@@ -856,11 +696,15 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.auditLogs,
     NavItem.settings,
   },
+
+  // ═══ Subscriber ═══
   AppRole.subscriber: {
     NavItem.home,
     NavItem.finances,
     NavItem.settings,
   },
+
+  // ═══ Unknown ═══
   AppRole.unknown: {
     NavItem.home,
     NavItem.settings,

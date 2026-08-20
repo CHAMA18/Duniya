@@ -1,5 +1,5 @@
 /// ─────────────────────────────────────────────────────────────────────
-/// Duniya RBAC — Role Definitions
+/// Pulse RBAC — Role Definitions
 /// ─────────────────────────────────────────────────────────────────────
 /// Defines every role in the system and normalizes the various
 /// string representations found in Firestore (e.g. 'Owner', 'owner',
@@ -14,7 +14,7 @@ enum AppRole {
   /// Pharmacy owner — full administrative access to their pharmacy
   owner,
 
-  /// Outlet manager — manages a specific outlet within a pharmacy
+  /// Pharmacy manager — manages pharmacy operations and staff
   outletManager,
 
   /// Pharmacist — handles dispensing, POS, and inventory operations
@@ -29,10 +29,10 @@ enum AppRole {
   /// Sales assistant — handles POS and basic sales operations
   salesAssistant,
 
-  /// Duniya network admin — oversees the entire Duniya network
+  /// Pulse network admin — oversees the entire Pulse network
   duniyaAdmin,
 
-  /// Duniya staff — operational staff within the Duniya network
+  /// Pulse staff — operational staff within the Pulse network
   duniyaStaff,
 
   /// Subscriber — external user with limited read access
@@ -81,7 +81,7 @@ enum AppRole {
   }
 
   /// Convert a Firestore `accountType` string to determine if
-  /// the user is a Duniya network user or a pharmacy user.
+  /// the user is a Pulse network user or a pharmacy user.
   /// Defaults to pharmacy (false) when null/empty for security —
   /// missing accountType should not grant network admin access.
   static bool isDuniyaAccountType(String? accountType) {
@@ -91,6 +91,46 @@ enum AppRole {
 
   /// Human-readable display name for the role.
   String get displayName {
+    switch (this) {
+      case AppRole.owner:
+        return 'Owner';
+      case AppRole.outletManager:
+        return 'Pharmacy Manager';
+      case AppRole.pharmacist:
+        return 'Pharmacist';
+      case AppRole.pharmacyTechnician:
+        return 'Pharmacy Technician';
+      case AppRole.cashier:
+        return 'Cashier';
+      case AppRole.salesAssistant:
+        return 'Sales Assistant';
+      case AppRole.duniyaAdmin:
+        return 'Pulse Admin';
+      case AppRole.duniyaStaff:
+        return 'Pulse Staff';
+      case AppRole.subscriber:
+        return 'Subscriber';
+      case AppRole.unknown:
+        return 'Unknown';
+    }
+  }
+
+  /// Whether this role belongs to the Pulse network side.
+  bool get isDuniyaRole =>
+      this == AppRole.duniyaAdmin || this == AppRole.duniyaStaff;
+
+  /// Whether this role belongs to the pharmacy side.
+  bool get isPharmacyRole =>
+      this == AppRole.owner ||
+      this == AppRole.outletManager ||
+      this == AppRole.pharmacist ||
+      this == AppRole.pharmacyTechnician ||
+      this == AppRole.cashier ||
+      this == AppRole.salesAssistant;
+
+  /// The canonical Firestore `role` string for this AppRole.
+  /// Used when writing role values to Firestore documents.
+  String get firestoreValue {
     switch (this) {
       case AppRole.owner:
         return 'Owner';
@@ -105,28 +145,18 @@ enum AppRole {
       case AppRole.salesAssistant:
         return 'Sales Assistant';
       case AppRole.duniyaAdmin:
-        return 'Duniya Admin';
+        return 'admin';
       case AppRole.duniyaStaff:
-        return 'Duniya Staff';
+        return 'staff';
       case AppRole.subscriber:
-        return 'Subscriber';
+        return 'subscriber';
       case AppRole.unknown:
-        return 'Unknown';
+        return '';
     }
   }
 
-  /// Whether this role belongs to the Duniya network side.
-  bool get isDuniyaRole =>
-      this == AppRole.duniyaAdmin || this == AppRole.duniyaStaff;
-
-  /// Whether this role belongs to the pharmacy side.
-  bool get isPharmacyRole =>
-      this == AppRole.owner ||
-      this == AppRole.outletManager ||
-      this == AppRole.pharmacist ||
-      this == AppRole.pharmacyTechnician ||
-      this == AppRole.cashier ||
-      this == AppRole.salesAssistant;
+  /// The Firestore `accountType` string for this AppRole's side.
+  String get accountTypeValue => isDuniyaRole ? 'Pulse' : 'Pharmacy';
 
   /// Whether this role has Owner-level admin privileges.
   bool get isOwnerLevel => this == AppRole.owner;

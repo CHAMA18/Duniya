@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/offline/offline_connectivity_service.dart';
 import '/offline/offline_status_widget.dart';
 

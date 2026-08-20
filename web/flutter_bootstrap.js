@@ -1,12 +1,12 @@
 {{flutter_js}}
 {{flutter_build_config}}
 
-// ─── Duniya Cache Busting ──────────────────────────────────────────
+// ─── Pulse Cache Busting ──────────────────────────────────────────
 // BUILD_VERSION is replaced by build.sh with a unique timestamp on
 // every deploy. This forces browsers/CDNs to fetch a fresh copy.
-const DUNIYA_BUILD_VERSION = '%%BUILD_VERSION%%';
+const PULSE_BUILD_VERSION = '%%BUILD_VERSION%%';
 
-// ─── Duniya PWA: register the offline service worker ──────────────
+// ─── Pulse PWA: register the offline service worker ──────────────
 // This runs BEFORE the Flutter engine loads so the SW is controlling
 // the page by the time the app boots. The SW (duniya_service_worker.js)
 // caches the app shell + assets for offline use.
@@ -14,12 +14,12 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     // Cache-bust the service worker URL so the browser always fetches
     // the latest version (defeats HTTP caches and CDN edge caches).
-    var swUrl = '/duniya_service_worker.js?v=' + DUNIYA_BUILD_VERSION;
+    var swUrl = '/duniya_service_worker.js?v=' + PULSE_BUILD_VERSION;
     navigator.serviceWorker
       .register(swUrl, { updateViaCache: 'none' })
       .then(function (registration) {
         console.log(
-          '[Duniya PWA] Service worker registered with scope:',
+          '[Pulse PWA] Service worker registered with scope:',
           registration.scope
         );
         // Check for updates every 5 minutes (cache busting —
@@ -46,7 +46,7 @@ if ('serviceWorker' in navigator) {
         });
       })
       .catch(function (err) {
-        console.warn('[Duniya PWA] Service worker registration failed:', err);
+        console.warn('[Pulse PWA] Service worker registration failed:', err);
       });
   });
 }

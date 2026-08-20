@@ -1,5 +1,5 @@
 /// ─────────────────────────────────────────────────────────────────────
-/// Duniya RBAC — Permission Definitions
+/// Pulse RBAC — Permission Definitions
 /// ─────────────────────────────────────────────────────────────────────
 /// Every granular action in the system is represented as a Permission
 /// enum value. This is the single source of truth for what actions exist.
@@ -61,12 +61,6 @@ enum Permission {
   replenishmentView,
   replenishmentCreate,
   replenishmentApprove,
-
-  // ─── Outlets ──────────────────────────────────────────────────────
-  outletsView,
-  outletsCreate,
-  outletsEdit,
-  outletsDelete,
 
   // ─── Human Resource ───────────────────────────────────────────────
   hrView,

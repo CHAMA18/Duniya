@@ -1,10 +1,7 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -133,7 +130,7 @@ class _DuniyaStockBalancesWidgetState
   @override
   Widget build(BuildContext context) {
     return Title(
-        title: 'Stock Balance Visibility — Duniya',
+        title: 'Stock Balance Visibility — Pulse',
         color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
         child: GestureDetector(
           onTap: () {
@@ -261,7 +258,7 @@ class _DuniyaStockBalancesWidgetState
               Icon(Icons.chevron_right,
                   color: Colors.white.withAlpha(120), size: 14),
               Text(
-                'Duniya Network',
+                'Pulse Network',
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,

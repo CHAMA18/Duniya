@@ -47,7 +47,7 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModel20;
   // Model for Audit Logs SidebarLink component.
   late SidebarLinkModel sidebarLinkModelAuditLogs;
-  // Duniya Network section models (separate from Operations section models)
+  // Pulse Network section models (separate from Operations section models)
   late SidebarLinkModel sidebarLinkModel15dup;
   late SidebarLinkModel sidebarLinkModel16dup;
   late SidebarLinkModel sidebarLinkModel17dup;

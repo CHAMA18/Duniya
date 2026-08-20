@@ -71,9 +71,9 @@ class UserRecord extends FirestoreRecord {
   bool hasAccountType() => _accountType != null;
 
   // "approved_by_duniya" field.
-  bool? _approvedByDuniya;
-  bool get approvedByDuniya => _approvedByDuniya ?? false;
-  bool hasApprovedByDuniya() => _approvedByDuniya != null;
+  bool? _approvedByPulse;
+  bool get approvedByPulse => _approvedByPulse ?? false;
+  bool hasApprovedByDuniya() => _approvedByPulse != null;
 
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
@@ -87,7 +87,7 @@ class UserRecord extends FirestoreRecord {
     _stripeId = snapshotData['StripeId'] as String?;
     _pharmacyName = snapshotData['pharmacy_name'] as String?;
     _accountType = snapshotData['account_type'] as String?;
-    _approvedByDuniya = snapshotData['approved_by_duniya'] as bool?;
+    _approvedByPulse = snapshotData['approved_by_duniya'] as bool?;
   }
 
   static CollectionReference get collection =>
@@ -135,7 +135,7 @@ Map<String, dynamic> createUserRecordData({
   String? stripeId,
   String? pharmacyName,
   String? accountType,
-  bool? approvedByDuniya,
+  bool? approvedByPulse,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -150,7 +150,7 @@ Map<String, dynamic> createUserRecordData({
       'StripeId': stripeId,
       'pharmacy_name': pharmacyName,
       'account_type': accountType,
-      'approved_by_duniya': approvedByDuniya,
+      'approved_by_duniya': approvedByPulse,
     }.withoutNulls,
   );
 
@@ -173,7 +173,7 @@ class UserRecordDocumentEquality implements Equality<UserRecord> {
         e1?.stripeId == e2?.stripeId &&
         e1?.pharmacyName == e2?.pharmacyName &&
         e1?.accountType == e2?.accountType &&
-        e1?.approvedByDuniya == e2?.approvedByDuniya;
+        e1?.approvedByPulse == e2?.approvedByPulse;
   }
 
   @override
@@ -189,7 +189,7 @@ class UserRecordDocumentEquality implements Equality<UserRecord> {
         e?.stripeId,
         e?.pharmacyName,
         e?.accountType,
-        e?.approvedByDuniya,
+        e?.approvedByPulse,
       ]);
 
   @override

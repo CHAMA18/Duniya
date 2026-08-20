@@ -541,11 +541,7 @@ class _SubscriptionWidgetState extends State<SubscriptionWidget> {
                                                                 'SUBSCRIPTION_ACTIVATE_FREE_TRAIL_BTN_ON_');
                                                             var _shouldSetState =
                                                                 false;
-                                                            if (valueOrDefault(
-                                                                    currentUserDocument
-                                                                        ?.role,
-                                                                    '') !=
-                                                                'Owner') {
+                                                            if (!AccessControl.isOwner(context)) {
                                                               logFirebaseEvent(
                                                                   'Button_alert_dialog');
                                                               await showDialog(

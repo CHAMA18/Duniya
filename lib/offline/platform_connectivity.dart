@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
 
 /// Platform-specific connectivity hooks.
 /// Resolves at compile time:

@@ -1038,7 +1038,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
         final pendingUsers = snapshot.data!;
         final pendingPharmacies =
             pendingUsers.where((u) => AppRole.isPharmacyAccountType(u.accountType)).toList();
-        final pendingDuniyaUsers = pendingUsers
+        final pendingPulseUsers = pendingUsers
             .where((u) => AppRole.isDuniyaAccountType(u.accountType) || u.accountType.isEmpty)
             .toList();
 
@@ -1115,7 +1115,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               color: const Color(0xFFFEF9C3),
                               borderRadius: BorderRadius.circular(9999.0)),
                           child: Text(
-                              '${pendingDuniyaUsers.length} Duniya Users',
+                              '${pendingPulseUsers.length} Pulse Users',
                               style: TextStyle(
                                   fontFamily: kAppFontFamily,
                                   fontSize: 11.0,
@@ -1220,7 +1220,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                   ? const Color(0xFFF3F0FF)
                                   : const Color(0xFFFEF9C3),
                               borderRadius: BorderRadius.circular(9999.0)),
-                          child: Text(isPharmacy ? 'Pharmacy' : 'Duniya',
+                          child: Text(isPharmacy ? 'Pharmacy' : 'Pulse',
                               style: TextStyle(
                                   fontFamily: kAppFontFamily,
                                   fontSize: 11.0,

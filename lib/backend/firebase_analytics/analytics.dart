@@ -1,11 +1,38 @@
+import 'dart:async';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../auth/firebase_auth/auth_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 const kMaxEventNameLength = 40;
 const kMaxParameterLength = 100;
+
+void _writeAuditLog(String eventName, Map<String, Object> parameters) {
+  final uid = currentUserUid;
+  if (uid.isEmpty) return;
+
+  final scopeId = currentUserDocument?.ownerRef?.path ?? 'User/$uid';
+  final payload = <String, Object?>{
+    'actorId': uid,
+    'actorEmail': currentUserEmail,
+    'actorName': currentUserDisplayName,
+    'scopeId': scopeId,
+    'eventName': eventName,
+    'parameters': parameters,
+    'createdAt': FieldValue.serverTimestamp(),
+    'clientCreatedAt': Timestamp.now(),
+  };
+
+  // Audit logging must never block or break the user action that generated it.
+  unawaited(
+    FirebaseFirestore.instance.collection('AuditLogs').add(payload).then<void>(
+          (_) {},
+          onError: (_) {},
+        ),
+  );
+}
 
 void logFirebaseEvent(String eventName, {Map<String?, dynamic>? parameters}) {
   // https://firebase.google.com/docs/reference/cpp/group/event-names
@@ -31,6 +58,7 @@ void logFirebaseEvent(String eventName, {Map<String?, dynamic>? parameters}) {
 
   FirebaseAnalytics.instance
       .logEvent(name: eventName, parameters: params.cast<String, Object>());
+  _writeAuditLog(eventName, params.cast<String, Object>());
 }
 
 void logFirebaseAuthEvent(User? user, String method) {

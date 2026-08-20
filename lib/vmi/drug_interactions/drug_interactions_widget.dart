@@ -85,7 +85,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
+  // ── Pulse Purple design tokens ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
@@ -158,12 +158,14 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   // ═══════════════════════════════════════════════════════════════════
 
   List<DrugInteraction> get _mockAlerts {
+    return <DrugInteraction>[];
     final now = DateTime.now();
     return [
       DrugInteraction(
         drugA: 'Warfarin',
         drugB: 'Aspirin',
-        description: 'Increased bleeding risk — concurrent use significantly raises haemorrhage probability',
+        description:
+            'Increased bleeding risk — concurrent use significantly raises haemorrhage probability',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacodynamic',
         flaggedAt: now.subtract(const Duration(minutes: 12)),
@@ -172,7 +174,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Metformin',
         drugB: 'Alcohol',
-        description: 'Lactic acidosis risk — alcohol potentiates metformin\'s effect on lactate metabolism',
+        description:
+            'Lactic acidosis risk — alcohol potentiates metformin\'s effect on lactate metabolism',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacodynamic',
         flaggedAt: now.subtract(const Duration(hours: 1)),
@@ -181,7 +184,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Lisinopril',
         drugB: 'Potassium Supplement',
-        description: 'Hyperkalemia risk — ACE inhibitors reduce potassium excretion',
+        description:
+            'Hyperkalemia risk — ACE inhibitors reduce potassium excretion',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacodynamic',
         flaggedAt: now.subtract(const Duration(hours: 2)),
@@ -190,7 +194,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Ibuprofen',
         drugB: 'Lisinopril',
-        description: 'Reduced antihypertensive efficacy — NSAIDs counteract ACE inhibitor effects',
+        description:
+            'Reduced antihypertensive efficacy — NSAIDs counteract ACE inhibitor effects',
         severity: InteractionSeverity.warning,
         interactionType: 'Pharmacodynamic',
         flaggedAt: now.subtract(const Duration(hours: 3)),
@@ -199,7 +204,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Amoxicillin',
         drugB: 'Methotrexate',
-        description: 'Methotrexate toxicity — reduced renal clearance increases serum levels',
+        description:
+            'Methotrexate toxicity — reduced renal clearance increases serum levels',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(hours: 4)),
@@ -208,7 +214,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Ciprofloxacin',
         drugB: 'Theophylline',
-        description: 'Theophylline toxicity — CYP1A2 inhibition raises serum theophylline 30–50%',
+        description:
+            'Theophylline toxicity — CYP1A2 inhibition raises serum theophylline 30–50%',
         severity: InteractionSeverity.warning,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(hours: 5)),
@@ -217,7 +224,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Omeprazole',
         drugB: 'Clopidogrel',
-        description: 'Reduced clopidogrel activation — CYP2C19 inhibition diminishes antiplatelet effect',
+        description:
+            'Reduced clopidogrel activation — CYP2C19 inhibition diminishes antiplatelet effect',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(hours: 6)),
@@ -226,7 +234,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Amlodipine',
         drugB: 'Simvastatin',
-        description: 'Rhabdomyolysis risk — amlodipine inhibits simvastatin metabolism (limit 20mg)',
+        description:
+            'Rhabdomyolysis risk — amlodipine inhibits simvastatin metabolism (limit 20mg)',
         severity: InteractionSeverity.warning,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(hours: 8)),
@@ -235,7 +244,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Spironolactone',
         drugB: 'Lisinopril',
-        description: 'Hyperkalemia risk — dual RAAS blockade with potassium-sparing diuretic',
+        description:
+            'Hyperkalemia risk — dual RAAS blockade with potassium-sparing diuretic',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacodynamic',
         flaggedAt: now.subtract(const Duration(hours: 10)),
@@ -244,7 +254,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Carbamazepine',
         drugB: 'Lamotrigine',
-        description: 'Reduced lamotrigine levels — carbamazepine induces glucuronidation',
+        description:
+            'Reduced lamotrigine levels — carbamazepine induces glucuronidation',
         severity: InteractionSeverity.caution,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(days: 1, hours: 2)),
@@ -253,7 +264,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Fluconazole',
         drugB: 'Warfarin',
-        description: 'Enhanced anticoagulant effect — fluconazole inhibits warfarin metabolism',
+        description:
+            'Enhanced anticoagulant effect — fluconazole inhibits warfarin metabolism',
         severity: InteractionSeverity.critical,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(days: 1, hours: 5)),
@@ -262,7 +274,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Tetracycline',
         drugB: 'Calcium Supplement',
-        description: 'Reduced absorption — divalent cations chelate tetracycline (separate by 2h)',
+        description:
+            'Reduced absorption — divalent cations chelate tetracycline (separate by 2h)',
         severity: InteractionSeverity.caution,
         interactionType: 'Pharmaceutic',
         flaggedAt: now.subtract(const Duration(days: 1, hours: 8)),
@@ -280,7 +293,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Digoxin',
         drugB: 'Amiodarone',
-        description: 'Digoxin toxicity — amiodarone reduces digoxin clearance by 30%',
+        description:
+            'Digoxin toxicity — amiodarone reduces digoxin clearance by 30%',
         severity: InteractionSeverity.warning,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(days: 2, hours: 6)),
@@ -289,7 +303,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Phenytoin',
         drugB: 'Folic Acid',
-        description: 'Reduced phenytoin levels — folic acid accelerates phenytoin metabolism',
+        description:
+            'Reduced phenytoin levels — folic acid accelerates phenytoin metabolism',
         severity: InteractionSeverity.info,
         interactionType: 'Pharmacokinetic',
         flaggedAt: now.subtract(const Duration(days: 3)),
@@ -298,7 +313,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Alendronate',
         drugB: 'Calcium Supplement',
-        description: 'Reduced absorption — take alendronate 30 min before calcium',
+        description:
+            'Reduced absorption — take alendronate 30 min before calcium',
         severity: InteractionSeverity.info,
         interactionType: 'Pharmaceutic',
         flaggedAt: now.subtract(const Duration(days: 3, hours: 4)),
@@ -307,7 +323,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
       DrugInteraction(
         drugA: 'Trimethoprim',
         drugB: 'Potassium Supplement',
-        description: 'Hyperkalemia risk — trimethoprim acts like amiloride on distal tubule',
+        description:
+            'Hyperkalemia risk — trimethoprim acts like amiloride on distal tubule',
         severity: InteractionSeverity.warning,
         interactionType: 'Pharmacodynamic',
         flaggedAt: now.subtract(const Duration(days: 4)),
@@ -317,61 +334,138 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   }
 
   List<InteractionRule> get _mockRules {
+    return <InteractionRule>[];
     return [
-      InteractionRule(id: 'R-001', drugA: 'Warfarin', drugB: 'Aspirin', severity: InteractionSeverity.critical, interactionType: 'Pharmacodynamic', description: 'Increased bleeding risk', isActive: true),
-      InteractionRule(id: 'R-002', drugA: 'Metformin', drugB: 'Alcohol', severity: InteractionSeverity.critical, interactionType: 'Pharmacodynamic', description: 'Lactic acidosis risk', isActive: true),
-      InteractionRule(id: 'R-003', drugA: 'Lisinopril', drugB: 'Potassium Supplement', severity: InteractionSeverity.critical, interactionType: 'Pharmacodynamic', description: 'Hyperkalemia risk', isActive: true),
-      InteractionRule(id: 'R-004', drugA: 'Omeprazole', drugB: 'Clopidogrel', severity: InteractionSeverity.critical, interactionType: 'Pharmacokinetic', description: 'Reduced clopidogrel activation', isActive: true),
-      InteractionRule(id: 'R-005', drugA: 'Ciprofloxacin', drugB: 'Theophylline', severity: InteractionSeverity.warning, interactionType: 'Pharmacokinetic', description: 'Theophylline toxicity', isActive: true),
-      InteractionRule(id: 'R-006', drugA: 'Amlodipine', drugB: 'Simvastatin', severity: InteractionSeverity.warning, interactionType: 'Pharmacokinetic', description: 'Rhabdomyolysis risk', isActive: false),
-      InteractionRule(id: 'R-007', drugA: 'Tetracycline', drugB: 'Calcium Supplement', severity: InteractionSeverity.caution, interactionType: 'Pharmaceutic', description: 'Reduced absorption', isActive: true),
-      InteractionRule(id: 'R-008', drugA: 'Phenytoin', drugB: 'Folic Acid', severity: InteractionSeverity.info, interactionType: 'Pharmacokinetic', description: 'Reduced phenytoin levels', isActive: true),
+      InteractionRule(
+          id: 'R-001',
+          drugA: 'Warfarin',
+          drugB: 'Aspirin',
+          severity: InteractionSeverity.critical,
+          interactionType: 'Pharmacodynamic',
+          description: 'Increased bleeding risk',
+          isActive: true),
+      InteractionRule(
+          id: 'R-002',
+          drugA: 'Metformin',
+          drugB: 'Alcohol',
+          severity: InteractionSeverity.critical,
+          interactionType: 'Pharmacodynamic',
+          description: 'Lactic acidosis risk',
+          isActive: true),
+      InteractionRule(
+          id: 'R-003',
+          drugA: 'Lisinopril',
+          drugB: 'Potassium Supplement',
+          severity: InteractionSeverity.critical,
+          interactionType: 'Pharmacodynamic',
+          description: 'Hyperkalemia risk',
+          isActive: true),
+      InteractionRule(
+          id: 'R-004',
+          drugA: 'Omeprazole',
+          drugB: 'Clopidogrel',
+          severity: InteractionSeverity.critical,
+          interactionType: 'Pharmacokinetic',
+          description: 'Reduced clopidogrel activation',
+          isActive: true),
+      InteractionRule(
+          id: 'R-005',
+          drugA: 'Ciprofloxacin',
+          drugB: 'Theophylline',
+          severity: InteractionSeverity.warning,
+          interactionType: 'Pharmacokinetic',
+          description: 'Theophylline toxicity',
+          isActive: true),
+      InteractionRule(
+          id: 'R-006',
+          drugA: 'Amlodipine',
+          drugB: 'Simvastatin',
+          severity: InteractionSeverity.warning,
+          interactionType: 'Pharmacokinetic',
+          description: 'Rhabdomyolysis risk',
+          isActive: false),
+      InteractionRule(
+          id: 'R-007',
+          drugA: 'Tetracycline',
+          drugB: 'Calcium Supplement',
+          severity: InteractionSeverity.caution,
+          interactionType: 'Pharmaceutic',
+          description: 'Reduced absorption',
+          isActive: true),
+      InteractionRule(
+          id: 'R-008',
+          drugA: 'Phenytoin',
+          drugB: 'Folic Acid',
+          severity: InteractionSeverity.info,
+          interactionType: 'Pharmacokinetic',
+          description: 'Reduced phenytoin levels',
+          isActive: true),
     ];
   }
 
   // ── Severity helpers ──
   Color _severityBg(InteractionSeverity s) {
     switch (s) {
-      case InteractionSeverity.critical: return _criticalBg;
-      case InteractionSeverity.warning: return _warningBg;
-      case InteractionSeverity.caution: return _cautionBg;
-      case InteractionSeverity.info: return _infoBg;
+      case InteractionSeverity.critical:
+        return _criticalBg;
+      case InteractionSeverity.warning:
+        return _warningBg;
+      case InteractionSeverity.caution:
+        return _cautionBg;
+      case InteractionSeverity.info:
+        return _infoBg;
     }
   }
 
   Color _severityText(InteractionSeverity s) {
     switch (s) {
-      case InteractionSeverity.critical: return _criticalText;
-      case InteractionSeverity.warning: return _warningText;
-      case InteractionSeverity.caution: return _cautionText;
-      case InteractionSeverity.info: return _infoText;
+      case InteractionSeverity.critical:
+        return _criticalText;
+      case InteractionSeverity.warning:
+        return _warningText;
+      case InteractionSeverity.caution:
+        return _cautionText;
+      case InteractionSeverity.info:
+        return _infoText;
     }
   }
 
   Color _severityBadge(InteractionSeverity s) {
     switch (s) {
-      case InteractionSeverity.critical: return _criticalBadge;
-      case InteractionSeverity.warning: return _warningBadge;
-      case InteractionSeverity.caution: return _cautionBadge;
-      case InteractionSeverity.info: return _infoBadge;
+      case InteractionSeverity.critical:
+        return _criticalBadge;
+      case InteractionSeverity.warning:
+        return _warningBadge;
+      case InteractionSeverity.caution:
+        return _cautionBadge;
+      case InteractionSeverity.info:
+        return _infoBadge;
     }
   }
 
   IconData _severityIcon(InteractionSeverity s) {
     switch (s) {
-      case InteractionSeverity.critical: return Icons.dangerous_outlined;
-      case InteractionSeverity.warning: return Icons.warning_amber_rounded;
-      case InteractionSeverity.caution: return Icons.info_outline;
-      case InteractionSeverity.info: return Icons.lightbulb_outline;
+      case InteractionSeverity.critical:
+        return Icons.dangerous_outlined;
+      case InteractionSeverity.warning:
+        return Icons.warning_amber_rounded;
+      case InteractionSeverity.caution:
+        return Icons.info_outline;
+      case InteractionSeverity.info:
+        return Icons.lightbulb_outline;
     }
   }
 
   String _severityLabel(InteractionSeverity s) {
     switch (s) {
-      case InteractionSeverity.critical: return 'CRITICAL';
-      case InteractionSeverity.warning: return 'WARNING';
-      case InteractionSeverity.caution: return 'CAUTION';
-      case InteractionSeverity.info: return 'INFO';
+      case InteractionSeverity.critical:
+        return 'CRITICAL';
+      case InteractionSeverity.warning:
+        return 'WARNING';
+      case InteractionSeverity.caution:
+        return 'CAUTION';
+      case InteractionSeverity.info:
+        return 'INFO';
     }
   }
 
@@ -399,7 +493,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         results.add(DrugInteraction(
           drugA: drugA,
           drugB: drugB,
-          description: 'No known interaction in database — manual review recommended for this combination',
+          description:
+              'No known interaction in database — manual review recommended for this combination',
           severity: InteractionSeverity.info,
           interactionType: 'Unknown',
           flaggedAt: DateTime.now(),
@@ -659,8 +754,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         // ── Section 3: Rules Database (RBAC-gated) ──
         AuthUserStreamWidget(
           builder: (context) {
-            if (AccessControl.hasPermission(context,
-                Permission.drugInteractionsManageRules)) {
+            if (AccessControl.hasPermission(
+                context, Permission.drugInteractionsManageRules)) {
               return _buildRulesDatabase(context);
             }
             return const SizedBox.shrink();
@@ -676,9 +771,11 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
 
   Widget _buildSummaryStats(BuildContext context) {
     final alerts = _mockAlerts;
-    final criticalCount = alerts.where((a) => a.severity == InteractionSeverity.critical).length;
+    final criticalCount =
+        alerts.where((a) => a.severity == InteractionSeverity.critical).length;
     final today = DateTime.now();
-    final todayChecks = alerts.where((a) => today.difference(a.flaggedAt).inHours < 24).length;
+    final todayChecks =
+        alerts.where((a) => today.difference(a.flaggedAt).inHours < 24).length;
 
     // Find most common drug pair
     final pairCounts = <String, int>{};
@@ -694,7 +791,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
 
     return Row(
       children: [
-        Expanded(child: _buildStatCard(
+        Expanded(
+            child: _buildStatCard(
           icon: Icons.search_rounded,
           iconBg: _duniyaPurpleLight,
           iconColor: _duniyaPurple,
@@ -704,7 +802,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
           accentColor: _duniyaPurple,
         )),
         const SizedBox(width: 16.0),
-        Expanded(child: _buildStatCard(
+        Expanded(
+            child: _buildStatCard(
           icon: Icons.dangerous_outlined,
           iconBg: _criticalBg,
           iconColor: _criticalBadge,
@@ -714,7 +813,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
           accentColor: _criticalBadge,
         )),
         const SizedBox(width: 16.0),
-        Expanded(child: _buildStatCard(
+        Expanded(
+            child: _buildStatCard(
           icon: Icons.link_rounded,
           iconBg: _cautionBg,
           iconColor: _cautionBadge,
@@ -746,7 +846,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -810,7 +910,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -874,7 +974,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         hintStyle: TextStyle(
                           fontFamily: kAppFontFamily,
                           fontSize: 14.0,
-                          color: _textSecondary.withOpacity(0.5),
+                          color: _textSecondary.withValues(alpha: 0.5),
                         ),
                         prefixIcon: Icon(Icons.medication_outlined,
                             color: _duniyaPurple, size: 20.0),
@@ -892,7 +992,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
+                          borderSide:
+                              BorderSide(color: _duniyaPurple, width: 1.5),
                         ),
                       ),
                       style: TextStyle(
@@ -940,7 +1041,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         hintStyle: TextStyle(
                           fontFamily: kAppFontFamily,
                           fontSize: 14.0,
-                          color: _textSecondary.withOpacity(0.5),
+                          color: _textSecondary.withValues(alpha: 0.5),
                         ),
                         prefixIcon: Icon(Icons.medication_outlined,
                             color: _duniyaPurple, size: 20.0),
@@ -958,7 +1059,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
-                          borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
+                          borderSide:
+                              BorderSide(color: _duniyaPurple, width: 1.5),
                         ),
                       ),
                       style: TextStyle(
@@ -1032,9 +1134,9 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       )),
                   const SizedBox(height: 12.0),
                   ..._checkerResults.map((r) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: _buildInteractionResultCard(r),
-                  )),
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: _buildInteractionResultCard(r),
+                      )),
                 ],
               ),
             ),
@@ -1051,7 +1153,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         color: _severityBg(interaction.severity),
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: _severityBadge(interaction.severity).withOpacity(0.3),
+          color: _severityBadge(interaction.severity).withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -1061,7 +1163,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
             width: 36.0,
             height: 36.0,
             decoration: BoxDecoration(
-              color: _severityBadge(interaction.severity).withOpacity(0.15),
+              color:
+                  _severityBadge(interaction.severity).withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(_severityIcon(interaction.severity),
@@ -1127,7 +1230,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       fontFamily: kAppFontFamily,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w400,
-                      color: _severityText(interaction.severity).withOpacity(0.8),
+                      color: _severityText(interaction.severity)
+                          .withValues(alpha: 0.8),
                       height: 1.4,
                     )),
               ],
@@ -1144,21 +1248,23 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
 
   Widget _buildRecentAlerts(BuildContext context) {
     final alerts = _mockAlerts;
-    final searchQuery = _model.alertSearchTextController?.text.toLowerCase() ?? '';
+    final searchQuery =
+        _model.alertSearchTextController?.text.toLowerCase() ?? '';
     final severityFilter = _model.severityFilterValue;
 
     List<DrugInteraction> filtered = alerts;
     if (searchQuery.isNotEmpty) {
-      filtered = filtered.where((a) =>
-        a.pair.toLowerCase().contains(searchQuery) ||
-        a.description.toLowerCase().contains(searchQuery) ||
-        a.interactionType.toLowerCase().contains(searchQuery)
-      ).toList();
+      filtered = filtered
+          .where((a) =>
+              a.pair.toLowerCase().contains(searchQuery) ||
+              a.description.toLowerCase().contains(searchQuery) ||
+              a.interactionType.toLowerCase().contains(searchQuery))
+          .toList();
     }
     if (severityFilter != null && severityFilter != 'All') {
-      filtered = filtered.where((a) =>
-        _severityLabel(a.severity) == severityFilter
-      ).toList();
+      filtered = filtered
+          .where((a) => _severityLabel(a.severity) == severityFilter)
+          .toList();
     }
 
     return Container(
@@ -1169,7 +1275,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -1200,7 +1306,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   )),
               const SizedBox(width: 12.0),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: _duniyaPurpleLight,
                   borderRadius: BorderRadius.circular(20.0),
@@ -1226,12 +1333,14 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     hintStyle: TextStyle(
                       fontFamily: kAppFontFamily,
                       fontSize: 13.0,
-                      color: _textSecondary.withOpacity(0.5),
+                      color: _textSecondary.withValues(alpha: 0.5),
                     ),
-                    prefixIcon: Icon(Icons.search, color: _textSecondary, size: 18.0),
+                    prefixIcon:
+                        Icon(Icons.search, color: _textSecondary, size: 18.0),
                     filled: true,
                     fillColor: _bgColor,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
@@ -1260,7 +1369,13 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 height: 38.0,
                 child: FlutterFlowDropDown<String>(
                   controller: _model.severityFilterController,
-                  options: const ['All', 'CRITICAL', 'WARNING', 'CAUTION', 'INFO'],
+                  options: const [
+                    'All',
+                    'CRITICAL',
+                    'WARNING',
+                    'CAUTION',
+                    'INFO'
+                  ],
                   onChanged: (val) => safeSetState(() {
                     _model.severityFilterValue = val;
                   }),
@@ -1272,7 +1387,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     color: _textPrimary,
                   ),
                   hintText: 'Severity',
-                  icon: Icon(Icons.filter_list, color: _textSecondary, size: 16.0),
+                  icon: Icon(Icons.filter_list,
+                      color: _textSecondary, size: 16.0),
                   fillColor: _bgColor,
                   elevation: 0,
                   borderColor: Colors.transparent,
@@ -1307,9 +1423,9 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
             )
           else
             ...filtered.map((alert) => Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: _buildAlertCard(alert),
-            )),
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: _buildAlertCard(alert),
+                )),
         ],
       ),
     );
@@ -1322,7 +1438,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         color: _bgColor,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-          color: _severityBadge(alert.severity).withOpacity(0.2),
+          color: _severityBadge(alert.severity).withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -1434,7 +1550,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       fontFamily: kAppFontFamily,
                       fontSize: 11.0,
                       fontWeight: FontWeight.w400,
-                      color: _textSecondary.withOpacity(0.7),
+                      color: _textSecondary.withValues(alpha: 0.7),
                     )),
             ],
           ),
@@ -1458,7 +1574,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -1476,8 +1592,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   color: _duniyaPurpleLight,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Icon(Icons.rule_rounded,
-                    color: _duniyaPurple, size: 20.0),
+                child:
+                    Icon(Icons.rule_rounded, color: _duniyaPurple, size: 20.0),
               ),
               const SizedBox(width: 12.0),
               Text('Rules Database',
@@ -1489,7 +1605,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   )),
               const SizedBox(width: 12.0),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: _duniyaPurpleLight,
                   borderRadius: BorderRadius.circular(20.0),
@@ -1543,7 +1660,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
 
           // Table header
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
             decoration: BoxDecoration(
               color: _bgColor,
               borderRadius: const BorderRadius.only(
@@ -1571,7 +1689,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
             final rule = entry.value;
             final isLast = i == rules.length - 1;
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               decoration: BoxDecoration(
                 color: i.isOdd ? _bgColor : _surfaceColor,
                 borderRadius: isLast
@@ -1581,7 +1700,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       )
                     : BorderRadius.zero,
                 border: Border(
-                  bottom: BorderSide(color: _borderColor.withOpacity(0.5)),
+                  bottom:
+                      BorderSide(color: _borderColor.withValues(alpha: 0.5)),
                 ),
               ),
               child: Row(
@@ -1717,7 +1837,8 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                           onTap: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Delete ${rule.id} — coming soon'),
+                                content:
+                                    Text('Delete ${rule.id} — coming soon'),
                                 backgroundColor: _criticalBadge,
                                 behavior: SnackBarBehavior.floating,
                                 shape: RoundedRectangleBorder(
@@ -1767,7 +1888,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         height: 30.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Icon(icon, color: color, size: 16.0),
       ),
@@ -1792,8 +1913,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 color: _duniyaPurpleLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_outline,
-                  color: _duniyaPurple, size: 36.0),
+              child: Icon(Icons.lock_outline, color: _duniyaPurple, size: 36.0),
             ),
             const SizedBox(height: 20.0),
             Text('Access Restricted',

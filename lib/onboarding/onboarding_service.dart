@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Persistent onboarding state for the Duniya app.
+/// Persistent onboarding state for the Pulse app.
 ///
 /// Wraps a small set of SharedPreferences flags so we can:
 ///   - remember whether the user has ever seen the full tour

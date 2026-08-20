@@ -144,7 +144,7 @@ class _MyAppState extends State<MyApp> {
         _appStateNotifier.update(user);
         // Auto-warm and sync tracking — re-enabled after fixing
         // the double-listener infinite rebuild loop in OfflineStatusChip.
-        if (user?.loggedIn == true) {
+        if (user.loggedIn == true) {
           _onUserSignedIn();
         }
       });
@@ -213,7 +213,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final app = MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Duniya',
+      title: 'Pulse',
       scrollBehavior: MyAppScrollBehavior(),
       localizationsDelegates: [
         FFLocalizationsDelegate(),
@@ -277,10 +277,10 @@ class _MyAppState extends State<MyApp> {
           labelMedium: TextStyle(fontFamily: kAppFontFamily),
           labelSmall: TextStyle(fontFamily: kAppFontFamily),
         ),
-        primaryColor: const Color(0xFF9900FF),
+        primaryColor: const Color(0xFF8A00FF),
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFF9900FF),
-          secondary: Color(0xFF7C3AED),
+          primary: Color(0xFF8A00FF),
+          secondary: Color(0xFFB04CFF),
           surface: Color(0xFFFFFFFF),
           onPrimary: Color(0xFFFFFFFF),
           onSecondary: Color(0xFFFFFFFF),
@@ -340,10 +340,10 @@ class _MyAppState extends State<MyApp> {
           labelMedium: TextStyle(fontFamily: kAppFontFamily),
           labelSmall: TextStyle(fontFamily: kAppFontFamily),
         ),
-        primaryColor: const Color(0xFF9900FF),
+        primaryColor: const Color(0xFF8A00FF),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF9900FF),
-          secondary: Color(0xFFA78BFA),
+          primary: Color(0xFF8A00FF),
+          secondary: Color(0xFFB04CFF),
           surface: Color(0xFF111827),
           onPrimary: Color(0xFFFFFFFF),
           onSecondary: Color(0xFF000000),

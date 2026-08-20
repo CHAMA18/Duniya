@@ -9,4 +9,5 @@
 #
 # This file MUST live in the published directory (build/web/_redirects).
 # build.sh copies it in after `flutter build web`.
+/    /index.html   200
 /*    /app.html   200

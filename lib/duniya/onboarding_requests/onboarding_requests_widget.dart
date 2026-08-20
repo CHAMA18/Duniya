@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -17,7 +16,7 @@ export 'onboarding_requests_model.dart';
 ///   DUNIYA — ONBOARDING REQUESTS
 ///
 ///   Approve or reject pharmacies that have self-registered on the
-///   Duniya network. Each row shows the pharmacy name, address,
+///   Pulse network. Each row shows the pharmacy name, address,
 ///   registration date, and the owner's name + email. Approving
 ///   sets `NetworkStatus` to 'active'; rejecting sets it to
 ///   'rejected'.
@@ -184,7 +183,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
   @override
   Widget build(BuildContext context) {
     return Title(
-      title: 'Onboarding Requests — Duniya',
+      title: 'Onboarding Requests — Pulse',
       color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
       child: GestureDetector(
         onTap: () {
@@ -305,7 +304,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
               Icon(Icons.chevron_right,
                   color: Colors.white.withAlpha(120), size: 14),
               Text(
-                'Duniya Network',
+                'Pulse Network',
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
@@ -362,7 +361,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      'Review pharmacies that have self-registered on the Duniya network. Approve to activate, or reject to deny access.',
+                      'Review pharmacies that have self-registered on the Pulse network. Approve to activate, or reject to deny access.',
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,

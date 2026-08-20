@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -674,25 +675,7 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
                                                     StreamBuilder<
                                                         List<SaleitemRecord>>(
                                                   stream: querySaleitemRecord(
-                                                    parent: () {
-                                                      if (valueOrDefault(
-                                                              currentUserDocument
-                                                                  ?.role,
-                                                              '') ==
-                                                          'Owner') {
-                                                        return currentUserReference;
-                                                      } else if (valueOrDefault(
-                                                              currentUserDocument
-                                                                  ?.role,
-                                                              '') !=
-                                                          'Owner') {
-                                                        return currentUserDocument
-                                                            ?.ownerRef;
-                                                      } else {
-                                                        return currentUserDocument
-                                                            ?.ownerRef;
-                                                      }
-                                                    }(),
+                                                    parent: AccessControl.parentRef(context),
                                                     queryBuilder:
                                                         (saleitemRecord) =>
                                                             saleitemRecord

@@ -1,5 +1,5 @@
 # =====================================================================
-# Duniya — Build Desktop Releases
+# Pulse — Build Desktop Releases
 # =====================================================================
 # Builds Windows (.exe) and macOS (.dmg) installers on every version tag
 # and uploads them as GitHub Release assets.
@@ -9,8 +9,8 @@
 #   - Manual dispatch from the Actions tab
 #
 # Release assets:
-#   - Duniya-Setup.exe (Windows installer)
-#   - Duniya.dmg (macOS disk image)
+#   - Pulse-Windows.zip (stable Windows download alias)
+#   - Pulse-macOS.dmg (stable macOS download alias)
 # =====================================================================
 
 name: Build Desktop Release
@@ -72,7 +72,7 @@ jobs:
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Duniya-Windows
+          name: Pulse-Windows
           path: installer/Output/
           retention-days: 5
 
@@ -117,14 +117,14 @@ jobs:
       - name: Create macOS DMG
         run: |
           mkdir -p release
-          cp -R build/macos/Build/Products/Release/Duniya.app release/
-          hdiutil create -volname "Duniya" -srcfolder release/Duniya.app -ov -format UDZO release/Duniya.dmg
+          cp -R build/macos/Build/Products/Release/Pulse.app release/
+          hdiutil create -volname "Pulse" -srcfolder release/Pulse.app -ov -format UDZO release/Pulse.dmg
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Duniya-macOS
-          path: release/Duniya.dmg
+          name: Pulse-macOS
+          path: release/Pulse.dmg
           retention-days: 5
 
   # -------------------------------------------------------------------
@@ -143,35 +143,41 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: Duniya-Windows
+          name: Pulse-Windows
           path: release/windows/
 
       - name: Download macOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: Duniya-macOS
+          name: Pulse-macOS
           path: release/macos/
 
       - name: Create ZIP for Windows
         run: |
           cd release/windows
-          zip -r ../Duniya-Setup-${{ github.ref_name }}.zip ./
+          zip -r ../Pulse-Setup-${{ github.ref_name }}.zip ./
           cd ../..
 
       - name: Rename macOS DMG
         run: |
-          mv release/macos/Duniya.dmg release/Duniya-${{ github.ref_name }}.dmg
+          mv release/macos/Pulse.dmg release/Pulse-${{ github.ref_name }}.dmg
+
+      - name: Create stable download aliases
+        run: |
+          cp release/Pulse-Setup-${{ github.ref_name }}.zip release/Pulse-Windows.zip
+          cp release/Pulse-${{ github.ref_name }}.dmg release/Pulse-macOS.dmg
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Duniya ${{ github.ref_name }}
+          name: Pulse ${{ github.ref_name }}
           body: |
-            ## Duniya ${{ github.ref_name }}
+            ## Pulse ${{ github.ref_name }}
 
             ### Downloads
-            - **Windows**: Download `Duniya-Setup-${{ github.ref_name }}.zip` — extract and run `Duniya-Setup.exe`, then follow the installer wizard
-            - **macOS**: Download `Duniya-${{ github.ref_name }}.dmg` — open and drag Duniya to Applications
+            - **Windows**: Download `Pulse-Setup-${{ github.ref_name }}.zip` — extract and run `Pulse-Setup.exe`, then follow the installer wizard
+            - **macOS**: Download `Pulse-${{ github.ref_name }}.dmg` — open and drag Pulse to Applications
+            - Stable links: `Pulse-Windows.zip` and `Pulse-macOS.dmg` always point to the latest release.
 
             ### System Requirements
             - Windows 10+ (64-bit) or macOS 12+ (Apple Silicon & Intel)
@@ -181,8 +187,10 @@ jobs:
             ### What's New
             See the commit history for changes in this release.
           files: |
-            release/Duniya-Setup-${{ github.ref_name }}.zip
-            release/Duniya-${{ github.ref_name }}.dmg
+            release/Pulse-Setup-${{ github.ref_name }}.zip
+            release/Pulse-${{ github.ref_name }}.dmg
+            release/Pulse-Windows.zip
+            release/Pulse-macOS.dmg
           draft: false
           prerelease: false
         env:

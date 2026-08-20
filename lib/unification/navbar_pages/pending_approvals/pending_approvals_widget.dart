@@ -27,7 +27,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
 
   List<UserRecord>? _pendingUsers;
   bool _isLoading = true;
-  int _selectedCategoryTab = 0; // 0=All, 1=Pharmacy Reg, 2=Staff, 3=Outlet, 4=Subscription
+  int _selectedCategoryTab =
+      0; // 0=All, 1=Pharmacy Reg, 2=Staff, 3=Subscription
   String _searchQuery = '';
   String _sortBy = 'newest'; // newest, oldest, name
 
@@ -65,7 +66,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
   Future<void> _approveUser(UserRecord user) async {
     try {
       await user.reference.update(createUserRecordData(
-        approvedByDuniya: true,
+        approvedByPulse: true,
       ));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -74,7 +75,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           ),
           backgroundColor: const Color(0xFF10B981),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       await _loadPendingApprovals();
@@ -99,7 +101,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           ),
           backgroundColor: const Color(0xFFF59E0B),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       await _loadPendingApprovals();
@@ -116,11 +119,13 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
 
   // Categorize the approval type based on user data using RBAC
   String _approvalCategory(UserRecord user) {
-    if (AppRole.isPharmacyAccountType(user.accountType)) return 'Pharmacy Registration';
+    if (AppRole.isPharmacyAccountType(user.accountType))
+      return 'Pharmacy Registration';
     final role = AppRole.fromFirestoreValue(user.role);
     if (role == AppRole.salesAssistant) return 'Staff Approval';
-    if (role == AppRole.outletManager) return 'Outlet Setup';
-    if (role == AppRole.subscriber || user.accountType.toLowerCase() == 'subscription') return 'Subscription';
+    if (role == AppRole.outletManager) return 'Pharmacy Setup';
+    if (role == AppRole.subscriber ||
+        user.accountType.toLowerCase() == 'subscription') return 'Subscription';
     return 'Pharmacy Registration'; // Default to pharmacy-focused
   }
 
@@ -130,7 +135,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
         return Icons.local_pharmacy_rounded;
       case 'Staff Approval':
         return Icons.badge_rounded;
-      case 'Outlet Setup':
+      case 'Pharmacy Setup':
         return Icons.store_rounded;
       case 'Subscription':
         return Icons.card_membership_rounded;
@@ -145,7 +150,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
         return const Color(0xFF9900FF);
       case 'Staff Approval':
         return const Color(0xFF3B82F6);
-      case 'Outlet Setup':
+      case 'Pharmacy Setup':
         return const Color(0xFF10B981);
       case 'Subscription':
         return const Color(0xFFF59E0B);
@@ -157,11 +162,11 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
   String _categoryDescription(String category) {
     switch (category) {
       case 'Pharmacy Registration':
-        return 'New pharmacy applying to join the Duniya network. Verify business details before approval.';
+        return 'New pharmacy applying to join the Pulse network. Verify business details before approval.';
       case 'Staff Approval':
         return 'Staff member awaiting access to a pharmacy workspace. Confirm their role and assignment.';
-      case 'Outlet Setup':
-        return 'New outlet or store branch requesting activation under a pharmacy group.';
+      case 'Pharmacy Setup':
+        return 'Pharmacy requesting activation under the network.';
       case 'Subscription':
         return 'Pharmacy subscription payment or plan change requiring verification.';
       default:
@@ -176,15 +181,13 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
     // Category filter
     switch (_selectedCategoryTab) {
       case 1: // Pharmacy Registration
-        users.removeWhere((u) => _approvalCategory(u) != 'Pharmacy Registration');
+        users.removeWhere(
+            (u) => _approvalCategory(u) != 'Pharmacy Registration');
         break;
       case 2: // Staff
         users.removeWhere((u) => _approvalCategory(u) != 'Staff Approval');
         break;
-      case 3: // Outlet
-        users.removeWhere((u) => _approvalCategory(u) != 'Outlet Setup');
-        break;
-      case 4: // Subscription
+      case 3: // Subscription
         users.removeWhere((u) => _approvalCategory(u) != 'Subscription');
         break;
     }
@@ -217,7 +220,9 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           if (bTime == null) return -1;
           return aTime.compareTo(bTime);
         case 'name':
-          return _displayNameFor(a).toLowerCase().compareTo(_displayNameFor(b).toLowerCase());
+          return _displayNameFor(a)
+              .toLowerCase()
+              .compareTo(_displayNameFor(b).toLowerCase());
         case 'newest':
         default:
           final aTime = a.createdTime;
@@ -225,7 +230,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           if (aTime == null && bTime == null) return 0;
           if (aTime == null) return 1;
           if (bTime == null) return -1;
-          return bTime!.compareTo(aTime!);
+          return bTime.compareTo(aTime);
       }
     });
 
@@ -248,7 +253,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
     if (diff.inHours < 24) return '${diff.inHours}h ago';
     if (diff.inDays < 7) return '${diff.inDays}d ago';
-    return dateTimeFormat('MMM d', dt, locale: FFLocalizations.of(context).languageCode);
+    return dateTimeFormat('MMM d', dt,
+        locale: FFLocalizations.of(context).languageCode);
   }
 
   // ─── UI BUILDERS ────────────────────────────────────────────────
@@ -297,21 +303,26 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   children: [
                     Text(
                       'Pharmacy Approvals',
-                      style: FlutterFlowTheme.of(context).headlineMedium.override(
-                            fontFamily: FlutterFlowTheme.of(context).headlineMediumFamily,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: -0.5,
-                            useGoogleFonts: !FlutterFlowTheme.of(context).headlineMediumIsCustom,
-                          ),
+                      style:
+                          FlutterFlowTheme.of(context).headlineMedium.override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .headlineMediumFamily,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.5,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .headlineMediumIsCustom,
+                              ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Review and manage pending approvals across your pharmacy network',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodyMediumFamily,
                             color: Colors.white.withValues(alpha: 0.85),
-                            useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .bodyMediumIsCustom,
                           ),
                     ),
                   ],
@@ -324,20 +335,30 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           Builder(
             builder: (context) {
               final all = _pendingUsers ?? <UserRecord>[];
-              final pharmReg = all.where((u) => _approvalCategory(u) == 'Pharmacy Registration').length;
-              final staff = all.where((u) => _approvalCategory(u) == 'Staff Approval').length;
-              final outlet = all.where((u) => _approvalCategory(u) == 'Outlet Setup').length;
-              final sub = all.where((u) => _approvalCategory(u) == 'Subscription').length;
+              final pharmReg = all
+                  .where((u) => _approvalCategory(u) == 'Pharmacy Registration')
+                  .length;
+              final staff = all
+                  .where((u) => _approvalCategory(u) == 'Staff Approval')
+                  .length;
+              final sub = all
+                  .where((u) => _approvalCategory(u) == 'Subscription')
+                  .length;
 
               return Wrap(
                 spacing: 10,
                 runSpacing: 10,
                 children: [
-                  _buildHeaderBadge('${all.length} Total', Icons.pending_actions_rounded),
-                  if (pharmReg > 0) _buildHeaderBadge('$pharmReg Registrations', Icons.local_pharmacy_rounded),
-                  if (staff > 0) _buildHeaderBadge('$staff Staff', Icons.badge_rounded),
-                  if (outlet > 0) _buildHeaderBadge('$outlet Outlets', Icons.store_rounded),
-                  if (sub > 0) _buildHeaderBadge('$sub Subscriptions', Icons.card_membership_rounded),
+                  _buildHeaderBadge(
+                      '${all.length} Total', Icons.pending_actions_rounded),
+                  if (pharmReg > 0)
+                    _buildHeaderBadge('$pharmReg Registrations',
+                        Icons.local_pharmacy_rounded),
+                  if (staff > 0)
+                    _buildHeaderBadge('$staff Staff', Icons.badge_rounded),
+                  if (sub > 0)
+                    _buildHeaderBadge(
+                        '$sub Subscriptions', Icons.card_membership_rounded),
                 ],
               );
             },
@@ -366,7 +387,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).labelMediumIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).labelMediumIsCustom,
                 ),
           ),
         ],
@@ -376,9 +398,11 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
 
   Widget _buildStatCards(BuildContext context) {
     final all = _pendingUsers ?? <UserRecord>[];
-    final pharmReg = all.where((u) => _approvalCategory(u) == 'Pharmacy Registration').length;
-    final staff = all.where((u) => _approvalCategory(u) == 'Staff Approval').length;
-    final outlet = all.where((u) => _approvalCategory(u) == 'Outlet Setup').length;
+    final pharmReg = all
+        .where((u) => _approvalCategory(u) == 'Pharmacy Registration')
+        .length;
+    final staff =
+        all.where((u) => _approvalCategory(u) == 'Staff Approval').length;
     final sub = all.where((u) => _approvalCategory(u) == 'Subscription').length;
 
     return LayoutBuilder(
@@ -403,14 +427,6 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           ),
           _buildStatCard(
             context,
-            title: 'Outlet Setups',
-            value: outlet.toString(),
-            subtitle: 'New store branches pending',
-            icon: Icons.store_rounded,
-            color: const Color(0xFF10B981),
-          ),
-          _buildStatCard(
-            context,
             title: 'Subscriptions',
             value: sub.toString(),
             subtitle: 'Plan changes to verify',
@@ -421,19 +437,24 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
 
         if (isWide) {
           return Row(
-            children: children.map((c) => Expanded(child: Padding(
-              padding: const EdgeInsets.only(right: 14),
-              child: c,
-            ))).toList(),
+            children: children
+                .map((c) => Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.only(right: 14),
+                      child: c,
+                    )))
+                .toList(),
           );
         }
         return Wrap(
           spacing: 14,
           runSpacing: 14,
-          children: children.map((c) => SizedBox(
-            width: (constraints.maxWidth - 14) / 2,
-            child: c,
-          )).toList(),
+          children: children
+              .map((c) => SizedBox(
+                    width: (constraints.maxWidth - 14) / 2,
+                    child: c,
+                  ))
+              .toList(),
         );
       },
     );
@@ -481,11 +502,13 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               Text(
                 value,
                 style: FlutterFlowTheme.of(context).headlineMedium.override(
-                      fontFamily: FlutterFlowTheme.of(context).headlineMediumFamily,
+                      fontFamily:
+                          FlutterFlowTheme.of(context).headlineMediumFamily,
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -1,
-                      useGoogleFonts: !FlutterFlowTheme.of(context).headlineMediumIsCustom,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).headlineMediumIsCustom,
                     ),
               ),
             ],
@@ -496,7 +519,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                   fontWeight: FontWeight.w700,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                 ),
           ),
           const SizedBox(height: 2),
@@ -505,7 +529,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).bodySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).bodySmallIsCustom,
                 ),
           ),
         ],
@@ -572,7 +597,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           hintStyle: FlutterFlowTheme.of(context).bodyMedium.override(
                 fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                 color: FlutterFlowTheme.of(context).alternate,
-                useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                useGoogleFonts:
+                    !FlutterFlowTheme.of(context).bodyMediumIsCustom,
               ),
           prefixIcon: Icon(
             Icons.search_rounded,
@@ -580,7 +606,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             size: 20,
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );
@@ -597,9 +624,7 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           const SizedBox(width: 8),
           _buildPill('Staff', 2, Icons.badge_rounded),
           const SizedBox(width: 8),
-          _buildPill('Outlets', 3, Icons.store_rounded),
-          const SizedBox(width: 8),
-          _buildPill('Subscriptions', 4, Icons.card_membership_rounded),
+          _buildPill('Subscriptions', 3, Icons.card_membership_rounded),
         ],
       ),
     );
@@ -627,15 +652,22 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 15, color: isActive ? Colors.white : FlutterFlowTheme.of(context).secondaryText),
+            Icon(icon,
+                size: 15,
+                color: isActive
+                    ? Colors.white
+                    : FlutterFlowTheme.of(context).secondaryText),
             const SizedBox(width: 6),
             Text(
               label,
               style: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
-                    color: isActive ? Colors.white : FlutterFlowTheme.of(context).secondaryText,
+                    color: isActive
+                        ? Colors.white
+                        : FlutterFlowTheme.of(context).secondaryText,
                     fontWeight: FontWeight.w600,
-                    useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                    useGoogleFonts:
+                        !FlutterFlowTheme.of(context).bodySmallIsCustom,
                   ),
             ),
           ],
@@ -657,7 +689,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
       child: DropdownButton<String>(
         value: _sortBy,
         underline: const SizedBox.shrink(),
-        icon: Icon(Icons.sort_rounded, size: 18, color: FlutterFlowTheme.of(context).secondaryText),
+        icon: Icon(Icons.sort_rounded,
+            size: 18, color: FlutterFlowTheme.of(context).secondaryText),
         items: const [
           DropdownMenuItem(value: 'newest', child: Text('Newest first')),
           DropdownMenuItem(value: 'oldest', child: Text('Oldest first')),
@@ -729,10 +762,12 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   child: Text(
                     initials.isEmpty ? '?' : initials,
                     style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                          fontFamily:
+                              FlutterFlowTheme.of(context).titleMediumFamily,
                           color: catColor,
                           fontWeight: FontWeight.w800,
-                          useGoogleFonts: !FlutterFlowTheme.of(context).titleMediumIsCustom,
+                          useGoogleFonts:
+                              !FlutterFlowTheme.of(context).titleMediumIsCustom,
                         ),
                   ),
                 ),
@@ -748,18 +783,23 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                         Expanded(
                           child: Text(
                             displayName,
-                            style: FlutterFlowTheme.of(context).titleLarge.override(
-                                  fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                            style: FlutterFlowTheme.of(context)
+                                .titleLarge
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .titleLargeFamily,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: -0.3,
-                                  useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
+                                  useGoogleFonts: !FlutterFlowTheme.of(context)
+                                      .titleLargeIsCustom,
                                 ),
                           ),
                         ),
                         // Category badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
                             color: catColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(999),
@@ -771,11 +811,16 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                               const SizedBox(width: 4),
                               Text(
                                 category,
-                                style: FlutterFlowTheme.of(context).labelSmall.override(
-                                      fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
+                                style: FlutterFlowTheme.of(context)
+                                    .labelSmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .labelSmallFamily,
                                       color: catColor,
                                       fontWeight: FontWeight.w700,
-                                      useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                                      useGoogleFonts:
+                                          !FlutterFlowTheme.of(context)
+                                              .labelSmallIsCustom,
                                     ),
                               ),
                             ],
@@ -792,8 +837,10 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                         _buildMetaChip(Icons.email_outlined, user.email),
                         if (user.phoneNumber.isNotEmpty)
                           _buildMetaChip(Icons.call_outlined, user.phoneNumber),
-                        if (user.pharmacyName.isNotEmpty && AppRole.isPharmacyAccountType(user.accountType))
-                          _buildMetaChip(Icons.local_pharmacy_outlined, user.pharmacyName),
+                        if (user.pharmacyName.isNotEmpty &&
+                            AppRole.isPharmacyAccountType(user.accountType))
+                          _buildMetaChip(
+                              Icons.local_pharmacy_outlined, user.pharmacyName),
                         if (user.role.isNotEmpty)
                           _buildMetaChip(Icons.badge_outlined, user.role),
                       ],
@@ -812,7 +859,9 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               color: FlutterFlowTheme.of(context).primaryBackground,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.25),
+                color: FlutterFlowTheme.of(context)
+                    .alternate
+                    .withValues(alpha: 0.25),
               ),
             ),
             child: Row(
@@ -823,9 +872,11 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   child: Text(
                     _categoryDescription(category),
                     style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
+                          fontFamily:
+                              FlutterFlowTheme.of(context).bodySmallFamily,
                           color: FlutterFlowTheme.of(context).secondaryText,
-                          useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                          useGoogleFonts:
+                              !FlutterFlowTheme.of(context).bodySmallIsCustom,
                         ),
                   ),
                 ),
@@ -837,20 +888,23 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           Row(
             children: [
               // Time indicator
-              Icon(Icons.schedule_outlined, size: 14, color: FlutterFlowTheme.of(context).secondaryText),
+              Icon(Icons.schedule_outlined,
+                  size: 14, color: FlutterFlowTheme.of(context).secondaryText),
               const SizedBox(width: 6),
               Text(
                 'Submitted $timeAgo',
                 style: FlutterFlowTheme.of(context).bodySmall.override(
                       fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                       color: FlutterFlowTheme.of(context).secondaryText,
-                      useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).bodySmallIsCustom,
                     ),
               ),
               if (isUrgent) ...[
                 const SizedBox(width: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(999),
@@ -858,15 +912,18 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.priority_high_rounded, size: 12, color: Color(0xFFEF4444)),
+                      const Icon(Icons.priority_high_rounded,
+                          size: 12, color: Color(0xFFEF4444)),
                       const SizedBox(width: 4),
                       Text(
                         'Urgent',
                         style: FlutterFlowTheme.of(context).labelSmall.override(
-                              fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).labelSmallFamily,
                               color: const Color(0xFFEF4444),
                               fontWeight: FontWeight.w700,
-                              useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                              useGoogleFonts: !FlutterFlowTheme.of(context)
+                                  .labelSmallIsCustom,
                             ),
                       ),
                     ],
@@ -882,10 +939,12 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFFEF4444),
                   side: const BorderSide(color: Color(0xFFEF4444), width: 1.2),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
               const SizedBox(width: 10),
@@ -896,11 +955,13 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9900FF),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ],
@@ -929,7 +990,6 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final all = _pendingUsers ?? <UserRecord>[];
     final isFiltered = _selectedCategoryTab != 0 || _searchQuery.isNotEmpty;
 
     return Container(
@@ -952,7 +1012,9 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               borderRadius: BorderRadius.circular(22),
             ),
             child: Icon(
-              isFiltered ? Icons.filter_alt_off_rounded : Icons.verified_rounded,
+              isFiltered
+                  ? Icons.filter_alt_off_rounded
+                  : Icons.verified_rounded,
               size: 34,
               color: const Color(0xFF9900FF),
             ),
@@ -964,7 +1026,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   fontFamily: FlutterFlowTheme.of(context).headlineSmallFamily,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.3,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).headlineSmallIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).headlineSmallIsCustom,
                 ),
           ),
           const SizedBox(height: 8),
@@ -976,7 +1039,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                 ),
           ),
           const SizedBox(height: 20),
@@ -991,8 +1055,10 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFF9900FF),
                 side: const BorderSide(color: Color(0xFF9900FF)),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
               ),
             )
           else
@@ -1003,8 +1069,10 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFF9900FF),
                 side: const BorderSide(color: Color(0xFF9900FF)),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
               ),
             ),
         ],
@@ -1016,12 +1084,22 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
 
   Widget _buildInsightsPanel(BuildContext context) {
     final all = _pendingUsers ?? <UserRecord>[];
-    final pharmReg = all.where((u) => _approvalCategory(u) == 'Pharmacy Registration').length;
-    final staff = all.where((u) => _approvalCategory(u) == 'Staff Approval').length;
-    final outlet = all.where((u) => _approvalCategory(u) == 'Outlet Setup').length;
+    final pharmReg = all
+        .where((u) => _approvalCategory(u) == 'Pharmacy Registration')
+        .length;
+    final staff =
+        all.where((u) => _approvalCategory(u) == 'Staff Approval').length;
     final sub = all.where((u) => _approvalCategory(u) == 'Subscription').length;
-    final urgentCount = all.where((u) => u.hasCreatedTime() && DateTime.now().difference(u.createdTime!).inDays >= 3).length;
-    final oldestTimes = all.where((u) => u.hasCreatedTime()).map((u) => u.createdTime!).toList()..sort();
+    final urgentCount = all
+        .where((u) =>
+            u.hasCreatedTime() &&
+            DateTime.now().difference(u.createdTime!).inDays >= 3)
+        .length;
+    final oldestTimes = all
+        .where((u) => u.hasCreatedTime())
+        .map((u) => u.createdTime!)
+        .toList()
+      ..sort();
     final oldest = oldestTimes.isNotEmpty ? oldestTimes.first : null;
 
     return Container(
@@ -1053,7 +1131,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   color: const Color(0xFF9900FF).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.insights_rounded, color: Color(0xFF9900FF), size: 18),
+                child: const Icon(Icons.insights_rounded,
+                    color: Color(0xFF9900FF), size: 18),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -1063,18 +1142,22 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                     Text(
                       'Queue Overview',
                       style: FlutterFlowTheme.of(context).titleMedium.override(
-                            fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                            fontFamily:
+                                FlutterFlowTheme.of(context).titleMediumFamily,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.2,
-                            useGoogleFonts: !FlutterFlowTheme.of(context).titleMediumIsCustom,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .titleMediumIsCustom,
                           ),
                     ),
                     Text(
                       'Pharmacy approval pipeline at a glance',
                       style: FlutterFlowTheme.of(context).bodySmall.override(
-                            fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodySmallFamily,
                             color: FlutterFlowTheme.of(context).secondaryText,
-                            useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                            useGoogleFonts:
+                                !FlutterFlowTheme.of(context).bodySmallIsCustom,
                           ),
                     ),
                   ],
@@ -1087,15 +1170,23 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
           _insightMetric(
             context,
             label: 'Queue Health',
-            value: all.isEmpty ? 'Clear' : (all.length <= 3 ? 'Light' : all.length <= 10 ? 'Busy' : 'Heavy'),
-            helper: all.isEmpty ? 'No pending approvals' : '${all.length} request${all.length > 1 ? 's' : ''} in queue',
+            value: all.isEmpty
+                ? 'Clear'
+                : (all.length <= 3
+                    ? 'Light'
+                    : all.length <= 10
+                        ? 'Busy'
+                        : 'Heavy'),
+            helper: all.isEmpty
+                ? 'No pending approvals'
+                : '${all.length} request${all.length > 1 ? 's' : ''} in queue',
           ),
           const SizedBox(height: 12),
           // Breakdown
           _insightMetric(
             context,
             label: 'Approval Mix',
-            value: '$pharmReg reg / $staff staff / $outlet outlet / $sub sub',
+            value: '$pharmReg reg / $staff staff / $sub sub',
             helper: 'Prioritize pharmacy registrations first',
           ),
           const SizedBox(height: 12),
@@ -1107,7 +1198,9 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             helper: urgentCount > 0
                 ? 'Requests older than 3 days need attention'
                 : 'All requests are within the 3-day SLA',
-            valueColor: urgentCount > 0 ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+            valueColor: urgentCount > 0
+                ? const Color(0xFFEF4444)
+                : const Color(0xFF10B981),
           ),
           const SizedBox(height: 12),
           // Oldest
@@ -1116,8 +1209,11 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             label: 'Oldest Request',
             value: oldest == null
                 ? '--'
-                : dateTimeFormat('MMM d, y', oldest, locale: FFLocalizations.of(context).languageCode),
-            helper: oldest == null ? 'No active queue' : 'Process oldest requests first',
+                : dateTimeFormat('MMM d, y', oldest,
+                    locale: FFLocalizations.of(context).languageCode),
+            helper: oldest == null
+                ? 'No active queue'
+                : 'Process oldest requests first',
           ),
           const SizedBox(height: 20),
           // Recommended flow
@@ -1141,9 +1237,11 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 Text(
                   'Recommended Review Flow',
                   style: FlutterFlowTheme.of(context).titleSmall.override(
-                        fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
+                        fontFamily:
+                            FlutterFlowTheme.of(context).titleSmallFamily,
                         fontWeight: FontWeight.w700,
-                        useGoogleFonts: !FlutterFlowTheme.of(context).titleSmallIsCustom,
+                        useGoogleFonts:
+                            !FlutterFlowTheme.of(context).titleSmallIsCustom,
                       ),
                 ),
                 const SizedBox(height: 10),
@@ -1151,9 +1249,9 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 const SizedBox(height: 6),
                 _buildFlowStep('2', 'Verify pharmacy registration details'),
                 const SizedBox(height: 6),
-                _buildFlowStep('3', 'Approve staff only after pharmacy is verified'),
+                _buildFlowStep(
+                    '3', 'Approve staff only after pharmacy is verified'),
                 const SizedBox(height: 6),
-                _buildFlowStep('4', 'Confirm outlet belongs to correct pharmacy'),
               ],
             ),
           ),
@@ -1188,7 +1286,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
                   fontWeight: FontWeight.w600,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).labelSmallIsCustom,
                 ),
           ),
           const SizedBox(height: 4),
@@ -1199,7 +1298,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.2,
                   color: valueColor,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).titleMediumIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).titleMediumIsCustom,
                 ),
           ),
           const SizedBox(height: 2),
@@ -1208,7 +1308,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).bodySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                   color: FlutterFlowTheme.of(context).alternate,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).bodySmallIsCustom,
                 ),
           ),
         ],
@@ -1234,7 +1335,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                     fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                     color: const Color(0xFF9900FF),
                     fontWeight: FontWeight.w800,
-                    useGoogleFonts: !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                    useGoogleFonts:
+                        !FlutterFlowTheme.of(context).labelSmallIsCustom,
                   ),
             ),
           ),
@@ -1246,7 +1348,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: FlutterFlowTheme.of(context).bodySmall.override(
                   fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                  useGoogleFonts:
+                      !FlutterFlowTheme.of(context).bodySmallIsCustom,
                 ),
           ),
         ),
@@ -1273,7 +1376,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 color: const Color(0xFF10B981).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.check_circle_outline_rounded, color: Color(0xFF10B981), size: 22),
+              child: const Icon(Icons.check_circle_outline_rounded,
+                  color: Color(0xFF10B981), size: 22),
             ),
             const SizedBox(width: 12),
             const Text('Approve Request'),
@@ -1295,16 +1399,22 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                  if (user.email.isNotEmpty) Text(user.email, style: const TextStyle(fontSize: 13)),
-                  if (user.pharmacyName.isNotEmpty) Text('Pharmacy: ${user.pharmacyName}', style: const TextStyle(fontSize: 13)),
+                  Text(name,
+                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                  if (user.email.isNotEmpty)
+                    Text(user.email, style: const TextStyle(fontSize: 13)),
+                  if (user.pharmacyName.isNotEmpty)
+                    Text('Pharmacy: ${user.pharmacyName}',
+                        style: const TextStyle(fontSize: 13)),
                 ],
               ),
             ),
             const SizedBox(height: 12),
             Text(
               'Once approved, this account will be able to sign in and access the platform immediately.',
-              style: TextStyle(color: FlutterFlowTheme.of(context).secondaryText, fontSize: 13),
+              style: TextStyle(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 13),
             ),
           ],
         ),
@@ -1323,7 +1433,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF10B981),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ],
@@ -1348,7 +1459,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                 color: const Color(0xFFEF4444).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.cancel_outlined, color: Color(0xFFEF4444), size: 22),
+              child: const Icon(Icons.cancel_outlined,
+                  color: Color(0xFFEF4444), size: 22),
             ),
             const SizedBox(width: 12),
             const Text('Reject Request'),
@@ -1370,15 +1482,19 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                  if (user.email.isNotEmpty) Text(user.email, style: const TextStyle(fontSize: 13)),
+                  Text(name,
+                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                  if (user.email.isNotEmpty)
+                    Text(user.email, style: const TextStyle(fontSize: 13)),
                 ],
               ),
             ),
             const SizedBox(height: 12),
             Text(
               'This will permanently remove the account from the system. This action cannot be undone.',
-              style: TextStyle(color: FlutterFlowTheme.of(context).secondaryText, fontSize: 13),
+              style: TextStyle(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 13),
             ),
           ],
         ),
@@ -1397,7 +1513,8 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF4444),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ],
@@ -1471,15 +1588,19 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                                 ),
                               )
                             : SingleChildScrollView(
-                                padding: const EdgeInsets.fromLTRB(24, 22, 24, 24),
+                                padding:
+                                    const EdgeInsets.fromLTRB(24, 22, 24, 24),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     // Page header with actions
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(child: _buildPharmacyHeader(context)),
+                                        Expanded(
+                                            child:
+                                                _buildPharmacyHeader(context)),
                                       ],
                                     ),
                                     const SizedBox(height: 20),
@@ -1492,38 +1613,69 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                                     // Queue info bar
                                     Container(
                                       width: double.infinity,
-                                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18, vertical: 12),
                                       decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
                                         borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
-                                          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.3),
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate
+                                              .withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Row(
                                         children: [
-                                          Icon(Icons.pending_actions_rounded, size: 16, color: FlutterFlowTheme.of(context).secondaryText),
+                                          Icon(Icons.pending_actions_rounded,
+                                              size: 16,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText),
                                           const SizedBox(width: 8),
                                           Text(
                                             '${visibleUsers.length} item${visibleUsers.length != 1 ? 's' : ''} in queue',
-                                            style: FlutterFlowTheme.of(context).bodySmall.override(
-                                                  fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodySmall
+                                                .override(
+                                                  fontFamily:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodySmallFamily,
                                                   fontWeight: FontWeight.w600,
-                                                  useGoogleFonts: !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                                                  useGoogleFonts:
+                                                      !FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodySmallIsCustom,
                                                 ),
                                           ),
                                           const Spacer(),
                                           OutlinedButton.icon(
                                             onPressed: _loadPendingApprovals,
-                                            icon: const Icon(Icons.refresh_rounded, size: 16),
+                                            icon: const Icon(
+                                                Icons.refresh_rounded,
+                                                size: 16),
                                             label: const Text('Refresh'),
                                             style: OutlinedButton.styleFrom(
-                                              foregroundColor: FlutterFlowTheme.of(context).secondaryText,
-                                              side: BorderSide(color: FlutterFlowTheme.of(context).alternate),
-                                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                              foregroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              side: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .alternate),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 14,
+                                                      vertical: 8),
                                               minimumSize: Size.zero,
-                                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
                                             ),
                                           ),
                                         ],
@@ -1536,21 +1688,31 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                                     else
                                       LayoutBuilder(
                                         builder: (context, constraints) {
-                                          final isWide = constraints.maxWidth >= 1260;
+                                          final isWide =
+                                              constraints.maxWidth >= 1260;
 
                                           if (isWide) {
                                             return Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Expanded(
                                                   flex: 3,
                                                   child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       ...visibleUsers.map(
                                                         (user) => Padding(
-                                                          padding: const EdgeInsets.only(bottom: 14),
-                                                          child: _buildApprovalCard(context, user),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  bottom: 14),
+                                                          child:
+                                                              _buildApprovalCard(
+                                                                  context,
+                                                                  user),
                                                         ),
                                                       ),
                                                     ],
@@ -1559,19 +1721,24 @@ class _PendingApprovalsWidgetState extends State<PendingApprovalsWidget> {
                                                 const SizedBox(width: 22),
                                                 Expanded(
                                                   flex: 2,
-                                                  child: _buildInsightsPanel(context),
+                                                  child: _buildInsightsPanel(
+                                                      context),
                                                 ),
                                               ],
                                             );
                                           }
 
                                           return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               ...visibleUsers.map(
                                                 (user) => Padding(
-                                                  padding: const EdgeInsets.only(bottom: 14),
-                                                  child: _buildApprovalCard(context, user),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 14),
+                                                  child: _buildApprovalCard(
+                                                      context, user),
                                                 ),
                                               ),
                                               const SizedBox(height: 22),

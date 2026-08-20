@@ -1,7 +1,7 @@
 /**
- * Duniya PWA Service Worker
+ * Pulse PWA Service Worker
  * ═════════════════════════════════════════════════════════════════
- * Provides offline support for the Duniya Flutter web app by:
+ * Provides offline support for the Pulse Flutter web app by:
  *
  * 1. Pre-caching the app shell (index.html, main.dart.js, flutter.js,
  *    canvaskit, fonts, favicons) on install so the app boots offline.
@@ -19,8 +19,8 @@
 // on every deploy. This ensures the service worker busts all caches
 // automatically when a new version is deployed.
 const CACHE_VERSION = '%%BUILD_VERSION%%';
-const CACHE_NAME = `duniya-pwa-${CACHE_VERSION}`;
-const RUNTIME_CACHE = `duniya-runtime-${CACHE_VERSION}`;
+const CACHE_NAME = `pulse-pwa-${CACHE_VERSION}`;
+const RUNTIME_CACHE = `pulse-runtime-${CACHE_VERSION}`;
 
 // Core app shell — these are the files needed to boot the app offline.
 // The exact filenames may include content hashes, so we use a
@@ -71,7 +71,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(APP_SHELL).catch((err) => {
         // Some shell URLs might 404 (e.g. /favicon.svg before build);
         // don't fail the whole install for that.
-        console.warn('[Duniya SW] Some shell assets failed to pre-cache:', err);
+        console.warn('[Pulse SW] Some shell assets failed to pre-cache:', err);
       });
     })
   );
@@ -89,7 +89,7 @@ self.addEventListener('activate', (event) => {
         cacheNames
           .filter((name) => name !== CACHE_NAME && name !== RUNTIME_CACHE)
           .map((name) => {
-            console.log('[Duniya SW] Deleting old cache:', name);
+            console.log('[Pulse SW] Deleting old cache:', name);
             return caches.delete(name);
           })
       );

@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 /// Fallback stub for platforms where neither dart:html nor dart:io are

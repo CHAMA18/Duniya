@@ -14,27 +14,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 import '/index.dart';
 
-import '/vmi/dashboard/vmi_dashboard_widget.dart';
-import '/vmi/stock_balances/stock_balances_widget.dart';
-import '/vmi/stock_movements/stock_movements_widget.dart';
-import '/vmi/product_master/product_master_widget.dart';
-import '/vmi/goods_received/goods_received_widget.dart';
-import '/vmi/goods_received_detail/goods_received_detail_widget.dart';
-import '/vmi/sales_vmi/sales_vmi_widget.dart';
-import '/vmi/stock_counts/stock_counts_widget.dart';
-import '/vmi/stock_count_detail/stock_count_detail_widget.dart';
-import '/vmi/batches/batches_widget.dart';
-import '/vmi/alerts/low_stock_alerts_widget.dart';
-import '/vmi/replenishment/replenishment_widget.dart';
-import '/vmi/outlets/outlets_widget.dart';
-import '/vmi/drug_interactions/drug_interactions_widget.dart';
-import '/vmi/expiry_tracking/expiry_tracking_widget.dart';
-import '/vmi/purchase_orders/purchase_orders_widget.dart';
-import '/vmi/prescriptions/prescriptions_widget.dart';
-import '/vmi/insurance/insurance_widget.dart';
-import '/vmi/cold_chain/cold_chain_widget.dart';
-import '/vmi/patient_records/patient_records_widget.dart';
-
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
 export '/backend/firebase_dynamic_links/firebase_dynamic_links.dart'
@@ -111,6 +90,15 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: '_initialize',
           path: '/',
+          builder: (context, _) =>
+              appStateNotifier.loggedIn ? WelcomeWidget() : RegisterUniWidget(),
+        ),
+        // The production build serves the marketing landing page at `/` and
+        // keeps this Flutter shell at `/app.html`. Treat the shell as an
+        // application entry route so direct app links still boot correctly.
+        FFRoute(
+          name: 'AppShell',
+          path: '/app.html',
           builder: (context, _) =>
               appStateNotifier.loggedIn ? WelcomeWidget() : RegisterUniWidget(),
         ),
@@ -410,6 +398,23 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => SettingsWidget(),
         ),
         FFRoute(
+          name: EmailTestWidget.routeName,
+          path: EmailTestWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => EmailTestWidget(),
+        ),
+        FFRoute(
+          name: RoleTestWidget.routeName,
+          path: RoleTestWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => const RoleTestWidget(),
+        ),
+        FFRoute(
+          name: StaffInvitationWidget.routeName,
+          path: StaffInvitationWidget.routePath,
+          builder: (context, params) => const StaffInvitationWidget(),
+        ),
+        FFRoute(
           name: NotificationsWidget.routeName,
           path: NotificationsWidget.routePath,
           requireAuth: true,
@@ -600,12 +605,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: ReplenishmentWidget.routePath,
           requireAuth: true,
           builder: (context, params) => ReplenishmentWidget(),
-        ),
-        FFRoute(
-          name: OutletsWidget.routeName,
-          path: OutletsWidget.routePath,
-          requireAuth: true,
-          builder: (context, params) => OutletsWidget(),
         ),
         FFRoute(
           name: DuniyaStockBalancesWidget.routeName,

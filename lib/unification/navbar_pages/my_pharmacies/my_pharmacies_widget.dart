@@ -244,12 +244,6 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                 const SizedBox(width: 10),
                 _buildFilterChip(
                   context: context,
-                  label: 'Outlets',
-                  icon: Icons.store_rounded,
-                ),
-                const SizedBox(width: 10),
-                _buildFilterChip(
-                  context: context,
                   label: 'ZMK',
                   icon: Icons.payments_outlined,
                 ),
@@ -696,7 +690,6 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                                   ),
                                   const SizedBox(height: 28),
                                   // ── OUTLETS SECTION ──
-                                  _buildOutletsSection(context),
                                 ],
                               ),
                             ),
@@ -725,7 +718,8 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
           if (!snapshot.hasData) {
             return const SizedBox(
               height: 120,
-              child: Center(child: LoadingSpinnerWidget(size: 32, showLabel: false)),
+              child: Center(
+                  child: LoadingSpinnerWidget(size: 32, showLabel: false)),
             );
           }
 
@@ -758,7 +752,8 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                           color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.store_rounded, color: Color(0xFF7C3AED), size: 20),
+                        child: const Icon(Icons.store_rounded,
+                            color: Color(0xFF7C3AED), size: 20),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -767,7 +762,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                           children: [
                             Text(
                               'Pharmacy Outlets',
-                              style: theme.titleLarge?.override(
+                              style: theme.titleLarge.override(
                                 fontFamily: theme.titleLargeFamily,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: -0.3,
@@ -776,7 +771,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                             ),
                             Text(
                               '${outlets.length} outlet${outlets.length != 1 ? 's' : ''} across all pharmacies',
-                              style: theme.bodySmall?.override(
+                              style: theme.bodySmall.override(
                                 fontFamily: theme.bodySmallFamily,
                                 color: theme.secondaryText,
                                 letterSpacing: 0.0,
@@ -794,8 +789,10 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                           label: const Text('Add Outlet'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: theme.primary,
-                            side: BorderSide(color: theme.primary.withValues(alpha: 0.5)),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            side: BorderSide(
+                                color: theme.primary.withValues(alpha: 0.5)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                           ),
                         ),
@@ -810,11 +807,12 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     child: Center(
                       child: Column(
                         children: [
-                          Icon(Icons.store_outlined, size: 40, color: theme.secondaryText),
+                          Icon(Icons.store_outlined,
+                              size: 40, color: theme.secondaryText),
                           const SizedBox(height: 12),
                           Text(
                             'No outlets configured',
-                            style: theme.bodyMedium?.override(
+                            style: theme.bodyMedium.override(
                               fontFamily: theme.bodyMediumFamily,
                               color: theme.secondaryText,
                               letterSpacing: 0.0,
@@ -824,7 +822,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                           const SizedBox(height: 4),
                           Text(
                             'Add outlets to manage dispensing points across your pharmacy network',
-                            style: theme.bodySmall?.override(
+                            style: theme.bodySmall.override(
                               fontFamily: theme.bodySmallFamily,
                               color: theme.secondaryText,
                               letterSpacing: 0.0,
@@ -841,7 +839,9 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     child: Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: outlets.map((outlet) => _buildOutletCard(context, outlet)).toList(),
+                      children: outlets
+                          .map((outlet) => _buildOutletCard(context, outlet))
+                          .toList(),
                     ),
                   ),
                 const SizedBox(height: 20),
@@ -872,14 +872,18 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: (outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280))
+                  color: (outlet.isActive
+                          ? const Color(0xFF059669)
+                          : const Color(0xFF6B7280))
                       .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   Icons.store_rounded,
                   size: 18,
-                  color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                  color: outlet.isActive
+                      ? const Color(0xFF059669)
+                      : const Color(0xFF6B7280),
                 ),
               ),
               const SizedBox(width: 10),
@@ -889,7 +893,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                   children: [
                     Text(
                       outlet.name,
-                      style: theme.bodyMedium?.override(
+                      style: theme.bodyMedium.override(
                         fontFamily: theme.bodyMediumFamily,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.0,
@@ -899,14 +903,15 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 2),
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 1),
                       decoration: BoxDecoration(
                         color: theme.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         outlet.code,
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: theme.primary,
                           fontWeight: FontWeight.w600,
@@ -923,7 +928,9 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                  color: outlet.isActive
+                      ? const Color(0xFF059669)
+                      : const Color(0xFF6B7280),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -933,12 +940,13 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.location_on_rounded, size: 12, color: theme.secondaryText),
+                Icon(Icons.location_on_rounded,
+                    size: 12, color: theme.secondaryText),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     outlet.address!,
-                    style: theme.bodySmall?.override(
+                    style: theme.bodySmall.override(
                       fontFamily: theme.bodySmallFamily,
                       color: theme.secondaryText,
                       fontSize: 11,
@@ -970,14 +978,20 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: (outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280))
+                      color: (outlet.isActive
+                              ? const Color(0xFF059669)
+                              : const Color(0xFF6B7280))
                           .withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
-                      outlet.isActive ? Icons.toggle_on_rounded : Icons.toggle_off_rounded,
+                      outlet.isActive
+                          ? Icons.toggle_on_rounded
+                          : Icons.toggle_off_rounded,
                       size: 16,
-                      color: outlet.isActive ? const Color(0xFF059669) : const Color(0xFF6B7280),
+                      color: outlet.isActive
+                          ? const Color(0xFF059669)
+                          : const Color(0xFF6B7280),
                     ),
                   ),
                 ),
@@ -991,12 +1005,16 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Delete Outlet'),
-                        content: Text('Delete "${outlet.name}"? This cannot be undone.'),
+                        content: Text(
+                            'Delete "${outlet.name}"? This cannot be undone.'),
                         actions: [
-                          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                          TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: const Text('Cancel')),
                           FilledButton(
                             onPressed: () => Navigator.pop(ctx, true),
-                            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFDC2626)),
+                            style: FilledButton.styleFrom(
+                                backgroundColor: const Color(0xFFDC2626)),
                             child: const Text('Delete'),
                           ),
                         ],
@@ -1014,7 +1032,8 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                       color: const Color(0xFFDC2626).withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.delete_outline_rounded, size: 14, color: Color(0xFFDC2626)),
+                    child: const Icon(Icons.delete_outline_rounded,
+                        size: 14, color: Color(0xFFDC2626)),
                   ),
                 ),
               ),
@@ -1043,23 +1062,27 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                   color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.store_rounded, color: Color(0xFF7C3AED), size: 18),
+                child: const Icon(Icons.store_rounded,
+                    color: Color(0xFF7C3AED), size: 18),
               ),
               const SizedBox(width: 12),
               Text(
                 'Add Outlet',
-                style: FlutterFlowTheme.of(context).titleLarge?.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.2,
-                  useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
-                ),
+                style: FlutterFlowTheme.of(context).titleLarge.override(
+                      fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.2,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).titleLargeIsCustom,
+                    ),
               ),
             ],
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           content: SizedBox(
-            width: MediaQuery.sizeOf(context).width > 440 ? 440 : double.infinity,
+            width:
+                MediaQuery.sizeOf(context).width > 440 ? 440 : double.infinity,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -1069,7 +1092,8 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     decoration: InputDecoration(
                       labelText: 'Outlet Name *',
                       prefixIcon: const Icon(Icons.label_rounded, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -1078,7 +1102,8 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     decoration: InputDecoration(
                       labelText: 'Outlet Code *',
                       prefixIcon: const Icon(Icons.qr_code_rounded, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -1087,8 +1112,10 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: 'Address',
-                      prefixIcon: const Icon(Icons.location_on_rounded, size: 18),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      prefixIcon:
+                          const Icon(Icons.location_on_rounded, size: 18),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ],
@@ -1102,14 +1129,17 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
             ),
             FilledButton(
               onPressed: () async {
-                if (nameController.text.isEmpty || codeController.text.isEmpty) return;
+                if (nameController.text.isEmpty || codeController.text.isEmpty)
+                  return;
                 final ownerRef = _pharmacyParent();
                 if (ownerRef == null) return;
                 await OutletRecord.createDoc(ownerRef).set(
                   createOutletRecordData(
                     name: nameController.text,
                     code: codeController.text,
-                    address: addressController.text.isNotEmpty ? addressController.text : null,
+                    address: addressController.text.isNotEmpty
+                        ? addressController.text
+                        : null,
                     isActive: true,
                     createdAt: getCurrentTimestamp,
                     updatedAt: getCurrentTimestamp,
@@ -1122,7 +1152,8 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
               },
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFF7C3AED),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
               ),
               child: const Text('Save'),
             ),

@@ -1,12 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
@@ -14,7 +13,6 @@ import '/index.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
 import 'add_user_model.dart';
@@ -35,7 +33,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya brand tokens (kept in sync with the rest of the app) ──
+  // ── Pulse brand tokens (kept in sync with the rest of the app) ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
   static const Color _duniyaPurpleDeep = Color(0xFF6A00D9);
@@ -57,12 +55,12 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     'Sales Assistant',
     'Pharmacy Technician',
     'Pharmacist',
-    'Outlet Manager',
+    'Pharmacy Manager',
     'Owner',
   ];
 
   /// Returns the role options the current user is allowed to assign.
-  /// Only Owners can assign the Owner role. Outlet Managers can assign
+  /// Only Owners can assign the Owner role. Pharmacy Managers can assign
   /// all pharmacy staff roles except Owner.
   List<String> _allowedRoleOptions(BuildContext context) {
     if (AccessControl.isOwner(context)) {
@@ -83,7 +81,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         return Icons.science_outlined;
       case 'Pharmacist':
         return Icons.medical_services_outlined;
-      case 'Outlet Manager':
+      case 'Pharmacy Manager':
         return Icons.manage_accounts_outlined;
       case 'Owner':
         return Icons.verified_user_outlined;
@@ -174,15 +172,18 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       _isPasswordValid &&
       _isConfirmValid;
 
-  String? _nameError() => !_isNameValid && (_model.nameTextController?.text.isNotEmpty ?? false)
-      ? 'Name must be at least 2 characters'
-      : null;
-  String? _emailError() => !_isEmailValid && (_model.emailAddressTextController?.text.isNotEmpty ?? false)
+  String? _nameError() =>
+      !_isNameValid && (_model.nameTextController?.text.isNotEmpty ?? false)
+          ? 'Name must be at least 2 characters'
+          : null;
+  String? _emailError() => !_isEmailValid &&
+          (_model.emailAddressTextController?.text.isNotEmpty ?? false)
       ? 'Enter a valid email address'
       : null;
-  String? _phoneError() => !_isPhoneValid && (_model.phoneTextController?.text.isNotEmpty ?? false)
-      ? 'Enter a valid phone number'
-      : null;
+  String? _phoneError() =>
+      !_isPhoneValid && (_model.phoneTextController?.text.isNotEmpty ?? false)
+          ? 'Enter a valid phone number'
+          : null;
 
   // ── Submit handler (preserved from original FF codegen, with branded
   //    dialog UX and a proper submitting state on the Save button) ──
@@ -226,15 +227,16 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         _shouldSetState = true;
         logFirebaseEvent('Button_backend_call');
 
-        await StaffRecord.collection.doc().set(
+        final staffRef = StaffRecord.collection.doc();
+        await staffRef.set(
               createStaffRecordData(
                 ownerRef: currentUserReference,
                 name: _model.nameTextController!.text,
                 // Normalize the role string through AppRole to ensure
                 // only valid role values are written to Firestore.
-                role: AppRole.fromFirestoreValue(
-                        _model.roleTextController!.text)
-                    .displayName,
+                role:
+                    AppRole.fromFirestoreValue(_model.roleTextController!.text)
+                        .displayName,
                 email: _model.emailAddressTextController!.text,
                 phone: _model.phoneTextController!.text,
                 pharmId: _model.pharm?.reference,
@@ -244,8 +246,28 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             );
         logFirebaseEvent('Button_navigate_to');
 
+        // Send staff invitation email via Cloud Function
+        try {
+          final callable = FirebaseFunctions.instance.httpsCallable(
+            'sendStaffInvitation',
+          );
+          await callable.call({
+            'staffId': staffRef.id,
+            'email': _model.emailAddressTextController!.text,
+            'name': _model.nameTextController!.text,
+            'role': AppRole.fromFirestoreValue(_model.roleTextController!.text)
+                .displayName,
+            'pharmacyName': _model.pharmValue ?? '',
+            'pharmacyId': _model.pharm?.reference.id ?? '',
+          });
+          logFirebaseEvent('Staff invitation email sent');
+        } catch (e) {
+          // Non-fatal — staff record is saved, email failure shouldn't block
+          logFirebaseEvent('Staff invitation email failed: $e');
+        }
+
         if (context.mounted) {
-          await _showSuccessToast();
+          await _showInvitationSentToast();
           context.pushNamed(HumanResourceUniWidget.routeName);
         }
       } else {
@@ -264,8 +286,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       context: context,
       builder: (alertDialogContext) => WebViewAware(
         child: AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           title: Row(
             children: [
               Container(
@@ -274,8 +296,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   color: _dangerColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: Icon(Icons.error_outline,
-                    color: _dangerColor, size: 22.0),
+                child:
+                    Icon(Icons.error_outline, color: _dangerColor, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Email already in use',
@@ -308,8 +330,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 12.0),
               ),
               child: Text('Got it',
                   style: TextStyle(
@@ -334,6 +356,22 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     );
     overlay.insert(entry);
     await Future.delayed(const Duration(seconds: 3));
+    entry.remove();
+  }
+
+  Future<void> _showInvitationSentToast() async {
+    final overlay = Overlay.of(context);
+    final entry = OverlayEntry(
+      builder: (_) => _BrandedToast(
+        icon: Icons.mail_outline_rounded,
+        iconColor: const Color(0xFF3B82F6),
+        title: 'Invitation sent',
+        message:
+            'An invitation email has been sent to ${_model.emailAddressTextController?.text.trim() ?? "the staff member"}. They can create their account using the link in the email.',
+      ),
+    );
+    overlay.insert(entry);
+    await Future.delayed(const Duration(seconds: 4));
     entry.remove();
   }
 
@@ -448,17 +486,18 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                           Expanded(
                             child: SingleChildScrollView(
                               padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    responsiveVisibility(context: context,
-                                            phone: false, tablet: false)
-                                        ? 40.0
-                                        : 20.0,
+                                horizontal: responsiveVisibility(
+                                        context: context,
+                                        phone: false,
+                                        tablet: false)
+                                    ? 40.0
+                                    : 20.0,
                                 vertical: 28.0,
                               ),
                               child: Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                      maxWidth: 920.0),
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 920.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -494,8 +533,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                               _buildSectionLabel(
                                                 icon: Icons
                                                     .person_outline_rounded,
-                                                title:
-                                                    'Personal Information',
+                                                title: 'Personal Information',
                                                 subtitle:
                                                     'The staff member\'s basic contact details.',
                                               ),
@@ -519,17 +557,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                                   ),
                                                   _buildPremiumField(
                                                     label: 'Email Address',
-                                                    hint:
-                                                        'name@pharmacy.com',
+                                                    hint: 'name@pharmacy.com',
                                                     icon: Icons
                                                         .mail_outline_rounded,
                                                     controller: _model
                                                         .emailAddressTextController,
                                                     focusNode: _model
                                                         .emailAddressFocusNode,
-                                                    keyboardType:
-                                                        TextInputType
-                                                            .emailAddress,
+                                                    keyboardType: TextInputType
+                                                        .emailAddress,
                                                     errorText: _emailError(),
                                                     required: true,
                                                   ),
@@ -541,12 +577,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                                   _buildPremiumField(
                                                     label: 'Phone Number',
                                                     hint: 'e.g. 0977112233',
-                                                    icon: Icons
-                                                        .phone_outlined,
+                                                    icon: Icons.phone_outlined,
                                                     controller: _model
                                                         .phoneTextController,
-                                                    focusNode: _model
-                                                        .phoneFocusNode,
+                                                    focusNode:
+                                                        _model.phoneFocusNode,
                                                     keyboardType:
                                                         TextInputType.phone,
                                                     errorText: _phoneError(),
@@ -560,8 +595,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
 
                                               // ── Section 2: Role & Pharmacy ──
                                               _buildSectionLabel(
-                                                icon: Icons
-                                                    .badge_outlined,
+                                                icon: Icons.badge_outlined,
                                                 title: 'Role & Pharmacy',
                                                 subtitle:
                                                     'Pick the staff member\'s role and the pharmacy they belong to.',
@@ -574,8 +608,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
 
                                               // ── Section 3: Security ──
                                               _buildSectionLabel(
-                                                icon: Icons
-                                                    .lock_outline_rounded,
+                                                icon:
+                                                    Icons.lock_outline_rounded,
                                                 title: 'Security',
                                                 subtitle:
                                                     'Set a strong password. The staff member can change it later.',
@@ -594,10 +628,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                                     visible:
                                                         _model.passVisibility,
                                                     onToggleVisibility: () =>
-                                                        safeSetState(() =>
-                                                            _model.passVisibility =
-                                                                !_model
-                                                                    .passVisibility),
+                                                        safeSetState(() => _model
+                                                                .passVisibility =
+                                                            !_model
+                                                                .passVisibility),
                                                     showStrength: true,
                                                     required: true,
                                                   ),
@@ -607,15 +641,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                                         'Re-enter the password',
                                                     controller: _model
                                                         .passrTextController,
-                                                    focusNode: _model
-                                                        .passrFocusNode,
+                                                    focusNode:
+                                                        _model.passrFocusNode,
                                                     visible:
                                                         _model.passrVisibility,
                                                     onToggleVisibility: () =>
-                                                        safeSetState(() =>
-                                                            _model.passrVisibility =
-                                                                !_model
-                                                                    .passrVisibility),
+                                                        safeSetState(() => _model
+                                                                .passrVisibility =
+                                                            !_model
+                                                                .passrVisibility),
                                                     showMatch: true,
                                                     required: true,
                                                   ),
@@ -653,9 +687,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   // Hero gradient header with avatar + step indicator
   // ───────────────────────────────────────────────────────────────────
   Widget _buildHeroHeader() {
-    final initials = (_model.nameTextController?.text.trim().isNotEmpty ?? false)
-        ? _model.nameTextController!.text.trim().split(' ').take(2).map((s) => s[0].toUpperCase()).join()
-        : '?';
+    final initials =
+        (_model.nameTextController?.text.trim().isNotEmpty ?? false)
+            ? _model.nameTextController!.text
+                .trim()
+                .split(' ')
+                .take(2)
+                .map((s) => s[0].toUpperCase())
+                .join()
+            : '?';
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -713,8 +753,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     color: Colors.white.withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(20.0),
                     border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.4),
-                        width: 2.0),
+                        color: Colors.white.withValues(alpha: 0.4), width: 2.0),
                   ),
                   alignment: Alignment.center,
                   child: Text(
@@ -932,8 +971,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 fontSize: 14.0,
                 color: _textSecondary.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w400),
-            prefixIcon:
-                Icon(icon, size: 18.0, color: _duniyaPurpleDark),
+            prefixIcon: Icon(icon, size: 18.0, color: _duniyaPurpleDark),
             filled: true,
             fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
             contentPadding:
@@ -982,8 +1020,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       decoration: BoxDecoration(
         color: _duniyaPurpleLight,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(
-            color: _duniyaPurple.withValues(alpha: 0.2), width: 1.5),
+        border:
+            Border.all(color: _duniyaPurple.withValues(alpha: 0.2), width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1134,9 +1172,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         : _duniyaPurpleLight.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
-                      color: isSelected
-                          ? _duniyaPurple
-                          : _borderColor,
+                      color: isSelected ? _duniyaPurple : _borderColor,
                       width: isSelected ? 1.5 : 1.0,
                     ),
                     boxShadow: isSelected
@@ -1154,18 +1190,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     children: [
                       Icon(_roleIcon(role),
                           size: 16.0,
-                          color: isSelected
-                              ? Colors.white
-                              : _duniyaPurpleDark),
+                          color: isSelected ? Colors.white : _duniyaPurpleDark),
                       const SizedBox(width: 8.0),
                       Text(role,
                           style: TextStyle(
                               fontFamily: kAppFontFamily,
                               fontWeight: FontWeight.w600,
                               fontSize: 13.0,
-                              color: isSelected
-                                  ? Colors.white
-                                  : _textPrimary)),
+                              color: isSelected ? Colors.white : _textPrimary)),
                       if (isSelected) ...[
                         const SizedBox(width: 6.0),
                         const Icon(Icons.check_circle,
@@ -1253,16 +1285,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               return FlutterFlowDropDown<String>(
                 controller: _model.pharmValueController ??=
                     FormFieldController<String>(null),
-                options:
-                    pharmPharmacyRecordList.map((e) => e.name).toList(),
+                options: pharmPharmacyRecordList.map((e) => e.name).toList(),
                 onChanged: (val) async {
                   safeSetState(() => _model.pharmValue = val);
                   logFirebaseEvent('ADD_USER_pharm_ON_FORM_WIDGET_SELECTED');
                   logFirebaseEvent('pharm_firestore_query');
                   _model.pharma = await queryPharmacyRecordOnce(
                     parent: currentUserReference,
-                    queryBuilder: (pharmacyRecord) =>
-                        pharmacyRecord.where('Name', isEqualTo: _model.pharmValue),
+                    queryBuilder: (pharmacyRecord) => pharmacyRecord
+                        .where('Name', isEqualTo: _model.pharmValue),
                     singleRecord: true,
                   ).then((s) => s.firstOrNull);
                   logFirebaseEvent('pharm_update_app_state');
@@ -1287,8 +1318,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 ),
                 fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
                 elevation: 2.0,
-                borderColor:
-                    _isPharmacyValid ? _duniyaPurple : _borderColor,
+                borderColor: _isPharmacyValid ? _duniyaPurple : _borderColor,
                 borderWidth: _isPharmacyValid ? 1.5 : 1.0,
                 borderRadius: 12.0,
                 margin:
@@ -1477,8 +1507,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 children: [
                   _buildStrengthChip('8+', password.length >= 8),
                   _buildStrengthChip(
-                      'Aa', RegExp(r'[A-Z]').hasMatch(password) && RegExp(r'[a-z]').hasMatch(password)),
-                  _buildStrengthChip('0-9', RegExp(r'[0-9]').hasMatch(password)),
+                      'Aa',
+                      RegExp(r'[A-Z]').hasMatch(password) &&
+                          RegExp(r'[a-z]').hasMatch(password)),
+                  _buildStrengthChip(
+                      '0-9', RegExp(r'[0-9]').hasMatch(password)),
                   _buildStrengthChip(
                       '!@#', RegExp(r'[^A-Za-z0-9]').hasMatch(password)),
                 ],
@@ -1503,8 +1536,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(met ? Icons.check : Icons.circle_outlined,
-              size: 10.0,
-              color: met ? _successColor : _textSecondary),
+              size: 10.0, color: met ? _successColor : _textSecondary),
           const SizedBox(width: 4.0),
           Text(label,
               style: TextStyle(
@@ -1653,9 +1685,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(9999.0),
-                onTap: _isFormValid && !_model.isSubmitting
-                    ? _handleSave
-                    : null,
+                onTap:
+                    _isFormValid && !_model.isSubmitting ? _handleSave : null,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(
@@ -1781,8 +1812,8 @@ class _BrandedToastState extends State<_BrandedToast>
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16.0),
-                    border: Border.all(
-                        color: const Color(0xFFE2E8F0), width: 1.0),
+                    border:
+                        Border.all(color: const Color(0xFFE2E8F0), width: 1.0),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.12),

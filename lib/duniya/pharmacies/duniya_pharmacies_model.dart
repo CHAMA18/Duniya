@@ -5,7 +5,7 @@ import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import 'duniya_pharmacies_widget.dart' show DuniyaPharmaciesWidget;
 import 'package:flutter/material.dart';
 
-/// Model for the Duniya Pharmacies listing page.
+/// Model for the Pulse Pharmacies listing page.
 ///
 /// Holds the [SideNavModel], [TopNavModel], and [MobileNavbarModel] used by the
 /// page chrome, plus the search field state used to filter the pharmacy list.

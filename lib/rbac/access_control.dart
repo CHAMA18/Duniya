@@ -1,5 +1,5 @@
 /// ─────────────────────────────────────────────────────────────────────
-/// Duniya RBAC — Access Control Helper
+/// Pulse RBAC — Access Control Helper
 /// ─────────────────────────────────────────────────────────────────────
 /// The primary API for checking permissions throughout the app.
 ///
@@ -35,12 +35,37 @@ import 'package:flutter/material.dart';
 
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/flutter_flow/flutter_flow_util.dart';
 import 'permissions.dart';
 import 'roles.dart';
 import 'role_config.dart';
 
 class AccessControl {
+  // ─── Debug Role Override (testing only) ─────────────────────────
+
+  /// When non-null, overrides the real Firestore role for testing.
+  /// Only active in debug mode. Reset with [clearDebugRole].
+  static AppRole? _debugOverrideRole;
+
+  /// Temporarily override the current user's role for testing.
+  /// Only works in debug/profile mode (ignored in release builds).
+  static void setDebugRole(AppRole role) {
+    assert(() {
+      _debugOverrideRole = role;
+      return true;
+    }());
+  }
+
+  /// Clear the debug role override and revert to the real Firestore role.
+  static void clearDebugRole() {
+    _debugOverrideRole = null;
+  }
+
+  /// Whether a debug role override is active.
+  static bool get hasDebugOverride => _debugOverrideRole != null;
+
+  /// The currently active debug override, if any.
+  static AppRole? get debugOverrideRole => _debugOverrideRole;
+
   // ─── Role Resolution ─────────────────────────────────────────────
 
   /// Resolve the current user's AppRole from the Firestore user document.
@@ -48,17 +73,20 @@ class AccessControl {
   /// canonical AppRole.
   ///
   /// Logic:
-  ///   1. If accountType is 'Duniya' → duniyaAdmin or duniyaStaff
+  ///   1. If accountType is 'Pulse' → duniyaAdmin or duniyaStaff
   ///   2. If accountType is 'Pharmacy' → use the `role` field
   ///   3. Fallback → unknown
   static AppRole currentRole(BuildContext context) {
+    // Use debug override if set (testing only)
+    if (_debugOverrideRole != null) return _debugOverrideRole!;
+
     final userDoc = currentUserDocument;
     if (userDoc == null) return AppRole.unknown;
 
     final accountType = userDoc.accountType ?? '';
     final role = userDoc.role ?? '';
 
-    // Duniya network users — resolve duniyaAdmin vs duniyaStaff from the
+    // Pulse network users — resolve duniyaAdmin vs duniyaStaff from the
     // Firestore `role` field.  Only explicit admin/owner values map to
     // duniyaAdmin; everything else (including empty/missing) maps to
     // duniyaStaff for least-privilege safety.
@@ -77,7 +105,7 @@ class AccessControl {
     return AppRole.fromFirestoreValue(role);
   }
 
-  /// Whether the current user is a Duniya network user.
+  /// Whether the current user is a Pulse network user.
   static bool isDuniyaUser(BuildContext context) {
     return currentRole(context).isDuniyaRole;
   }
@@ -195,7 +223,7 @@ class AccessControl {
   }
 
   /// Backward-compatible check for the old `_isDuniyaUser` pattern.
-  /// Returns true if the user is a Duniya network user.
+  /// Returns true if the user is a Pulse network user.
   ///
   /// Prefer using `isDuniyaUser()` for new code.
   static bool isDuniyaLegacy(BuildContext context) {

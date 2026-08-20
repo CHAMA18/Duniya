@@ -46,6 +46,29 @@ class _CartWidgetState extends State<CartWidget> {
     super.dispose();
   }
 
+  Future<StockRecord?> _resolveStockForSale({
+    required String productName,
+    required String pharmacyName,
+    required bool allowSinglePharmacyFallback,
+  }) async {
+    final candidates = await queryStockRecordOnce(
+      parent: AccessControl.parentRef(context) ?? currentUserReference,
+      queryBuilder: (stockRecord) => stockRecord.where(
+        'Name',
+        isEqualTo: productName,
+      ),
+    );
+    final available = candidates.where((stock) => stock.quantity > 0).toList();
+    final normalizedPharmacyName = pharmacyName.trim().toLowerCase();
+
+    return available.firstWhereOrNull(
+          (stock) =>
+              stock.pharmacy.trim().toLowerCase() == normalizedPharmacyName,
+        ) ??
+        available.firstWhereOrNull((stock) => stock.pharmacy.trim().isEmpty) ??
+        (allowSinglePharmacyFallback ? available.firstOrNull : null);
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -386,11 +409,91 @@ class _CartWidgetState extends State<CartWidget> {
                           child: FFButtonWidget(
                             onPressed: () async {
                               logFirebaseEvent('CART_COMP_PAY_BTN_ON_TAP');
+                              final cart = FFAppState().Cart;
+                              final cartParent =
+                                  AccessControl.parentRef(context) ??
+                                      currentUserReference;
+                              if (cartParent == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Your account is not ready to complete a sale.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              if (cart.pharmId == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Select a pharmacy before completing the sale.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              _model.pharm =
+                                  await PharmacyRecord.getDocumentOnce(
+                                      cart.pharmId!);
+                              final scopedPharmacies =
+                                  await queryPharmacyRecordOnce(
+                                      parent: cartParent);
+                              final allowSinglePharmacyFallback =
+                                  scopedPharmacies.length == 1;
+                              final resolvedStocks = <StockRecord>[];
+                              for (var index = 0;
+                                  index < cart.displayName.length;
+                                  index++) {
+                                final requestedQuantity =
+                                    cart.quantity.elementAtOrNull(index) ?? 0;
+                                final productName =
+                                    cart.displayName.elementAtOrNull(index) ??
+                                        '';
+                                if (requestedQuantity <= 0) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Set a quantity for $productName before completing the sale.'),
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                final stock = await _resolveStockForSale(
+                                  productName: productName,
+                                  pharmacyName:
+                                      _model.pharm?.name ?? cart.pharmName,
+                                  allowSinglePharmacyFallback:
+                                      allowSinglePharmacyFallback,
+                                );
+                                if (stock == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          '$productName is no longer available in the selected pharmacy.'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                if (stock.quantity < requestedQuantity) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Only ${stock.quantity} of $productName is available.'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                resolvedStocks.add(stock);
+                              }
+
+                              FFAppState().LoopCounter = 0;
                               logFirebaseEvent('Button_backend_call');
 
-                              var salesRecordReference = SalesRecord.createDoc(
-                                  (AccessControl.parentRef(context) ??
-                                          currentUserReference)!);
+                              var salesRecordReference =
+                                  SalesRecord.createDoc(cartParent);
                               await salesRecordReference
                                   .set(createSalesRecordData(
                                 date: getCurrentTimestamp,
@@ -429,7 +532,7 @@ class _CartWidgetState extends State<CartWidget> {
                                 logFirebaseEvent('Button_backend_call');
 
                                 await FinanceRecord.createDoc(
-                                    (AccessControl.parentRef(context) ??
+                                        (AccessControl.parentRef(context) ??
                                             currentUserReference)!)
                                     .set(createFinanceRecordData(
                                   revenue: functions.cartTotal(
@@ -454,36 +557,13 @@ class _CartWidgetState extends State<CartWidget> {
                                 });
                               }
 
-                              logFirebaseEvent('Button_backend_call');
-                              _model.pharm =
-                                  await PharmacyRecord.getDocumentOnce(
-                                      FFAppState().Cart.pharmId!);
                               while (FFAppState().LoopCounter !=
                                   FFAppState().Cart.displayName.length) {
-                                logFirebaseEvent('Button_firestore_query');
-                                _model.stock = await queryStockRecordOnce(
-                                  parent: AccessControl.parentRef(context) ??
-                                      currentUserReference,
-                                  queryBuilder: (stockRecord) => stockRecord
-                                      .where(
-                                        'Name',
-                                        isEqualTo: FFAppState()
-                                            .Cart
-                                            .displayName
-                                            .elementAtOrNull(
-                                                FFAppState().LoopCounter),
-                                      )
-                                      .where(
-                                        'Pharmacy',
-                                        isEqualTo: _model.pharm?.name,
-                                      ),
-                                  singleRecord: true,
-                                ).then((s) => s.firstOrNull);
+                                _model.stock = resolvedStocks
+                                    .elementAtOrNull(FFAppState().LoopCounter);
                                 logFirebaseEvent('Button_backend_call');
 
-                                await SaleitemRecord.createDoc(
-                                    (AccessControl.parentRef(context) ??
-                                            currentUserReference)!)
+                                await SaleitemRecord.createDoc(cartParent)
                                     .set(createSaleitemRecordData(
                                   quantity: FFAppState()
                                       .Cart
@@ -578,7 +658,8 @@ class _CartWidgetState extends State<CartWidget> {
                                     ),
                                   ),
                                   duration: Duration(milliseconds: 4000),
-                                  backgroundColor: FlutterFlowTheme.of(context).success,
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).success,
                                 ),
                               );
 

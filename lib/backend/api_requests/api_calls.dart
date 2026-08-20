@@ -33,7 +33,7 @@ class SendFullPromptCall {
    "messages":[
       {
          "role":"system",
-         "content":"Welcome to Duniya! How can we assist you today?"
+         "content":"Welcome to Pulse! How can we assist you today?"
       },
       {
          "role":"user",
@@ -1030,7 +1030,7 @@ class SendEmailCall {
   ],
   "from": {
     "email": "developer@thestackone.com",
-    "name": "Duniya"
+    "name": "Pulse"
   },
   "reply_to": {
     "email": "developer@thestackone.com",

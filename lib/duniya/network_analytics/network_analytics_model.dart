@@ -5,7 +5,7 @@ import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import 'network_analytics_widget.dart' show NetworkAnalyticsWidget;
 import 'package:flutter/material.dart';
 
-/// Model for the Duniya Network Analytics dashboard.
+/// Model for the Pulse Network Analytics dashboard.
 ///
 /// Holds the [SideNavModel], [TopNavModel], and [MobileNavbarModel] used by the
 /// page chrome. All aggregate KPIs are computed reactively inside the widget's

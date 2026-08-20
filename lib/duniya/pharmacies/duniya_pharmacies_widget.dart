@@ -1,9 +1,7 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/rbac/rbac.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -16,7 +14,7 @@ export 'duniya_pharmacies_model.dart';
 /// ═══════════════════════════════════════════════════════════════
 ///   DUNIYA — PHARMACIES (Network-Wide Listing)
 ///
-///   Lists every pharmacy on the Duniya network (active, pending
+///   Lists every pharmacy on the Pulse network (active, pending
 ///   approval, and rejected) with their owner email, registered
 ///   date, and network status. Network admins can search and filter
 ///   by status, and click into a pharmacy to view its details.
@@ -48,7 +46,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         parameters: {'screen_name': 'DuniyaPharmacies'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
-    // RBAC guard — only Duniya network users can access this page
+    // RBAC guard — only Pulse network users can access this page
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!AccessControl.isDuniyaUser(context)) {
         context.goNamed(HomeWidget.routeName);
@@ -201,7 +199,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
   @override
   Widget build(BuildContext context) {
     return Title(
-      title: 'Duniya Pharmacies',
+      title: 'Pulse Pharmacies',
       color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
       child: GestureDetector(
         onTap: () {
@@ -323,7 +321,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
               Icon(Icons.chevron_right,
                   color: Colors.white.withAlpha(120), size: 14),
               Text(
-                'Duniya Network',
+                'Pulse Network',
                 style: TextStyle(
                   color: Colors.white.withAlpha(180),
                   fontSize: 12,
@@ -369,7 +367,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Duniya Pharmacies',
+                      'Pulse Pharmacies',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -380,7 +378,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      'Browse every pharmacy on the Duniya network — active, pending approval, and rejected. Click any pharmacy to view its details.',
+                      'Browse every pharmacy on the Pulse network — active, pending approval, and rejected. Click any pharmacy to view its details.',
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
@@ -1091,7 +1089,7 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
           ),
           const SizedBox(height: 8.0),
           Text(
-            'Once a pharmacy registers on Duniya, it will appear here for you to review and manage.',
+            'Once a pharmacy registers on Pulse, it will appear here for you to review and manage.',
             textAlign: TextAlign.center,
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,

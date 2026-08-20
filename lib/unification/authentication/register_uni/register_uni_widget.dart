@@ -1,6 +1,8 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/auth/firebase_auth/google_auth.dart' as google_auth;
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
+import '/components/pulse_logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/success/success_widget.dart';
@@ -122,11 +124,10 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
   }
 
   Widget _buildBrandLogo({double size = 44.0}) {
-    return Image.asset(
-      'assets/images/duniya_logo.png',
-      width: size,
-      height: size,
-      fit: BoxFit.contain,
+    return PulseLogoWidget(
+      size: size,
+      showWordmark: true,
+      color: _primaryBlue,
     );
   }
 
@@ -304,7 +305,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
     final isDesktop = MediaQuery.of(context).size.width >= 960;
 
     return Title(
-      title: 'Duniya',
+      title: 'Pulse',
       color: _primaryDeep,
       child: GestureDetector(
         onTap: () {
@@ -368,7 +369,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Duniya',
+                                        'Pulse',
                                         style: TextStyle(
                                           fontFamily: kAppFontFamily,
                                           fontSize: 24.0,
@@ -554,7 +555,7 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                           children: [
                                             Expanded(
                                               child: _buildModeTab(
-                                                label: 'Duniya',
+                                                label: 'Pulse',
                                                 icon: Icons
                                                     .person_outline_rounded,
                                                 selected: _selectedMode == 0,
@@ -620,12 +621,12 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                       createdTime:
                                                           getCurrentTimestamp,
                                                       role: _selectedMode == 0
-                                                          ? 'admin'
-                                                          : 'Owner',
+                                                          ? AppRole.duniyaAdmin.firestoreValue
+                                                          : AppRole.owner.firestoreValue,
                                                       accountType:
                                                           _selectedMode == 0
-                                                              ? 'Duniya'
-                                                              : 'Pharmacy',
+                                                              ? AppRole.duniyaAdmin.accountTypeValue
+                                                              : AppRole.owner.accountTypeValue,
                                                     ));
                                                   }
 
@@ -893,12 +894,12 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                   createdTime:
                                                       getCurrentTimestamp,
                                                   role: _selectedMode == 0
-                                                      ? 'admin'
-                                                      : 'Owner',
+                                                      ? AppRole.duniyaAdmin.firestoreValue
+                                                      : AppRole.owner.firestoreValue,
                                                   accountType:
                                                       _selectedMode == 0
-                                                          ? 'Duniya'
-                                                          : 'Pharmacy',
+                                                          ? AppRole.duniyaAdmin.accountTypeValue
+                                                          : AppRole.owner.accountTypeValue,
                                                   displayName:
                                                       displayName.isNotEmpty
                                                           ? displayName

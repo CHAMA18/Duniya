@@ -170,6 +170,33 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     }).toList();
   }
 
+  List<StockRecord> _stocksForPharmacy({
+    required List<StockRecord> stocks,
+    required List<PharmacyRecord> pharmacies,
+    required String pharmacyName,
+  }) {
+    final normalizedPharmacyName = pharmacyName.trim().toLowerCase();
+    if (normalizedPharmacyName.isEmpty) {
+      return const <StockRecord>[];
+    }
+
+    final matchingStocks = stocks
+        .where((stock) =>
+            stock.pharmacy.trim().toLowerCase() == normalizedPharmacyName)
+        .toList();
+    if (matchingStocks.isNotEmpty) {
+      return matchingStocks;
+    }
+
+    // Older inventory imports may not have a Pharmacy value. If this owner
+    // has one pharmacy, those records still belong to its usable inventory.
+    if (pharmacies.length <= 1) {
+      return stocks;
+    }
+
+    return stocks.where((stock) => stock.pharmacy.trim().isEmpty).toList();
+  }
+
   int _lowStockThreshold(StockRecord stock) {
     return stock.limitNotice > 0 ? stock.limitNotice : 5;
   }
@@ -739,8 +766,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
   }) {
     final activeName = _effectivePharmacyName(pharmacies);
     final activeRecord = _effectivePharmacyReference(pharmacies, activeName);
-    final dropdownEnabled =
-        AccessControl.isOwner(context);
+    final dropdownEnabled = AccessControl.isOwner(context);
 
     final dropdown = FlutterFlowDropDown<String>(
       controller: _model.pharmacyDropDownValueController ??=
@@ -1235,457 +1261,274 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                        if (!responsiveVisibility(
-                          context: context,
-                          phone: false,
-                          tablet: false,
-                        )) ...[
-                          Row(
-                            children: [
-                              FFButtonWidget(
-                                onPressed: () async {
-                                  context.pushNamed(HomeWidget.routeName);
-                                },
-                                text: 'Back',
-                                icon: const Icon(
-                                  Icons.chevron_left_rounded,
-                                  size: 15.0,
-                                ),
-                                options: FFButtonOptions(
-                                  height: 42.0,
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  iconPadding: EdgeInsets.zero,
-                                  iconColor:
-                                      FlutterFlowTheme.of(context).secondary,
-                                  color: Colors.white,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .titleSmallFamily,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: 0.0,
-                                        useGoogleFonts:
-                                            !FlutterFlowTheme.of(context)
-                                                .titleSmallIsCustom,
+                              if (!responsiveVisibility(
+                                context: context,
+                                phone: false,
+                                tablet: false,
+                              )) ...[
+                                Row(
+                                  children: [
+                                    FFButtonWidget(
+                                      onPressed: () async {
+                                        context.pushNamed(HomeWidget.routeName);
+                                      },
+                                      text: 'Back',
+                                      icon: const Icon(
+                                        Icons.chevron_left_rounded,
+                                        size: 15.0,
                                       ),
-                                  borderSide: BorderSide(
-                                    color:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(14.0),
-                                ),
-                              ),
-                              Text(
-                                'Point of Sale',
-                                style: FlutterFlowTheme.of(context)
-                                    .displaySmall
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .displaySmallFamily,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w800,
-                                      useGoogleFonts:
-                                          !FlutterFlowTheme.of(context)
-                                              .displaySmallIsCustom,
-                                    ),
-                              ),
-                            ].divide(const SizedBox(width: 16.0)),
-                          ),
-                          const SizedBox(height: 18),
-                        ],
-                        _buildHeader(context, isWide, activePharmacyName),
-                        const SizedBox(height: 18),
-                        StreamBuilder<List<PharmacyRecord>>(
-                          stream: queryPharmacyRecord(parent: pharmaciesParent),
-                          builder: (context, pharmacySnapshot) {
-                            if (!pharmacySnapshot.hasData) {
-                              return Container(
-                                width: double.infinity,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 40),
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: const Center(
-                                  child: SizedBox(
-                                    width: 76,
-                                    height: 76,
-                                    child: SpinKitRing(
-                                      color: Color(0xFF7C3AED),
-                                      size: 76,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-
-                            final pharmacies = pharmacySnapshot.data!;
-                            _seedPharmacySelection(pharmacies);
-                            final resolvedPharmacyName =
-                                _effectivePharmacyName(pharmacies);
-
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildSelectorCard(
-                                  context,
-                                  pharmacies,
-                                  isWide: isWide,
-                                ),
-                                const SizedBox(height: 18),
-                                StreamBuilder<List<StockRecord>>(
-                                  stream: resolvedPharmacyName.isEmpty
-                                      ? Stream<List<StockRecord>>.value(
-                                          <StockRecord>[],
-                                        )
-                                      : queryStockRecord(
-                                          parent: stockParent,
-                                          queryBuilder: (stockRecord) =>
-                                              stockRecord
-                                                  .where(
-                                                    'Pharmacy',
-                                                    isEqualTo:
-                                                        resolvedPharmacyName,
-                                                  )
-                                                  .where(
-                                                    'Quantity',
-                                                    isGreaterThan: 0,
-                                                  ),
-                                        ),
-                                  builder: (context, stockSnapshot) {
-                                    if (!stockSnapshot.hasData) {
-                                      return Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 60),
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(24),
-                                        ),
-                                        child: const Center(
-                                          child: SizedBox(
-                                            width: 76,
-                                            height: 76,
-                                            child: SpinKitRing(
-                                              color: Color(0xFF7C3AED),
-                                              size: 76,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-
-                                    final allStocks = stockSnapshot.data!;
-                                    _model.pharmCopy2 =
-                                        pharmacies.firstWhereOrNull((p) =>
-                                            p.name == resolvedPharmacyName);
-                                    final visibleStocks =
-                                        _filterStocks(allStocks);
-                                    final totalValue = allStocks.fold<double>(
-                                      0.0,
-                                      (sum, stock) =>
-                                          sum + (stock.quantity * stock.price),
-                                    );
-                                    final lowStockCount =
-                                        allStocks.where(_isLowStock).length;
-                                    final nearExpiryCount =
-                                        allStocks.where(_isNearExpiry).length;
-                                    final cartCount =
-                                        FFAppState().Cart.displayName.length;
-                                    final subtotal = functions.cartTotal(
-                                      FFAppState().Cart.price.toList(),
-                                      FFAppState().Cart.quantity.toList(),
-                                    );
-
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (isWide)
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: _buildMetricCard(
-                                                  context: context,
-                                                  label: 'Total stock value',
-                                                  value: 'ZMK ${formatNumber(
-                                                    totalValue,
-                                                    formatType:
-                                                        FormatType.compact,
-                                                  )}',
-                                                  subtitle:
-                                                      '${allStocks.length} active SKUs in scope',
-                                                  icon: Icons.bar_chart_rounded,
-                                                  iconBackground:
-                                                      const Color(0xFFF3E8FF),
-                                                  iconColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .primary,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 18),
-                                              Expanded(
-                                                child: _buildMetricCard(
-                                                  context: context,
-                                                  label: 'Cart items',
-                                                  value: cartCount.toString(),
-                                                  subtitle:
-                                                      'Products waiting for checkout',
-                                                  icon: Icons
-                                                      .shopping_bag_rounded,
-                                                  iconBackground:
-                                                      const Color(0xFFE8FAF1),
-                                                  iconColor:
-                                                      const Color(0xFF10B981),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 18),
-                                              Expanded(
-                                                child: _buildMetricCard(
-                                                  context: context,
-                                                  label: 'Low stock alerts',
-                                                  value:
-                                                      lowStockCount.toString(),
-                                                  subtitle:
-                                                      'Items below reorder thresholds',
-                                                  icon: Icons
-                                                      .warning_amber_rounded,
-                                                  iconBackground:
-                                                      const Color(0xFFFFF1F2),
-                                                  iconColor:
-                                                      const Color(0xFFEF4444),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 18),
-                                              Expanded(
-                                                child: _buildMetricCard(
-                                                  context: context,
-                                                  label: 'Near expiry',
-                                                  value: nearExpiryCount
-                                                      .toString(),
-                                                  subtitle:
-                                                      'Batch review within 30 days',
-                                                  icon: Icons.event_rounded,
-                                                  iconBackground:
-                                                      const Color(0xFFFFF7ED),
-                                                  iconColor:
-                                                      const Color(0xFFF59E0B),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        else
-                                          Column(
-                                            children: [
-                                              _buildMetricCard(
-                                                context: context,
-                                                label: 'Total stock value',
-                                                value: 'ZMK ${formatNumber(
-                                                  totalValue,
-                                                  formatType:
-                                                      FormatType.compact,
-                                                )}',
-                                                subtitle:
-                                                    '${allStocks.length} active SKUs in scope',
-                                                icon: Icons.bar_chart_rounded,
-                                                iconBackground:
-                                                    const Color(0xFFF3E8FF),
-                                                iconColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                              ),
-                                              const SizedBox(height: 16),
-                                              _buildMetricCard(
-                                                context: context,
-                                                label: 'Cart items',
-                                                value: cartCount.toString(),
-                                                subtitle:
-                                                    'Products waiting for checkout',
-                                                icon:
-                                                    Icons.shopping_bag_rounded,
-                                                iconBackground:
-                                                    const Color(0xFFE8FAF1),
-                                                iconColor:
-                                                    const Color(0xFF10B981),
-                                              ),
-                                              const SizedBox(height: 16),
-                                              _buildMetricCard(
-                                                context: context,
-                                                label: 'Low stock alerts',
-                                                value: lowStockCount.toString(),
-                                                subtitle:
-                                                    'Items below reorder thresholds',
-                                                icon:
-                                                    Icons.warning_amber_rounded,
-                                                iconBackground:
-                                                    const Color(0xFFFFF1F2),
-                                                iconColor:
-                                                    const Color(0xFFEF4444),
-                                              ),
-                                              const SizedBox(height: 16),
-                                              _buildMetricCard(
-                                                context: context,
-                                                label: 'Near expiry',
-                                                value:
-                                                    nearExpiryCount.toString(),
-                                                subtitle:
-                                                    'Batch review within 30 days',
-                                                icon: Icons.event_rounded,
-                                                iconBackground:
-                                                    const Color(0xFFFFF7ED),
-                                                iconColor:
-                                                    const Color(0xFFF59E0B),
-                                              ),
-                                            ],
-                                          ),
-                                        const SizedBox(height: 18),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.all(18),
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            border: Border.all(
+                                      options: FFButtonOptions(
+                                        height: 42.0,
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                        iconPadding: EdgeInsets.zero,
+                                        iconColor: FlutterFlowTheme.of(context)
+                                            .secondary,
+                                        color: Colors.white,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmallFamily,
                                               color:
                                                   FlutterFlowTheme.of(context)
-                                                      .alternate
-                                                      .withValues(alpha: 0.7),
+                                                      .primaryText,
+                                              fontWeight: FontWeight.w700,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts:
+                                                  !FlutterFlowTheme.of(context)
+                                                      .titleSmallIsCustom,
                                             ),
+                                        borderSide: BorderSide(
+                                          color: FlutterFlowTheme.of(context)
+                                              .alternate,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(14.0),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Point of Sale',
+                                      style: FlutterFlowTheme.of(context)
+                                          .displaySmall
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .displaySmallFamily,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w800,
+                                            useGoogleFonts:
+                                                !FlutterFlowTheme.of(context)
+                                                    .displaySmallIsCustom,
                                           ),
-                                          child: Column(
+                                    ),
+                                  ].divide(const SizedBox(width: 16.0)),
+                                ),
+                                const SizedBox(height: 18),
+                              ],
+                              _buildHeader(context, isWide, activePharmacyName),
+                              const SizedBox(height: 18),
+                              StreamBuilder<List<PharmacyRecord>>(
+                                stream: queryPharmacyRecord(
+                                    parent: pharmaciesParent),
+                                builder: (context, pharmacySnapshot) {
+                                  if (!pharmacySnapshot.hasData) {
+                                    return Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 40),
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: const Center(
+                                        child: SizedBox(
+                                          width: 76,
+                                          height: 76,
+                                          child: SpinKitRing(
+                                            color: Color(0xFF7C3AED),
+                                            size: 76,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  final pharmacies = pharmacySnapshot.data!;
+                                  _seedPharmacySelection(pharmacies);
+                                  final resolvedPharmacyName =
+                                      _effectivePharmacyName(pharmacies);
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildSelectorCard(
+                                        context,
+                                        pharmacies,
+                                        isWide: isWide,
+                                      ),
+                                      const SizedBox(height: 18),
+                                      StreamBuilder<List<StockRecord>>(
+                                        stream: resolvedPharmacyName.isEmpty
+                                            ? Stream<List<StockRecord>>.value(
+                                                <StockRecord>[],
+                                              )
+                                            : queryStockRecord(
+                                                parent: stockParent,
+                                                queryBuilder: (stockRecord) =>
+                                                    stockRecord.where(
+                                                  'Quantity',
+                                                  isGreaterThan: 0,
+                                                ),
+                                              ),
+                                        builder: (context, stockSnapshot) {
+                                          if (!stockSnapshot.hasData) {
+                                            return Container(
+                                              width: double.infinity,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 60),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                borderRadius:
+                                                    BorderRadius.circular(24),
+                                              ),
+                                              child: const Center(
+                                                child: SizedBox(
+                                                  width: 76,
+                                                  height: 76,
+                                                  child: SpinKitRing(
+                                                    color: Color(0xFF7C3AED),
+                                                    size: 76,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+
+                                          final allStocks = _stocksForPharmacy(
+                                            stocks: stockSnapshot.data!,
+                                            pharmacies: pharmacies,
+                                            pharmacyName: resolvedPharmacyName,
+                                          );
+                                          _model.pharmCopy2 =
+                                              pharmacies.firstWhereOrNull((p) =>
+                                                  p.name ==
+                                                  resolvedPharmacyName);
+                                          final visibleStocks =
+                                              _filterStocks(allStocks);
+                                          final totalValue =
+                                              allStocks.fold<double>(
+                                            0.0,
+                                            (sum, stock) =>
+                                                sum +
+                                                (stock.quantity * stock.price),
+                                          );
+                                          final lowStockCount = allStocks
+                                              .where(_isLowStock)
+                                              .length;
+                                          final nearExpiryCount = allStocks
+                                              .where(_isNearExpiry)
+                                              .length;
+                                          final cartCount = FFAppState()
+                                              .Cart
+                                              .displayName
+                                              .length;
+                                          final subtotal = functions.cartTotal(
+                                            FFAppState().Cart.price.toList(),
+                                            FFAppState().Cart.quantity.toList(),
+                                          );
+
+                                          return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               if (isWide)
                                                 Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
                                                   children: [
                                                     Expanded(
-                                                      child: SizedBox(
-                                                        height: 52,
-                                                        child: TextField(
-                                                          onChanged: (value) {
-                                                            safeSetState(() {
-                                                              _searchQuery =
-                                                                  value;
-                                                            });
-                                                          },
-                                                          decoration:
-                                                              InputDecoration(
-                                                            hintText:
-                                                                'Search stock, brand, batch, or category...',
-                                                            prefixIcon:
-                                                                const Icon(Icons
-                                                                    .search_rounded),
-                                                            filled: true,
-                                                            fillColor: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                            border:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
-                                                              borderSide:
-                                                                  BorderSide(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .alternate,
-                                                              ),
-                                                            ),
-                                                            enabledBorder:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
-                                                              borderSide:
-                                                                  BorderSide(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .alternate,
-                                                              ),
-                                                            ),
-                                                            focusedBorder:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
-                                                              borderSide:
-                                                                  BorderSide(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                                width: 1.6,
-                                                              ),
-                                                            ),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        18,
-                                                                    vertical:
-                                                                        16),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 14),
-                                                    FFButtonWidget(
-                                                      onPressed: () async {
-                                                        scaffoldKey.currentState
-                                                            ?.openEndDrawer();
-                                                      },
-                                                      text:
-                                                          'Checkout: ZMK ${subtotal.toStringAsFixed(2)}',
-                                                      options: FFButtonOptions(
-                                                        height: 52,
-                                                        padding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(22.0,
-                                                                0.0, 22.0, 0.0),
-                                                        color:
+                                                      child: _buildMetricCard(
+                                                        context: context,
+                                                        label:
+                                                            'Total stock value',
+                                                        value:
+                                                            'ZMK ${formatNumber(
+                                                          totalValue,
+                                                          formatType: FormatType
+                                                              .compact,
+                                                        )}',
+                                                        subtitle:
+                                                            '${allStocks.length} active SKUs in scope',
+                                                        icon: Icons
+                                                            .bar_chart_rounded,
+                                                        iconBackground:
+                                                            const Color(
+                                                                0xFFF3E8FF),
+                                                        iconColor:
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .primary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleSmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmallFamily,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmallIsCustom,
-                                                                ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 18),
+                                                    Expanded(
+                                                      child: _buildMetricCard(
+                                                        context: context,
+                                                        label: 'Cart items',
+                                                        value: cartCount
+                                                            .toString(),
+                                                        subtitle:
+                                                            'Products waiting for checkout',
+                                                        icon: Icons
+                                                            .shopping_bag_rounded,
+                                                        iconBackground:
+                                                            const Color(
+                                                                0xFFE8FAF1),
+                                                        iconColor: const Color(
+                                                            0xFF10B981),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 18),
+                                                    Expanded(
+                                                      child: _buildMetricCard(
+                                                        context: context,
+                                                        label:
+                                                            'Low stock alerts',
+                                                        value: lowStockCount
+                                                            .toString(),
+                                                        subtitle:
+                                                            'Items below reorder thresholds',
+                                                        icon: Icons
+                                                            .warning_amber_rounded,
+                                                        iconBackground:
+                                                            const Color(
+                                                                0xFFFFF1F2),
+                                                        iconColor: const Color(
+                                                            0xFFEF4444),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 18),
+                                                    Expanded(
+                                                      child: _buildMetricCard(
+                                                        context: context,
+                                                        label: 'Near expiry',
+                                                        value: nearExpiryCount
+                                                            .toString(),
+                                                        subtitle:
+                                                            'Batch review within 30 days',
+                                                        icon:
+                                                            Icons.event_rounded,
+                                                        iconBackground:
+                                                            const Color(
+                                                                0xFFFFF7ED),
+                                                        iconColor: const Color(
+                                                            0xFFF59E0B),
                                                       ),
                                                     ),
                                                   ],
@@ -1693,252 +1536,501 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                               else
                                                 Column(
                                                   children: [
-                                                    TextField(
-                                                      onChanged: (value) {
-                                                        safeSetState(() {
-                                                          _searchQuery = value;
-                                                        });
-                                                      },
-                                                      decoration:
-                                                          InputDecoration(
-                                                        hintText:
-                                                            'Search stock, brand, batch, or category...',
-                                                        prefixIcon: const Icon(
-                                                            Icons
-                                                                .search_rounded),
-                                                        filled: true,
-                                                        fillColor: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        border:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(16),
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .alternate,
-                                                          ),
-                                                        ),
-                                                        enabledBorder:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(16),
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .alternate,
-                                                          ),
-                                                        ),
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(16),
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            width: 1.6,
-                                                          ),
-                                                        ),
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 18,
-                                                                vertical: 16),
-                                                      ),
+                                                    _buildMetricCard(
+                                                      context: context,
+                                                      label:
+                                                          'Total stock value',
+                                                      value:
+                                                          'ZMK ${formatNumber(
+                                                        totalValue,
+                                                        formatType:
+                                                            FormatType.compact,
+                                                      )}',
+                                                      subtitle:
+                                                          '${allStocks.length} active SKUs in scope',
+                                                      icon: Icons
+                                                          .bar_chart_rounded,
+                                                      iconBackground:
+                                                          const Color(
+                                                              0xFFF3E8FF),
+                                                      iconColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
                                                     ),
-                                                    const SizedBox(height: 14),
-                                                    FFButtonWidget(
-                                                      onPressed: () async {
-                                                        scaffoldKey.currentState
-                                                            ?.openEndDrawer();
-                                                      },
-                                                      text:
-                                                          'Checkout: ZMK ${subtotal.toStringAsFixed(2)}',
-                                                      options: FFButtonOptions(
-                                                        width: double.infinity,
-                                                        height: 52,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .titleSmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmallFamily,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmallIsCustom,
-                                                                ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                      ),
+                                                    const SizedBox(height: 16),
+                                                    _buildMetricCard(
+                                                      context: context,
+                                                      label: 'Cart items',
+                                                      value:
+                                                          cartCount.toString(),
+                                                      subtitle:
+                                                          'Products waiting for checkout',
+                                                      icon: Icons
+                                                          .shopping_bag_rounded,
+                                                      iconBackground:
+                                                          const Color(
+                                                              0xFFE8FAF1),
+                                                      iconColor: const Color(
+                                                          0xFF10B981),
+                                                    ),
+                                                    const SizedBox(height: 16),
+                                                    _buildMetricCard(
+                                                      context: context,
+                                                      label: 'Low stock alerts',
+                                                      value: lowStockCount
+                                                          .toString(),
+                                                      subtitle:
+                                                          'Items below reorder thresholds',
+                                                      icon: Icons
+                                                          .warning_amber_rounded,
+                                                      iconBackground:
+                                                          const Color(
+                                                              0xFFFFF1F2),
+                                                      iconColor: const Color(
+                                                          0xFFEF4444),
+                                                    ),
+                                                    const SizedBox(height: 16),
+                                                    _buildMetricCard(
+                                                      context: context,
+                                                      label: 'Near expiry',
+                                                      value: nearExpiryCount
+                                                          .toString(),
+                                                      subtitle:
+                                                          'Batch review within 30 days',
+                                                      icon: Icons.event_rounded,
+                                                      iconBackground:
+                                                          const Color(
+                                                              0xFFFFF7ED),
+                                                      iconColor: const Color(
+                                                          0xFFF59E0B),
                                                     ),
                                                   ],
                                                 ),
-                                              const SizedBox(height: 14),
-                                              Wrap(
-                                                spacing: 10,
-                                                runSpacing: 10,
-                                                children: [
-                                                  _buildFilterChip(
-                                                    context: context,
-                                                    label: 'All',
-                                                    selected:
-                                                        _selectedCategory ==
-                                                            'All',
-                                                    onTap: () => safeSetState(
-                                                      () => _selectedCategory =
-                                                          'All',
-                                                    ),
+                                              const SizedBox(height: 18),
+                                              Container(
+                                                width: double.infinity,
+                                                padding:
+                                                    const EdgeInsets.all(18),
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                  border: Border.all(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .alternate
+                                                        .withValues(alpha: 0.7),
                                                   ),
-                                                  ...[
-                                                    'Medicine',
-                                                    'Nutrition Suppliments',
-                                                    'Veterinary Products',
-                                                    'Beauty Care',
-                                                    'Mother and Babycare',
-                                                    'Personal Care'
-                                                  ].map(
-                                                    (label) => _buildFilterChip(
-                                                      context: context,
-                                                      label: label,
-                                                      selected:
-                                                          _selectedCategory ==
-                                                              label,
-                                                      onTap: () =>
-                                                          safeSetState(() {
-                                                        _selectedCategory =
-                                                            label;
-                                                      }),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 18),
-                                        if (isWide)
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                flex: 3,
-                                                child: visibleStocks.isEmpty
-                                                    ? _buildEmptyState(
-                                                        context,
-                                                        title: allStocks.isEmpty
-                                                            ? 'No stock found for this pharmacy'
-                                                            : 'No items match the current search',
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    if (isWide)
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Expanded(
+                                                            child: SizedBox(
+                                                              height: 52,
+                                                              child: TextField(
+                                                                onChanged:
+                                                                    (value) {
+                                                                  safeSetState(
+                                                                      () {
+                                                                    _searchQuery =
+                                                                        value;
+                                                                  });
+                                                                },
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  hintText:
+                                                                      'Search stock, brand, batch, or category...',
+                                                                  prefixIcon:
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .search_rounded),
+                                                                  filled: true,
+                                                                  fillColor: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryBackground,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16),
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .alternate,
+                                                                    ),
+                                                                  ),
+                                                                  enabledBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16),
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .alternate,
+                                                                    ),
+                                                                  ),
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16),
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
+                                                                      width:
+                                                                          1.6,
+                                                                    ),
+                                                                  ),
+                                                                  contentPadding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          18,
+                                                                      vertical:
+                                                                          16),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 14),
+                                                          FFButtonWidget(
+                                                            onPressed:
+                                                                () async {
+                                                              scaffoldKey
+                                                                  .currentState
+                                                                  ?.openEndDrawer();
+                                                            },
+                                                            text:
+                                                                'Checkout: ZMK ${subtotal.toStringAsFixed(2)}',
+                                                            options:
+                                                                FFButtonOptions(
+                                                              height: 52,
+                                                              padding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                      22.0,
+                                                                      0.0,
+                                                                      22.0,
+                                                                      0.0),
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              textStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).titleSmallFamily,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.w700,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).titleSmallIsCustom,
+                                                                      ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       )
-                                                    : GridView.builder(
-                                                        shrinkWrap: true,
-                                                        physics:
-                                                            const NeverScrollableScrollPhysics(),
-                                                        itemCount: visibleStocks
-                                                            .length,
-                                                        gridDelegate:
-                                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 3,
-                                                          crossAxisSpacing: 18,
-                                                          mainAxisSpacing: 18,
-                                                          childAspectRatio:
-                                                              0.92,
-                                                        ),
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          final stock =
-                                                              visibleStocks[
-                                                                  index];
-                                                          return _buildProductCard(
-                                                              context, stock);
-                                                        },
+                                                    else
+                                                      Column(
+                                                        children: [
+                                                          TextField(
+                                                            onChanged: (value) {
+                                                              safeSetState(() {
+                                                                _searchQuery =
+                                                                    value;
+                                                              });
+                                                            },
+                                                            decoration:
+                                                                InputDecoration(
+                                                              hintText:
+                                                                  'Search stock, brand, batch, or category...',
+                                                              prefixIcon:
+                                                                  const Icon(Icons
+                                                                      .search_rounded),
+                                                              filled: true,
+                                                              fillColor: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondaryBackground,
+                                                              border:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .alternate,
+                                                                ),
+                                                              ),
+                                                              enabledBorder:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .alternate,
+                                                                ),
+                                                              ),
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
+                                                                  width: 1.6,
+                                                                ),
+                                                              ),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          18,
+                                                                      vertical:
+                                                                          16),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 14),
+                                                          FFButtonWidget(
+                                                            onPressed:
+                                                                () async {
+                                                              scaffoldKey
+                                                                  .currentState
+                                                                  ?.openEndDrawer();
+                                                            },
+                                                            text:
+                                                                'Checkout: ZMK ${subtotal.toStringAsFixed(2)}',
+                                                            options:
+                                                                FFButtonOptions(
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 52,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              textStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            FlutterFlowTheme.of(context).titleSmallFamily,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.w700,
+                                                                        letterSpacing:
+                                                                            0.0,
+                                                                        useGoogleFonts:
+                                                                            !FlutterFlowTheme.of(context).titleSmallIsCustom,
+                                                                      ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                              ),
-                                              const SizedBox(width: 18),
-                                              Expanded(
-                                                flex: 1,
-                                                child: _buildCashierSidebar(
-                                                  context,
-                                                  allStocks,
-                                                  visibleStocks,
-                                                  resolvedPharmacyName,
+                                                    const SizedBox(height: 14),
+                                                    Wrap(
+                                                      spacing: 10,
+                                                      runSpacing: 10,
+                                                      children: [
+                                                        _buildFilterChip(
+                                                          context: context,
+                                                          label: 'All',
+                                                          selected:
+                                                              _selectedCategory ==
+                                                                  'All',
+                                                          onTap: () =>
+                                                              safeSetState(
+                                                            () =>
+                                                                _selectedCategory =
+                                                                    'All',
+                                                          ),
+                                                        ),
+                                                        ...[
+                                                          'Medicine',
+                                                          'Nutrition Suppliments',
+                                                          'Veterinary Products',
+                                                          'Beauty Care',
+                                                          'Mother and Babycare',
+                                                          'Personal Care'
+                                                        ].map(
+                                                          (label) =>
+                                                              _buildFilterChip(
+                                                            context: context,
+                                                            label: label,
+                                                            selected:
+                                                                _selectedCategory ==
+                                                                    label,
+                                                            onTap: () =>
+                                                                safeSetState(
+                                                                    () {
+                                                              _selectedCategory =
+                                                                  label;
+                                                            }),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          )
-                                        else
-                                          Column(
-                                            children: [
-                                              visibleStocks.isEmpty
-                                                  ? _buildEmptyState(
-                                                      context,
-                                                      title: allStocks.isEmpty
-                                                          ? 'No stock found for this pharmacy'
-                                                          : 'No items match the current search',
-                                                    )
-                                                  : GridView.builder(
-                                                      shrinkWrap: true,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      itemCount:
-                                                          visibleStocks.length,
-                                                      gridDelegate:
-                                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 1,
-                                                        crossAxisSpacing: 16,
-                                                        mainAxisSpacing: 16,
-                                                        childAspectRatio: 1.55,
-                                                      ),
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        final stock =
-                                                            visibleStocks[
-                                                                index];
-                                                        return _buildProductCard(
-                                                            context, stock);
-                                                      },
-                                                    ),
                                               const SizedBox(height: 18),
-                                              _buildCashierSidebar(
-                                                context,
-                                                allStocks,
-                                                visibleStocks,
-                                                resolvedPharmacyName,
-                                              ),
+                                              if (isWide)
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: visibleStocks
+                                                              .isEmpty
+                                                          ? _buildEmptyState(
+                                                              context,
+                                                              title: allStocks
+                                                                      .isEmpty
+                                                                  ? 'No stock found for this pharmacy'
+                                                                  : 'No items match the current search',
+                                                            )
+                                                          : GridView.builder(
+                                                              shrinkWrap: true,
+                                                              physics:
+                                                                  const NeverScrollableScrollPhysics(),
+                                                              itemCount:
+                                                                  visibleStocks
+                                                                      .length,
+                                                              gridDelegate:
+                                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                crossAxisCount:
+                                                                    3,
+                                                                crossAxisSpacing:
+                                                                    18,
+                                                                mainAxisSpacing:
+                                                                    18,
+                                                                childAspectRatio:
+                                                                    0.92,
+                                                              ),
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                final stock =
+                                                                    visibleStocks[
+                                                                        index];
+                                                                return _buildProductCard(
+                                                                    context,
+                                                                    stock);
+                                                              },
+                                                            ),
+                                                    ),
+                                                    const SizedBox(width: 18),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child:
+                                                          _buildCashierSidebar(
+                                                        context,
+                                                        allStocks,
+                                                        visibleStocks,
+                                                        resolvedPharmacyName,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              else
+                                                Column(
+                                                  children: [
+                                                    visibleStocks.isEmpty
+                                                        ? _buildEmptyState(
+                                                            context,
+                                                            title: allStocks
+                                                                    .isEmpty
+                                                                ? 'No stock found for this pharmacy'
+                                                                : 'No items match the current search',
+                                                          )
+                                                        : GridView.builder(
+                                                            shrinkWrap: true,
+                                                            physics:
+                                                                const NeverScrollableScrollPhysics(),
+                                                            itemCount:
+                                                                visibleStocks
+                                                                    .length,
+                                                            gridDelegate:
+                                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount: 1,
+                                                              crossAxisSpacing:
+                                                                  16,
+                                                              mainAxisSpacing:
+                                                                  16,
+                                                              childAspectRatio:
+                                                                  1.55,
+                                                            ),
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              final stock =
+                                                                  visibleStocks[
+                                                                      index];
+                                                              return _buildProductCard(
+                                                                  context,
+                                                                  stock);
+                                                            },
+                                                          ),
+                                                    const SizedBox(height: 18),
+                                                    _buildCashierSidebar(
+                                                      context,
+                                                      allStocks,
+                                                      visibleStocks,
+                                                      resolvedPharmacyName,
+                                                    ),
+                                                  ],
+                                                ),
                                             ],
-                                          ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),

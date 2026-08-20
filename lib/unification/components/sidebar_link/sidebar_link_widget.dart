@@ -54,59 +54,74 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
 
     final bool isSelected = FFAppState().SelectedPage == widget.linkText;
     final bool isCollapsed = FFAppState().SidebarCollapsed;
+    final theme = FlutterFlowTheme.of(context);
+    final primary = theme.primary;
 
-    // Determine background color based on state
-    Color bgColor;
-    if (isSelected) {
-      bgColor = FlutterFlowTheme.of(context).primary.withValues(alpha: 0.12);
-    } else if (_isHovered) {
-      bgColor =
-          FlutterFlowTheme.of(context).primaryBackground.withValues(alpha: 0.8);
-    } else {
-      bgColor = Colors.transparent;
-    }
+    // ── Background: subtle active fill, transparent otherwise ──
+    final bgColor = isSelected
+        ? primary.withValues(alpha: 0.08)
+        : _isHovered
+            ? theme.secondaryBackground.withValues(alpha: 0.60)
+            : Colors.transparent;
+
+    // ── Border: only visible on active or hover ──
+    final borderColor = isSelected
+        ? primary.withValues(alpha: 0.12)
+        : _isHovered
+            ? theme.lineColor.withValues(alpha: 0.20)
+            : Colors.transparent;
 
     return MouseRegion(
       onEnter: (_) => safeSetState(() => _isHovered = true),
       onExit: (_) => safeSetState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
         width: double.infinity,
         constraints: const BoxConstraints(minHeight: 40.0),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(
+            color: borderColor,
+            width: 1.0,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.06),
+                    blurRadius: 10.0,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
+              : null,
         ),
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(
-            isCollapsed ? 12.0 : 16.0,
-            7.0,
-            isCollapsed ? 12.0 : 10.0,
-            7.0,
+            isCollapsed ? 0.0 : 10.0,
+            0.0,
+            isCollapsed ? 0.0 : 10.0,
+            0.0,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment:
-                isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+            mainAxisAlignment: isCollapsed
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.start,
             children: [
-              // Icon with background circle
+              // ── Icon container ──
               AnimatedContainer(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeInOut,
-                width: 30.0,
-                height: 30.0,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutCubic,
+                width: 34.0,
+                height: 34.0,
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? FlutterFlowTheme.of(context)
-                          .primary
-                          .withValues(alpha: 0.18)
+                      ? primary.withValues(alpha: 0.12)
                       : _isHovered
-                          ? FlutterFlowTheme.of(context)
-                              .primary
-                              .withValues(alpha: 0.08)
-                          : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8.0),
+                          ? primary.withValues(alpha: 0.06)
+                          : theme.primaryBackground.withValues(alpha: 0.22),
+                  borderRadius: BorderRadius.circular(9.0),
                 ),
                 child: Center(
                   child: SizedBox(
@@ -118,26 +133,27 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                   ),
                 ),
               ),
+
+              // ── Label ──
               if (!isCollapsed) ...[
-                const SizedBox(width: 12.0),
-                // Link Text
+                const SizedBox(width: 10.0),
                 Expanded(
                   child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 150),
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).bodyMediumFamily,
-                          color: isSelected
-                              ? FlutterFlowTheme.of(context).primary
-                              : _isHovered
-                                  ? FlutterFlowTheme.of(context).primaryText
-                                  : FlutterFlowTheme.of(context).secondaryText,
-                          letterSpacing: isSelected ? -0.01 : 0.0,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w500,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                        ),
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOutCubic,
+                    style: theme.bodyMedium.override(
+                      fontFamily: theme.bodyMediumFamily,
+                      color: isSelected
+                          ? theme.primaryText
+                          : _isHovered
+                              ? theme.primaryText
+                              : theme.secondaryText,
+                      fontSize: 13.5,
+                      letterSpacing: isSelected ? -0.1 : 0.0,
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      useGoogleFonts: !theme.bodyMediumIsCustom,
+                    ),
                     child: Text(
                       widget.linkText!,
                       overflow: TextOverflow.ellipsis,
@@ -146,16 +162,6 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                     ),
                   ),
                 ),
-                // Active indicator bar — Duniya purple accent
-                if (isSelected)
-                  Container(
-                    width: 3.0,
-                    height: 20.0,
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).primary,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                  ),
               ],
             ],
           ),

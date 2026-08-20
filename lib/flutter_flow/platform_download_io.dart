@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -17,7 +16,7 @@ Future<void> save({
     await file.writeAsBytes(bytes);
     await Share.shareXFiles(
       [XFile(file.path, mimeType: mimeType, name: fileName)],
-      text: 'Duniya — $fileName',
+      text: 'Pulse — $fileName',
     );
   } catch (e) {
     debugPrint('[PlatformDownload] Save failed: $e');

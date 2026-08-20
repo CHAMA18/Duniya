@@ -108,6 +108,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
+  Future<_PharmacyDashboardData>? _pharmacyDashboardFuture;
+  String? _pharmacyDashboardFutureKey;
 
   @override
   void initState() {
@@ -361,76 +363,96 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }) {
     return Container(
       width: width,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate,
-          width: 1,
+          color: FlutterFlowTheme.of(context).lineColor.withValues(alpha: 0.25),
+          width: 0.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // Icon
           Container(
-            width: 56,
-            height: 56,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: iconBackground,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: iconColor, size: 24),
+            child: Icon(icon, color: iconColor, size: 20),
           ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.0,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+          const SizedBox(width: 14),
+          // Text + Value
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).bodySmallFamily,
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.0,
+                        useGoogleFonts:
+                            !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                      ),
                 ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: FlutterFlowTheme.of(context).displaySmall.override(
-                  fontFamily: FlutterFlowTheme.of(context).displaySmallFamily,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
-                  lineHeight: 1.2,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).displaySmallIsCustom,
+                const SizedBox(height: 2),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      value,
+                      style:
+                          FlutterFlowTheme.of(context).headlineSmall.override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .headlineSmallFamily,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                                lineHeight: 1.1,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .headlineSmallIsCustom,
+                              ),
+                    ),
+                    const SizedBox(width: 8),
+                    footer,
+                  ],
                 ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            subtitle,
-            style: FlutterFlowTheme.of(context).bodySmall.override(
-                  fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
-                  color: FlutterFlowTheme.of(context).secondaryText,
-                  fontSize: 12,
-                  letterSpacing: 0.0,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).bodySmallFamily,
+                        color: FlutterFlowTheme.of(context)
+                            .secondaryText
+                            .withValues(alpha: 0.7),
+                        fontSize: 11,
+                        letterSpacing: 0.0,
+                        useGoogleFonts:
+                            !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                      ),
                 ),
+              ],
+            ),
           ),
-          footer,
         ],
       ),
     );
@@ -551,7 +573,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }
 
   Widget _buildTopOverviewSection({required bool isPhone}) {
-    final stockParent = AccessControl.parentRef(context) ?? currentUserReference;
+    final stockParent =
+        AccessControl.parentRef(context) ?? currentUserReference;
 
     return AuthUserStreamWidget(
       builder: (context) => FutureBuilder<List<StockRecord>>(
@@ -688,7 +711,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }
 
   Widget _buildAnalyticsOverviewSection({required bool isPhone}) {
-    final stockParent = AccessControl.parentRef(context) ?? currentUserReference;
+    final stockParent =
+        AccessControl.parentRef(context) ?? currentUserReference;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1041,13 +1065,13 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             _buildMetricCard(
               title: 'All Pharmacies Revenue',
               value: _formatCurrency(data.totalRevenue),
-              subtitle:
-                  '${data.pharmacySnapshots.length} pharmacies combined',
+              subtitle: '${data.pharmacySnapshots.length} pharmacies combined',
               icon: Icons.account_balance_wallet_rounded,
               iconBackground: const Color(0xFFF3E8FF),
               iconColor: FlutterFlowTheme.of(context).primary,
               footer: Container(
-                height: 8,
+                height: 6,
+                width: 48,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -1068,20 +1092,22 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               iconBackground: const Color(0xFFE8FAF1),
               iconColor: const Color(0xFF10B981),
               footer: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.stacked_line_chart_rounded,
                     color: FlutterFlowTheme.of(context).success,
-                    size: 16,
+                    size: 13,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 3),
                   Text(
-                    '${data.totalMargin.toStringAsFixed(1)}% margin',
+                    '${data.totalMargin.toStringAsFixed(1)}%',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).bodySmallFamily,
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                          color: FlutterFlowTheme.of(context).success,
                           fontWeight: FontWeight.w600,
+                          fontSize: 11,
                           useGoogleFonts:
                               !FlutterFlowTheme.of(context).bodySmallIsCustom,
                         ),
@@ -1098,7 +1124,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               iconBackground: const Color(0xFFE0E7FF),
               iconColor: const Color(0xFF4F46E5),
               footer: Container(
-                height: 8,
+                height: 6,
+                width: 48,
                 decoration: BoxDecoration(
                   color: const Color(0xFF4F46E5).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(999),
@@ -1114,7 +1141,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               iconBackground: const Color(0xFFFDE7E9),
               iconColor: const Color(0xFFEF4444),
               footer: Container(
-                height: 8,
+                height: 6,
+                width: 48,
                 decoration: BoxDecoration(
                   color: const Color(0xFFEF4444).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(999),
@@ -1142,7 +1170,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   children: [
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -1154,55 +1183,56 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: 52,
-                            height: 52,
+                            width: 38,
+                            height: 38,
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.16),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
                               Icons.pie_chart_rounded,
                               color: Colors.white,
-                              size: 26,
+                              size: 20,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   'All pharmacies in one view',
                                   style: FlutterFlowTheme.of(context)
-                                      .titleMedium
+                                      .bodyLarge
                                       .override(
-                                        fontFamily:
-                                            FlutterFlowTheme.of(context)
-                                                .titleMediumFamily,
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyLargeFamily,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: -0.2,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: -0.1,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
-                                                .titleMediumIsCustom,
+                                                .bodyLargeIsCustom,
                                       ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 3),
                                 Text(
-                                  'A combined finance snapshot with pharmacy-level performance below.',
+                                  'Combined finance snapshot with pharmacy-level performance.',
                                   style: FlutterFlowTheme.of(context)
                                       .bodySmall
                                       .override(
-                                        fontFamily:
-                                            FlutterFlowTheme.of(context)
-                                                .bodySmallFamily,
-                                        color: Colors.white.withValues(
-                                            alpha: 0.88),
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodySmallFamily,
+                                        color: Colors.white
+                                            .withValues(alpha: 0.75),
+                                        fontSize: 11,
                                         useGoogleFonts:
                                             !FlutterFlowTheme.of(context)
                                                 .bodySmallIsCustom,
@@ -1211,10 +1241,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 8),
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.16),
                               borderRadius: BorderRadius.circular(999),
@@ -1225,35 +1255,46 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             child: Text(
                               '${data.pharmacySnapshots.length} pharmacies',
                               style: FlutterFlowTheme.of(context)
-                                  .labelMedium
+                                  .labelSmall
                                   .override(
-                                    fontFamily:
-                                        FlutterFlowTheme.of(context)
-                                            .labelMediumFamily,
+                                    fontFamily: FlutterFlowTheme.of(context)
+                                        .labelSmallFamily,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
                                     useGoogleFonts:
                                         !FlutterFlowTheme.of(context)
-                                            .labelMediumIsCustom,
+                                            .labelSmallIsCustom,
                                   ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 12),
                     LayoutBuilder(
                       builder: (context, constraints) {
-                        final columns = constraints.maxWidth >= 1200
-                            ? 4
-                            : constraints.maxWidth >= 760
-                                ? 2
-                                : 1;
+                        if (constraints.maxWidth >= 1000) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              for (var index = 0;
+                                  index < heroCards.length;
+                                  index++) ...[
+                                Expanded(child: heroCards[index]),
+                                if (index < heroCards.length - 1)
+                                  const SizedBox(width: 16),
+                              ],
+                            ],
+                          );
+                        }
+
+                        final columns = constraints.maxWidth >= 680 ? 2 : 1;
                         return GridView.count(
                           crossAxisCount: columns,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
-                          childAspectRatio: columns == 1 ? 1.8 : 0.72,
+                          childAspectRatio: columns == 1 ? 3.5 : 3.0,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           children: heroCards,
@@ -1284,7 +1325,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     crossAxisCount: columns,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: columns == 1 ? 1.2 : 0.85,
+                    childAspectRatio: columns == 1 ? 1.6 : 1.1,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: data.pharmacySnapshots
@@ -1310,19 +1351,19 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     required _PharmacyFinanceSnapshot snapshot,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate,
-          width: 1,
+          color: FlutterFlowTheme.of(context).lineColor.withValues(alpha: 0.25),
+          width: 0.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -1333,8 +1374,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 38,
+                height: 38,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -1346,15 +1387,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   Icons.local_pharmacy_rounded,
                   color: FlutterFlowTheme.of(context).primary,
-                  size: 22,
+                  size: 18,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1383,8 +1424,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodySmallFamily,
                             color: FlutterFlowTheme.of(context).secondaryText,
-                            useGoogleFonts: !FlutterFlowTheme.of(context)
-                                .bodySmallIsCustom,
+                            useGoogleFonts:
+                                !FlutterFlowTheme.of(context).bodySmallIsCustom,
                           ),
                     ),
                   ],
@@ -1654,16 +1695,22 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          drawer: Drawer(
-            elevation: 16.0,
-            child: WebViewAware(
-              child: wrapWithModel(
-                model: _model.sideNavModel2,
-                updateCallback: () => safeSetState(() {}),
-                child: SideNavWidget(),
-              ),
-            ),
-          ),
+          drawer: responsiveVisibility(
+            context: context,
+            desktop: false,
+            tabletLandscape: false,
+          )
+              ? Drawer(
+                  elevation: 16.0,
+                  child: WebViewAware(
+                    child: wrapWithModel(
+                      model: _model.sideNavModel2,
+                      updateCallback: () => safeSetState(() {}),
+                      child: SideNavWidget(),
+                    ),
+                  ),
+                )
+              : null,
           body: SafeArea(
             top: true,
             child: Column(
@@ -1719,14 +1766,21 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                     _buildDashboardHeader(isPhone: isPhone),
                                     const SizedBox(height: 24),
                                     // ─── Point Of Sale quick-action card (RBAC: pharmacy users with posView) ───
-                                    if (AccessControl.hasAnyPermission(context, [Permission.posView, Permission.posCreateSale]))
+                                    if (AccessControl.hasAnyPermission(
+                                        context, [
+                                      Permission.posView,
+                                      Permission.posCreateSale
+                                    ]))
                                       AuthUserStreamWidget(
                                         builder: (context) => Padding(
-                                          padding: const EdgeInsets.only(bottom: 16),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 16),
                                           child: GestureDetector(
                                             onTap: () async {
-                                              logFirebaseEvent('HOME_POS_QUICK_ACTION_ON_TAP');
-                                              logFirebaseEvent('Home_navigate_to');
+                                              logFirebaseEvent(
+                                                  'HOME_POS_QUICK_ACTION_ON_TAP');
+                                              logFirebaseEvent(
+                                                  'Home_navigate_to');
                                               context.goNamed(
                                                 PointOfSalesWidget.routeName,
                                                 queryParameters: {
@@ -1736,30 +1790,43 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                   ),
                                                 }.withoutNulls,
                                                 extra: <String, dynamic>{
-                                                  '__transition_info__': TransitionInfo(
+                                                  '__transition_info__':
+                                                      TransitionInfo(
                                                     hasTransition: true,
-                                                    transitionType: PageTransitionType.fade,
-                                                    duration: Duration(milliseconds: 0),
+                                                    transitionType:
+                                                        PageTransitionType.fade,
+                                                    duration: Duration(
+                                                        milliseconds: 0),
                                                   ),
                                                 },
                                               );
-                                              FFAppState().SelectedPage = 'Point Of Sale';
+                                              FFAppState().SelectedPage =
+                                                  'Point Of Sale';
                                             },
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   colors: [
-                                                    FlutterFlowTheme.of(context).primary,
-                                                    FlutterFlowTheme.of(context).primary.withValues(alpha: 0.85),
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary
+                                                        .withValues(
+                                                            alpha: 0.85),
                                                   ],
                                                   begin: Alignment.topLeft,
                                                   end: Alignment.bottomRight,
                                                 ),
-                                                borderRadius: BorderRadius.circular(16.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(16.0),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.25),
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary
+                                                        .withValues(
+                                                            alpha: 0.25),
                                                     blurRadius: 16.0,
                                                     offset: Offset(0, 6),
                                                   ),
@@ -1767,8 +1834,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                  horizontal: isPhone ? 20.0 : 28.0,
-                                                  vertical: isPhone ? 18.0 : 24.0,
+                                                  horizontal:
+                                                      isPhone ? 20.0 : 28.0,
+                                                  vertical:
+                                                      isPhone ? 18.0 : 24.0,
                                                 ),
                                                 child: Row(
                                                   children: [
@@ -1776,11 +1845,16 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                       width: 52.0,
                                                       height: 52.0,
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white.withValues(alpha: 0.2),
-                                                        borderRadius: BorderRadius.circular(14.0),
+                                                        color: Colors.white
+                                                            .withValues(
+                                                                alpha: 0.2),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(14.0),
                                                       ),
                                                       child: Icon(
-                                                        Icons.point_of_sale_rounded,
+                                                        Icons
+                                                            .point_of_sale_rounded,
                                                         color: Colors.white,
                                                         size: 28.0,
                                                       ),
@@ -1788,36 +1862,73 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                     SizedBox(width: 16.0),
                                                     Expanded(
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Text(
                                                             'Point Of Sale',
-                                                            style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                              fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                                                              color: Colors.white,
-                                                              fontSize: isPhone ? 20.0 : 24.0,
-                                                              fontWeight: FontWeight.w700,
-                                                              letterSpacing: -0.5,
-                                                              useGoogleFonts: !FlutterFlowTheme.of(context).titleLargeIsCustom,
-                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .titleLarge
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleLargeFamily,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      isPhone
+                                                                          ? 20.0
+                                                                          : 24.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  letterSpacing:
+                                                                      -0.5,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleLargeIsCustom,
+                                                                ),
                                                           ),
                                                           SizedBox(height: 4.0),
                                                           Text(
                                                             'Quick sales & dispensing — tap to start',
-                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                              color: Colors.white.withValues(alpha: 0.85),
-                                                              fontSize: isPhone ? 13.0 : 14.0,
-                                                              fontWeight: FontWeight.w400,
-                                                              useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMediumFamily,
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withValues(
+                                                                          alpha:
+                                                                              0.85),
+                                                                  fontSize:
+                                                                      isPhone
+                                                                          ? 13.0
+                                                                          : 14.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  useGoogleFonts:
+                                                                      !FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMediumIsCustom,
+                                                                ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                     Icon(
-                                                      Icons.arrow_forward_ios_rounded,
-                                                      color: Colors.white.withValues(alpha: 0.7),
+                                                      Icons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Colors.white
+                                                          .withValues(
+                                                              alpha: 0.7),
                                                       size: 20.0,
                                                     ),
                                                   ],
@@ -1832,7 +1943,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                     const SizedBox(height: 28),
                                     _buildAnalyticsOverviewSection(
                                         isPhone: isPhone),
-                                    if (AccessControl.hasPermission(context, Permission.dashboardViewFinanceNetwork)) ...[
+                                    if (AccessControl.hasPermission(
+                                        context,
+                                        Permission
+                                            .dashboardViewFinanceNetwork)) ...[
                                       const SizedBox(height: 28),
                                       _buildFinanceNetworkSection(
                                           isPhone: isPhone),
@@ -1916,25 +2030,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                       FutureBuilder<int>(
                                                     future:
                                                         querySalesRecordCount(
-                                                      parent: () {
-                                                        if (valueOrDefault(
-                                                                currentUserDocument
-                                                                    ?.role,
-                                                                '') ==
-                                                            'Owner') {
-                                                          return currentUserReference;
-                                                        } else if (valueOrDefault(
-                                                                currentUserDocument
-                                                                    ?.role,
-                                                                '') !=
-                                                            'Owner') {
-                                                          return currentUserDocument
-                                                              ?.ownerRef;
-                                                        } else {
-                                                          return currentUserDocument
-                                                              ?.ownerRef;
-                                                        }
-                                                      }(),
+                                                      parent: AccessControl
+                                                          .parentRef(context),
                                                     ),
                                                     builder:
                                                         (context, snapshot) {
@@ -2036,11 +2133,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 ),
                                                 const SizedBox(height: 16),
                                                 // Staff Card (Owner only)
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') ==
-                                                    'Owner')
+                                                if (AccessControl.isOwner(
+                                                    context))
                                                   AuthUserStreamWidget(
                                                     builder: (context) =>
                                                         FutureBuilder<int>(
@@ -2139,11 +2233,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                       },
                                                     ),
                                                   ),
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') ==
-                                                    'Owner')
+                                                if (AccessControl.isOwner(
+                                                    context))
                                                   const SizedBox(height: 16),
                                                 // Inventory Card
                                                 AuthUserStreamWidget(
@@ -2151,14 +2242,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                       FutureBuilder<int>(
                                                     future:
                                                         queryStockRecordCount(
-                                                      parent: valueOrDefault(
-                                                                  currentUserDocument
-                                                                      ?.role,
-                                                                  '') ==
-                                                              'Owner'
-                                                          ? currentUserReference
-                                                          : currentUserDocument
-                                                              ?.ownerRef,
+                                                      parent: AccessControl
+                                                          .parentRef(context),
                                                       queryBuilder:
                                                           (stockRecord) =>
                                                               stockRecord.where(
@@ -2284,25 +2369,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                         FutureBuilder<int>(
                                                       future:
                                                           querySalesRecordCount(
-                                                        parent: () {
-                                                          if (valueOrDefault(
-                                                                  currentUserDocument
-                                                                      ?.role,
-                                                                  '') ==
-                                                              'Owner') {
-                                                            return currentUserReference;
-                                                          } else if (valueOrDefault(
-                                                                  currentUserDocument
-                                                                      ?.role,
-                                                                  '') !=
-                                                              'Owner') {
-                                                            return currentUserDocument
-                                                                ?.ownerRef;
-                                                          } else {
-                                                            return currentUserDocument
-                                                                ?.ownerRef;
-                                                          }
-                                                        }(),
+                                                        parent: AccessControl
+                                                            .parentRef(context),
                                                       ),
                                                       builder:
                                                           (context, snapshot) {
@@ -2404,11 +2472,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 ),
                                                 const SizedBox(width: 16),
                                                 // Staff Card (Owner only)
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') ==
-                                                    'Owner')
+                                                if (AccessControl.isOwner(
+                                                    context))
                                                   Expanded(
                                                     flex: 1,
                                                     child: AuthUserStreamWidget(
@@ -2512,11 +2577,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                       ),
                                                     ),
                                                   ),
-                                                if (valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') ==
-                                                    'Owner')
+                                                if (AccessControl.isOwner(
+                                                    context))
                                                   const SizedBox(width: 16),
                                                 // Inventory Card
                                                 Expanded(
@@ -2526,14 +2588,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                         FutureBuilder<int>(
                                                       future:
                                                           queryStockRecordCount(
-                                                        parent: valueOrDefault(
-                                                                    currentUserDocument
-                                                                        ?.role,
-                                                                    '') ==
-                                                                'Owner'
-                                                            ? currentUserReference
-                                                            : currentUserDocument
-                                                                ?.ownerRef,
+                                                        parent: AccessControl
+                                                            .parentRef(context),
                                                         queryBuilder:
                                                             (stockRecord) =>
                                                                 stockRecord
@@ -2683,13 +2739,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
                                     const SizedBox(height: 28),
 
-                                    _buildSectionHeader(
-                                      'Outlets Network',
-                                      Icons.storefront_rounded,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    _buildOutletsSection(),
-
                                     // Bottom padding for scroll
                                     const SizedBox(height: 100),
                                   ],
@@ -2727,6 +2776,16 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             : '';
     final pharmacyLabel =
         activePharmacy.isNotEmpty ? activePharmacy : 'Active Pharmacy';
+    final dashboardFutureKey =
+        '${ownerRef?.path ?? 'current-user'}:$activePharmacy';
+    if (_pharmacyDashboardFuture == null ||
+        _pharmacyDashboardFutureKey != dashboardFutureKey) {
+      _pharmacyDashboardFutureKey = dashboardFutureKey;
+      _pharmacyDashboardFuture = _loadPharmacyDashboardData(
+        activePharmacy: activePharmacy,
+        ownerRef: ownerRef,
+      );
+    }
 
     return Title(
       title: 'Pharmacy Dashboard',
@@ -2739,16 +2798,22 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         child: Scaffold(
           key: scaffoldKey,
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          drawer: Drawer(
-            elevation: 16.0,
-            child: WebViewAware(
-              child: wrapWithModel(
-                model: _model.sideNavModel2,
-                updateCallback: () => safeSetState(() {}),
-                child: SideNavWidget(),
-              ),
-            ),
-          ),
+          drawer: responsiveVisibility(
+            context: context,
+            desktop: false,
+            tabletLandscape: false,
+          )
+              ? Drawer(
+                  elevation: 16.0,
+                  child: WebViewAware(
+                    child: wrapWithModel(
+                      model: _model.sideNavModel2,
+                      updateCallback: () => safeSetState(() {}),
+                      child: SideNavWidget(),
+                    ),
+                  ),
+                )
+              : null,
           body: SafeArea(
             top: true,
             child: Row(
@@ -2783,16 +2848,66 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       ),
                       Expanded(
                         child: FutureBuilder<_PharmacyDashboardData>(
-                          future: _loadPharmacyDashboardData(
-                            activePharmacy: activePharmacy,
-                            ownerRef: ownerRef,
-                          ),
+                          future: _pharmacyDashboardFuture,
                           builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline_rounded,
+                                      color: FlutterFlowTheme.of(context).error,
+                                      size: 42,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      'Unable to load dashboard data',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMediumFamily,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            useGoogleFonts:
+                                                !FlutterFlowTheme.of(context)
+                                                    .bodyMediumIsCustom,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    InkWell(
+                                      onTap: () => safeSetState(() {}),
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: const Text(
+                                          'Retry',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                             if (!snapshot.hasData) {
                               return const Center(
-                                child: const LoadingSpinnerWidget(
-                                  size: 42,
-                                  showLabel: false,
+                                child: LoadingSpinnerWidget(
+                                  size: 88,
+                                  showLabel: true,
+                                  fullScreen: true,
                                 ),
                               );
                             }
@@ -2934,9 +3049,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 },
                                                 isPrimary: true,
                                               ),
-                                              if (AccessControl.hasPermission(context, Permission.hrView))
+                                              if (AccessControl.hasPermission(
+                                                  context, Permission.hrView))
                                                 const SizedBox(width: 12),
-                                              if (AccessControl.hasPermission(context, Permission.hrView))
+                                              if (AccessControl.hasPermission(
+                                                  context, Permission.hrView))
                                                 _buildDashboardActionButton(
                                                   label: 'HR Portal',
                                                   icon: Icons.badge_rounded,
@@ -2997,7 +3114,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                   '$movementCount stock movements tracked',
                                             ),
                                             if (isPhone &&
-                                                AccessControl.hasPermission(context, Permission.hrView))
+                                                AccessControl.hasPermission(
+                                                    context, Permission.hrView))
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 6),
@@ -4082,46 +4200,66 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }) async {
     final scope = ownerRef ?? currentUserReference;
 
-    final pharmacyList = await queryPharmacyRecordOnce(
-      parent: scope,
-      queryBuilder: (query) => activePharmacy.isNotEmpty
-          ? query.where('Name', isEqualTo: activePharmacy)
-          : query,
-      singleRecord: true,
-    );
-    final pharmacy = pharmacyList.firstOrNull;
+    // Wrap each query individually so a single failure doesn't break
+    // the entire dashboard.
+    PharmacyRecord? pharmacy;
+    try {
+      final pharmacyList = await queryPharmacyRecordOnce(
+        parent: scope,
+        queryBuilder: (query) => activePharmacy.isNotEmpty
+            ? query.where('Name', isEqualTo: activePharmacy)
+            : query,
+        singleRecord: true,
+      );
+      pharmacy = pharmacyList.firstOrNull;
+    } catch (_) {}
 
-    final stockItems = await queryStockRecordOnce(
-      parent: scope,
-      queryBuilder: (query) => activePharmacy.isNotEmpty
-          ? query.where('Pharmacy', isEqualTo: activePharmacy)
-          : query.where('Quantity', isGreaterThan: 0),
-    );
+    List<StockRecord> stockItems = [];
+    try {
+      stockItems = await queryStockRecordOnce(
+        parent: scope,
+        queryBuilder: (query) => activePharmacy.isNotEmpty
+            ? query.where('Pharmacy', isEqualTo: activePharmacy)
+            : query.where('Quantity', isGreaterThan: 0),
+      );
+    } catch (_) {}
 
-    final salesRecords = await querySalesRecordOnce(
-      parent: scope,
-      queryBuilder: (query) => pharmacy != null
-          ? query.where('PharmaID', isEqualTo: pharmacy.reference)
-          : query,
-    );
+    List<SalesRecord> salesRecords = [];
+    try {
+      salesRecords = await querySalesRecordOnce(
+        parent: scope,
+        queryBuilder: (query) => pharmacy != null
+            ? query.where('PharmaID', isEqualTo: pharmacy.reference)
+            : query,
+      );
+    } catch (_) {}
 
-    final goodsReceived = await queryGoodsReceivedRecordOnce(
-      parent: scope,
-      queryBuilder: (query) =>
-          query.orderBy('CreatedAt', descending: true).limit(6),
-    );
+    List<GoodsReceivedRecord> goodsReceived = [];
+    try {
+      goodsReceived = await queryGoodsReceivedRecordOnce(
+        parent: scope,
+        queryBuilder: (query) =>
+            query.orderBy('CreatedAt', descending: true).limit(6),
+      );
+    } catch (_) {}
 
-    final movements = await queryStockMovementRecordOnce(
-      parent: scope,
-      queryBuilder: (query) =>
-          query.orderBy('CreatedAt', descending: true).limit(6),
-    );
+    List<StockMovementRecord> movements = [];
+    try {
+      movements = await queryStockMovementRecordOnce(
+        parent: scope,
+        queryBuilder: (query) =>
+            query.orderBy('CreatedAt', descending: true).limit(6),
+      );
+    } catch (_) {}
 
-    final lowStockAlertCount = await queryLowStockAlertRecordCount(
-      queryBuilder: (query) => pharmacy != null
-          ? query.where('PharmacyId', isEqualTo: pharmacy.reference)
-          : query,
-    );
+    int lowStockAlertCount = 0;
+    try {
+      lowStockAlertCount = await queryLowStockAlertRecordCount(
+        queryBuilder: (query) => pharmacy != null
+            ? query.where('PharmacyId', isEqualTo: pharmacy.reference)
+            : query,
+      );
+    } catch (_) {}
 
     final inventoryValue = stockItems.fold<double>(
       0.0,
@@ -4213,7 +4351,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               const SizedBox(height: 24),
               FutureBuilder<List<SalesRecord>>(
                 future: querySalesRecordOnce(
-                  parent: AccessControl.parentRef(context) ?? currentUserReference,
+                  parent:
+                      AccessControl.parentRef(context) ?? currentUserReference,
                   queryBuilder: (salesRecord) =>
                       salesRecord.orderBy('Date', descending: false).limit(12),
                 ),
@@ -4286,8 +4425,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             ],
           ),
         ),
-
-
       ],
     );
   }
@@ -4307,7 +4444,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             children: [
               FutureBuilder<List<StockRecord>>(
                 future: queryStockRecordOnce(
-                  parent: AccessControl.parentRef(context) ?? currentUserReference,
+                  parent:
+                      AccessControl.parentRef(context) ?? currentUserReference,
                   queryBuilder: (stockRecord) =>
                       stockRecord.where('Quantity', isGreaterThan: 0),
                 ),

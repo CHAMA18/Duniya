@@ -36,12 +36,13 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
       'icon': Icons.admin_panel_settings_rounded,
       'color': Color(0xFF9900FF),
       'bgColor': Color(0xFFF3EAFF),
-      'description': 'Full access to all features, settings, and member management',
+      'description':
+          'Full access to all features, settings, and member management',
       'permissions': [
         'Create & delete pharmacies',
         'Manage team members & RBAC',
         'Access all financial data',
-        'Configure outlets',
+        'Configure your pharmacy',
         'Approve pending requests',
       ],
     },
@@ -50,7 +51,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
       'icon': Icons.medication_rounded,
       'color': Color(0xFF059669),
       'bgColor': Color(0xFFD1FAE5),
-      'description': 'Professional dispensing, stock management, and patient care',
+      'description':
+          'Professional dispensing, stock management, and patient care',
       'permissions': [
         'Dispense medications',
         'Manage store inventory',
@@ -74,16 +76,16 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
       ],
     },
     {
-      'role': 'Outlet Manager',
+      'role': 'Pharmacy Manager',
       'icon': Icons.store_rounded,
       'color': Color(0xFFD97706),
       'bgColor': Color(0xFFFEF3C7),
-      'description': 'Manage assigned outlet operations and outlet-level reporting',
+      'description': 'Manage pharmacy operations and reporting',
       'permissions': [
-        'Manage assigned outlet',
-        'View outlet inventory',
-        'Process outlet sales',
-        'View outlet stock alerts',
+        'Manage pharmacy operations',
+        'View pharmacy inventory',
+        'Process pharmacy sales',
+        'View pharmacy stock alerts',
         'Request replenishment',
       ],
     },
@@ -118,7 +120,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => AddstoresModel());
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() => safeSetState(() {}));
 
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'addstores'});
@@ -149,7 +151,6 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
     final theme = FlutterFlowTheme.of(context);
     final steps = [
       {'label': 'Pharmacy Details', 'icon': Icons.local_pharmacy_rounded},
-      {'label': 'Outlets', 'icon': Icons.store_rounded},
       {'label': 'Team & Roles', 'icon': Icons.group_rounded},
     ];
 
@@ -224,7 +225,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                             children: [
                               Text(
                                 'Step ${index + 1}',
-                                style: theme.bodySmall?.override(
+                                style: theme.bodySmall.override(
                                   fontFamily: theme.bodySmallFamily,
                                   color: theme.secondaryText,
                                   fontSize: 10,
@@ -234,7 +235,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                               ),
                               Text(
                                 step['label'] as String,
-                                style: theme.bodyMedium?.override(
+                                style: theme.bodyMedium.override(
                                   fontFamily: theme.bodyMediumFamily,
                                   fontWeight: isActive || isCompleted
                                       ? FontWeight.w600
@@ -330,7 +331,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         children: [
                           Text(
                             'Create Your Pharmacy',
-                            style: theme.headlineMedium?.override(
+                            style: theme.headlineMedium.override(
                               fontFamily: theme.headlineMediumFamily,
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
@@ -341,8 +342,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Set up your pharmacy details to get started with Duniya',
-                            style: theme.bodyMedium?.override(
+                            'Set up your pharmacy details to get started with Pulse',
+                            style: theme.bodyMedium.override(
                               fontFamily: theme.bodyMediumFamily,
                               color: Colors.white.withValues(alpha: 0.85),
                               fontSize: 13,
@@ -370,8 +371,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Fill in the required fields below. You can add outlets and team members in the next steps.',
-                          style: theme.bodySmall?.override(
+                          'Fill in the required fields below. You can add team members in the next step.',
+                          style: theme.bodySmall.override(
                             fontFamily: theme.bodySmallFamily,
                             color: Colors.white.withValues(alpha: 0.9),
                             fontSize: 11,
@@ -421,7 +422,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     const SizedBox(width: 10),
                     Text(
                       'Pharmacy Information',
-                      style: theme.titleMedium?.override(
+                      style: theme.titleMedium.override(
                         fontFamily: theme.titleMediumFamily,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.2,
@@ -546,7 +547,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     children: [
                       Text(
                         'Pharmacy Outlets',
-                        style: theme.headlineMedium?.override(
+                        style: theme.headlineMedium.override(
                           fontFamily: theme.headlineMediumFamily,
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
@@ -558,7 +559,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       const SizedBox(height: 4),
                       Text(
                         'Add dispensing points for your pharmacy branches',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           color: Colors.white.withValues(alpha: 0.85),
                           fontSize: 13,
@@ -577,7 +578,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   ),
                   child: Text(
                     '${_model.outletDrafts.length} added',
-                    style: theme.bodySmall?.override(
+                    style: theme.bodySmall.override(
                       fontFamily: theme.bodySmallFamily,
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -596,8 +597,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
             decoration: BoxDecoration(
               color: theme.secondaryBackground,
               borderRadius: BorderRadius.circular(18),
-              border:
-                  Border.all(color: theme.alternate.withValues(alpha: 0.4)),
+              border: Border.all(color: theme.alternate.withValues(alpha: 0.4)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.03),
@@ -624,7 +624,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     const SizedBox(width: 10),
                     Text(
                       'Add New Outlet',
-                      style: theme.titleMedium?.override(
+                      style: theme.titleMedium.override(
                         fontFamily: theme.titleMediumFamily,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.2,
@@ -697,7 +697,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
           if (_model.outletDrafts.isNotEmpty) ...[
             Text(
               'Configured Outlets',
-              style: theme.titleMedium?.override(
+              style: theme.titleMedium.override(
                 fontFamily: theme.titleMediumFamily,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.2,
@@ -733,7 +733,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   const SizedBox(height: 12),
                   Text(
                     'No outlets added yet',
-                    style: theme.bodyMedium?.override(
+                    style: theme.bodyMedium.override(
                       fontFamily: theme.bodyMediumFamily,
                       fontWeight: FontWeight.w600,
                       color: theme.secondaryText,
@@ -743,7 +743,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   const SizedBox(height: 4),
                   Text(
                     'Add at least one outlet to enable dispensing at this pharmacy',
-                    style: theme.bodySmall?.override(
+                    style: theme.bodySmall.override(
                       fontFamily: theme.bodySmallFamily,
                       color: theme.secondaryText,
                       useGoogleFonts: !theme.bodySmallIsCustom,
@@ -790,7 +790,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   children: [
                     Text(
                       outlet.name,
-                      style: theme.bodyMedium?.override(
+                      style: theme.bodyMedium.override(
                         fontFamily: theme.bodyMediumFamily,
                         fontWeight: FontWeight.w600,
                         useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -799,15 +799,15 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 2),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 1),
                       decoration: BoxDecoration(
                         color: const Color(0xFF9900FF).withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         outlet.code,
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: const Color(0xFF9900FF),
                           fontWeight: FontWeight.w600,
@@ -853,7 +853,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                 Expanded(
                   child: Text(
                     outlet.address,
-                    style: theme.bodySmall?.override(
+                    style: theme.bodySmall.override(
                       fontFamily: theme.bodySmallFamily,
                       color: theme.secondaryText,
                       fontSize: 11,
@@ -917,7 +917,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     children: [
                       Text(
                         'Team Members & RBAC',
-                        style: theme.headlineMedium?.override(
+                        style: theme.headlineMedium.override(
                           fontFamily: theme.headlineMediumFamily,
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
@@ -929,7 +929,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       const SizedBox(height: 4),
                       Text(
                         'Assign roles and permissions to your pharmacy team',
-                        style: theme.bodyMedium?.override(
+                        style: theme.bodyMedium.override(
                           fontFamily: theme.bodyMediumFamily,
                           color: Colors.white.withValues(alpha: 0.85),
                           fontSize: 13,
@@ -948,7 +948,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   ),
                   child: Text(
                     '${_model.memberDrafts.length} members',
-                    style: theme.bodySmall?.override(
+                    style: theme.bodySmall.override(
                       fontFamily: theme.bodySmallFamily,
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -967,8 +967,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
             decoration: BoxDecoration(
               color: theme.secondaryBackground,
               borderRadius: BorderRadius.circular(18),
-              border:
-                  Border.all(color: theme.alternate.withValues(alpha: 0.4)),
+              border: Border.all(color: theme.alternate.withValues(alpha: 0.4)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.03),
@@ -995,7 +994,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     const SizedBox(width: 10),
                     Text(
                       'Available Roles & Permissions',
-                      style: theme.titleMedium?.override(
+                      style: theme.titleMedium.override(
                         fontFamily: theme.titleMediumFamily,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.2,
@@ -1013,8 +1012,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       width: 200,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: (rbac['bgColor'] as Color)
-                            .withValues(alpha: 0.3),
+                        color:
+                            (rbac['bgColor'] as Color).withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color:
@@ -1044,7 +1043,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                               Expanded(
                                 child: Text(
                                   rbac['role'] as String,
-                                  style: theme.bodyMedium?.override(
+                                  style: theme.bodyMedium.override(
                                     fontFamily: theme.bodyMediumFamily,
                                     fontWeight: FontWeight.w700,
                                     color: rbac['color'] as Color,
@@ -1058,7 +1057,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                           const SizedBox(height: 6),
                           Text(
                             rbac['description'] as String,
-                            style: theme.bodySmall?.override(
+                            style: theme.bodySmall.override(
                               fontFamily: theme.bodySmallFamily,
                               color: theme.secondaryText,
                               fontSize: 10,
@@ -1083,8 +1082,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
             decoration: BoxDecoration(
               color: theme.secondaryBackground,
               borderRadius: BorderRadius.circular(18),
-              border:
-                  Border.all(color: theme.alternate.withValues(alpha: 0.4)),
+              border: Border.all(color: theme.alternate.withValues(alpha: 0.4)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.03),
@@ -1111,7 +1109,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     const SizedBox(width: 10),
                     Text(
                       'Add Team Member',
-                      style: theme.titleMedium?.override(
+                      style: theme.titleMedium.override(
                         fontFamily: theme.titleMediumFamily,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.2,
@@ -1169,7 +1167,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         children: [
                           Text(
                             'Role *',
-                            style: theme.bodyMedium?.override(
+                            style: theme.bodyMedium.override(
                               fontFamily: theme.bodyMediumFamily,
                               fontWeight: FontWeight.w500,
                               color: theme.secondaryText,
@@ -1180,8 +1178,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                           const SizedBox(height: 6),
                           Container(
                             height: 48,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
                             decoration: BoxDecoration(
                               color: theme.primaryBackground,
                               borderRadius: BorderRadius.circular(12),
@@ -1197,12 +1194,11 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                     : null,
                                 hint: Text(
                                   'Select role',
-                                  style: theme.bodyMedium?.override(
+                                  style: theme.bodyMedium.override(
                                     fontFamily: theme.bodyMediumFamily,
                                     color: theme.secondaryText,
                                     fontSize: 13,
-                                    useGoogleFonts:
-                                        !theme.bodyMediumIsCustom,
+                                    useGoogleFonts: !theme.bodyMediumIsCustom,
                                   ),
                                 ),
                                 isExpanded: true,
@@ -1213,22 +1209,20 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                           value: rbac['role'] as String,
                                           child: Row(
                                             children: [
-                                              Icon(
-                                                  rbac['icon'] as IconData,
+                                              Icon(rbac['icon'] as IconData,
                                                   size: 16,
-                                                  color: rbac['color']
-                                                      as Color),
+                                                  color:
+                                                      rbac['color'] as Color),
                                               const SizedBox(width: 8),
                                               Text(
                                                 rbac['role'] as String,
-                                                style: theme.bodyMedium
-                                                    ?.override(
+                                                style:
+                                                    theme.bodyMedium.override(
                                                   fontFamily:
                                                       theme.bodyMediumFamily,
                                                   fontSize: 13,
                                                   useGoogleFonts:
-                                                      !theme
-                                                          .bodyMediumIsCustom,
+                                                      !theme.bodyMediumIsCustom,
                                                 ),
                                               ),
                                             ],
@@ -1282,7 +1276,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
           if (_model.memberDrafts.isNotEmpty) ...[
             Text(
               'Team Members',
-              style: theme.titleMedium?.override(
+              style: theme.titleMedium.override(
                 fontFamily: theme.titleMediumFamily,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.2,
@@ -1314,7 +1308,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   const SizedBox(height: 12),
                   Text(
                     'No team members added yet',
-                    style: theme.bodyMedium?.override(
+                    style: theme.bodyMedium.override(
                       fontFamily: theme.bodyMediumFamily,
                       fontWeight: FontWeight.w600,
                       color: theme.secondaryText,
@@ -1324,7 +1318,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                   const SizedBox(height: 4),
                   Text(
                     'You\'ll be assigned as Owner automatically. Add other team members here.',
-                    style: theme.bodySmall?.override(
+                    style: theme.bodySmall.override(
                       fontFamily: theme.bodySmallFamily,
                       color: theme.secondaryText,
                       useGoogleFonts: !theme.bodySmallIsCustom,
@@ -1344,7 +1338,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
       children: [
         Text(
           'Assign to Outlet (for Outlet Manager role)',
-          style: theme.bodyMedium?.override(
+          style: theme.bodyMedium.override(
             fontFamily: theme.bodyMediumFamily,
             fontWeight: FontWeight.w500,
             color: theme.secondaryText,
@@ -1365,7 +1359,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
             child: DropdownButton<String>(
               hint: Text(
                 'Select outlet (optional)',
-                style: theme.bodyMedium?.override(
+                style: theme.bodyMedium.override(
                   fontFamily: theme.bodyMediumFamily,
                   color: theme.secondaryText,
                   fontSize: 13,
@@ -1385,7 +1379,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                             const SizedBox(width: 8),
                             Text(
                               '${outlet.name} (${outlet.code})',
-                              style: theme.bodyMedium?.override(
+                              style: theme.bodyMedium.override(
                                 fontFamily: theme.bodyMediumFamily,
                                 fontSize: 13,
                                 useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1398,8 +1392,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
               onChanged: (val) {
                 // Store the selected outlet for the next member being added
                 if (val != null) {
-                  final outlet = _model.outletDrafts
-                      .firstWhere((o) => o.code == val);
+                  final outlet =
+                      _model.outletDrafts.firstWhere((o) => o.code == val);
                   safeSetState(() {
                     // Will be assigned when member is added
                   });
@@ -1448,7 +1442,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         .join()
                         .toUpperCase()
                     : '?',
-                style: theme.bodyMedium?.override(
+                style: theme.bodyMedium.override(
                   fontFamily: theme.bodyMediumFamily,
                   fontWeight: FontWeight.w700,
                   color: rbac['color'] as Color,
@@ -1464,7 +1458,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
               children: [
                 Text(
                   member.name.isNotEmpty ? member.name : 'Unnamed Member',
-                  style: theme.bodyMedium?.override(
+                  style: theme.bodyMedium.override(
                     fontFamily: theme.bodyMediumFamily,
                     fontWeight: FontWeight.w600,
                     useGoogleFonts: !theme.bodyMediumIsCustom,
@@ -1479,7 +1473,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       const SizedBox(width: 3),
                       Text(
                         member.email,
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: theme.secondaryText,
                           fontSize: 11,
@@ -1494,7 +1488,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                       const SizedBox(width: 3),
                       Text(
                         member.assignedOutletName!,
-                        style: theme.bodySmall?.override(
+                        style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: const Color(0xFF7C3AED),
                           fontSize: 11,
@@ -1525,7 +1519,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                 const SizedBox(width: 5),
                 Text(
                   member.role,
-                  style: theme.bodySmall?.override(
+                  style: theme.bodySmall.override(
                     fontFamily: theme.bodySmallFamily,
                     color: rbac['color'] as Color,
                     fontWeight: FontWeight.w600,
@@ -1581,7 +1575,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
         RichText(
           text: TextSpan(
             text: label,
-            style: theme.bodyMedium?.override(
+            style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               fontWeight: FontWeight.w500,
               color: theme.secondaryText,
@@ -1605,7 +1599,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
           controller: controller,
           focusNode: focusNode,
           keyboardType: keyboardType,
-          style: theme.bodyMedium?.override(
+          style: theme.bodyMedium.override(
             fontFamily: theme.bodyMediumFamily,
             fontSize: 14,
             letterSpacing: 0.0,
@@ -1613,7 +1607,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
           ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: theme.bodySmall?.override(
+            hintStyle: theme.bodySmall.override(
               fontFamily: theme.bodySmallFamily,
               color: theme.secondaryText.withValues(alpha: 0.6),
               fontSize: 13,
@@ -1946,16 +1940,15 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                     ),
                     title: Text(
                       'Create Pharmacy',
-                      style: FlutterFlowTheme.of(context)
-                          .headlineMedium
-                          .override(
-                            fontFamily: FlutterFlowTheme.of(context)
-                                .headlineMediumFamily,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            letterSpacing: 0.0,
-                            useGoogleFonts: !FlutterFlowTheme.of(context)
-                                .headlineMediumIsCustom,
-                          ),
+                      style:
+                          FlutterFlowTheme.of(context).headlineMedium.override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .headlineMediumFamily,
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !FlutterFlowTheme.of(context)
+                                    .headlineMediumIsCustom,
+                              ),
                     ),
                     actions: [],
                     centerTitle: true,
@@ -2002,7 +1995,6 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                             controller: _tabController,
                             children: [
                               _buildPharmacyDetailsTab(),
-                              _buildOutletsTab(),
                               _buildTeamRolesTab(),
                             ],
                           ),
@@ -2011,8 +2003,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color:
-                                FlutterFlowTheme.of(context).secondaryBackground,
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
                             border: Border(
                               top: BorderSide(
                                 color: FlutterFlowTheme.of(context)
@@ -2027,8 +2019,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                               if (_tabController.index > 0)
                                 OutlinedButton.icon(
                                   onPressed: () {
-                                    _tabController.animateTo(
-                                        _tabController.index - 1);
+                                    _tabController
+                                        .animateTo(_tabController.index - 1);
                                   },
                                   icon: const Icon(Icons.arrow_back_rounded,
                                       size: 16),
@@ -2052,8 +2044,8 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                               if (_tabController.index < 2)
                                 FilledButton.icon(
                                   onPressed: () {
-                                    _tabController.animateTo(
-                                        _tabController.index + 1);
+                                    _tabController
+                                        .animateTo(_tabController.index + 1);
                                   },
                                   icon: const Icon(Icons.arrow_forward_rounded,
                                       size: 16),
@@ -2077,17 +2069,17 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                           height: 16,
                                           margin:
                                               const EdgeInsets.only(right: 8),
-                                          child: const CircularProgressIndicator(
+                                          child:
+                                              const CircularProgressIndicator(
                                             color: Colors.white,
                                             strokeWidth: 2,
                                           ),
                                         )
                                       : const Icon(Icons.check_rounded,
                                           size: 18),
-                                  label: Text(
-                                      _model.isSaving
-                                          ? 'Creating...'
-                                          : 'Create Pharmacy'),
+                                  label: Text(_model.isSaving
+                                      ? 'Creating...'
+                                      : 'Create Pharmacy'),
                                   style: FilledButton.styleFrom(
                                     backgroundColor: const Color(0xFF9900FF),
                                     shape: RoundedRectangleBorder(

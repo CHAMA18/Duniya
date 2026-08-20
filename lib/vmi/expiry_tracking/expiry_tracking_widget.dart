@@ -1,23 +1,16 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '/flutter_flow/platform_download.dart';
-import 'dart:typed_data';
 import 'expiry_tracking_model.dart';
 export 'expiry_tracking_model.dart';
 
@@ -70,7 +63,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
+  // ── Pulse Purple design tokens ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
@@ -138,6 +131,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
   // MOCK DATA — realistic pharmacy batch data
   // ═══════════════════════════════════════════════════════════════════
   List<ExpiryBatch> get _mockBatches {
+    return <ExpiryBatch>[];
     final now = DateTime.now();
     return [
       ExpiryBatch(
@@ -382,31 +376,28 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text('Expiry Tracking Report',
-                style: pw.TextStyle(
-                    fontSize: 22, fontWeight: pw.FontWeight.bold)),
+                style:
+                    pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 4),
             pw.Text(
                 'Generated: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                style:
-                    pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
             pw.SizedBox(height: 12),
             pw.Row(
               children: [
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.red100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
                   child: pw.Text('Expired: ${counts['expired']}',
-                      style: pw.TextStyle(
-                          fontSize: 9, color: PdfColors.red900)),
+                      style:
+                          pw.TextStyle(fontSize: 9, color: PdfColors.red900)),
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.orange100,
                     borderRadius: pw.BorderRadius.circular(4),
@@ -417,8 +408,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.yellow100,
                     borderRadius: pw.BorderRadius.circular(4),
@@ -429,27 +419,25 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.blue100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
                   child: pw.Text('60-90d: ${counts['d60to90']}',
-                      style: pw.TextStyle(
-                          fontSize: 9, color: PdfColors.blue900)),
+                      style:
+                          pw.TextStyle(fontSize: 9, color: PdfColors.blue900)),
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.green100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
                   child: pw.Text('90+d: ${counts['safe']}',
-                      style: pw.TextStyle(
-                          fontSize: 9, color: PdfColors.green900)),
+                      style:
+                          pw.TextStyle(fontSize: 9, color: PdfColors.green900)),
                 ),
               ],
             ),
@@ -477,8 +465,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               5: pw.FixedColumnWidth(90),
               6: pw.FixedColumnWidth(70),
             },
-            border:
-                pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+            border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
           ),
         ],
       ),
@@ -563,8 +550,8 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                               // ── RBAC Guard: check expiryTrackingView ──
                               AuthUserStreamWidget(
                                 builder: (context) {
-                                  if (!AccessControl.hasPermission(context,
-                                      Permission.expiryTrackingView)) {
+                                  if (!AccessControl.hasPermission(
+                                      context, Permission.expiryTrackingView)) {
                                     return _buildNoAccessState();
                                   }
                                   return _buildDashboardContent(context);
@@ -669,8 +656,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
     final counts = _getBucketCounts(allBatches);
 
     // Apply search filter
-    final searchQuery =
-        _model.searchTextController?.text.toLowerCase() ?? '';
+    final searchQuery = _model.searchTextController?.text.toLowerCase() ?? '';
     List<ExpiryBatch> filteredBatches = allBatches.where((b) {
       if (searchQuery.isNotEmpty) {
         return b.productName.toLowerCase().contains(searchQuery) ||
@@ -774,18 +760,20 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
       builder: (context, constraints) {
         const double spacing = 16.0;
         const double minCardWidth = 200.0;
-        final cols =
-            (constraints.maxWidth / (minCardWidth + spacing)).clamp(1, 4).toInt();
-        final cardWidth =
-            (constraints.maxWidth - spacing * (cols - 1)) / cols;
+        final cols = (constraints.maxWidth / (minCardWidth + spacing))
+            .clamp(1, 4)
+            .toInt();
+        final cardWidth = (constraints.maxWidth - spacing * (cols - 1)) / cols;
 
         return Wrap(
           spacing: spacing,
           runSpacing: spacing,
-          children: cards.map((c) => SizedBox(
-                width: cardWidth,
-                child: _buildAnimatedStatCard(c),
-              )).toList(),
+          children: cards
+              .map((c) => SizedBox(
+                    width: cardWidth,
+                    child: _buildAnimatedStatCard(c),
+                  ))
+              .toList(),
         );
       },
     );
@@ -795,8 +783,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
     return AnimatedBuilder(
       animation: _countUpAnimation,
       builder: (context, child) {
-        final animatedCount =
-            (config.count * _countUpAnimation.value).round();
+        final animatedCount = (config.count * _countUpAnimation.value).round();
         return Container(
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
@@ -825,8 +812,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                       color: config.badge.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: Icon(config.icon,
-                        size: 20.0, color: config.badge),
+                    child: Icon(config.icon, size: 20.0, color: config.badge),
                   ),
                   const Spacer(),
                   // Animated count
@@ -1033,15 +1019,18 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             decoration: InputDecoration(
               hintText: 'Search product, batch, or facility...',
               hintStyle: TextStyle(
-                  fontFamily: kAppFontFamily, color: _textSecondary, fontSize: 14.0),
-              prefixIcon:
-                  Icon(Icons.search, color: _duniyaPurple, size: 20.0),
+                  fontFamily: kAppFontFamily,
+                  color: _textSecondary,
+                  fontSize: 14.0),
+              prefixIcon: Icon(Icons.search, color: _duniyaPurple, size: 20.0),
               border: InputBorder.none,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
             ),
             style: TextStyle(
-                fontFamily: kAppFontFamily, fontSize: 14.0, color: _textPrimary),
+                fontFamily: kAppFontFamily,
+                fontSize: 14.0,
+                color: _textPrimary),
             onChanged: (val) => safeSetState(() {}),
           );
 
@@ -1483,8 +1472,8 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             ),
             child: Text('Confirm',
                 style: TextStyle(
@@ -1499,7 +1488,8 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
 
   // ── Sortable header cell ──
   Widget _sortableHeaderCell(String text, double flex) {
-    final isActive = _model.sortColumn == text.toLowerCase().replaceAll(' ', '');
+    final isActive =
+        _model.sortColumn == text.toLowerCase().replaceAll(' ', '');
     return Expanded(
       flex: (flex * 10).round(),
       child: InkWell(
@@ -1580,8 +1570,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                     fontWeight: FontWeight.w500,
                     color: _textSecondary)),
             const SizedBox(height: 8.0),
-            Text(
-                'All inventory is within safe expiry windows.',
+            Text('All inventory is within safe expiry windows.',
                 style: TextStyle(
                     fontFamily: kAppFontFamily,
                     fontSize: 13.0,
@@ -1626,8 +1615,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 color: _duniyaPurpleLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_outline,
-                  color: _duniyaPurple, size: 36.0),
+              child: Icon(Icons.lock_outline, color: _duniyaPurple, size: 36.0),
             ),
             const SizedBox(height: 20.0),
             Text('Access Restricted',
@@ -1721,8 +1709,7 @@ class _SparklinePainter extends CustomPainter {
     final points = <Offset>[];
     for (var i = 0; i < data.length; i++) {
       final x = i * stepX;
-      final y =
-          size.height - padding - (data[i] / maxVal) * usableHeight;
+      final y = size.height - padding - (data[i] / maxVal) * usableHeight;
       points.add(Offset(x, y));
     }
 

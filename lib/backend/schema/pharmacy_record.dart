@@ -35,9 +35,9 @@ class PharmacyRecord extends FirestoreRecord {
   bool get deleted => _deleted ?? false;
   bool hasDeleted() => _deleted != null;
 
-  // "NetworkStatus" field — tracks Duniya network approval.
-  // Values: 'pending_approval' (self-registered, awaiting Duniya admin),
-  //         'active' (approved or invited), 'rejected' (denied by Duniya).
+  // "NetworkStatus" field — tracks Pulse network approval.
+  // Values: 'pending_approval' (self-registered, awaiting Pulse admin),
+  //         'active' (approved or invited), 'rejected' (denied by Pulse).
   String? _networkStatus;
   String get networkStatus => _networkStatus ?? 'active';
   bool hasNetworkStatus() => _networkStatus != null;

@@ -1,23 +1,17 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import '/flutter_flow/platform_download.dart';
-import 'dart:typed_data';
 import 'batches_model.dart';
 export 'batches_model.dart';
 
@@ -36,7 +30,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
+  // ── Pulse Purple design tokens ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);

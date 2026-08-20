@@ -1,7 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -10,7 +9,6 @@ import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'stock_count_detail_model.dart';
@@ -36,8 +34,7 @@ class StockCountDetailWidget extends StatefulWidget {
   static String routePath = '/stockCountDetail';
 
   @override
-  State<StockCountDetailWidget> createState() =>
-      _StockCountDetailWidgetState();
+  State<StockCountDetailWidget> createState() => _StockCountDetailWidgetState();
 }
 
 class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
@@ -188,8 +185,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
         productId: item['productId'] as DocumentReference?,
         systemQuantity: item['systemQuantity'] as int,
         countedQuantity: item['countedQuantity'] as int,
-        variance: (item['countedQuantity'] as int) -
-            (item['systemQuantity'] as int),
+        variance:
+            (item['countedQuantity'] as int) - (item['systemQuantity'] as int),
       ));
     }
 
@@ -207,8 +204,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
     final ownerRef = AccessControl.parentRef(context);
     if (ownerRef != null) {
       for (var item in _countItems) {
-        int variance = (item['countedQuantity'] as int) -
-            (item['systemQuantity'] as int);
+        int variance =
+            (item['countedQuantity'] as int) - (item['systemQuantity'] as int);
         if (variance != 0) {
           final movementDoc = StockMovementRecord.createDoc(ownerRef);
           await movementDoc.set(createStockMovementRecordData(
@@ -313,8 +310,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
   int get _countedCount =>
       _countItems.where((i) => (i['countedQuantity'] as int) > 0).length;
   int get _remainingCount => _totalCount - _countedCount;
-  int get _varianceCount =>
-      _countItems.where((i) {
+  int get _varianceCount => _countItems.where((i) {
         final v = (i['countedQuantity'] as int) - (i['systemQuantity'] as int);
         return v != 0;
       }).length;
@@ -699,9 +695,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                 height: 2.0,
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
-                  color: completed
-                      ? theme.primary
-                      : theme.alternate,
+                  color: completed ? theme.primary : theme.alternate,
                   borderRadius: BorderRadius.circular(1.0),
                 ),
               ),
@@ -760,7 +754,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
         Text(
           label,
           style: TextStyle(
-            color: completed || active ? theme.primaryText : theme.secondaryText,
+            color:
+                completed || active ? theme.primaryText : theme.secondaryText,
             fontSize: 11,
             fontWeight: active ? FontWeight.w700 : FontWeight.w500,
           ),
@@ -831,7 +826,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     ),
                     const SizedBox(height: 2.0),
                     Text(
-                      'Choose the pharmacy and outlet where this count is being performed.',
+                      'Choose the pharmacy where this count is being performed.',
                       style: theme.bodySmall.override(
                         fontFamily: theme.bodySmallFamily,
                         color: theme.secondaryText,
@@ -856,10 +851,10 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                   icon: Icons.local_pharmacy_outlined,
                   theme: theme,
                   child: AuthUserStreamWidget(
-                    builder: (context) =>
-                        FutureBuilder<List<PharmacyRecord>>(
+                    builder: (context) => FutureBuilder<List<PharmacyRecord>>(
                       future: queryPharmacyRecordOnce(
-                        parent: AccessControl.parentRef(context) ?? currentUserReference,
+                        parent: AccessControl.parentRef(context) ??
+                            currentUserReference,
                       ),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
@@ -869,8 +864,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                           controller: _model.pharmacyValueController ??=
                               FormFieldController<String>(null),
                           options: snapshot.data!.map((p) => p.name).toList(),
-                          onChanged: (val) => safeSetState(
-                              () => _model.pharmacyValue = val),
+                          onChanged: (val) =>
+                              safeSetState(() => _model.pharmacyValue = val),
                           width: double.infinity,
                           height: 48.0,
                           textStyle: theme.bodyMedium.override(
@@ -888,36 +883,6 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                         );
                       },
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              // Outlet
-              Expanded(
-                child: _labeledField(
-                  label: 'Outlet',
-                  icon: Icons.store_outlined,
-                  theme: theme,
-                  child: FlutterFlowDropDown<String>(
-                    controller: _model.outletValueController ??=
-                        FormFieldController<String>(null),
-                    options: ['Main Store', 'Dispensary', 'Warehouse'],
-                    onChanged: (val) =>
-                        safeSetState(() => _model.outletValue = val),
-                    width: double.infinity,
-                    height: 48.0,
-                    textStyle: theme.bodyMedium.override(
-                      fontFamily: theme.bodyMediumFamily,
-                      letterSpacing: 0.0,
-                      useGoogleFonts: !theme.bodyMediumIsCustom,
-                    ),
-                    hintText: 'Select Outlet',
-                    fillColor: theme.primaryBackground,
-                    borderColor: theme.alternate,
-                    borderRadius: 10.0,
-                    elevation: 2,
-                    borderWidth: 1.0,
-                    margin: EdgeInsets.zero,
                   ),
                 ),
               ),
@@ -993,8 +958,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
 
   Widget _buildPreLoadEmptyState() {
     final theme = FlutterFlowTheme.of(context);
-    final locationSelected =
-        _model.pharmacyValue != null && _model.outletValue != null;
+    final locationSelected = _model.pharmacyValue != null;
 
     return Container(
       width: double.infinity,
@@ -1072,8 +1036,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             constraints: const BoxConstraints(maxWidth: 480.0),
             child: Text(
               locationSelected
-                  ? 'Pharmacy and outlet selected. Click "Load Products" to pull the current stock list and begin counting. Each product will show its system quantity — you\'ll enter the physical count and variances are calculated automatically.'
-                  : 'Select a pharmacy and outlet above, then load products to begin your stock count. The system will pull every active product with its current system quantity so you can record physical counts.',
+                  ? 'Pharmacy selected. Click "Load Products" to pull the current stock list and begin counting. Each product will show its system quantity — you\'ll enter the physical count and variances are calculated automatically.'
+                  : 'Select a pharmacy above, then load products to begin your stock count. The system will pull every active product with its current system quantity so you can record physical counts.',
               textAlign: TextAlign.center,
               style: theme.bodyMedium.override(
                 fontFamily: theme.bodyMediumFamily,
@@ -1109,7 +1073,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
           if (!locationSelected) ...[
             const SizedBox(height: 12.0),
             Text(
-              '⚠️ Please select a pharmacy and outlet first',
+              '⚠️ Please select a pharmacy first',
               style: theme.bodySmall.override(
                 fontFamily: theme.bodySmallFamily,
                 color: const Color(0xFFF59E0B),
@@ -1291,8 +1255,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                 icon: Icons.check_circle_rounded,
                 accentColor: const Color(0xFF10B981),
                 accentBg: const Color(0xFFD1FAE5),
-                delta:
-                    '${(_progressPct * 100).round()}% complete',
+                delta: '${(_progressPct * 100).round()}% complete',
                 deltaPositive: true,
               ),
             ),
@@ -1320,9 +1283,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                 accentBg: _varianceCount > 0
                     ? const Color(0xFFFEE2E2)
                     : const Color(0xFFD1FAE5),
-                delta: _varianceCount > 0
-                    ? 'Needs review'
-                    : 'No discrepancies',
+                delta: _varianceCount > 0 ? 'Needs review' : 'No discrepancies',
                 deltaPositive: _varianceCount == 0,
               ),
             ),
@@ -1485,8 +1446,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                       value: _progressPct,
                       minHeight: 6.0,
                       backgroundColor: theme.alternate,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(theme.primary),
+                      valueColor: AlwaysStoppedAnimation<Color>(theme.primary),
                     ),
                   ),
                 ),
@@ -1635,17 +1595,14 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     future: item['productId'] != null
                         ? (item['productId'] as DocumentReference)
                             .get()
-                            .then((s) =>
-                                ProductMasterRecord.fromSnapshot(s))
+                            .then((s) => ProductMasterRecord.fromSnapshot(s))
                         : null,
                     builder: (context, snapshot) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            snapshot.hasData
-                                ? snapshot.data!.name
-                                : 'Loading…',
+                            snapshot.hasData ? snapshot.data!.name : 'Loading…',
                             style: theme.bodyMedium.override(
                               fontFamily: theme.bodyMediumFamily,
                               fontWeight: FontWeight.w600,
@@ -1654,8 +1611,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (snapshot.hasData &&
-                              snapshot.data!.sku.isNotEmpty)
+                          if (snapshot.hasData && snapshot.data!.sku.isNotEmpty)
                             Text(
                               'SKU: ${snapshot.data!.sku}',
                               style: theme.bodySmall.override(
@@ -1716,18 +1672,14 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
-                        color: isCounted
-                            ? theme.primary
-                            : theme.alternate,
+                        color: isCounted ? theme.primary : theme.alternate,
                         width: isCounted ? 1.5 : 1.0,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
-                        color: isCounted
-                            ? theme.primary
-                            : theme.alternate,
+                        color: isCounted ? theme.primary : theme.alternate,
                         width: isCounted ? 1.5 : 1.0,
                       ),
                     ),
@@ -1744,8 +1696,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     if (parsed != null) {
                       safeSetState(() {
                         _countItems[idx]['countedQuantity'] = parsed;
-                        _countItems[idx]['variance'] =
-                            parsed - systemQty;
+                        _countItems[idx]['variance'] = parsed - systemQty;
                       });
                     } else if (value.isEmpty) {
                       safeSetState(() {
@@ -1763,8 +1714,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             flex: 2,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0, vertical: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: varianceBg,
                   borderRadius: BorderRadius.circular(8.0),
@@ -1827,8 +1778,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                   color: theme.primary.withAlpha(20),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.note_outlined,
-                    color: theme.primary, size: 18.0),
+                child:
+                    Icon(Icons.note_outlined, color: theme.primary, size: 18.0),
               ),
               const SizedBox(width: 12.0),
               Expanded(
@@ -1865,7 +1816,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             focusNode: _model.notesFocusNode,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'e.g. "Found 3 damaged boxes of Paracetamol in dispensary storage. Count conducted by Sarah at 2pm."',
+              hintText:
+                  'e.g. "Found 3 damaged boxes of Paracetamol in dispensary storage. Count conducted by Sarah at 2pm."',
               hintStyle: theme.bodySmall.override(
                 fontFamily: theme.bodySmallFamily,
                 color: theme.secondaryText,
@@ -2000,8 +1952,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                   fontWeight: FontWeight.w700,
                 ),
                 elevation: 0.0,
-                borderSide: const BorderSide(
-                    color: Color(0xFFEF4444), width: 1.5),
+                borderSide:
+                    const BorderSide(color: Color(0xFFEF4444), width: 1.5),
                 borderRadius: BorderRadius.circular(12.0),
               ),
             ),
@@ -2128,8 +2080,7 @@ class _KpiCard extends StatelessWidget {
           ),
           const SizedBox(height: 6.0),
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
             decoration: BoxDecoration(
               color: deltaIsNeutral
                   ? theme.primaryBackground

@@ -25,7 +25,7 @@ final MIME_TYPES = {
 
 Future<void> main() async {
   final server = await HttpServer.bind(InternetAddress.anyIPv4, PORT);
-  print('Duniya Flutter web app serving on http://0.0.0.0:$PORT');
+  print('Pulse Flutter web app serving on http://0.0.0.0:$PORT');
 
   await for (final request in server) {
     try {

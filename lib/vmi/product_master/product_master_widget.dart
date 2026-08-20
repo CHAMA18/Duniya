@@ -1,23 +1,17 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:excel/excel.dart' hide Border;
 import 'package:csv/csv.dart';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'product_master_model.dart';
 export 'product_master_model.dart';
 
@@ -36,7 +30,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
+  // ── Pulse Purple design tokens ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
   static const Color _duniyaPurpleDeep = Color(0xFF6D28D9);

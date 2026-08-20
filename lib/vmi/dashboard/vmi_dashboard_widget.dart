@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -175,14 +176,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                         // Total Pharmacies Card
                                         FutureBuilder<int>(
                                           future: queryPharmacyRecordCount(
-                                            parent: valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.role,
-                                                        '') ==
-                                                    'Owner'
-                                                ? currentUserReference
-                                                : currentUserDocument
-                                                    ?.ownerRef,
+                                            parent: AccessControl.parentRef(context),
                                           ),
                                           builder: (context, snapshot) {
                                             if (!snapshot.hasData) {
@@ -249,14 +243,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                 List<GoodsReceivedRecord>>(
                                             stream:
                                                 queryGoodsReceivedRecord(
-                                              parent: valueOrDefault(
-                                                          currentUserDocument
-                                                              ?.role,
-                                                          '') ==
-                                                      'Owner'
-                                                  ? currentUserReference
-                                                  : currentUserDocument
-                                                      ?.ownerRef,
+                                              parent: AccessControl.parentRef(context),
                                               queryBuilder:
                                                   (goodsReceivedRecord) =>
                                                       goodsReceivedRecord.where(
@@ -338,14 +325,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                                   PharmacyRecord>>(
                                                           stream:
                                                               queryPharmacyRecord(
-                                                            parent: valueOrDefault(
-                                                                        currentUserDocument
-                                                                            ?.role,
-                                                                        '') ==
-                                                                    'Owner'
-                                                                ? currentUserReference
-                                                                : currentUserDocument
-                                                                    ?.ownerRef,
+                                                            parent: AccessControl.parentRef(context),
                                                           ),
                                                           builder:
                                                               (context,
@@ -743,14 +723,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                             StockMovementRecord>>(
                                                     stream:
                                                         queryStockMovementRecord(
-                                                      parent: valueOrDefault(
-                                                                  currentUserDocument
-                                                                      ?.role,
-                                                                  '') ==
-                                                              'Owner'
-                                                          ? currentUserReference
-                                                          : currentUserDocument
-                                                              ?.ownerRef,
+                                                      parent: AccessControl.parentRef(context),
                                                       queryBuilder:
                                                           (stockMovementRecord) =>
                                                               stockMovementRecord
@@ -795,12 +768,12 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                             .horizontal,
                                                         child: DataTable(
                                                           headingRowColor:
-                                                              MaterialStateProperty
+                                                              WidgetStateProperty
                                                                   .all(FlutterFlowTheme.of(
                                                                           context)
                                                                       .primaryBackground),
                                                           dataRowColor:
-                                                              MaterialStateProperty
+                                                              WidgetStateProperty
                                                                   .all(FlutterFlowTheme.of(
                                                                           context)
                                                                       .secondaryBackground),

@@ -912,7 +912,7 @@ class _SettingsWidgetState extends State<SettingsWidget>
                                                                 title:
                                                                     'Preferences',
                                                                 subtitle:
-                                                                    'Customize your Duniya experience.',
+                                                                    'Customize your Pulse experience.',
                                                                 context:
                                                                     context,
                                                               ),

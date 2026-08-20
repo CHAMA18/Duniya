@@ -73,7 +73,7 @@ final List<OnboardingChapter> kOnboardingChapters = [
     icon: Icons.dashboard_rounded,
     steps: [
       OnboardingStep(
-        headline: 'Welcome to Duniya',
+        headline: 'Welcome to Pulse',
         body:
             'Your dashboard is the first thing you see after logging in. '
             'It gives you an at-a-glance view of stock value, today\'s sales, '
@@ -341,7 +341,7 @@ final List<OnboardingChapter> kOnboardingChapters = [
       OnboardingStep(
         headline: 'What to do next',
         body:
-            'You\'re ready to start using Duniya. We recommend this order for '
+            'You\'re ready to start using Pulse. We recommend this order for '
             'your first day: (1) add a few products to your catalogue, '
             '(2) record a goods receipt for your current shelf stock, '
             '(3) record a test sale to see how stock updates. If you get '

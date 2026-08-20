@@ -29,31 +29,31 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Duniya">
-  <meta name="application-name" content="Duniya">
+  <meta name="apple-mobile-web-app-title" content="Pulse">
+  <meta name="application-name" content="Pulse">
   <meta name="theme-color" content="#9900FF">
-  <meta name="description" content="Duniya — pharmacy and inventory management for modern health teams.">
+  <meta name="description" content="Pulse — pharmacy and inventory management for modern health teams.">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="duniya, pharmacy, inventory, stock, health, management">
-  <meta name="author" content="Duniya">
-  <meta property="og:title" content="Duniya">
-  <meta property="og:description" content="Duniya — pharmacy and inventory management for modern health teams.">
+  <meta name="keywords" content="pulse, pharmacy, inventory, stock, health, management">
+  <meta name="author" content="Pulse">
+  <meta property="og:title" content="Pulse">
+  <meta property="og:description" content="Pulse — pharmacy and inventory management for modern health teams.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="Artboard_1.png">
 
-  <!-- Favicon — Duniya logo (multi-format, multi-size for max compatibility) -->
+  <!-- Favicon — Pulse logo (multi-format, multi-size for max compatibility) -->
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="180x180" href="favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <meta name="twitter:title" content="Duniya">
-  <meta name="twitter:description" content="Duniya — pharmacy and inventory management for modern health teams.">
+  <meta name="twitter:title" content="Pulse">
+  <meta name="twitter:description" content="Pulse — pharmacy and inventory management for modern health teams.">
   <meta name="twitter:image" content="Artboard_1.png">
   <meta name="twitter:card" content="summary_large_image" />
 
-  <title>Duniya</title>
+  <title>Pulse</title>
 
   <link rel="manifest" href="manifest.json?v=%%BUILD_VERSION%%">
 
@@ -73,6 +73,18 @@
 
 </head>
 <body>
+
+  <!-- Keep the marketing experience first when this shell is served directly.
+       The production build moves this Flutter shell to /app.html, so this
+       guard only affects direct root loads in development or generic hosts. -->
+  <script>
+    (function () {
+      var path = window.location.pathname.replace(/\/+$/, '') || '/';
+      if (path === '/' || path === '/index.html') {
+        window.location.replace('/landing.html' + window.location.search + window.location.hash);
+      }
+    })();
+  </script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-HDfLffnuYVQUL4aR6DDPNqFWr5navE&loading=async" async></script>
 

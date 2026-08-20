@@ -798,7 +798,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               border: Border.all(color: theme.alternate, width: 1.0),
             ),
             child: DropdownButtonFormField<String>(
-              value: _sortColumn,
+              initialValue: _sortColumn,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.sort_rounded,
                     color: theme.secondaryText, size: 18.0),

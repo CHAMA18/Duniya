@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # =====================================================================
-# Duniya — Build macOS Desktop App
+# Pulse — Build macOS Desktop App
 # =====================================================================
-# Builds a macOS .app bundle and .dmg for Duniya.
+# Builds a macOS .app bundle and .dmg for Pulse.
 #
 # Prerequisites:
 #   - Flutter SDK 3.24+ with macOS desktop support enabled
@@ -14,11 +14,11 @@
 #
 # Output:
 #   ./build/macos/Build/Products/Release/ — the compiled .app
-#   ./release/Duniya.dmg — the disk image
+#   ./release/Pulse.dmg — the disk image
 # =====================================================================
 set -euo pipefail
 
-APP_NAME="Duniya"
+APP_NAME="Pulse"
 APP_VERSION="$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1)"
 BUILD_DIR="build/macos/Build/Products/Release"
 RELEASE_DIR="release"

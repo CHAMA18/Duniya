@@ -5,7 +5,7 @@ import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import 'onboarding_requests_widget.dart' show OnboardingRequestsWidget;
 import 'package:flutter/material.dart';
 
-/// Model for the Duniya Onboarding Requests page.
+/// Model for the Pulse Onboarding Requests page.
 ///
 /// Holds the [SideNavModel], [TopNavModel], and [MobileNavbarModel] used by the
 /// page chrome. The page itself fetches pending pharmacies reactively, so the

@@ -1,15 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'patient_records_model.dart';
 export 'patient_records_model.dart';
@@ -79,7 +74,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
+  // ── Pulse Purple design tokens ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
@@ -106,7 +101,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         parameters: {'screen_name': 'PatientRecords'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
-    _patients = _buildMockPatients();
+    _patients = <PatientRecord>[];
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -133,9 +128,27 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '12 Aug',
         adherencePercent: 87,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 12), medication: 'Metformin 500mg', dose: '1 tab BD', quantity: 60, prescriber: 'Dr. Ncube', notes: 'Regular refill'),
-          DispensingEvent(date: DateTime(2024, 7, 15), medication: 'Amlodipine 5mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Ncube', notes: null),
-          DispensingEvent(date: DateTime(2024, 6, 20), medication: 'Lisinopril 10mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Moyo', notes: 'BP review'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 12),
+              medication: 'Metformin 500mg',
+              dose: '1 tab BD',
+              quantity: 60,
+              prescriber: 'Dr. Ncube',
+              notes: 'Regular refill'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 15),
+              medication: 'Amlodipine 5mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Ncube',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 6, 20),
+              medication: 'Lisinopril 10mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Moyo',
+              notes: 'BP review'),
         ],
       ),
       PatientRecord(
@@ -149,7 +162,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '28 Jul',
         adherencePercent: 95,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 7, 28), medication: 'Ciprofloxacin 500mg', dose: '1 tab BD', quantity: 14, prescriber: 'Dr. Gumbo', notes: 'UTI treatment'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 28),
+              medication: 'Ciprofloxacin 500mg',
+              dose: '1 tab BD',
+              quantity: 14,
+              prescriber: 'Dr. Gumbo',
+              notes: 'UTI treatment'),
         ],
       ),
       PatientRecord(
@@ -163,8 +182,20 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '3 Aug',
         adherencePercent: 72,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 3), medication: 'Azithromycin 250mg', dose: '1 tab OD', quantity: 6, prescriber: 'Dr. Zhuwao', notes: 'Respiratory infection'),
-          DispensingEvent(date: DateTime(2024, 7, 1), medication: 'Paracetamol 500mg', dose: '2 tabs QID', quantity: 40, prescriber: 'Dr. Zhuwao', notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 8, 3),
+              medication: 'Azithromycin 250mg',
+              dose: '1 tab OD',
+              quantity: 6,
+              prescriber: 'Dr. Zhuwao',
+              notes: 'Respiratory infection'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 1),
+              medication: 'Paracetamol 500mg',
+              dose: '2 tabs QID',
+              quantity: 40,
+              prescriber: 'Dr. Zhuwao',
+              notes: null),
         ],
       ),
       PatientRecord(
@@ -178,11 +209,41 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '15 Aug',
         adherencePercent: 63,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 15), medication: 'Insulin Glargine', dose: '20 units OD', quantity: 3, prescriber: 'Dr. Sibanda', notes: 'DM Type 2'),
-          DispensingEvent(date: DateTime(2024, 8, 15), medication: 'Metformin 850mg', dose: '1 tab BD', quantity: 60, prescriber: 'Dr. Sibanda', notes: null),
-          DispensingEvent(date: DateTime(2024, 7, 20), medication: 'Atorvastatin 20mg', dose: '1 tab ON', quantity: 30, prescriber: 'Dr. Sibanda', notes: 'Cholesterol'),
-          DispensingEvent(date: DateTime(2024, 7, 20), medication: 'Enalapril 10mg', dose: '1 tab BD', quantity: 60, prescriber: 'Dr. Sibanda', notes: null),
-          DispensingEvent(date: DateTime(2024, 6, 15), medication: 'Aspirin 75mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Sibanda', notes: 'CV prophylaxis'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 15),
+              medication: 'Insulin Glargine',
+              dose: '20 units OD',
+              quantity: 3,
+              prescriber: 'Dr. Sibanda',
+              notes: 'DM Type 2'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 15),
+              medication: 'Metformin 850mg',
+              dose: '1 tab BD',
+              quantity: 60,
+              prescriber: 'Dr. Sibanda',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 7, 20),
+              medication: 'Atorvastatin 20mg',
+              dose: '1 tab ON',
+              quantity: 30,
+              prescriber: 'Dr. Sibanda',
+              notes: 'Cholesterol'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 20),
+              medication: 'Enalapril 10mg',
+              dose: '1 tab BD',
+              quantity: 60,
+              prescriber: 'Dr. Sibanda',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 6, 15),
+              medication: 'Aspirin 75mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Sibanda',
+              notes: 'CV prophylaxis'),
         ],
       ),
       PatientRecord(
@@ -196,8 +257,20 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '9 Aug',
         adherencePercent: 91,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 9), medication: 'Omeprazole 20mg', dose: '1 cap OD', quantity: 30, prescriber: 'Dr. Chikwaka', notes: 'Gastritis'),
-          DispensingEvent(date: DateTime(2024, 7, 12), medication: 'Domperidone 10mg', dose: '1 tab TID', quantity: 90, prescriber: 'Dr. Chikwaka', notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 8, 9),
+              medication: 'Omeprazole 20mg',
+              dose: '1 cap OD',
+              quantity: 30,
+              prescriber: 'Dr. Chikwaka',
+              notes: 'Gastritis'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 12),
+              medication: 'Domperidone 10mg',
+              dose: '1 tab TID',
+              quantity: 90,
+              prescriber: 'Dr. Chikwaka',
+              notes: null),
         ],
       ),
       PatientRecord(
@@ -211,10 +284,34 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '1 Aug',
         adherencePercent: 78,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 1), medication: 'Carbamazepine 200mg', dose: '1 tab BD', quantity: 60, prescriber: 'Dr. Maposa', notes: 'Epilepsy'),
-          DispensingEvent(date: DateTime(2024, 7, 5), medication: 'Phenytoin 100mg', dose: '1 cap TID', quantity: 90, prescriber: 'Dr. Maposa', notes: null),
-          DispensingEvent(date: DateTime(2024, 6, 10), medication: 'Folic Acid 5mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Maposa', notes: null),
-          DispensingEvent(date: DateTime(2024, 5, 15), medication: 'Phenobarbitone 30mg', dose: '1 tab ON', quantity: 30, prescriber: 'Dr. Maposa', notes: 'Adjunct'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 1),
+              medication: 'Carbamazepine 200mg',
+              dose: '1 tab BD',
+              quantity: 60,
+              prescriber: 'Dr. Maposa',
+              notes: 'Epilepsy'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 5),
+              medication: 'Phenytoin 100mg',
+              dose: '1 cap TID',
+              quantity: 90,
+              prescriber: 'Dr. Maposa',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 6, 10),
+              medication: 'Folic Acid 5mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Maposa',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 5, 15),
+              medication: 'Phenobarbitone 30mg',
+              dose: '1 tab ON',
+              quantity: 30,
+              prescriber: 'Dr. Maposa',
+              notes: 'Adjunct'),
         ],
       ),
       PatientRecord(
@@ -228,7 +325,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '20 Jul',
         adherencePercent: 100,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 7, 20), medication: 'Fluconazole 150mg', dose: '1 cap stat', quantity: 1, prescriber: 'Dr. Nhema', notes: 'Single dose'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 20),
+              medication: 'Fluconazole 150mg',
+              dose: '1 cap stat',
+              quantity: 1,
+              prescriber: 'Dr. Nhema',
+              notes: 'Single dose'),
         ],
       ),
       PatientRecord(
@@ -242,9 +345,27 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '14 Aug',
         adherencePercent: 82,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 14), medication: 'Losartan 50mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Hove', notes: 'HTN'),
-          DispensingEvent(date: DateTime(2024, 7, 18), medication: 'Hydrochlorothiazide 25mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Hove', notes: null),
-          DispensingEvent(date: DateTime(2024, 6, 22), medication: 'Simvastatin 20mg', dose: '1 tab ON', quantity: 30, prescriber: 'Dr. Hove', notes: 'Lipids'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 14),
+              medication: 'Losartan 50mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Hove',
+              notes: 'HTN'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 18),
+              medication: 'Hydrochlorothiazide 25mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Hove',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 6, 22),
+              medication: 'Simvastatin 20mg',
+              dose: '1 tab ON',
+              quantity: 30,
+              prescriber: 'Dr. Hove',
+              notes: 'Lipids'),
         ],
       ),
       PatientRecord(
@@ -258,12 +379,48 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '10 Aug',
         adherencePercent: 55,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 10), medication: 'Metformin 500mg', dose: '1 tab TID', quantity: 90, prescriber: 'Dr. Ncube', notes: 'DM Type 2'),
-          DispensingEvent(date: DateTime(2024, 8, 10), medication: 'Gliclazide 80mg', dose: '1 tab BD', quantity: 60, prescriber: 'Dr. Ncube', notes: null),
-          DispensingEvent(date: DateTime(2024, 7, 12), medication: 'Ramipril 5mg', dose: '1 cap OD', quantity: 30, prescriber: 'Dr. Ncube', notes: 'Renal protection'),
-          DispensingEvent(date: DateTime(2024, 7, 12), medication: 'Aspirin 75mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Ncube', notes: null),
-          DispensingEvent(date: DateTime(2024, 6, 14), medication: 'Atorvastatin 40mg', dose: '1 tab ON', quantity: 30, prescriber: 'Dr. Ncube', notes: null),
-          DispensingEvent(date: DateTime(2024, 5, 20), medication: 'Pantoprazole 40mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Ncube', notes: 'GI protection'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 10),
+              medication: 'Metformin 500mg',
+              dose: '1 tab TID',
+              quantity: 90,
+              prescriber: 'Dr. Ncube',
+              notes: 'DM Type 2'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 10),
+              medication: 'Gliclazide 80mg',
+              dose: '1 tab BD',
+              quantity: 60,
+              prescriber: 'Dr. Ncube',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 7, 12),
+              medication: 'Ramipril 5mg',
+              dose: '1 cap OD',
+              quantity: 30,
+              prescriber: 'Dr. Ncube',
+              notes: 'Renal protection'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 12),
+              medication: 'Aspirin 75mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Ncube',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 6, 14),
+              medication: 'Atorvastatin 40mg',
+              dose: '1 tab ON',
+              quantity: 30,
+              prescriber: 'Dr. Ncube',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 5, 20),
+              medication: 'Pantoprazole 40mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Ncube',
+              notes: 'GI protection'),
         ],
       ),
       PatientRecord(
@@ -277,8 +434,20 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '7 Aug',
         adherencePercent: 96,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 7), medication: 'Salbutamol Inhaler', dose: '2 puffs PRN', quantity: 2, prescriber: 'Dr. Munyoro', notes: 'Asthma'),
-          DispensingEvent(date: DateTime(2024, 7, 10), medication: 'Budesonide Inhaler', dose: '2 puffs BD', quantity: 2, prescriber: 'Dr. Munyoro', notes: 'Preventer'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 7),
+              medication: 'Salbutamol Inhaler',
+              dose: '2 puffs PRN',
+              quantity: 2,
+              prescriber: 'Dr. Munyoro',
+              notes: 'Asthma'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 10),
+              medication: 'Budesonide Inhaler',
+              dose: '2 puffs BD',
+              quantity: 2,
+              prescriber: 'Dr. Munyoro',
+              notes: 'Preventer'),
         ],
       ),
       PatientRecord(
@@ -292,8 +461,20 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '30 Jul',
         adherencePercent: 68,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 7, 30), medication: 'Isoniazid 300mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Nzira', notes: 'TB prophylaxis'),
-          DispensingEvent(date: DateTime(2024, 6, 30), medication: 'Pyridoxine 25mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Nzira', notes: 'INH adjunct'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 30),
+              medication: 'Isoniazid 300mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Nzira',
+              notes: 'TB prophylaxis'),
+          DispensingEvent(
+              date: DateTime(2024, 6, 30),
+              medication: 'Pyridoxine 25mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Nzira',
+              notes: 'INH adjunct'),
         ],
       ),
       PatientRecord(
@@ -307,7 +488,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '5 Aug',
         adherencePercent: 100,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 5), medication: 'Doxycycline 100mg', dose: '1 cap BD', quantity: 14, prescriber: 'Dr. Biriwasha', notes: 'Acne'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 5),
+              medication: 'Doxycycline 100mg',
+              dose: '1 cap BD',
+              quantity: 14,
+              prescriber: 'Dr. Biriwasha',
+              notes: 'Acne'),
         ],
       ),
       PatientRecord(
@@ -321,10 +508,34 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '11 Aug',
         adherencePercent: 74,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 11), medication: 'Amlodipine 10mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Tshuma', notes: 'HTN'),
-          DispensingEvent(date: DateTime(2024, 8, 11), medication: 'Bisoprolol 5mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Tshuma', notes: null),
-          DispensingEvent(date: DateTime(2024, 7, 14), medication: 'Furosemide 40mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Tshuma', notes: 'Fluid overload'),
-          DispensingEvent(date: DateTime(2024, 6, 18), medication: 'Spironolactone 25mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Tshuma', notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 8, 11),
+              medication: 'Amlodipine 10mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Tshuma',
+              notes: 'HTN'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 11),
+              medication: 'Bisoprolol 5mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Tshuma',
+              notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 7, 14),
+              medication: 'Furosemide 40mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Tshuma',
+              notes: 'Fluid overload'),
+          DispensingEvent(
+              date: DateTime(2024, 6, 18),
+              medication: 'Spironolactone 25mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Tshuma',
+              notes: null),
         ],
       ),
       PatientRecord(
@@ -338,7 +549,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '22 Jul',
         adherencePercent: 88,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 7, 22), medication: 'Artemether/Lumefantrine', dose: '4 tabs stat, then 4 tabs 8h', quantity: 24, prescriber: 'Dr. Makhula', notes: 'Malaria treatment'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 22),
+              medication: 'Artemether/Lumefantrine',
+              dose: '4 tabs stat, then 4 tabs 8h',
+              quantity: 24,
+              prescriber: 'Dr. Makhula',
+              notes: 'Malaria treatment'),
         ],
       ),
       PatientRecord(
@@ -352,9 +569,27 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '8 Aug',
         adherencePercent: 81,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 8), medication: 'Warfarin 5mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Chifamba', notes: 'INR 2.5'),
-          DispensingEvent(date: DateTime(2024, 7, 11), medication: 'Digoxin 0.25mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Chifamba', notes: 'Atrial fib'),
-          DispensingEvent(date: DateTime(2024, 6, 15), medication: 'Amiodarone 200mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Chifamba', notes: null),
+          DispensingEvent(
+              date: DateTime(2024, 8, 8),
+              medication: 'Warfarin 5mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Chifamba',
+              notes: 'INR 2.5'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 11),
+              medication: 'Digoxin 0.25mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Chifamba',
+              notes: 'Atrial fib'),
+          DispensingEvent(
+              date: DateTime(2024, 6, 15),
+              medication: 'Amiodarone 200mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Chifamba',
+              notes: null),
         ],
       ),
       PatientRecord(
@@ -368,8 +603,20 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         lastVisit: '2 Aug',
         adherencePercent: 93,
         dispensingHistory: [
-          DispensingEvent(date: DateTime(2024, 8, 2), medication: 'Citalopram 20mg', dose: '1 tab OD', quantity: 30, prescriber: 'Dr. Mudzviti', notes: 'Depression'),
-          DispensingEvent(date: DateTime(2024, 7, 5), medication: 'Zolpidem 5mg', dose: '1 tab ON', quantity: 14, prescriber: 'Dr. Mudzviti', notes: 'Insomnia PRN'),
+          DispensingEvent(
+              date: DateTime(2024, 8, 2),
+              medication: 'Citalopram 20mg',
+              dose: '1 tab OD',
+              quantity: 30,
+              prescriber: 'Dr. Mudzviti',
+              notes: 'Depression'),
+          DispensingEvent(
+              date: DateTime(2024, 7, 5),
+              medication: 'Zolpidem 5mg',
+              dose: '1 tab ON',
+              quantity: 14,
+              prescriber: 'Dr. Mudzviti',
+              notes: 'Insomnia PRN'),
         ],
       ),
     ];
@@ -404,11 +651,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
   }
 
   int get _totalPatients => _patients.length;
-  int get _activeMedications => _patients.fold(0, (sum, p) => sum + p.activeMeds);
+  int get _activeMedications =>
+      _patients.fold(0, (sum, p) => sum + p.activeMeds);
   int get _refillsDueThisWeek => 8; // mock
   double get _avgAdherence {
     if (_patients.isEmpty) return 0;
-    return _patients.map((p) => p.adherencePercent).reduce((a, b) => a + b) / _patients.length;
+    return _patients.map((p) => p.adherencePercent).reduce((a, b) => a + b) /
+        _patients.length;
   }
 
   List<PatientRecord> get _filteredPatients {
@@ -491,8 +740,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                               // ── RBAC Guard ──
                               AuthUserStreamWidget(
                                 builder: (context) {
-                                  if (!AccessControl.hasPermission(context,
-                                      Permission.patientRecordsView)) {
+                                  if (!AccessControl.hasPermission(
+                                      context, Permission.patientRecordsView)) {
                                     return _buildNoAccessState();
                                   }
                                   return _buildContent(context);
@@ -616,10 +865,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
   // ═══════════════════════════════════════════════════════════════════════
 
   Widget _buildContent(BuildContext context) {
-    final canCreate = AccessControl.hasPermission(
-        context, Permission.patientRecordsCreate);
-    final canEdit = AccessControl.hasPermission(
-        context, Permission.patientRecordsEdit);
+    final canCreate =
+        AccessControl.hasPermission(context, Permission.patientRecordsCreate);
+    final canEdit =
+        AccessControl.hasPermission(context, Permission.patientRecordsEdit);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -647,8 +896,9 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
       builder: (context, constraints) {
         double cardSpacing = 16.0;
         double minCardWidth = 180.0;
-        int cols =
-            (constraints.maxWidth / (minCardWidth + cardSpacing)).clamp(1, 4).toInt();
+        int cols = (constraints.maxWidth / (minCardWidth + cardSpacing))
+            .clamp(1, 4)
+            .toInt();
         final cardWidth =
             (constraints.maxWidth - cardSpacing * (cols - 1)) / cols;
 
@@ -792,15 +1042,18 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             decoration: InputDecoration(
               hintText: 'Search by name, ID, or phone...',
               hintStyle: TextStyle(
-                  fontFamily: kAppFontFamily, color: _textSecondary, fontSize: 14.0),
-              prefixIcon:
-                  Icon(Icons.search, color: _duniyaPurple, size: 20.0),
+                  fontFamily: kAppFontFamily,
+                  color: _textSecondary,
+                  fontSize: 14.0),
+              prefixIcon: Icon(Icons.search, color: _duniyaPurple, size: 20.0),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12.0, vertical: 10.0),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
             ),
             style: TextStyle(
-                fontFamily: kAppFontFamily, fontSize: 14.0, color: _textPrimary),
+                fontFamily: kAppFontFamily,
+                fontSize: 14.0,
+                color: _textPrimary),
             onChanged: (val) => safeSetState(() {}),
           );
 
@@ -816,8 +1069,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(9999.0),
               ),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             ),
           );
 
@@ -918,7 +1171,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             ...patients.map((patient) {
               final idx = _patients.indexOf(patient);
               final isExpanded = _model.expandedPatientIndex == idx;
-              return _buildPatientRow(context, patient, idx, isExpanded, canEdit);
+              return _buildPatientRow(
+                  context, patient, idx, isExpanded, canEdit);
             }),
         ],
       ),
@@ -941,15 +1195,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         InkWell(
           onTap: () {
             safeSetState(() {
-              _model.expandedPatientIndex =
-                  isExpanded ? null : index;
+              _model.expandedPatientIndex = isExpanded ? null : index;
             });
           },
           child: Container(
             padding: const EdgeInsets.fromLTRB(24.0, 14.0, 24.0, 14.0),
             decoration: BoxDecoration(
-              color: isExpanded
-                  ? Color(0xFFF8F5FF) : Colors.transparent,
+              color: isExpanded ? Color(0xFFF8F5FF) : Colors.transparent,
               border: Border(
                 bottom: BorderSide(
                     color: _borderColor.withValues(alpha: 0.5), width: 0.5),
@@ -1009,7 +1261,9 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   flex: 5,
                   child: Text('${patient.age}',
                       style: TextStyle(
-                          fontFamily: kAppFontFamily, fontSize: 13.0, color: _textPrimary)),
+                          fontFamily: kAppFontFamily,
+                          fontSize: 13.0,
+                          color: _textPrimary)),
                 ),
                 // Active meds
                 Expanded(
@@ -1035,7 +1289,9 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   flex: 8,
                   child: Text(patient.lastVisit,
                       style: TextStyle(
-                          fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary)),
+                          fontFamily: kAppFontFamily,
+                          fontSize: 13.0,
+                          color: _textSecondary)),
                 ),
                 // Adherence
                 Expanded(
@@ -1059,8 +1315,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                                 fontFamily: kAppFontFamily,
                                 fontSize: 11.0,
                                 fontWeight: FontWeight.w600,
-                                color: _adherenceColor(
-                                    patient.adherencePercent))),
+                                color:
+                                    _adherenceColor(patient.adherencePercent))),
                       ),
                     ],
                   ),
@@ -1085,9 +1341,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Icon(
-                    isExpanded
-                        ? Icons.expand_less
-                        : Icons.expand_more,
+                    isExpanded ? Icons.expand_less : Icons.expand_more,
                     size: 18.0,
                     color: _textSecondary,
                   ),
@@ -1097,8 +1351,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
           ),
         ),
         // ── Section 4: Medication History (expanded) ──
-        if (isExpanded && canViewHistory)
-          _buildMedicationHistory(patient),
+        if (isExpanded && canViewHistory) _buildMedicationHistory(patient),
       ],
     );
   }
@@ -1114,7 +1367,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
       decoration: BoxDecoration(
         color: _bgColor,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: _duniyaPurple.withValues(alpha: 0.2), width: 1.0),
+        border:
+            Border.all(color: _duniyaPurple.withValues(alpha: 0.2), width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1239,7 +1493,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     const SizedBox(height: 4.0),
                     Row(
                       children: [
-                        Icon(Icons.medication, size: 14.0, color: _textSecondary),
+                        Icon(Icons.medication,
+                            size: 14.0, color: _textSecondary),
                         const SizedBox(width: 4.0),
                         Text(event.dose,
                             style: TextStyle(
@@ -1247,7 +1502,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                                 fontSize: 12.0,
                                 color: _textSecondary)),
                         const SizedBox(width: 16.0),
-                        Icon(Icons.person_outline, size: 14.0, color: _textSecondary),
+                        Icon(Icons.person_outline,
+                            size: 14.0, color: _textSecondary),
                         const SizedBox(width: 4.0),
                         Text(event.prescriber,
                             style: TextStyle(
@@ -1284,8 +1540,19 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
 
   String _monthAbbr(int month) {
     const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month];
   }
@@ -1309,8 +1576,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           title: Row(
             children: [
               Container(
@@ -1319,8 +1586,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   color: _duniyaPurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.person_add,
-                    color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.person_add, color: _duniyaPurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Add New Patient',
@@ -1427,7 +1693,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     : 0;
                 final newPatient = PatientRecord(
                   name: name,
-                  patientId: 'PATG-${(1000 + _patients.length).toString().padLeft(4, '0')}',
+                  patientId:
+                      'PATG-${(1000 + _patients.length).toString().padLeft(4, '0')}',
                   age: age,
                   phone: _model.phoneTextController?.text.trim(),
                   address: _model.addressTextController?.text.trim(),
@@ -1479,8 +1746,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           title: Row(
             children: [
               Container(
@@ -1489,8 +1756,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   color: _duniyaPurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.edit,
-                    color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.edit, color: _duniyaPurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Edit Patient',

@@ -11,7 +11,6 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:webviewx_plus/webviewx_plus.dart';
 import 'create_pharmacy_model.dart';
 export 'create_pharmacy_model.dart';
 
@@ -295,7 +294,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                 ),
                 const SizedBox(width: 12.0),
                 const Text(
-                  'Duniya',
+                  'Pulse',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -335,7 +334,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _heroFeature(Icons.inventory_2_rounded,
-                    'Real-time inventory across all outlets'),
+                    'Real-time inventory across all pharmacies'),
                 _heroFeature(Icons.point_of_sale_rounded,
                     'Point of sale with live stock deductions'),
                 _heroFeature(Icons.fact_check_rounded,
@@ -446,7 +445,7 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
             ),
             const SizedBox(width: 12.0),
             const Text(
-              'Duniya',
+              'Pulse',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -785,15 +784,15 @@ class _CreatePharmacyWidgetState extends State<CreatePharmacyWidget> {
                               isError: true);
                           return;
                         }
-                        await PharmacyRecord.createDoc(userRef).set(
-                            createPharmacyRecordData(
+                        await PharmacyRecord.createDoc(userRef)
+                            .set(createPharmacyRecordData(
                           name: name,
                           address: address,
                           userID: currentUserReference,
                           deleted: false,
                           // Self-registered pharmacies start as 'pending_approval'.
-                          // A Duniya admin must approve them before they appear
-                          // as active on the Duniya network.
+                          // A Pulse admin must approve them before they appear
+                          // as active on the Pulse network.
                           networkStatus: 'pending_approval',
                           registeredAt: getCurrentTimestamp,
                         ));

@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/rbac/rbac.dart';
-import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/components/loading_spinner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -9,7 +8,6 @@ import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:webviewx_plus/webviewx_plus.dart';
 import 'welcome_model.dart';
 export 'welcome_model.dart';
 
@@ -37,6 +35,24 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       logFirebaseEvent('WELCOME_PAGE_Welcome_ON_INIT_STATE');
+      final userReference = currentUserReference;
+      if (userReference == null) return;
+
+      // Resolve the user document before applying portal rules. Auth and
+      // Firestore streams can complete on different frames.
+      if (currentUserDocument?.reference.path != userReference.path) {
+        currentUserDocument = await UserRecord.getDocumentOnce(userReference);
+      }
+      if (!mounted) return;
+
+      if (AccessControl.isDuniyaUser(context)) {
+        context.goNamedAuth(
+          DuniyaPharmaciesWidget.routeName,
+          context.mounted,
+        );
+        return;
+      }
+
       if (!AccessControl.isOwner(context)) {
         if (currentUserDocument?.ownerRef == null) {
           logFirebaseEvent('Welcome_backend_call');

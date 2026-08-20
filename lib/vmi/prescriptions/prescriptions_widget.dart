@@ -1,13 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -73,10 +69,14 @@ class Prescription {
 
   String get statusLabel {
     switch (status) {
-      case RxStatus.pending: return 'Pending Verification';
-      case RxStatus.verified: return 'Verified';
-      case RxStatus.fulfilled: return 'Fulfilled';
-      case RxStatus.expired: return 'Expired';
+      case RxStatus.pending:
+        return 'Pending Verification';
+      case RxStatus.verified:
+        return 'Verified';
+      case RxStatus.fulfilled:
+        return 'Fulfilled';
+      case RxStatus.expired:
+        return 'Expired';
     }
   }
 }
@@ -87,7 +87,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ── Duniya Purple design tokens ──
+  // ── Pulse Purple design tokens ──
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
@@ -134,8 +134,10 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
 
-    _prescriptions = _mockPrescriptions;
-    _formMedLines = [MedicationLine(drug: '', dose: '', frequency: '', duration: '')];
+    _prescriptions = <Prescription>[];
+    _formMedLines = [
+      MedicationLine(drug: '', dose: '', frequency: '', duration: '')
+    ];
 
     _countUpController = AnimationController(
       vsync: this,
@@ -166,7 +168,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0156',
         patientName: 'John Mwanza',
         prescriber: 'Dr. Chanda',
-        medications: [MedicationLine(drug: 'Amoxicillin', dose: '500mg', frequency: '3x daily', duration: '7 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Amoxicillin',
+              dose: '500mg',
+              frequency: '3x daily',
+              duration: '7 days')
+        ],
         status: RxStatus.pending,
         date: now.subtract(const Duration(hours: 2)),
         notes: 'Outpatient — upper respiratory infection',
@@ -176,7 +184,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0157',
         patientName: 'Grace Banda',
         prescriber: 'Dr. Phiri',
-        medications: [MedicationLine(drug: 'Metformin', dose: '850mg', frequency: '2x daily', duration: '30 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Metformin',
+              dose: '850mg',
+              frequency: '2x daily',
+              duration: '30 days')
+        ],
         status: RxStatus.verified,
         date: now.subtract(const Duration(hours: 5)),
         notes: 'Diabetes management — chronic',
@@ -187,8 +201,16 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         patientName: 'Peter Tembo',
         prescriber: 'Dr. Chanda',
         medications: [
-          MedicationLine(drug: 'Lisinopril', dose: '10mg', frequency: '1x daily', duration: '30 days'),
-          MedicationLine(drug: 'Amlodipine', dose: '5mg', frequency: '1x daily', duration: '30 days'),
+          MedicationLine(
+              drug: 'Lisinopril',
+              dose: '10mg',
+              frequency: '1x daily',
+              duration: '30 days'),
+          MedicationLine(
+              drug: 'Amlodipine',
+              dose: '5mg',
+              frequency: '1x daily',
+              duration: '30 days'),
         ],
         status: RxStatus.fulfilled,
         date: now.subtract(const Duration(days: 1)),
@@ -199,7 +221,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0159',
         patientName: 'Mary Sakala',
         prescriber: 'Dr. Moyo',
-        medications: [MedicationLine(drug: 'Ciprofloxacin', dose: '500mg', frequency: '2x daily', duration: '5 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Ciprofloxacin',
+              dose: '500mg',
+              frequency: '2x daily',
+              duration: '5 days')
+        ],
         status: RxStatus.pending,
         date: now.subtract(const Duration(hours: 1)),
         notes: 'UTI — acute treatment',
@@ -209,7 +237,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0160',
         patientName: 'Joseph Phiri',
         prescriber: 'Dr. Nkosi',
-        medications: [MedicationLine(drug: 'Omeprazole', dose: '20mg', frequency: '1x daily', duration: '14 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Omeprazole',
+              dose: '20mg',
+              frequency: '1x daily',
+              duration: '14 days')
+        ],
         status: RxStatus.expired,
         date: now.subtract(const Duration(days: 30)),
         notes: 'GERD — prescription not collected within 7 days',
@@ -220,7 +254,11 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         patientName: 'Esther Zulu',
         prescriber: 'Dr. Phiri',
         medications: [
-          MedicationLine(drug: 'Artemether/Lumefantrine', dose: '20/120mg', frequency: '2x daily', duration: '3 days'),
+          MedicationLine(
+              drug: 'Artemether/Lumefantrine',
+              dose: '20/120mg',
+              frequency: '2x daily',
+              duration: '3 days'),
         ],
         status: RxStatus.verified,
         date: now.subtract(const Duration(hours: 8)),
@@ -231,7 +269,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0162',
         patientName: 'David Kamanga',
         prescriber: 'Dr. Moyo',
-        medications: [MedicationLine(drug: 'Ibuprofen', dose: '400mg', frequency: '3x daily', duration: '5 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Ibuprofen',
+              dose: '400mg',
+              frequency: '3x daily',
+              duration: '5 days')
+        ],
         status: RxStatus.fulfilled,
         date: now.subtract(const Duration(days: 2)),
         notes: 'Post-operative pain management',
@@ -241,7 +285,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0163',
         patientName: 'Agnes Chiluba',
         prescriber: 'Dr. Chanda',
-        medications: [MedicationLine(drug: 'Azithromycin', dose: '500mg', frequency: '1x daily', duration: '3 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Azithromycin',
+              dose: '500mg',
+              frequency: '1x daily',
+              duration: '3 days')
+        ],
         status: RxStatus.pending,
         date: now.subtract(const Duration(minutes: 30)),
         value: 62.00,
@@ -251,8 +301,16 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         patientName: 'Robert Sichone',
         prescriber: 'Dr. Nkosi',
         medications: [
-          MedicationLine(drug: 'Warfarin', dose: '5mg', frequency: '1x daily', duration: '30 days'),
-          MedicationLine(drug: 'Aspirin', dose: '75mg', frequency: '1x daily', duration: '30 days'),
+          MedicationLine(
+              drug: 'Warfarin',
+              dose: '5mg',
+              frequency: '1x daily',
+              duration: '30 days'),
+          MedicationLine(
+              drug: 'Aspirin',
+              dose: '75mg',
+              frequency: '1x daily',
+              duration: '30 days'),
         ],
         status: RxStatus.pending,
         date: now.subtract(const Duration(hours: 3)),
@@ -263,7 +321,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0165',
         patientName: 'Florence Mwale',
         prescriber: 'Dr. Phiri',
-        medications: [MedicationLine(drug: 'Cetirizine', dose: '10mg', frequency: '1x daily', duration: '14 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Cetirizine',
+              dose: '10mg',
+              frequency: '1x daily',
+              duration: '14 days')
+        ],
         status: RxStatus.fulfilled,
         date: now.subtract(const Duration(days: 3)),
         notes: 'Allergic rhinitis',
@@ -273,7 +337,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0166',
         patientName: 'Harrison Bwalya',
         prescriber: 'Dr. Moyo',
-        medications: [MedicationLine(drug: 'Paracetamol', dose: '1g', frequency: '4x daily', duration: '3 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Paracetamol',
+              dose: '1g',
+              frequency: '4x daily',
+              duration: '3 days')
+        ],
         status: RxStatus.verified,
         date: now.subtract(const Duration(hours: 12)),
         notes: 'Pyrexia of unknown origin — symptomatic',
@@ -284,8 +354,16 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         patientName: 'Chimwemwe Ngoma',
         prescriber: 'Dr. Nkosi',
         medications: [
-          MedicationLine(drug: 'Co-trimoxazole', dose: '960mg', frequency: '2x daily', duration: '7 days'),
-          MedicationLine(drug: 'Multivitamin', dose: '1 tab', frequency: '1x daily', duration: '30 days'),
+          MedicationLine(
+              drug: 'Co-trimoxazole',
+              dose: '960mg',
+              frequency: '2x daily',
+              duration: '7 days'),
+          MedicationLine(
+              drug: 'Multivitamin',
+              dose: '1 tab',
+              frequency: '1x daily',
+              duration: '30 days'),
         ],
         status: RxStatus.expired,
         date: now.subtract(const Duration(days: 14)),
@@ -296,7 +374,13 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
         rxNumber: 'RX-2024-0168',
         patientName: 'Bwana Mutale',
         prescriber: 'Dr. Chanda',
-        medications: [MedicationLine(drug: 'Salbutamol Inhaler', dose: '100mcg', frequency: 'PRN', duration: '90 days')],
+        medications: [
+          MedicationLine(
+              drug: 'Salbutamol Inhaler',
+              dose: '100mcg',
+              frequency: 'PRN',
+              duration: '90 days')
+        ],
         status: RxStatus.pending,
         date: now.subtract(const Duration(minutes: 45)),
         notes: 'Bronchial asthma — rescue inhaler',
@@ -308,50 +392,70 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
   // ── Status colour helpers ──
   Color _statusBg(RxStatus s) {
     switch (s) {
-      case RxStatus.pending: return _pendingBg;
-      case RxStatus.verified: return _verifiedBg;
-      case RxStatus.fulfilled: return _fulfilledBg;
-      case RxStatus.expired: return _expiredBg;
+      case RxStatus.pending:
+        return _pendingBg;
+      case RxStatus.verified:
+        return _verifiedBg;
+      case RxStatus.fulfilled:
+        return _fulfilledBg;
+      case RxStatus.expired:
+        return _expiredBg;
     }
   }
 
   Color _statusText(RxStatus s) {
     switch (s) {
-      case RxStatus.pending: return _pendingText;
-      case RxStatus.verified: return _verifiedText;
-      case RxStatus.fulfilled: return _fulfilledText;
-      case RxStatus.expired: return _expiredText;
+      case RxStatus.pending:
+        return _pendingText;
+      case RxStatus.verified:
+        return _verifiedText;
+      case RxStatus.fulfilled:
+        return _fulfilledText;
+      case RxStatus.expired:
+        return _expiredText;
     }
   }
 
   Color _statusBadge(RxStatus s) {
     switch (s) {
-      case RxStatus.pending: return _pendingBadge;
-      case RxStatus.verified: return _verifiedBadge;
-      case RxStatus.fulfilled: return _fulfilledBadge;
-      case RxStatus.expired: return _expiredBadge;
+      case RxStatus.pending:
+        return _pendingBadge;
+      case RxStatus.verified:
+        return _verifiedBadge;
+      case RxStatus.fulfilled:
+        return _fulfilledBadge;
+      case RxStatus.expired:
+        return _expiredBadge;
     }
   }
 
   IconData _statusIcon(RxStatus s) {
     switch (s) {
-      case RxStatus.pending: return Icons.schedule;
-      case RxStatus.verified: return Icons.verified_outlined;
-      case RxStatus.fulfilled: return Icons.check_circle;
-      case RxStatus.expired: return Icons.event_busy;
+      case RxStatus.pending:
+        return Icons.schedule;
+      case RxStatus.verified:
+        return Icons.verified_outlined;
+      case RxStatus.fulfilled:
+        return Icons.check_circle;
+      case RxStatus.expired:
+        return Icons.event_busy;
     }
   }
 
   // ── Summary stats ──
-  int get _pendingCount => _prescriptions.where((p) => p.status == RxStatus.pending).length;
-  int get _verifiedCount => _prescriptions.where((p) => p.status == RxStatus.verified).length;
-  int get _fulfilledTodayCount => _prescriptions.where((p) =>
-    p.status == RxStatus.fulfilled &&
-    p.date.year == DateTime.now().year &&
-    p.date.month == DateTime.now().month &&
-    p.date.day == DateTime.now().day
-  ).length;
-  double get _totalRxValue => _prescriptions.fold(0.0, (sum, p) => sum + p.value);
+  int get _pendingCount =>
+      _prescriptions.where((p) => p.status == RxStatus.pending).length;
+  int get _verifiedCount =>
+      _prescriptions.where((p) => p.status == RxStatus.verified).length;
+  int get _fulfilledTodayCount => _prescriptions
+      .where((p) =>
+          p.status == RxStatus.fulfilled &&
+          p.date.year == DateTime.now().year &&
+          p.date.month == DateTime.now().month &&
+          p.date.day == DateTime.now().day)
+      .length;
+  double get _totalRxValue =>
+      _prescriptions.fold(0.0, (sum, p) => sum + p.value);
 
   // ── Filtered prescriptions ──
   List<Prescription> get _filteredPrescriptions {
@@ -359,17 +463,22 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
     List<Prescription> result = _prescriptions;
 
     // Filter by tab
-    if (_selectedTab == 1) result = result.where((p) => p.status == RxStatus.pending).toList();
-    if (_selectedTab == 2) result = result.where((p) => p.status == RxStatus.verified).toList();
-    if (_selectedTab == 3) result = result.where((p) => p.status == RxStatus.fulfilled).toList();
-    if (_selectedTab == 4) result = result.where((p) => p.status == RxStatus.expired).toList();
+    if (_selectedTab == 1)
+      result = result.where((p) => p.status == RxStatus.pending).toList();
+    if (_selectedTab == 2)
+      result = result.where((p) => p.status == RxStatus.verified).toList();
+    if (_selectedTab == 3)
+      result = result.where((p) => p.status == RxStatus.fulfilled).toList();
+    if (_selectedTab == 4)
+      result = result.where((p) => p.status == RxStatus.expired).toList();
 
     // Filter by search
     if (searchQuery.isNotEmpty) {
-      result = result.where((p) =>
-        p.patientName.toLowerCase().contains(searchQuery) ||
-        p.rxNumber.toLowerCase().contains(searchQuery)
-      ).toList();
+      result = result
+          .where((p) =>
+              p.patientName.toLowerCase().contains(searchQuery) ||
+              p.rxNumber.toLowerCase().contains(searchQuery))
+          .toList();
     }
 
     return result;
@@ -460,7 +569,8 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
               onTap: () => safeSetState(() => _selectedTab = i),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                 decoration: BoxDecoration(
                   color: isSelected ? _duniyaPurple : Colors.transparent,
                   borderRadius: BorderRadius.circular(8.0),
@@ -475,7 +585,8 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                         style: TextStyle(
                           fontFamily: kAppFontFamily,
                           fontSize: 13.0,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w500,
                           color: isSelected ? Colors.white : _textSecondary,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -484,9 +595,12 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     if (counts[i] > 0) ...[
                       const SizedBox(width: 6.0),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6.0, vertical: 2.0),
                         decoration: BoxDecoration(
-                          color: isSelected ? Colors.white.withValues(alpha: 0.25) : _borderColor,
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.25)
+                              : _borderColor,
                           borderRadius: BorderRadius.circular(9999.0),
                         ),
                         child: Text(
@@ -512,8 +626,10 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
 
   // ── Prescription Card ──
   Widget _buildPrescriptionCard(Prescription rx) {
-    final canVerify = AccessControl.hasPermission(context, Permission.prescriptionsVerify);
-    final canFulfill = AccessControl.hasPermission(context, Permission.prescriptionsFulfill);
+    final canVerify =
+        AccessControl.hasPermission(context, Permission.prescriptionsVerify);
+    final canFulfill =
+        AccessControl.hasPermission(context, Permission.prescriptionsFulfill);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
@@ -542,7 +658,8 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                   color: _duniyaPurpleLight,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Icon(Icons.receipt_long, size: 18.0, color: _duniyaPurple),
+                child:
+                    Icon(Icons.receipt_long, size: 18.0, color: _duniyaPurple),
               ),
               const SizedBox(width: 12.0),
               Expanded(
@@ -571,16 +688,20 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
               ),
               // Status badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                 decoration: BoxDecoration(
                   color: _statusBg(rx.status),
                   borderRadius: BorderRadius.circular(9999.0),
-                  border: Border.all(color: _statusBadge(rx.status).withValues(alpha: 0.3), width: 1.0),
+                  border: Border.all(
+                      color: _statusBadge(rx.status).withValues(alpha: 0.3),
+                      width: 1.0),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(_statusIcon(rx.status), size: 14.0, color: _statusBadge(rx.status)),
+                    Icon(_statusIcon(rx.status),
+                        size: 14.0, color: _statusBadge(rx.status)),
                     const SizedBox(width: 6.0),
                     Text(
                       rx.statusLabel,
@@ -601,25 +722,25 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
 
           // Medication lines
           ...rx.medications.map((med) => Padding(
-            padding: const EdgeInsets.only(bottom: 6.0),
-            child: Row(
-              children: [
-                Icon(Icons.medication, size: 14.0, color: _duniyaPurple),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: Text(
-                    med.summary,
-                    style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w500,
-                      color: _textPrimary,
+                padding: const EdgeInsets.only(bottom: 6.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.medication, size: 14.0, color: _duniyaPurple),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: Text(
+                        med.summary,
+                        style: TextStyle(
+                          fontFamily: kAppFontFamily,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w500,
+                          color: _textPrimary,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          )),
+              )),
 
           // Notes (if any)
           if (rx.notes != null && rx.notes!.isNotEmpty) ...[
@@ -654,11 +775,15 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
           // Footer: date + value + actions
           Row(
             children: [
-              Icon(Icons.calendar_today_outlined, size: 13.0, color: _textSecondary),
+              Icon(Icons.calendar_today_outlined,
+                  size: 13.0, color: _textSecondary),
               const SizedBox(width: 6.0),
               Text(
                 '${rx.date.day}/${rx.date.month}/${rx.date.year}',
-                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, color: _textSecondary),
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 12.0,
+                    color: _textSecondary),
               ),
               const SizedBox(width: 16.0),
               Icon(Icons.attach_money, size: 13.0, color: _textSecondary),
@@ -681,7 +806,8 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     icon: Icons.verified_outlined,
                     color: _verifiedBadge,
                     onTap: () => safeSetState(() {
-                      final idx = _prescriptions.indexWhere((p) => p.rxNumber == rx.rxNumber);
+                      final idx = _prescriptions
+                          .indexWhere((p) => p.rxNumber == rx.rxNumber);
                       if (idx >= 0) {
                         _prescriptions[idx] = Prescription(
                           rxNumber: rx.rxNumber,
@@ -706,7 +832,8 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     icon: Icons.local_pharmacy,
                     color: _fulfilledBadge,
                     onTap: () => safeSetState(() {
-                      final idx = _prescriptions.indexWhere((p) => p.rxNumber == rx.rxNumber);
+                      final idx = _prescriptions
+                          .indexWhere((p) => p.rxNumber == rx.rxNumber);
                       if (idx >= 0) {
                         _prescriptions[idx] = Prescription(
                           rxNumber: rx.rxNumber,
@@ -772,13 +899,16 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
     _model.patientNameTextController?.clear();
     _model.prescriberTextController?.clear();
     _model.notesTextController?.clear();
-    _formMedLines = [MedicationLine(drug: '', dose: '', frequency: '', duration: '')];
+    _formMedLines = [
+      MedicationLine(drug: '', dose: '', frequency: '', duration: '')
+    ];
 
     showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
           title: Row(
             children: [
               Container(
@@ -823,11 +953,15 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                   // Date display
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 16.0, color: _duniyaPurple),
+                      Icon(Icons.calendar_today,
+                          size: 16.0, color: _duniyaPurple),
                       const SizedBox(width: 8.0),
                       Text(
                         'Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                        style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary),
+                        style: TextStyle(
+                            fontFamily: kAppFontFamily,
+                            fontSize: 13.0,
+                            color: _textSecondary),
                       ),
                     ],
                   ),
@@ -861,12 +995,18 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                           Row(
                             children: [
                               Text('Line ${i + 1}',
-                                  style: TextStyle(fontFamily: kAppFontFamily, fontSize: 11.0, fontWeight: FontWeight.w600, color: _duniyaPurple)),
+                                  style: TextStyle(
+                                      fontFamily: kAppFontFamily,
+                                      fontSize: 11.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: _duniyaPurple)),
                               const Spacer(),
                               if (_formMedLines.length > 1)
                                 InkWell(
-                                  onTap: () => setDialogState(() => _formMedLines.removeAt(i)),
-                                  child: Icon(Icons.close, size: 16.0, color: _expiredBadge),
+                                  onTap: () => setDialogState(
+                                      () => _formMedLines.removeAt(i)),
+                                  child: Icon(Icons.close,
+                                      size: 16.0, color: _expiredBadge),
                                 ),
                             ],
                           ),
@@ -916,14 +1056,17 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                   // Add medication line
                   OutlinedButton.icon(
                     onPressed: () => setDialogState(
-                      () => _formMedLines.add(MedicationLine(drug: '', dose: '', frequency: '', duration: '')),
+                      () => _formMedLines.add(MedicationLine(
+                          drug: '', dose: '', frequency: '', duration: '')),
                     ),
                     icon: Icon(Icons.add, size: 16.0),
                     label: Text('Add Medication'),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: _duniyaPurple, width: 1.0),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 8.0),
                     ),
                   ),
 
@@ -936,13 +1079,17 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: 'Notes',
-                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+                      labelStyle: TextStyle(
+                          fontFamily: kAppFontFamily, color: _textSecondary),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0),
                       ),
-                      prefixIcon: Icon(Icons.notes, color: _duniyaPurple, size: 20.0),
+                      prefixIcon:
+                          Icon(Icons.notes, color: _duniyaPurple, size: 20.0),
                     ),
                   ),
                 ],
@@ -953,18 +1100,25 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
               child: Text('Cancel',
-                  style: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary, fontWeight: FontWeight.w500)),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      color: _textSecondary,
+                      fontWeight: FontWeight.w500)),
             ),
             ElevatedButton(
               onPressed: () {
-                final patient = _model.patientNameTextController?.text.trim() ?? '';
-                final prescriber = _model.prescriberTextController?.text.trim() ?? '';
+                final patient =
+                    _model.patientNameTextController?.text.trim() ?? '';
+                final prescriber =
+                    _model.prescriberTextController?.text.trim() ?? '';
                 if (patient.isEmpty || prescriber.isEmpty) return;
-                final validMeds = _formMedLines.where((m) => m.drug.isNotEmpty).toList();
+                final validMeds =
+                    _formMedLines.where((m) => m.drug.isNotEmpty).toList();
                 if (validMeds.isEmpty) return;
 
                 final newRx = Prescription(
-                  rxNumber: 'RX-2024-${(156 + _prescriptions.length + 1).toString().padLeft(4, '0')}',
+                  rxNumber:
+                      'RX-2024-${(156 + _prescriptions.length + 1).toString().padLeft(4, '0')}',
                   patientName: patient,
                   prescriber: prescriber,
                   medications: validMeds,
@@ -980,11 +1134,16 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
               style: ElevatedButton.styleFrom(
                 backgroundColor: _duniyaPurple,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0)),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 12.0),
               ),
               child: Text('Save & Submit',
-                  style: TextStyle(fontFamily: kAppFontFamily, fontWeight: FontWeight.w600, fontSize: 14.0)),
+                  style: TextStyle(
+                      fontFamily: kAppFontFamily,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.0)),
             ),
           ],
         ),
@@ -1003,7 +1162,8 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+        labelStyle:
+            TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -1017,13 +1177,15 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
   InputDecoration _medInputDec(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(fontFamily: kAppFontFamily, fontSize: 12.0, color: _textSecondary),
+      hintStyle: TextStyle(
+          fontFamily: kAppFontFamily, fontSize: 12.0, color: _textSecondary),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
     );
   }
 
@@ -1037,7 +1199,11 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
           children: [
             SpinKitRing(color: _duniyaPurple, size: 48.0),
             const SizedBox(height: 16.0),
-            Text('Loading prescriptions...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
+            Text('Loading prescriptions...',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: _textSecondary)),
           ],
         ),
       ),
@@ -1105,12 +1271,14 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                             children: [
                               // ── Header ──
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Digital Prescriptions',
@@ -1138,9 +1306,11 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                     ),
                                   ),
                                   // New Prescription button (if has permission)
-                                  if (AccessControl.hasPermission(context, Permission.prescriptionsCreate))
+                                  if (AccessControl.hasPermission(
+                                      context, Permission.prescriptionsCreate))
                                     ElevatedButton.icon(
-                                      onPressed: () => _showNewPrescriptionDialog(context),
+                                      onPressed: () =>
+                                          _showNewPrescriptionDialog(context),
                                       icon: Icon(Icons.add, size: 18.0),
                                       label: Text('New Prescription'),
                                       style: ElevatedButton.styleFrom(
@@ -1148,9 +1318,11 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                         foregroundColor: Colors.white,
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(9999.0),
+                                          borderRadius:
+                                              BorderRadius.circular(9999.0),
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24.0, vertical: 12.0),
                                       ),
                                     ),
                                 ],
@@ -1161,28 +1333,36 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                               // ── RBAC Gate ──
                               AuthUserStreamWidget(
                                 builder: (context) {
-                                  if (!AccessControl.hasPermission(context, Permission.prescriptionsView)) {
+                                  if (!AccessControl.hasPermission(
+                                      context, Permission.prescriptionsView)) {
                                     return _buildNoAccessState();
                                   }
 
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       // ── Section 1: Summary Stats ──
                                       LayoutBuilder(
                                         builder: (context, constraints) {
                                           double cardSpacing = 16.0;
                                           double minCardWidth = 180.0;
-                                          int cols = (constraints.maxWidth ~/ (minCardWidth + cardSpacing)).clamp(1, 4);
+                                          int cols = (constraints.maxWidth ~/
+                                                  (minCardWidth + cardSpacing))
+                                              .clamp(1, 4);
                                           return Wrap(
                                             spacing: cardSpacing,
                                             runSpacing: cardSpacing,
                                             children: [
                                               SizedBox(
-                                                width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                                width: (constraints.maxWidth -
+                                                        cardSpacing *
+                                                            (cols - 1)) /
+                                                    cols,
                                                 child: _buildStatCard(
                                                   title: 'Pending Verification',
-                                                  value: _pendingCount.toString(),
+                                                  value:
+                                                      _pendingCount.toString(),
                                                   icon: Icons.schedule,
                                                   bgColor: _pendingBg,
                                                   iconColor: _pendingBadge,
@@ -1190,10 +1370,14 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                                width: (constraints.maxWidth -
+                                                        cardSpacing *
+                                                            (cols - 1)) /
+                                                    cols,
                                                 child: _buildStatCard(
                                                   title: 'Ready to Fulfill',
-                                                  value: _verifiedCount.toString(),
+                                                  value:
+                                                      _verifiedCount.toString(),
                                                   icon: Icons.verified_outlined,
                                                   bgColor: _verifiedBg,
                                                   iconColor: _verifiedBadge,
@@ -1201,10 +1385,14 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                                width: (constraints.maxWidth -
+                                                        cardSpacing *
+                                                            (cols - 1)) /
+                                                    cols,
                                                 child: _buildStatCard(
                                                   title: 'Fulfilled Today',
-                                                  value: _fulfilledTodayCount.toString(),
+                                                  value: _fulfilledTodayCount
+                                                      .toString(),
                                                   icon: Icons.check_circle,
                                                   bgColor: _fulfilledBg,
                                                   iconColor: _fulfilledBadge,
@@ -1212,10 +1400,14 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: (constraints.maxWidth - cardSpacing * (cols - 1)) / cols,
+                                                width: (constraints.maxWidth -
+                                                        cardSpacing *
+                                                            (cols - 1)) /
+                                                    cols,
                                                 child: _buildStatCard(
                                                   title: 'Total Rx Value',
-                                                  value: 'K${_totalRxValue.toStringAsFixed(0)}',
+                                                  value:
+                                                      'K${_totalRxValue.toStringAsFixed(0)}',
                                                   icon: Icons.attach_money,
                                                   bgColor: _duniyaPurpleLight,
                                                   iconColor: _duniyaPurple,
@@ -1234,11 +1426,14 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                         padding: const EdgeInsets.all(16.0),
                                         decoration: BoxDecoration(
                                           color: _surfaceColor,
-                                          borderRadius: BorderRadius.circular(12.0),
-                                          border: Border.all(color: _borderColor, width: 1.0),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          border: Border.all(
+                                              color: _borderColor, width: 1.0),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withValues(alpha: 0.04),
+                                              color: Colors.black
+                                                  .withValues(alpha: 0.04),
                                               blurRadius: 20.0,
                                               offset: const Offset(0, 4),
                                             ),
@@ -1246,19 +1441,32 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                         ),
                                         child: Row(
                                           children: [
-                                            Icon(Icons.search, color: _duniyaPurple, size: 20.0),
+                                            Icon(Icons.search,
+                                                color: _duniyaPurple,
+                                                size: 20.0),
                                             const SizedBox(width: 12.0),
                                             Expanded(
                                               child: TextField(
-                                                controller: _model.searchTextController,
-                                                focusNode: _model.searchFocusNode,
+                                                controller:
+                                                    _model.searchTextController,
+                                                focusNode:
+                                                    _model.searchFocusNode,
                                                 decoration: InputDecoration(
-                                                  hintText: 'Search by patient name or Rx number...',
-                                                  hintStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary, fontSize: 14.0),
+                                                  hintText:
+                                                      'Search by patient name or Rx number...',
+                                                  hintStyle: TextStyle(
+                                                      fontFamily:
+                                                          kAppFontFamily,
+                                                      color: _textSecondary,
+                                                      fontSize: 14.0),
                                                   border: InputBorder.none,
                                                 ),
-                                                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textPrimary),
-                                                onChanged: (val) => safeSetState(() {}),
+                                                style: TextStyle(
+                                                    fontFamily: kAppFontFamily,
+                                                    fontSize: 14.0,
+                                                    color: _textPrimary),
+                                                onChanged: (val) =>
+                                                    safeSetState(() {}),
                                               ),
                                             ),
                                           ],
@@ -1278,23 +1486,47 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                           padding: const EdgeInsets.all(60.0),
                                           decoration: BoxDecoration(
                                             color: _surfaceColor,
-                                            borderRadius: BorderRadius.circular(12.0),
-                                            border: Border.all(color: _borderColor, width: 1.0),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            border: Border.all(
+                                                color: _borderColor,
+                                                width: 1.0),
                                           ),
                                           child: Center(
                                             child: Column(
                                               children: [
-                                                Icon(Icons.receipt_long_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
+                                                Icon(
+                                                    Icons.receipt_long_outlined,
+                                                    size: 56.0,
+                                                    color: _textSecondary
+                                                        .withValues(
+                                                            alpha: 0.4)),
                                                 const SizedBox(height: 16.0),
-                                                Text('No prescriptions found', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
+                                                Text('No prescriptions found',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            kAppFontFamily,
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: _textSecondary)),
                                                 const SizedBox(height: 8.0),
-                                                Text('Click "New Prescription" to create one', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
+                                                Text(
+                                                    'Click "New Prescription" to create one',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            kAppFontFamily,
+                                                        fontSize: 13.0,
+                                                        color: _textSecondary
+                                                            .withValues(
+                                                                alpha: 0.7))),
                                               ],
                                             ),
                                           ),
                                         )
                                       else
-                                        ..._filteredPrescriptions.map((rx) => _buildPrescriptionCard(rx)),
+                                        ..._filteredPrescriptions.map(
+                                            (rx) => _buildPrescriptionCard(rx)),
                                     ],
                                   );
                                 },
@@ -1347,10 +1579,17 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
             ),
             const SizedBox(height: 16.0),
             Text('Access Denied',
-                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                    color: _textPrimary)),
             const SizedBox(height: 8.0),
             Text('You do not have permission to view prescriptions.',
-                style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: _textSecondary)),
           ],
         ),
       ),

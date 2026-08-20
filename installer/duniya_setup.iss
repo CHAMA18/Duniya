@@ -1,16 +1,16 @@
 ; =====================================================================
-; Duniya — Windows Installer (Inno Setup 6)
+; Pulse — Windows Installer (Inno Setup 6)
 ; =====================================================================
 ; Used by the GitHub Actions desktop release workflow
 ; (see .github/workflows/build-desktop.yml) and by build_windows.sh.
-; Output: installer/Output/Duniya-Setup.exe
+; Output: installer/Output/Pulse-Setup.exe
 ; =====================================================================
 
-#define MyAppName "Duniya"
+#define MyAppName "Pulse"
 #define MyAppVersion "1.8.0"
-#define MyAppPublisher "Duniya Healthcare"
-#define MyAppURL "https://ivm.duniyahealthcare.com"
-#define MyAppExeName "duniya.exe"
+#define MyAppPublisher "Pulse Healthcare"
+#define MyAppURL "https://ivm.pulsehealthcare.com"
+#define MyAppExeName "pulse.exe"
 
 [Setup]
 AppId={{7D2C1A3E-5B4A-4C9F-9E6A-D8B1F2C4E6A8}

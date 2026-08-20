@@ -1,5 +1,5 @@
 /// ─────────────────────────────────────────────────────────────────────
-/// Duniya RBAC — Barrel Export
+/// Pulse RBAC — Barrel Export
 /// ─────────────────────────────────────────────────────────────────────
 /// Import this single file to access the entire RBAC system:
 ///

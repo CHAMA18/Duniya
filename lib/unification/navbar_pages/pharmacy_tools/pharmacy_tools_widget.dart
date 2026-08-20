@@ -62,16 +62,22 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
           child: Scaffold(
             key: scaffoldKey,
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            drawer: Drawer(
-              elevation: 16.0,
-              child: WebViewAware(
-                child: wrapWithModel(
-                  model: _model.sideNavModel2,
-                  updateCallback: () => safeSetState(() {}),
-                  child: SideNavWidget(),
-                ),
-              ),
-            ),
+            drawer: responsiveVisibility(
+                    context: context,
+                    desktop: false,
+                    tabletLandscape: false,
+                  )
+                ? Drawer(
+                    elevation: 16.0,
+                    child: WebViewAware(
+                      child: wrapWithModel(
+                        model: _model.sideNavModel2,
+                        updateCallback: () => safeSetState(() {}),
+                        child: SideNavWidget(),
+                      ),
+                    ),
+                  )
+                : null,
             body: SafeArea(
               top: true,
               child: Row(

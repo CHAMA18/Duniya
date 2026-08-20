@@ -541,21 +541,18 @@ class _StaffDetailsWidgetState extends State<StaffDetailsWidget> {
                                                               SalesRecord>(
                                                         pagingController: _model
                                                             .setListViewController(
-                                                                SalesRecord.collection(AccessControl.parentRef(context) ?? currentUserReference)
+                                                                SalesRecord.collection(
+                                                                        AccessControl.parentRef(context) ??
+                                                                            currentUserReference)
                                                                     .where(
                                                                   'UserID',
                                                                   isEqualTo:
                                                                       staffDetailsStaffRecord
                                                                           .userRef,
                                                                 ),
-                                                                parent: valueOrDefault(
-                                                                            currentUserDocument
-                                                                                ?.role,
-                                                                            '') ==
-                                                                        'Owner'
-                                                                    ? currentUserReference
-                                                                    : currentUserDocument
-                                                                        ?.ownerRef),
+                                                                parent: AccessControl
+                                                                    .parentRef(
+                                                                        context)),
                                                         padding:
                                                             EdgeInsets.zero,
                                                         shrinkWrap: true,

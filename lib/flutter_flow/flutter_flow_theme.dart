@@ -174,7 +174,7 @@ class LightModeTheme extends FlutterFlowTheme {
   // ═══════════════════════════════════════════════════════════
   // DUNIYA BRAND THEME — Purple #9900FF
   // ═══════════════════════════════════════════════════════════
-  late Color primary = const Color(0xFF9900FF); // Duniya Purple
+  late Color primary = const Color(0xFF9900FF); // Pulse Purple
   late Color secondary = const Color(0xFF7C3AED); // Violet 600
   late Color tertiary = const Color(0xFFA855F7); // Secondary purple accent
   late Color alternate = const Color(0xFFE2D7FB); // Soft lavender borders
@@ -691,7 +691,7 @@ class DarkModeTheme extends FlutterFlowTheme {
   // ═══════════════════════════════════════════════════════════
   // DUNIYA BRAND DARK THEME — Purple #9900FF
   // ═══════════════════════════════════════════════════════════
-  late Color primary = const Color(0xFF9900FF); // Duniya Purple
+  late Color primary = const Color(0xFF9900FF); // Pulse Purple
   late Color secondary = const Color(0xFFA78BFA); // Violet 400
   late Color tertiary = const Color(0xFFFBBF24); // Amber 400
   late Color alternate = const Color(0xFF374151); // Gray 700
@@ -797,7 +797,7 @@ extension TextStyleHelper on TextStyle {
     // ═════════════════════════════════════════════════════════════
     // BRAND FONT POLICY — Satoshi everywhere.
     //
-    // The Duniya brand uses Satoshi as the only typeface.
+    // The Pulse brand uses Satoshi as the only typeface.
     // Any caller that asks for "GoogleFonts" (either via useGoogleFonts
     // or by passing a GoogleFonts TextStyle as `font:`) is silently
     // rerouted to Satoshi so the UI stays visually consistent. This

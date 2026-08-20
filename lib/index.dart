@@ -41,6 +41,12 @@ export '/unification/pharmacy_tools/supply_chain/maps/maps_widget.dart'
     show MapsWidget;
 export '/unification/settings_mobile_pages/billing_mobile/billing_mobile_widget.dart'
     show BillingMobileWidget;
+export '/unification/settings_mobile_pages/email_test/email_test_widget.dart'
+    show EmailTestWidget;
+export '/unification/settings_mobile_pages/role_test/role_test_widget.dart'
+    show RoleTestWidget;
+export '/unification/authentication/staff_invitation/staff_invitation_widget.dart'
+    show StaffInvitationWidget;
 export '/unification/reset_pass/reset_pass_widget.dart' show ResetPassWidget;
 export '/unification/settings_mobile_pages/subscription/subscription_widget.dart'
     show SubscriptionWidget;
@@ -99,27 +105,36 @@ export '/inventory/staff_details/staff_details_widget.dart'
 
 // VMI Pages
 export '/vmi/dashboard/vmi_dashboard_widget.dart' show VMIDashboardWidget;
-export '/vmi/stock_balances/stock_balances_widget.dart' show StockBalancesWidget;
-export '/vmi/stock_movements/stock_movements_widget.dart' show StockMovementsWidget;
-export '/vmi/product_master/product_master_widget.dart' show ProductMasterWidget;
-export '/vmi/goods_received/goods_received_widget.dart' show GoodsReceivedWidget;
-export '/vmi/goods_received_detail/goods_received_detail_widget.dart' show GoodsReceivedDetailWidget;
+export '/vmi/stock_balances/stock_balances_widget.dart'
+    show StockBalancesWidget;
+export '/vmi/stock_movements/stock_movements_widget.dart'
+    show StockMovementsWidget;
+export '/vmi/product_master/product_master_widget.dart'
+    show ProductMasterWidget;
+export '/vmi/goods_received/goods_received_widget.dart'
+    show GoodsReceivedWidget;
+export '/vmi/goods_received_detail/goods_received_detail_widget.dart'
+    show GoodsReceivedDetailWidget;
 export '/vmi/sales_vmi/sales_vmi_widget.dart' show SalesVMIWidget;
 export '/vmi/stock_counts/stock_counts_widget.dart' show StockCountsWidget;
-export '/vmi/stock_count_detail/stock_count_detail_widget.dart' show StockCountDetailWidget;
+export '/vmi/stock_count_detail/stock_count_detail_widget.dart'
+    show StockCountDetailWidget;
 export '/vmi/batches/batches_widget.dart' show BatchesWidget;
 export '/vmi/alerts/low_stock_alerts_widget.dart' show LowStockAlertsWidget;
 export '/vmi/replenishment/replenishment_widget.dart' show ReplenishmentWidget;
-export '/vmi/outlets/outlets_widget.dart' show OutletsWidget;
-export '/vmi/drug_interactions/drug_interactions_widget.dart' show DrugInteractionsWidget;
-export '/vmi/expiry_tracking/expiry_tracking_widget.dart' show ExpiryTrackingWidget;
-export '/vmi/purchase_orders/purchase_orders_widget.dart' show PurchaseOrdersWidget;
+export '/vmi/drug_interactions/drug_interactions_widget.dart'
+    show DrugInteractionsWidget;
+export '/vmi/expiry_tracking/expiry_tracking_widget.dart'
+    show ExpiryTrackingWidget;
+export '/vmi/purchase_orders/purchase_orders_widget.dart'
+    show PurchaseOrdersWidget;
 export '/vmi/prescriptions/prescriptions_widget.dart' show PrescriptionsWidget;
 export '/vmi/insurance/insurance_widget.dart' show InsuranceWidget;
 export '/vmi/cold_chain/cold_chain_widget.dart' show ColdChainWidget;
-export '/vmi/patient_records/patient_records_widget.dart' show PatientRecordsWidget;
+export '/vmi/patient_records/patient_records_widget.dart'
+    show PatientRecordsWidget;
 
-// Duniya dashboard pages
+// Pulse dashboard pages
 export '/duniya/stock_balance_visibility/duniya_stock_balances_widget.dart'
     show DuniyaStockBalancesWidget;
 export '/duniya/pharmacies/duniya_pharmacies_widget.dart'

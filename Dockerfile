@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for the Duniya Flutter Web App.
+# Multi-stage Dockerfile for the Pulse Flutter Web App.
 #
 # Optimisations vs. the previous version:
 #   1. Pinned Flutter image (no git clone of the SDK — saves ~1 GB and

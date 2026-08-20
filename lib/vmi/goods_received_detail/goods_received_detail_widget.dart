@@ -4,7 +4,6 @@ import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
@@ -40,7 +39,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   // Line items state
   List<Map<String, dynamic>> _lineItems = [];
 
-  // Design tokens — Duniya purple design system
+  // Design tokens — Pulse purple design system
   static const Color _duniyaPurple = Color(0xFF9900FF);
   static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
   static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
@@ -527,7 +526,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             _buildSectionHeader(
               icon: Icons.receipt_long_rounded,
               title: 'Receipt Information',
-              subtitle: 'Capture delivery note details and outlet',
+              subtitle: 'Capture delivery note details and pharmacy',
               stepNumber: 1,
               rightSlot: _buildLiveBadge(
                 label: 'Live',
@@ -551,7 +550,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       SizedBox(width: 16),
                       Expanded(
                           child: _buildLabeledField(
-                        label: 'Pharmacy / Outlet',
+                        label: 'Pharmacy',
                         isRequired: true,
                         child: _buildPharmacyField(),
                       )),
@@ -573,7 +572,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       ),
                       SizedBox(height: 16),
                       _buildLabeledField(
-                        label: 'Pharmacy / Outlet',
+                        label: 'Pharmacy',
                         isRequired: true,
                         child: _buildPharmacyField(),
                       ),
@@ -603,7 +602,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             isWide
                 ? Row(
                     children: [
-                      Expanded(child: _buildInfoChip(
+                      Expanded(
+                          child: _buildInfoChip(
                         icon: Icons.event_available_rounded,
                         label: 'Date Received',
                         value: dateTimeFormat(
@@ -613,7 +613,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                         ),
                       )),
                       SizedBox(width: 16),
-                      Expanded(child: _buildInfoChip(
+                      Expanded(
+                          child: _buildInfoChip(
                         icon: Icons.person_rounded,
                         label: 'Received By',
                         value: currentUserDisplayName.isNotEmpty
@@ -1128,9 +1129,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                     .then((s) => ProductMasterRecord.fromSnapshot(s))
                 : null,
             builder: (context, snapshot) {
-              final productName = snapshot.hasData
-                  ? snapshot.data!.name
-                  : 'Loading product...';
+              final productName =
+                  snapshot.hasData ? snapshot.data!.name : 'Loading product...';
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1198,8 +1198,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                   style: TextStyle(color: _textTertiary, fontSize: 13),
                 )
               : Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _bgColor,
                     borderRadius: BorderRadius.circular(6),
@@ -1278,9 +1277,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                         .then((s) => ProductMasterRecord.fromSnapshot(s))
                     : null,
                 builder: (context, snapshot) {
-                  final productName = snapshot.hasData
-                      ? snapshot.data!.name
-                      : 'Loading...';
+                  final productName =
+                      snapshot.hasData ? snapshot.data!.name : 'Loading...';
                   return Text(
                     productName,
                     style: TextStyle(
@@ -1340,8 +1338,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.report_problem_rounded,
-                    size: 14, color: _warning),
+                Icon(Icons.report_problem_rounded, size: 14, color: _warning),
                 SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -1466,8 +1463,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 ),
                 if (delta != 0)
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: delta < 0 ? _dangerBg : _warningBg,
                       borderRadius: BorderRadius.circular(6),
@@ -1662,9 +1658,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       ),
       filled: true,
       fillColor: _bgColor,
-      prefixIcon: icon != null
-          ? Icon(icon, size: 18, color: _textTertiary)
-          : null,
+      prefixIcon:
+          icon != null ? Icon(icon, size: 18, color: _textTertiary) : null,
       prefixIconConstraints: BoxConstraints(minWidth: 36),
       contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       enabledBorder: OutlineInputBorder(
@@ -1775,8 +1770,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                   Text(
                                     'Select a product and record delivery details',
                                     style: TextStyle(
-                                      color: Colors.white
-                                          .withValues(alpha: 0.85),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.85),
                                       fontSize: 12.5,
                                     ),
                                   ),
@@ -1800,8 +1795,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Product
-                            _buildDialogFieldLabel(
-                                'Product', isRequired: true),
+                            _buildDialogFieldLabel('Product', isRequired: true),
                             SizedBox(height: 6),
                             StreamBuilder<List<ProductMasterRecord>>(
                               stream: queryProductMasterRecord(),
@@ -1825,7 +1819,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                     controller:
                                         _model.lineProductValueController ??=
                                             FormFieldController<String>(null),
-                                    options: snapshot.data!.map((p) => p.name).toList(),
+                                    options: snapshot.data!
+                                        .map((p) => p.name)
+                                        .toList(),
                                     onChanged: (val) => setDialogState(
                                         () => _model.lineProductValue = val),
                                     width: double.infinity,
@@ -1866,8 +1862,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      _buildDialogFieldLabel(
-                                          'Qty Delivered',
+                                      _buildDialogFieldLabel('Qty Delivered',
                                           isRequired: true),
                                       SizedBox(height: 6),
                                       TextFormField(
@@ -1895,8 +1890,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      _buildDialogFieldLabel(
-                                          'Qty Received'),
+                                      _buildDialogFieldLabel('Qty Received'),
                                       SizedBox(height: 6),
                                       TextFormField(
                                         controller: _model
@@ -1975,8 +1969,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                             });
                                           }
                                         },
-                                        borderRadius:
-                                            BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(10),
                                         child: Container(
                                           height: 48,
                                           decoration: _inputBoxDecoration(),
@@ -2007,13 +2000,13 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                                         )
                                                       : 'Select date',
                                                   style: TextStyle(
-                                                    color: _model.lineExpiryDate !=
-                                                            null
-                                                        ? _textPrimary
-                                                        : _textTertiary,
+                                                    color:
+                                                        _model.lineExpiryDate !=
+                                                                null
+                                                            ? _textPrimary
+                                                            : _textTertiary,
                                                     fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
                                               ),
@@ -2116,7 +2109,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     final delivered =
         int.tryParse(_model.lineQtyTextController?.text ?? '0') ?? 0;
     final receivedStr = _model.lineReceivedQtyTextController?.text ?? '';
-    final received = receivedStr.isEmpty ? delivered : (int.tryParse(receivedStr) ?? delivered);
+    final received = receivedStr.isEmpty
+        ? delivered
+        : (int.tryParse(receivedStr) ?? delivered);
     if (delivered == 0) return SizedBox.shrink();
     final delta = received - delivered;
     if (delta == 0) {
@@ -2183,9 +2178,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     );
     final deliveredQty =
         int.tryParse(_model.lineQtyTextController?.text ?? '0') ?? 0;
-    final receivedQty = int.tryParse(
-            _model.lineReceivedQtyTextController?.text ?? '') ??
-        deliveredQty;
+    final receivedQty =
+        int.tryParse(_model.lineReceivedQtyTextController?.text ?? '') ??
+            deliveredQty;
     safeSetState(() {
       _lineItems.add({
         'productId': product.reference,
@@ -2264,8 +2259,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                               Text(
                                 'Describe any overall issues with this delivery',
                                 style: TextStyle(
-                                  color:
-                                      Colors.white.withValues(alpha: 0.85),
+                                  color: Colors.white.withValues(alpha: 0.85),
                                   fontSize: 12.5,
                                 ),
                               ),
@@ -2312,8 +2306,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                               child: _SecondaryButton(
                                 label: 'Cancel',
                                 icon: Icons.close_rounded,
-                                onPressed: () =>
-                                    Navigator.pop(dialogContext),
+                                onPressed: () => Navigator.pop(dialogContext),
                                 expand: true,
                               ),
                             ),
@@ -2717,8 +2710,7 @@ class _StatusPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.check_circle_rounded,
-              size: 12, color: Color(0xFF16A34A)),
+          Icon(Icons.check_circle_rounded, size: 12, color: Color(0xFF16A34A)),
           SizedBox(width: 4),
           Text(
             'VERIFIED',
@@ -2758,9 +2750,7 @@ class _DeleteIconButtonState extends State<_DeleteIconButton> {
           width: 30,
           height: 30,
           decoration: BoxDecoration(
-            color: _hover
-                ? Color(0xFFFEF2F2)
-                : Color(0xFFF8F9FF),
+            color: _hover ? Color(0xFFFEF2F2) : Color(0xFFF8F9FF),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: _hover
