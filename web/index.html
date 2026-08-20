@@ -82,6 +82,15 @@
       var path = window.location.pathname.replace(/\/+$/, '') || '/';
       if (path === '/' || path === '/index.html') {
         window.location.replace('/landing.html' + window.location.search + window.location.hash);
+        return;
+      }
+
+      // Static hosts can serve /app.html but may not apply SPA rewrites for
+      // routes such as /loginUni. The landing page therefore opens this
+      // guaranteed shell and supplies the desired Flutter path explicitly.
+      var route = new URLSearchParams(window.location.search).get('route');
+      if (route && route.charAt(0) === '/' && !route.startsWith('//')) {
+        window.history.replaceState(null, '', route + window.location.hash);
       }
     })();
   </script>
