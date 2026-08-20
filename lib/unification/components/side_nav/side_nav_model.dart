@@ -41,6 +41,8 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModel16;
   // Model for SidebarLink component.
   late SidebarLinkModel sidebarLinkModel17;
+  // Model for Supplier Management SidebarLink component.
+  late SidebarLinkModel sidebarLinkModel18;
   // Model for PendingApprovals SidebarLink component.
   late SidebarLinkModel sidebarLinkModel19;
   // Model for Point Of Sale (highlighted) SidebarLink component.
@@ -81,6 +83,7 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel16 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel17 = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModel18 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel19 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel20 = createModel(context, () => SidebarLinkModel());
     sidebarLinkModelAuditLogs = createModel(context, () => SidebarLinkModel());

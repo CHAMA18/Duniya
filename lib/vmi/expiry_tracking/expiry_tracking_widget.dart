@@ -547,16 +547,16 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                               _buildPageHeader(context),
                               const SizedBox(height: 28.0),
 
-                              // ── RBAC Guard: check expiryTrackingView ──
-                              AuthUserStreamWidget(
-                                builder: (context) {
-                                  if (!AccessControl.hasPermission(
-                                      context, Permission.expiryTrackingView)) {
-                                    return _buildNoAccessState();
-                                  }
-                                  return _buildDashboardContent(context);
-                                },
-                              ),
+                              // Render an explicit access state immediately instead of
+                              // leaving the dashboard region blank while the user stream
+                              // refreshes after navigation.
+                              if (currentUserDocument == null)
+                                _buildLoadingState()
+                              else if (!AccessControl.hasPermission(
+                                  context, Permission.expiryTrackingView))
+                                _buildNoAccessState()
+                              else
+                                _buildDashboardContent(context),
                             ],
                           ),
                         ),

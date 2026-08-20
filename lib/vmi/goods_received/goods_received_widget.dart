@@ -68,6 +68,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
   }
 
   DocumentReference? _pharmacyScopeParent() {
+    // Pulse is a network workspace: a null parent selects the collection group
+    // so dispatch records can be viewed and filtered across approved pharmacies.
+    if (_isPulseUser) return null;
     return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
@@ -259,10 +262,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                     stream: queryGoodsReceivedRecord(
                                       parent: _pharmacyScopeParent(),
                                       queryBuilder: (goodsReceivedRecord) {
-                                        var query =
-                                            goodsReceivedRecord.orderBy(
-                                                'CreatedAt',
-                                                descending: true);
+                                        var query = goodsReceivedRecord.orderBy(
+                                            'CreatedAt',
+                                            descending: true);
                                         if (_model.pharmacyRef != null) {
                                           query = query.where('OutletId',
                                               isEqualTo: _model.pharmacyRef);
@@ -280,16 +282,14 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                       // Compute KPIs
                                       _lastTotal = receipts.length;
                                       _lastPending = receipts
-                                          .where((r) =>
-                                              r.status == 'PENDING')
+                                          .where((r) => r.status == 'PENDING')
                                           .length;
                                       _lastConfirmed = receipts
-                                          .where((r) =>
-                                              r.status == 'CONFIRMED')
+                                          .where((r) => r.status == 'CONFIRMED')
                                           .length;
                                       _lastDiscrepancy = receipts
-                                          .where((r) =>
-                                              r.status == 'DISCREPANCY')
+                                          .where(
+                                              (r) => r.status == 'DISCREPANCY')
                                           .length;
 
                                       // Apply status pill filter
@@ -304,11 +304,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                       String? search = _model
                                           .searchTextController?.text
                                           .toLowerCase();
-                                      if (search != null &&
-                                          search.isNotEmpty) {
+                                      if (search != null && search.isNotEmpty) {
                                         receipts = receipts.where((r) {
-                                          final note = r
-                                              .deliveryNoteNumber
+                                          final note = r.deliveryNoteNumber
                                               .toLowerCase();
                                           return note.contains(search);
                                         }).toList();
@@ -323,8 +321,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                             break;
                                           case 'note':
                                             cmp = a.deliveryNoteNumber
-                                                .compareTo(b
-                                                    .deliveryNoteNumber);
+                                                .compareTo(
+                                                    b.deliveryNoteNumber);
                                             break;
                                           case 'date':
                                           default:
@@ -334,10 +332,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                             final bDate = b.receivedDate ??
                                                 b.deliveryDate ??
                                                 b.createdAt;
-                                            cmp = (aDate ??
-                                                    DateTime.now())
-                                                .compareTo(bDate ??
-                                                    DateTime.now());
+                                            cmp = (aDate ?? DateTime.now())
+                                                .compareTo(
+                                                    bDate ?? DateTime.now());
                                         }
                                         return _sortAscending ? cmp : -cmp;
                                       });
@@ -579,7 +576,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 icon: Icons.inventory_2_rounded,
                 accentColor: FlutterFlowTheme.of(context).primary,
                 accentBg: const Color(0xFFEDE0FE),
-                delta: _lastTotal > 0 ? '$_lastTotal records' : 'No records yet',
+                delta:
+                    _lastTotal > 0 ? '$_lastTotal records' : 'No records yet',
                 deltaPositive: _lastTotal > 0,
                 deltaIsNeutral: _lastTotal == 0,
               ),
@@ -592,7 +590,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 icon: Icons.pending_actions_rounded,
                 accentColor: const Color(0xFFF59E0B),
                 accentBg: const Color(0xFFFEF3C7),
-                delta: _lastPending > 0 ? 'Awaiting confirmation' : 'All confirmed',
+                delta: _lastPending > 0
+                    ? 'Awaiting confirmation'
+                    : 'All confirmed',
                 deltaPositive: _lastPending == 0,
                 deltaIsNeutral: _lastPending == 0,
               ),
@@ -618,7 +618,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 icon: Icons.warning_rounded,
                 accentColor: const Color(0xFFEF4444),
                 accentBg: const Color(0xFFFEE2E2),
-                delta: _lastDiscrepancy > 0 ? 'Needs review' : 'No discrepancies',
+                delta:
+                    _lastDiscrepancy > 0 ? 'Needs review' : 'No discrepancies',
                 deltaPositive: _lastDiscrepancy == 0,
               ),
             ),
@@ -675,8 +676,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 ),
                 prefixIcon: Icon(Icons.search_rounded,
                     color: theme.secondaryText, size: 20.0),
-                suffixIcon: (_model.searchTextController?.text ?? '')
-                        .isNotEmpty
+                suffixIcon: (_model.searchTextController?.text ?? '').isNotEmpty
                     ? IconButton(
                         icon: Icon(Icons.close_rounded,
                             color: theme.secondaryText, size: 18.0),
@@ -703,8 +703,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
 
           // Pharmacy dropdown
           AuthUserStreamWidget(
-            builder: (context) =>
-                FutureBuilder<List<PharmacyRecord>>(
+            builder: (context) => FutureBuilder<List<PharmacyRecord>>(
               future: queryPharmacyRecordOnce(
                 parent: _pharmacyScopeParent(),
               ),
@@ -729,10 +728,10 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     onChanged: (val) {
                       safeSetState(() {
                         _model.pharmacyValue = val;
-                        _model.pharmacyRef = (val == null ||
-                                val == 'All Pharmacies')
-                            ? null
-                            : _resolvePharmacyRef(snapshot.data!);
+                        _model.pharmacyRef =
+                            (val == null || val == 'All Pharmacies')
+                                ? null
+                                : _resolvePharmacyRef(snapshot.data!);
                       });
                     },
                     width: 200.0,
@@ -775,8 +774,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 'Last 3 Months',
                 'Current Year',
               ],
-              onChanged: (val) =>
-                  safeSetState(() => _model.periodValue = val),
+              onChanged: (val) => safeSetState(() => _model.periodValue = val),
               width: 180.0,
               height: 44.0,
               textStyle: theme.bodyMedium.override(
@@ -817,10 +815,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               ),
               items: const [
                 DropdownMenuItem(value: 'date', child: Text('Sort: Date')),
-                DropdownMenuItem(
-                    value: 'status', child: Text('Sort: Status')),
-                DropdownMenuItem(
-                    value: 'note', child: Text('Sort: Note #')),
+                DropdownMenuItem(value: 'status', child: Text('Sort: Status')),
+                DropdownMenuItem(value: 'note', child: Text('Sort: Note #')),
               ],
               onChanged: (val) =>
                   safeSetState(() => _sortColumn = val ?? 'date'),
@@ -911,12 +907,24 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
     final theme = FlutterFlowTheme.of(context);
     final pills = [
       ('All', _lastTotal, theme.primary, theme.primaryBackground),
-      ('Pending', _lastPending, const Color(0xFFF59E0B),
-          const Color(0xFFFEF3C7)),
-      ('Confirmed', _lastConfirmed, const Color(0xFF10B981),
-          const Color(0xFFD1FAE5)),
-      ('Discrepancy', _lastDiscrepancy, const Color(0xFFEF4444),
-          const Color(0xFFFEE2E2)),
+      (
+        'Pending',
+        _lastPending,
+        const Color(0xFFF59E0B),
+        const Color(0xFFFEF3C7)
+      ),
+      (
+        'Confirmed',
+        _lastConfirmed,
+        const Color(0xFF10B981),
+        const Color(0xFFD1FAE5)
+      ),
+      (
+        'Discrepancy',
+        _lastDiscrepancy,
+        const Color(0xFFEF4444),
+        const Color(0xFFFEE2E2)
+      ),
     ];
 
     return SingleChildScrollView(
@@ -931,8 +939,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               onTap: () => safeSetState(() => _statusFilter = label),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 14.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
                 decoration: BoxDecoration(
                   color: selected ? fg : theme.secondaryBackground,
                   borderRadius: BorderRadius.circular(20.0),
@@ -966,9 +974,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6.0, vertical: 1.0),
                       decoration: BoxDecoration(
-                        color: selected
-                            ? Colors.white.withAlpha(60)
-                            : bg,
+                        color: selected ? Colors.white.withAlpha(60) : bg,
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Text(
@@ -1028,8 +1034,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             ),
             child: Row(
               children: [
-                Icon(Icons.inventory_rounded,
-                    color: theme.primary, size: 18.0),
+                Icon(Icons.inventory_rounded, color: theme.primary, size: 18.0),
                 const SizedBox(width: 8.0),
                 Text(
                   'Showing ${receipts.length} receipt${receipts.length == 1 ? '' : 's'}',
@@ -1048,8 +1053,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   icon: const Icon(Icons.add_rounded, size: 16.0),
                   options: FFButtonOptions(
                     height: 36.0,
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        16.0, 0.0, 16.0, 0.0),
                     color: theme.primary,
                     textStyle: const TextStyle(
                       color: Colors.white,
@@ -1210,8 +1215,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     // Pharmacy + dates row
                     FutureBuilder<PharmacyRecord?>(
                       future: receipt.outletId != null
-                          ? PharmacyRecord.getDocumentOnce(
-                              receipt.outletId!)
+                          ? PharmacyRecord.getDocumentOnce(receipt.outletId!)
                           : Future.value(null),
                       builder: (context, pharmacySnapshot) {
                         final pharmacyName = (pharmacySnapshot.hasData &&
@@ -1243,8 +1247,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                                       fontWeight: FontWeight.w600,
                                       fontSize: 11.0,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !theme.bodySmallIsCustom,
+                                      useGoogleFonts: !theme.bodySmallIsCustom,
                                     ),
                                   ),
                                 ],
@@ -1339,8 +1342,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     Icons.print_outlined,
                     'Print receipt',
                     theme,
-                    onTap: () => _showToast(
-                        'Printing ${receipt.deliveryNoteNumber}…'),
+                    onTap: () =>
+                        _showToast('Printing ${receipt.deliveryNoteNumber}…'),
                   ),
                   const SizedBox(width: 6.0),
                   _actionIcon(
@@ -1382,8 +1385,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             borderRadius: BorderRadius.circular(8.0),
             border: Border.all(color: theme.alternate, width: 1.0),
           ),
-          child: Icon(icon,
-              color: iconColor ?? theme.secondaryText, size: 16.0),
+          child:
+              Icon(icon, color: iconColor ?? theme.secondaryText, size: 16.0),
         ),
       ),
     );
@@ -1394,8 +1397,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           title: Row(
             children: [
               Icon(Icons.warning_rounded,
@@ -1432,8 +1435,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               onPressed: () async {
                 await receipt.reference.delete();
                 Navigator.pop(dialogContext);
-                _showToast(
-                    'Receipt ${receipt.deliveryNoteNumber} deleted');
+                _showToast('Receipt ${receipt.deliveryNoteNumber} deleted');
               },
               text: 'Delete',
               icon: Icon(Icons.delete_outline_rounded, size: 16.0),
@@ -1443,12 +1445,12 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                 color: FlutterFlowTheme.of(context).error,
                 textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                  fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
-                  color: Colors.white,
-                  letterSpacing: 0.0,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).titleSmallIsCustom,
-                ),
+                      fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
+                      color: Colors.white,
+                      letterSpacing: 0.0,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).titleSmallIsCustom,
+                    ),
                 elevation: 0.0,
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -1641,8 +1643,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                       fontWeight: FontWeight.w600,
                     ),
                     elevation: 0.0,
-                    borderSide:
-                        BorderSide(color: theme.alternate, width: 1.0),
+                    borderSide: BorderSide(color: theme.alternate, width: 1.0),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
@@ -1833,17 +1834,12 @@ class _HeroActionButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(10.0),
         child: Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
           decoration: BoxDecoration(
-            color: isPrimary
-                ? Colors.white
-                : Colors.white.withAlpha(25),
+            color: isPrimary ? Colors.white : Colors.white.withAlpha(25),
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(
-              color: isPrimary
-                  ? Colors.white
-                  : Colors.white.withAlpha(50),
+              color: isPrimary ? Colors.white : Colors.white.withAlpha(50),
               width: 1.0,
             ),
           ),
@@ -1853,17 +1849,13 @@ class _HeroActionButton extends StatelessWidget {
               Icon(
                 icon,
                 size: 16.0,
-                color: isPrimary
-                    ? const Color(0xFF9900FF)
-                    : Colors.white,
+                color: isPrimary ? const Color(0xFF9900FF) : Colors.white,
               ),
               const SizedBox(width: 6.0),
               Text(
                 label,
                 style: TextStyle(
-                  color: isPrimary
-                      ? const Color(0xFF9900FF)
-                      : Colors.white,
+                  color: isPrimary ? const Color(0xFF9900FF) : Colors.white,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1968,8 +1960,8 @@ class _KpiCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 6.0, vertical: 2.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
                 decoration: BoxDecoration(
                   color: deltaIsNeutral
                       ? theme.primaryBackground

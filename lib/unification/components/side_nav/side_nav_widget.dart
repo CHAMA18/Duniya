@@ -379,42 +379,46 @@ class _SideNavWidgetState extends State<SideNavWidget> {
       NavItem.finances,
       NavItem.pendingApprovals,
     ]);
-    // Pulse/Duniya network users should never see pharmacy-specific sections.
+    // Pulse users share the operational navigation, but inventory keeps its
+    // portal-specific destination: Product Catalogue instead of Store Inventory.
     final isPulseNetwork = _isDuniyaUser;
-    final hasInventory = !isPulseNetwork && _hasAnyNav([
+    final hasInventory = _hasAnyNav([
       NavItem.storeInventory,
       NavItem.productCatalogue,
     ]);
-    final hasStock = !isPulseNetwork && _hasAnyNav([
+    final hasStock = _hasAnyNav([
       NavItem.stockBalances,
       NavItem.stockMovements,
       NavItem.stockCounts,
     ]);
-    final hasOperations = !isPulseNetwork && _hasAnyNav([
+    final hasOperations = _hasAnyNav([
       NavItem.goodsReceived,
       NavItem.salesDispensing,
       NavItem.pointOfSale,
     ]);
-    final hasMonitoring = !isPulseNetwork && _hasAnyNav([
+    final hasMonitoring = _hasAnyNav([
       NavItem.batchesExpiry,
       NavItem.expiryTracking,
       NavItem.lowStockAlerts,
       NavItem.replenishment,
       NavItem.coldChain,
     ]);
-    final hasClinical = !isPulseNetwork && _hasAnyNav([
-      NavItem.prescriptions,
-      NavItem.insurance,
-      NavItem.patientRecords,
-      NavItem.drugInteractions,
-    ]);
-    final hasProcurement = !isPulseNetwork && _hasAnyNav([NavItem.purchaseOrders]);
+    final hasClinical = !isPulseNetwork &&
+        _hasAnyNav([
+          NavItem.prescriptions,
+          NavItem.insurance,
+          NavItem.patientRecords,
+          NavItem.drugInteractions,
+        ]);
+    final hasProcurement =
+        !isPulseNetwork && _hasAnyNav([NavItem.purchaseOrders]);
     final hasAdmin = _hasAnyNav([NavItem.auditLogs, NavItem.userManagement]);
     final hasPulseNetwork = _hasAnyNav([
       NavItem.duniyaPharmacies,
       NavItem.duniyaStockBalances,
       NavItem.duniyaOnboardingRequests,
       NavItem.duniyaNetworkAnalytics,
+      NavItem.duniyaSupplierManagement,
     ]);
 
     return LayoutBuilder(
@@ -676,49 +680,50 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 message: 'Home',
                                 preferBelow: false,
                                 child: InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  logFirebaseEvent(
-                                      'SIDE_NAV_COMP_Container_xein5tez_ON_TAP');
-                                  logFirebaseEvent('SidebarLink_navigate_to');
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    logFirebaseEvent(
+                                        'SIDE_NAV_COMP_Container_xein5tez_ON_TAP');
+                                    logFirebaseEvent('SidebarLink_navigate_to');
 
-                                  context.goNamed(
-                                    HomeWidget.routeName,
-                                    extra: <String, dynamic>{
-                                      '__transition_info__': TransitionInfo(
-                                        hasTransition: true,
-                                        transitionType: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 0),
+                                    context.goNamed(
+                                      HomeWidget.routeName,
+                                      extra: <String, dynamic>{
+                                        '__transition_info__': TransitionInfo(
+                                          hasTransition: true,
+                                          transitionType:
+                                              PageTransitionType.fade,
+                                          duration: Duration(milliseconds: 0),
+                                        ),
+                                      },
+                                    );
+
+                                    logFirebaseEvent(
+                                        'SidebarLink_update_app_state');
+                                    FFAppState().SelectedPage = 'Home';
+                                  },
+                                  child: wrapWithModel(
+                                    model: _model.sidebarLinkModel1,
+                                    updateCallback: () => safeSetState(() {}),
+                                    child: SidebarLinkWidget(
+                                      linkText: 'Home',
+                                      activeIcon: Icon(
+                                        Icons.home_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
                                       ),
-                                    },
-                                  );
-
-                                  logFirebaseEvent(
-                                      'SidebarLink_update_app_state');
-                                  FFAppState().SelectedPage = 'Home';
-                                },
-                                child: wrapWithModel(
-                                  model: _model.sidebarLinkModel1,
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: SidebarLinkWidget(
-                                    linkText: 'Home',
-                                    activeIcon: Icon(
-                                      Icons.home_rounded,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      inactiveIcon: Icon(
+                                        Icons.home_outlined,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                      ),
+                                      isActive:
+                                          FFAppState().SelectedPage == 'Home',
                                     ),
-                                    inactiveIcon: Icon(
-                                      Icons.home_outlined,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                    ),
-                                    isActive:
-                                        FFAppState().SelectedPage == 'Home',
                                   ),
-                                ),
                                 ),
                               ),
                             ),
@@ -785,51 +790,52 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   message: 'Human Resource',
                                   preferBelow: false,
                                   child: InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    logFirebaseEvent(
-                                        'SIDE_NAV_COMP_Container_omwz15yo_ON_TAP');
-                                    logFirebaseEvent('SidebarLink_navigate_to');
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      logFirebaseEvent(
+                                          'SIDE_NAV_COMP_Container_omwz15yo_ON_TAP');
+                                      logFirebaseEvent(
+                                          'SidebarLink_navigate_to');
 
-                                    context.goNamed(
-                                      HumanResourceUniWidget.routeName,
-                                      extra: <String, dynamic>{
-                                        '__transition_info__': TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.fade,
-                                          duration: Duration(milliseconds: 0),
+                                      context.goNamed(
+                                        HumanResourceUniWidget.routeName,
+                                        extra: <String, dynamic>{
+                                          '__transition_info__': TransitionInfo(
+                                            hasTransition: true,
+                                            transitionType:
+                                                PageTransitionType.fade,
+                                            duration: Duration(milliseconds: 0),
+                                          ),
+                                        },
+                                      );
+
+                                      logFirebaseEvent(
+                                          'SidebarLink_update_app_state');
+                                      FFAppState().SelectedPage =
+                                          'Human Resource';
+                                    },
+                                    child: wrapWithModel(
+                                      model: _model.sidebarLinkModel4,
+                                      updateCallback: () => safeSetState(() {}),
+                                      child: SidebarLinkWidget(
+                                        linkText: 'Human Resource',
+                                        activeIcon: Icon(
+                                          Icons.person,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
                                         ),
-                                      },
-                                    );
-
-                                    logFirebaseEvent(
-                                        'SidebarLink_update_app_state');
-                                    FFAppState().SelectedPage =
-                                        'Human Resource';
-                                  },
-                                  child: wrapWithModel(
-                                    model: _model.sidebarLinkModel4,
-                                    updateCallback: () => safeSetState(() {}),
-                                    child: SidebarLinkWidget(
-                                      linkText: 'Human Resource',
-                                      activeIcon: Icon(
-                                        Icons.person,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
+                                        inactiveIcon: Icon(
+                                          Icons.person_outlined,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                        ),
+                                        isActive: FFAppState().SelectedPage ==
+                                            'Human Resource',
                                       ),
-                                      inactiveIcon: Icon(
-                                        Icons.person_outlined,
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryText,
-                                      ),
-                                      isActive: FFAppState().SelectedPage ==
-                                          'Human Resource',
                                     ),
-                                  ),
                                   ),
                                 ),
                               ),
@@ -956,7 +962,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                               _canSee(NavItem.productCatalogue))
                             KeyedSubtree(
                               key: DuniyaTourTargets.inventory,
-                              child: _buildExpandableInventorySection(isCollapsed),
+                              child:
+                                  _buildExpandableInventorySection(isCollapsed),
                             ),
 
                           // ─── Divider ───
@@ -1861,14 +1868,23 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 preferBelow: false,
                                 child: InkWell(
                                   onTap: () {
-                                    context.goNamed(PulseUserManagementWidget.routeName);
-                                    FFAppState().SelectedPage = 'User Management';
+                                    context.goNamed(
+                                        PulseUserManagementWidget.routeName);
+                                    FFAppState().SelectedPage =
+                                        'User Management';
                                   },
                                   child: SidebarLinkWidget(
                                     linkText: 'User Management',
-                                    activeIcon: Icon(Icons.manage_accounts_rounded, color: FlutterFlowTheme.of(context).primary),
-                                    inactiveIcon: Icon(Icons.manage_accounts_outlined, color: FlutterFlowTheme.of(context).secondaryText),
-                                    isActive: FFAppState().SelectedPage == 'User Management',
+                                    activeIcon: Icon(
+                                        Icons.manage_accounts_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary),
+                                    inactiveIcon: Icon(
+                                        Icons.manage_accounts_outlined,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText),
+                                    isActive: FFAppState().SelectedPage ==
+                                        'User Management',
                                   ),
                                 ),
                               ),
@@ -2051,6 +2067,48 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   ),
                                 ),
                               ),
+                            // Supplier Management (RBAC)
+                            if (_canSee(NavItem.duniyaSupplierManagement))
+                              Tooltip(
+                                message: 'Supplier Management',
+                                preferBelow: false,
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    logFirebaseEvent(
+                                        'SIDE_NAV_Supplier_Management_ON_TAP');
+                                    logFirebaseEvent('SidebarLink_navigate_to');
+                                    context.goNamed(
+                                        SupplierManagementWidget.routeName);
+                                    logFirebaseEvent(
+                                        'SidebarLink_update_app_state');
+                                    FFAppState().SelectedPage =
+                                        'Supplier Management';
+                                  },
+                                  child: wrapWithModel(
+                                    model: _model.sidebarLinkModel18,
+                                    updateCallback: () => safeSetState(() {}),
+                                    child: SidebarLinkWidget(
+                                      linkText: 'Supplier Management',
+                                      activeIcon: Icon(
+                                        Icons.business_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                      ),
+                                      inactiveIcon: Icon(
+                                        Icons.business_outlined,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                      ),
+                                      isActive: FFAppState().SelectedPage ==
+                                          'Supplier Management',
+                                    ),
+                                  ),
+                                ),
+                              ),
                           ],
                         ],
                       ),
@@ -2199,80 +2257,85 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () {
-                                    safeSetState(() {
-                                      _isFooterExpanded = !_isFooterExpanded;
-                                    });
-                                  },
+                                      safeSetState(() {
+                                        _isFooterExpanded = !_isFooterExpanded;
+                                      });
+                                    },
                                     child: Container(
-                                    width: double.infinity,
-                                    height: 36.0,
-                                    decoration: BoxDecoration(
-                                      color: _isFooterExpanded
-                                          ? FlutterFlowTheme.of(context)
-                                              .primary
-                                              .withValues(alpha: 0.04)
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    margin: EdgeInsetsDirectional.fromSTEB(
-                                        16.0, 8.0, 16.0, 0.0),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 6.0, 8.0, 6.0),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.grid_view_rounded,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate
-                                                .withValues(alpha: 0.7),
-                                            size: 16.0,
-                                          ),
-                                          const SizedBox(width: 10.0),
-                                          Expanded(
-                                            child: Text(
-                                              'Quick Access',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .labelSmall
-                                                  .override(
-                                                    fontFamily:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .labelSmallFamily,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .alternate
-                                                        .withValues(alpha: 0.7),
-                                                    letterSpacing: 1.2,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 10.5,
-                                                    useGoogleFonts:
-                                                        !FlutterFlowTheme.of(
-                                                                context)
-                                                            .labelSmallIsCustom,
-                                                  ),
-                                            ),
-                                          ),
-                                          AnimatedRotation(
-                                            duration: const Duration(
-                                                milliseconds: 220),
-                                            curve: Curves.easeOutCubic,
-                                            turns: _isFooterExpanded
-                                                ? -0.25
-                                                : 0.25,
-                                            child: Icon(
-                                              Icons.chevron_right_rounded,
+                                      width: double.infinity,
+                                      height: 36.0,
+                                      decoration: BoxDecoration(
+                                        color: _isFooterExpanded
+                                            ? FlutterFlowTheme.of(context)
+                                                .primary
+                                                .withValues(alpha: 0.04)
+                                            : Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      margin: EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 8.0, 16.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8.0, 6.0, 8.0, 6.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.grid_view_rounded,
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .alternate
-                                                      .withValues(alpha: 0.6),
+                                                      .withValues(alpha: 0.7),
                                               size: 16.0,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(width: 10.0),
+                                            Expanded(
+                                              child: Text(
+                                                'Quick Access',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .labelSmall
+                                                    .override(
+                                                      fontFamily:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .labelSmallFamily,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .alternate
+                                                              .withValues(
+                                                                  alpha: 0.7),
+                                                      letterSpacing: 1.2,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 10.5,
+                                                      useGoogleFonts:
+                                                          !FlutterFlowTheme.of(
+                                                                  context)
+                                                              .labelSmallIsCustom,
+                                                    ),
+                                              ),
+                                            ),
+                                            AnimatedRotation(
+                                              duration: const Duration(
+                                                  milliseconds: 220),
+                                              curve: Curves.easeOutCubic,
+                                              turns: _isFooterExpanded
+                                                  ? -0.25
+                                                  : 0.25,
+                                              child: Icon(
+                                                Icons.chevron_right_rounded,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate
+                                                        .withValues(alpha: 0.6),
+                                                size: 16.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
                                     ),
                                   ),
                                 ),

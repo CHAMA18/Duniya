@@ -225,12 +225,14 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                       'Batch Number : ${inventoryDetailsStockRecord.batchNumber}',
                                                       style: FlutterFlowTheme
                                                               .of(context)
-                                                          .displaySmall
+                                                          .titleMedium
                                                           .override(
                                                             fontFamily:
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .displaySmallFamily,
+                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                            fontWeight: FontWeight.w600,
                                                             letterSpacing: 0.0,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -259,12 +261,14 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                       )}',
                                                       style: FlutterFlowTheme
                                                               .of(context)
-                                                          .displaySmall
+                                                          .titleMedium
                                                           .override(
                                                             fontFamily:
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .displaySmallFamily,
+                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                            fontWeight: FontWeight.w600,
                                                             letterSpacing: 0.0,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -285,12 +289,14 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                       'Pharmacy : ${inventoryDetailsStockRecord.pharmacy}',
                                                       style: FlutterFlowTheme
                                                               .of(context)
-                                                          .displaySmall
+                                                          .titleMedium
                                                           .override(
                                                             fontFamily:
                                                                 FlutterFlowTheme.of(
                                                                         context)
                                                                     .displaySmallFamily,
+                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                            fontWeight: FontWeight.w600,
                                                             letterSpacing: 0.0,
                                                             useGoogleFonts:
                                                                 !FlutterFlowTheme.of(
@@ -579,7 +585,7 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                     .fromSTEB(
                                                         0.0, 12.0, 0.0, 12.0),
                                                 child: Container(
-                                                  height: 120.0,
+                                                  height: 132.0,
                                                   constraints: BoxConstraints(
                                                     maxWidth: 270.0,
                                                   ),
@@ -589,7 +595,17 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget> {
                                                         .secondaryBackground,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            8.0),
+                                                            16.0),
+                                                    border: Border.all(
+                                                      color: FlutterFlowTheme.of(context).primary.withValues(alpha: 0.14),
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black.withValues(alpha: 0.035),
+                                                        blurRadius: 14.0,
+                                                        offset: const Offset(0, 6),
+                                                      ),
+                                                    ],
                                                   ),
                                                   child: Padding(
                                                     padding:

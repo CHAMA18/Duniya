@@ -1414,8 +1414,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       '${snapshot.profitMargin.toStringAsFixed(1)}% margin',
                       maxLines: 1,
                       style: FlutterFlowTheme.of(context).labelMedium.override(
-                            fontFamily: FlutterFlowTheme.of(context)
-                                .labelMediumFamily,
+                            fontFamily:
+                                FlutterFlowTheme.of(context).labelMediumFamily,
                             color: const Color(0xFF059669),
                             fontWeight: FontWeight.w600,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
@@ -1428,31 +1428,31 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             ],
           );
           final financePills = [
-              _buildFinancePill(
-                context,
-                label: 'Revenue',
-                value: _formatCurrency(snapshot.revenue),
-                tint: FlutterFlowTheme.of(context).primary,
-              ),
-              _buildFinancePill(
-                context,
-                label: 'Gross Profit',
-                value: _formatCurrency(snapshot.grossProfit),
-                tint: const Color(0xFF10B981),
-              ),
-              _buildFinancePill(
-                context,
-                label: 'Net Profit',
-                value: _formatCurrency(snapshot.netProfit),
-                tint: const Color(0xFF4F46E5),
-              ),
-              _buildFinancePill(
-                context,
-                label: 'Cost of Goods',
-                value: _formatCurrency(snapshot.costOfGoods),
-                tint: const Color(0xFFEF4444),
-              ),
-            ];
+            _buildFinancePill(
+              context,
+              label: 'Revenue',
+              value: _formatCurrency(snapshot.revenue),
+              tint: FlutterFlowTheme.of(context).primary,
+            ),
+            _buildFinancePill(
+              context,
+              label: 'Gross Profit',
+              value: _formatCurrency(snapshot.grossProfit),
+              tint: const Color(0xFF10B981),
+            ),
+            _buildFinancePill(
+              context,
+              label: 'Net Profit',
+              value: _formatCurrency(snapshot.netProfit),
+              tint: const Color(0xFF4F46E5),
+            ),
+            _buildFinancePill(
+              context,
+              label: 'Cost of Goods',
+              value: _formatCurrency(snapshot.costOfGoods),
+              tint: const Color(0xFFEF4444),
+            ),
+          ];
 
           if (showsCompactRow) {
             return Row(
@@ -1546,8 +1546,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 value,
                 maxLines: 1,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      fontFamily:
-                          FlutterFlowTheme.of(context).bodyMediumFamily,
+                      fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                       color: tint,
                       fontWeight: FontWeight.w800,
                       useGoogleFonts:
@@ -2962,231 +2961,243 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(isPhone ? 22 : 28),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          const Color(0xFF6D28D9),
-                                          FlutterFlowTheme.of(context).primary,
-                                          const Color(0xFF1D4ED8),
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(28),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary
-                                              .withValues(alpha: 0.2),
-                                          blurRadius: 28,
-                                          offset: const Offset(0, 14),
+                                  if (!AccessControl.isDuniyaUser(context)) ...[
+                                    Container(
+                                      width: double.infinity,
+                                      padding:
+                                          EdgeInsets.all(isPhone ? 22 : 28),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            const Color(0xFF6D28D9),
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                            const Color(0xFF1D4ED8),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
                                         ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Pharmacy Command Center',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .displaySmall
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .displaySmallFamily,
-                                                          color: Colors.white,
-                                                          fontSize:
-                                                              isPhone ? 28 : 40,
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                          letterSpacing: -1.1,
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .displaySmallIsCustom,
-                                                        ),
+                                        borderRadius: BorderRadius.circular(28),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary
+                                                .withValues(alpha: 0.2),
+                                            blurRadius: 28,
+                                            offset: const Offset(0, 14),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Pharmacy Command Center',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .displaySmall
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .displaySmallFamily,
+                                                            color: Colors.white,
+                                                            fontSize: isPhone
+                                                                ? 28
+                                                                : 40,
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            letterSpacing: -1.1,
+                                                            useGoogleFonts:
+                                                                !FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .displaySmallIsCustom,
+                                                          ),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    Text(
+                                                      '$pharmacyLabel is tracking credit-delivered goods, sell-through, and inventory movement in real time.',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyLarge
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLargeFamily,
+                                                            color: Colors.white
+                                                                .withValues(
+                                                                    alpha: 0.9),
+                                                            useGoogleFonts:
+                                                                !FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLargeIsCustom,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              if (!isPhone) ...[
+                                                if (AccessControl
+                                                    .hasAnyPermission(context, [
+                                                  Permission.posView,
+                                                  Permission.posCreateSale
+                                                ]))
+                                                  const SizedBox(width: 16),
+                                                if (AccessControl
+                                                    .hasAnyPermission(context, [
+                                                  Permission.posView,
+                                                  Permission.posCreateSale
+                                                ]))
+                                                  _buildDashboardActionButton(
+                                                    label: 'Open POS',
+                                                    icon: Icons
+                                                        .point_of_sale_rounded,
+                                                    fillColor: Colors.white,
+                                                    iconColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                    textColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                    onTap: () async {
+                                                      context.pushNamed(
+                                                        PointOfSalesWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                    isPrimary: false,
                                                   ),
-                                                  const SizedBox(height: 10),
-                                                  Text(
-                                                    '$pharmacyLabel is tracking credit-delivered goods, sell-through, and inventory movement in real time.',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyLarge
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyLargeFamily,
-                                                          color: Colors.white
-                                                              .withValues(
-                                                                  alpha: 0.9),
-                                                          useGoogleFonts:
-                                                              !FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyLargeIsCustom,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),                                            if (!isPhone) ...[
-                                              if (AccessControl.hasAnyPermission(
-                                                  context, [
-                                                Permission.posView,
-                                                Permission.posCreateSale
-                                              ]))
-                                                const SizedBox(width: 16),
-                                              if (AccessControl.hasAnyPermission(
-                                                  context, [
-                                                Permission.posView,
-                                                Permission.posCreateSale
-                                              ]))
-                                              _buildDashboardActionButton(
-                                                label: 'Open POS',
-                                                icon:
-                                                    Icons.point_of_sale_rounded,
-                                                fillColor: Colors.white,
-                                                iconColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
-                                                textColor: FlutterFlowTheme.of(
-                                                        context)
-                                                    .primary,
-                                                onTap: () async {
-                                                  context.pushNamed(
-                                                    PointOfSalesWidget
-                                                        .routeName,
-                                                  );
-                                                },
-                                                isPrimary: false,
-                                              ),
-                                              const SizedBox(width: 12),
-                                              _buildDashboardActionButton(
-                                                label: 'Inventory',
-                                                icon: Icons.inventory_2_rounded,
-                                                fillColor: Colors.black,
-                                                iconColor: Colors.white,
-                                                textColor: Colors.white,
-                                                onTap: () async {
-                                                  context.pushNamed(
-                                                    PharmacyInventoryWidget
-                                                        .routeName,
-                                                  );
-                                                },
-                                                isPrimary: true,
-                                              ),
-                                              if (AccessControl.hasPermission(
-                                                  context, Permission.hrView))
                                                 const SizedBox(width: 12),
-                                              if (AccessControl.hasPermission(
-                                                  context, Permission.hrView))
                                                 _buildDashboardActionButton(
-                                                  label: 'HR Portal',
-                                                  icon: Icons.badge_rounded,
-                                                  fillColor: Colors.white,
-                                                  iconColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                  textColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
+                                                  label: 'Inventory',
+                                                  icon:
+                                                      Icons.inventory_2_rounded,
+                                                  fillColor: Colors.black,
+                                                  iconColor: Colors.white,
+                                                  textColor: Colors.white,
                                                   onTap: () async {
-                                                    context.goNamed(
-                                                      HumanResourceUniWidget
+                                                    context.pushNamed(
+                                                      PharmacyInventoryWidget
                                                           .routeName,
                                                     );
                                                   },
-                                                  isPrimary: false,
+                                                  isPrimary: true,
+                                                ),
+                                                if (AccessControl.hasPermission(
+                                                    context, Permission.hrView))
+                                                  const SizedBox(width: 12),
+                                                if (AccessControl.hasPermission(
+                                                    context, Permission.hrView))
+                                                  _buildDashboardActionButton(
+                                                    label: 'HR Portal',
+                                                    icon: Icons.badge_rounded,
+                                                    fillColor: Colors.white,
+                                                    iconColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    textColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    onTap: () async {
+                                                      context.goNamed(
+                                                        HumanResourceUniWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                    isPrimary: false,
+                                                  ),
+                                              ],
+                                            ],
+                                          ),
+                                          const SizedBox(height: 18),
+                                          Wrap(
+                                            spacing: 10,
+                                            runSpacing: 10,
+                                            children: [
+                                              _buildStatusChip(
+                                                context,
+                                                icon: Icons
+                                                    .local_shipping_rounded,
+                                                label:
+                                                    '${deliveries} goods received',
+                                              ),
+                                              _buildStatusChip(
+                                                context,
+                                                icon: Icons.trending_up_rounded,
+                                                label:
+                                                    '$soldItems items sold across ${data.sales.length} transactions',
+                                              ),
+                                              _buildStatusChip(
+                                                context,
+                                                icon:
+                                                    Icons.warning_amber_rounded,
+                                                label:
+                                                    '$lowStockCount low stock alerts',
+                                              ),
+                                              _buildStatusChip(
+                                                context,
+                                                icon: Icons.event_busy_rounded,
+                                                label:
+                                                    '$nearExpiry near expiry SKUs',
+                                              ),
+                                              _buildStatusChip(
+                                                context,
+                                                icon: Icons.sync_alt_rounded,
+                                                label:
+                                                    '$movementCount stock movements tracked',
+                                              ),
+                                              if (isPhone &&
+                                                  AccessControl.hasPermission(
+                                                      context,
+                                                      Permission.hrView))
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 6),
+                                                  child:
+                                                      _buildDashboardActionButton(
+                                                    label: 'HR Portal',
+                                                    icon: Icons.badge_rounded,
+                                                    fillColor: Colors.white,
+                                                    iconColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    textColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .secondary,
+                                                    onTap: () async {
+                                                      context.goNamed(
+                                                        HumanResourceUniWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                    isPrimary: false,
+                                                  ),
                                                 ),
                                             ],
-                                          ],
-                                        ),
-                                        const SizedBox(height: 18),
-                                        Wrap(
-                                          spacing: 10,
-                                          runSpacing: 10,
-                                          children: [
-                                            _buildStatusChip(
-                                              context,
-                                              icon:
-                                                  Icons.local_shipping_rounded,
-                                              label:
-                                                  '${deliveries} goods received',
-                                            ),
-                                            _buildStatusChip(
-                                              context,
-                                              icon: Icons.trending_up_rounded,
-                                              label:
-                                                  '$soldItems items sold across ${data.sales.length} transactions',
-                                            ),
-                                            _buildStatusChip(
-                                              context,
-                                              icon: Icons.warning_amber_rounded,
-                                              label:
-                                                  '$lowStockCount low stock alerts',
-                                            ),
-                                            _buildStatusChip(
-                                              context,
-                                              icon: Icons.event_busy_rounded,
-                                              label:
-                                                  '$nearExpiry near expiry SKUs',
-                                            ),
-                                            _buildStatusChip(
-                                              context,
-                                              icon: Icons.sync_alt_rounded,
-                                              label:
-                                                  '$movementCount stock movements tracked',
-                                            ),
-                                            if (isPhone &&
-                                                AccessControl.hasPermission(
-                                                    context, Permission.hrView))
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 6),
-                                                child:
-                                                    _buildDashboardActionButton(
-                                                  label: 'HR Portal',
-                                                  icon: Icons.badge_rounded,
-                                                  fillColor: Colors.white,
-                                                  iconColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                  textColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .secondary,
-                                                  onTap: () async {
-                                                    context.goNamed(
-                                                      HumanResourceUniWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                  isPrimary: false,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 22),
+                                    const SizedBox(height: 22),
+                                  ],
                                   LayoutBuilder(
                                     builder: (context, constraints) {
                                       // Four compact cards fit comfortably on
@@ -3292,17 +3303,19 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                       )
                                                       .toList(),
                                                 )
-                                          : Column(
-                                              children: [
-                                                for (var i = 0;
-                                                    i < heroCards.length;
-                                                    i++) ...[
-                                                  heroCards[i],
-                                                  if (i != heroCards.length - 1)
-                                                    const SizedBox(height: 12),
-                                                ],
-                                              ],
-                                            );
+                                              : Column(
+                                                  children: [
+                                                    for (var i = 0;
+                                                        i < heroCards.length;
+                                                        i++) ...[
+                                                      heroCards[i],
+                                                      if (i !=
+                                                          heroCards.length - 1)
+                                                        const SizedBox(
+                                                            height: 12),
+                                                    ],
+                                                  ],
+                                                );
 
                                       return Column(
                                         crossAxisAlignment:
@@ -3545,160 +3558,168 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 ),
                                               ],
                                             ),
-                                          const SizedBox(height: 22),
-                                          _buildPharmacySectionHeader(
-                                            context,
-                                            title: 'Fast Actions',
-                                            subtitle:
-                                                'Move from insight to action in one tap',
-                                            icon: Icons.flash_on_rounded,
-                                          ),
-                                          const SizedBox(height: 14),
-                                          LayoutBuilder(
-                                            builder:
-                                                (context, actionConstraints) {
-                                              final actionIsWide =
-                                                  actionConstraints.maxWidth >=
-                                                      980;
-                                              final actionCards = [
-                                                if (AccessControl.hasAnyPermission(
-                                                    context, [
-                                                  Permission.posView,
-                                                  Permission.posCreateSale
-                                                ]))
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Point of Sale',
-                                                  subtitle:
-                                                      'Process transactions and record sell-through',
-                                                  icon: Icons
-                                                      .point_of_sale_rounded,
-                                                  accent: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      PointOfSalesWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                ),
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Pharmacy Inventory',
-                                                  subtitle:
-                                                      'Track stock, batches, expiry, and availability',
-                                                  icon:
-                                                      Icons.inventory_2_rounded,
-                                                  accent:
-                                                      const Color(0xFF10B981),
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      PharmacyInventoryWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                ),
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Goods Received',
-                                                  subtitle:
-                                                      'Review deliveries and reconcile supply',
-                                                  icon: Icons
-                                                      .local_shipping_rounded,
-                                                  accent:
-                                                      const Color(0xFFF59E0B),
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      GoodsReceivedWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                ),
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Batches & Expiry',
-                                                  subtitle:
-                                                      'Protect stock with expiry visibility',
-                                                  icon: Icons
-                                                      .event_available_rounded,
-                                                  accent:
-                                                      const Color(0xFF8B5CF6),
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      BatchesWidget.routeName,
-                                                    );
-                                                  },
-                                                ),
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Stock Movements',
-                                                  subtitle:
-                                                      'See stock-in, stock-out, and transfer flow',
-                                                  icon: Icons.sync_alt_rounded,
-                                                  accent:
-                                                      const Color(0xFF0EA5E9),
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      StockMovementsWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                ),
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Low Stock Alerts',
-                                                  subtitle:
-                                                      'Jump directly to replenishment pressure',
-                                                  icon: Icons
-                                                      .warning_amber_rounded,
-                                                  accent:
-                                                      const Color(0xFFEF4444),
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      LowStockAlertsWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                ),
-                                                _buildPharmacyActionCard(
-                                                  context,
-                                                  title: 'Replenishment',
-                                                  subtitle:
-                                                      'Plan supply before stock-out hits',
-                                                  icon: Icons.restore_rounded,
-                                                  accent:
-                                                      const Color(0xFFF97316),
-                                                  onTap: () {
-                                                    context.pushNamed(
-                                                      ReplenishmentWidget
-                                                          .routeName,
-                                                    );
-                                                  },
-                                                ),
-                                              ];
+                                          if (!AccessControl.isDuniyaUser(
+                                              context)) ...[
+                                            const SizedBox(height: 22),
+                                            _buildPharmacySectionHeader(
+                                              context,
+                                              title: 'Fast Actions',
+                                              subtitle:
+                                                  'Move from insight to action in one tap',
+                                              icon: Icons.flash_on_rounded,
+                                            ),
+                                            const SizedBox(height: 14),
+                                            LayoutBuilder(
+                                              builder:
+                                                  (context, actionConstraints) {
+                                                final actionIsWide =
+                                                    actionConstraints
+                                                            .maxWidth >=
+                                                        980;
+                                                final actionCards = [
+                                                  if (AccessControl
+                                                      .hasAnyPermission(
+                                                          context, [
+                                                    Permission.posView,
+                                                    Permission.posCreateSale
+                                                  ]))
+                                                    _buildPharmacyActionCard(
+                                                      context,
+                                                      title:
+                                                          'Sales & Dispensing',
+                                                      subtitle:
+                                                          'Record pharmacy sales and dispense medicines',
+                                                      icon: Icons
+                                                          .point_of_sale_rounded,
+                                                      accent:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
+                                                      onTap: () {
+                                                        context.pushNamed(
+                                                          SalesVMIWidget
+                                                              .routeName,
+                                                        );
+                                                      },
+                                                    ),
+                                                  _buildPharmacyActionCard(
+                                                    context,
+                                                    title: 'Pharmacy Inventory',
+                                                    subtitle:
+                                                        'Track stock, batches, expiry, and availability',
+                                                    icon: Icons
+                                                        .inventory_2_rounded,
+                                                    accent:
+                                                        const Color(0xFF10B981),
+                                                    onTap: () {
+                                                      context.pushNamed(
+                                                        PharmacyInventoryWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                  ),
+                                                  _buildPharmacyActionCard(
+                                                    context,
+                                                    title: 'Goods Received',
+                                                    subtitle:
+                                                        'Review deliveries and reconcile supply',
+                                                    icon: Icons
+                                                        .local_shipping_rounded,
+                                                    accent:
+                                                        const Color(0xFFF59E0B),
+                                                    onTap: () {
+                                                      context.pushNamed(
+                                                        GoodsReceivedWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                  ),
+                                                  _buildPharmacyActionCard(
+                                                    context,
+                                                    title: 'Batches & Expiry',
+                                                    subtitle:
+                                                        'Protect stock with expiry visibility',
+                                                    icon: Icons
+                                                        .event_available_rounded,
+                                                    accent:
+                                                        const Color(0xFF8B5CF6),
+                                                    onTap: () {
+                                                      context.pushNamed(
+                                                        BatchesWidget.routeName,
+                                                      );
+                                                    },
+                                                  ),
+                                                  _buildPharmacyActionCard(
+                                                    context,
+                                                    title: 'Stock Movements',
+                                                    subtitle:
+                                                        'See stock-in, stock-out, and transfer flow',
+                                                    icon:
+                                                        Icons.sync_alt_rounded,
+                                                    accent:
+                                                        const Color(0xFF0EA5E9),
+                                                    onTap: () {
+                                                      context.pushNamed(
+                                                        StockMovementsWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                  ),
+                                                  _buildPharmacyActionCard(
+                                                    context,
+                                                    title: 'Low Stock Alerts',
+                                                    subtitle:
+                                                        'Jump directly to replenishment pressure',
+                                                    icon: Icons
+                                                        .warning_amber_rounded,
+                                                    accent:
+                                                        const Color(0xFFEF4444),
+                                                    onTap: () {
+                                                      context.pushNamed(
+                                                        LowStockAlertsWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                  ),
+                                                  _buildPharmacyActionCard(
+                                                    context,
+                                                    title: 'Replenishment',
+                                                    subtitle:
+                                                        'Plan supply before stock-out hits',
+                                                    icon: Icons.restore_rounded,
+                                                    accent:
+                                                        const Color(0xFFF97316),
+                                                    onTap: () {
+                                                      context.pushNamed(
+                                                        ReplenishmentWidget
+                                                            .routeName,
+                                                      );
+                                                    },
+                                                  ),
+                                                ];
 
-                                              return Wrap(
-                                                spacing: 14,
-                                                runSpacing: 14,
-                                                children: actionCards
-                                                    .map(
-                                                      (card) => SizedBox(
-                                                        width: actionIsWide
-                                                            ? (actionConstraints
-                                                                        .maxWidth -
-                                                                    42) /
-                                                                2
-                                                            : actionConstraints
-                                                                .maxWidth,
-                                                        child: card,
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(height: 22),
+                                                return Wrap(
+                                                  spacing: 14,
+                                                  runSpacing: 14,
+                                                  children: actionCards
+                                                      .map(
+                                                        (card) => SizedBox(
+                                                          width: actionIsWide
+                                                              ? (actionConstraints
+                                                                          .maxWidth -
+                                                                      42) /
+                                                                  2
+                                                              : actionConstraints
+                                                                  .maxWidth,
+                                                          child: card,
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(height: 22),
+                                          ],
                                           _buildPharmacySectionHeader(
                                             context,
                                             title: 'Supply Watchlist',

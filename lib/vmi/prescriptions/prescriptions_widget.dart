@@ -903,249 +903,393 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
       MedicationLine(drug: '', dose: '', frequency: '', duration: '')
     ];
 
+    String? validationError;
     showDialog(
       context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.56),
       builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          title: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Icon(Icons.add_circle, color: _duniyaPurple, size: 22.0),
-              ),
-              const SizedBox(width: 12.0),
-              Text('New Prescription',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontWeight: FontWeight.w700,
-                      color: _textPrimary)),
-            ],
-          ),
-          content: SizedBox(
-            width: 520,
-            child: SingleChildScrollView(
+        builder: (context, setDialogState) => Dialog(
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints:
+                const BoxConstraints(maxWidth: 760.0, maxHeight: 780.0),
+            child: Material(
+              color: Colors.white,
+              elevation: 24.0,
+              shadowColor: Colors.black.withValues(alpha: 0.32),
+              borderRadius: BorderRadius.circular(28.0),
+              clipBehavior: Clip.antiAlias,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Patient name
-                  _formField(
-                    controller: _model.patientNameTextController,
-                    focusNode: _model.patientNameFocusNode,
-                    label: 'Patient Name',
-                    icon: Icons.person,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(28.0, 24.0, 20.0, 20.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 52.0,
+                          height: 52.0,
+                          decoration: BoxDecoration(
+                            color: _duniyaPurpleLight,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          child:
+                              Icon(Icons.add, color: _duniyaPurple, size: 28.0),
+                        ),
+                        const SizedBox(width: 16.0),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('New Prescription',
+                                  style: TextStyle(
+                                      fontFamily: kAppFontFamily,
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: _textPrimary)),
+                              const SizedBox(height: 3.0),
+                              Text(
+                                  'Record medication instructions for a patient.',
+                                  style: TextStyle(
+                                      fontFamily: kAppFontFamily,
+                                      fontSize: 13.0,
+                                      color: _textSecondary)),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Close',
+                          onPressed: () => Navigator.pop(dialogContext),
+                          icon: Icon(Icons.close, color: _textSecondary),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 14.0),
-                  // Prescriber
-                  _formField(
-                    controller: _model.prescriberTextController,
-                    focusNode: _model.prescriberFocusNode,
-                    label: 'Prescriber',
-                    icon: Icons.local_hospital,
-                  ),
-                  const SizedBox(height: 14.0),
-                  // Date display
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today,
-                          size: 16.0, color: _duniyaPurple),
-                      const SizedBox(width: 8.0),
-                      Text(
-                        'Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                        style: TextStyle(
-                            fontFamily: kAppFontFamily,
-                            fontSize: 13.0,
-                            color: _textSecondary),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-
-                  // Medication lines header
-                  Text('Medications',
-                      style: TextStyle(
-                        fontFamily: kAppFontFamily,
-                        fontSize: 13.0,
-                        fontWeight: FontWeight.w600,
-                        color: _textPrimary,
-                      )),
-                  const SizedBox(height: 8.0),
-
-                  // Medication lines
-                  ..._formMedLines.asMap().entries.map((entry) {
-                    final i = entry.key;
-                    final line = entry.value;
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10.0),
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color: _bgColor,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(color: _borderColor, width: 1.0),
-                      ),
+                  Divider(height: 1.0, color: _borderColor),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      padding:
+                          const EdgeInsets.fromLTRB(28.0, 24.0, 28.0, 20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Patient name
+                          _formField(
+                            controller: _model.patientNameTextController,
+                            focusNode: _model.patientNameFocusNode,
+                            label: 'Patient Name',
+                            icon: Icons.person,
+                          ),
+                          const SizedBox(height: 14.0),
+                          // Prescriber
+                          _formField(
+                            controller: _model.prescriberTextController,
+                            focusNode: _model.prescriberFocusNode,
+                            label: 'Prescriber',
+                            icon: Icons.local_hospital,
+                          ),
+                          const SizedBox(height: 14.0),
+                          // Date display
                           Row(
                             children: [
-                              Text('Line ${i + 1}',
+                              Icon(Icons.calendar_today,
+                                  size: 16.0, color: _duniyaPurple),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                'Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 13.0,
+                                    color: _textSecondary),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 18.0),
+
+                          // Medication lines header
+                          Row(
+                            children: [
+                              Text('Medications',
                                   style: TextStyle(
-                                      fontFamily: kAppFontFamily,
-                                      fontSize: 11.0,
-                                      fontWeight: FontWeight.w600,
-                                      color: _duniyaPurple)),
-                              const Spacer(),
-                              if (_formMedLines.length > 1)
-                                InkWell(
-                                  onTap: () => setDialogState(
-                                      () => _formMedLines.removeAt(i)),
-                                  child: Icon(Icons.close,
-                                      size: 16.0, color: _expiredBadge),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: TextField(
-                                  decoration: _medInputDec('Drug'),
-                                  onChanged: (v) => line.drug = v,
-                                ),
-                              ),
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: _textPrimary,
+                                  )),
                               const SizedBox(width: 8.0),
-                              Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  decoration: _medInputDec('Dose'),
-                                  onChanged: (v) => line.dose = v,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 3.0),
+                                decoration: BoxDecoration(
+                                  color: _duniyaPurpleLight,
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
+                                child: Text(
+                                    '${_formMedLines.length} line${_formMedLines.length == 1 ? '' : 's'}',
+                                    style: TextStyle(
+                                        fontFamily: kAppFontFamily,
+                                        fontSize: 11.0,
+                                        fontWeight: FontWeight.w600,
+                                        color: _duniyaPurple)),
                               ),
                             ],
                           ),
+                          const SizedBox(height: 4.0),
+                          Text(
+                              'Add the medicine and directions exactly as prescribed.',
+                              style: TextStyle(
+                                  fontFamily: kAppFontFamily,
+                                  fontSize: 12.0,
+                                  color: _textSecondary)),
                           const SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  decoration: _medInputDec('Frequency'),
-                                  onChanged: (v) => line.frequency = v,
-                                ),
+
+                          // Medication lines
+                          ..._formMedLines.asMap().entries.map((entry) {
+                            final i = entry.key;
+                            final line = entry.value;
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10.0),
+                              padding: const EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                color: _bgColor.withValues(alpha: 0.62),
+                                borderRadius: BorderRadius.circular(14.0),
+                                border:
+                                    Border.all(color: _borderColor, width: 1.0),
                               ),
-                              const SizedBox(width: 8.0),
-                              Expanded(
-                                child: TextField(
-                                  decoration: _medInputDec('Duration'),
-                                  onChanged: (v) => line.duration = v,
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('Line ${i + 1}',
+                                          style: TextStyle(
+                                              fontFamily: kAppFontFamily,
+                                              fontSize: 11.0,
+                                              fontWeight: FontWeight.w600,
+                                              color: _duniyaPurple)),
+                                      const Spacer(),
+                                      if (_formMedLines.length > 1)
+                                        IconButton(
+                                          tooltip: 'Remove medication line',
+                                          visualDensity: VisualDensity.compact,
+                                          onPressed: () => setDialogState(
+                                              () => _formMedLines.removeAt(i)),
+                                          icon: Icon(Icons.close,
+                                              size: 18.0, color: _expiredBadge),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final isCompact =
+                                          constraints.maxWidth < 500.0;
+                                      final drugField = TextField(
+                                        decoration: _medInputDec('Drug'),
+                                        onChanged: (v) => line.drug = v,
+                                      );
+                                      final doseField = TextField(
+                                        decoration: _medInputDec('Dose'),
+                                        onChanged: (v) => line.dose = v,
+                                      );
+                                      final frequencyField = TextField(
+                                        decoration: _medInputDec('Frequency'),
+                                        onChanged: (v) => line.frequency = v,
+                                      );
+                                      final durationField = TextField(
+                                        decoration: _medInputDec('Duration'),
+                                        onChanged: (v) => line.duration = v,
+                                      );
+                                      if (isCompact) {
+                                        return Column(
+                                          children: [
+                                            drugField,
+                                            const SizedBox(height: 8.0),
+                                            doseField,
+                                            const SizedBox(height: 8.0),
+                                            frequencyField,
+                                            const SizedBox(height: 8.0),
+                                            durationField,
+                                          ],
+                                        );
+                                      }
+                                      return Column(
+                                        children: [
+                                          Row(children: [
+                                            Expanded(flex: 3, child: drugField),
+                                            const SizedBox(width: 8.0),
+                                            Expanded(flex: 2, child: doseField),
+                                          ]),
+                                          const SizedBox(height: 8.0),
+                                          Row(children: [
+                                            Expanded(child: frequencyField),
+                                            const SizedBox(width: 8.0),
+                                            Expanded(child: durationField),
+                                          ]),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
-                            ],
+                            );
+                          }),
+
+                          // Add medication line
+                          OutlinedButton.icon(
+                            onPressed: () => setDialogState(
+                              () => _formMedLines.add(MedicationLine(
+                                  drug: '',
+                                  dose: '',
+                                  frequency: '',
+                                  duration: '')),
+                            ),
+                            icon: Icon(Icons.add, size: 16.0),
+                            label: Text('Add Medication'),
+                            style: OutlinedButton.styleFrom(
+                              side:
+                                  BorderSide(color: _duniyaPurple, width: 1.0),
+                              foregroundColor: _duniyaPurple,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0, vertical: 8.0),
+                            ),
+                          ),
+
+                          const SizedBox(height: 18.0),
+
+                          // Notes
+                          TextField(
+                            controller: _model.notesTextController,
+                            focusNode: _model.notesFocusNode,
+                            minLines: 2,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+                              labelText: 'Notes',
+                              labelStyle: TextStyle(
+                                  fontFamily: kAppFontFamily,
+                                  color: _textSecondary),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12.0)),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide(
+                                    color: _duniyaPurple, width: 2.0),
+                              ),
+                              prefixIcon: Icon(Icons.notes,
+                                  color: _duniyaPurple, size: 20.0),
+                            ),
                           ),
                         ],
                       ),
-                    );
-                  }),
-
-                  // Add medication line
-                  OutlinedButton.icon(
-                    onPressed: () => setDialogState(
-                      () => _formMedLines.add(MedicationLine(
-                          drug: '', dose: '', frequency: '', duration: '')),
-                    ),
-                    icon: Icon(Icons.add, size: 16.0),
-                    label: Text('Add Medication'),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: _duniyaPurple, width: 1.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical: 8.0),
                     ),
                   ),
-
-                  const SizedBox(height: 14.0),
-
-                  // Notes
-                  TextField(
-                    controller: _model.notesTextController,
-                    focusNode: _model.notesFocusNode,
-                    maxLines: 2,
-                    decoration: InputDecoration(
-                      labelText: 'Notes',
-                      labelStyle: TextStyle(
-                          fontFamily: kAppFontFamily, color: _textSecondary),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0)),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0),
+                  if (validationError != null)
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.fromLTRB(28.0, 0.0, 28.0, 12.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 10.0),
+                      decoration: BoxDecoration(
+                        color: _expiredBadge.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon:
-                          Icon(Icons.notes, color: _duniyaPurple, size: 20.0),
+                      child: Row(children: [
+                        Icon(Icons.info_outline,
+                            size: 18.0, color: _expiredBadge),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                            child: Text(validationError!,
+                                style: TextStyle(
+                                    fontFamily: kAppFontFamily,
+                                    fontSize: 12.0,
+                                    color: _expiredBadge))),
+                      ]),
+                    ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(28.0, 16.0, 28.0, 20.0),
+                    decoration: BoxDecoration(
+                      color: _bgColor.withValues(alpha: 0.5),
+                      border: Border(top: BorderSide(color: _borderColor)),
+                    ),
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 10.0,
+                      runSpacing: 10.0,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext),
+                          child: Text('Cancel',
+                              style: TextStyle(
+                                  fontFamily: kAppFontFamily,
+                                  color: _textSecondary,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            final patient =
+                                _model.patientNameTextController?.text.trim() ??
+                                    '';
+                            final prescriber =
+                                _model.prescriberTextController?.text.trim() ??
+                                    '';
+                            if (patient.isEmpty || prescriber.isEmpty) {
+                              setDialogState(() => validationError =
+                                  'Enter the patient name and prescriber before submitting.');
+                              return;
+                            }
+                            final validMeds = _formMedLines
+                                .where((m) => m.drug.isNotEmpty)
+                                .toList();
+                            if (validMeds.isEmpty) {
+                              setDialogState(() => validationError =
+                                  'Add at least one medication before submitting.');
+                              return;
+                            }
+
+                            final newRx = Prescription(
+                              rxNumber:
+                                  'RX-2024-${(156 + _prescriptions.length + 1).toString().padLeft(4, '0')}',
+                              patientName: patient,
+                              prescriber: prescriber,
+                              medications: validMeds,
+                              status: RxStatus.pending,
+                              date: DateTime.now(),
+                              notes: _model.notesTextController?.text.trim(),
+                              value: validMeds.length * 35.0,
+                            );
+
+                            safeSetState(() => _prescriptions.insert(0, newRx));
+                            Navigator.pop(dialogContext);
+                          },
+                          icon: const Icon(Icons.check_circle_outline,
+                              size: 18.0),
+                          label: Text('Save & Submit',
+                              style: TextStyle(
+                                  fontFamily: kAppFontFamily,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14.0)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _duniyaPurple,
+                            foregroundColor: Colors.white,
+                            elevation: 0.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 14.0),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text('Cancel',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      color: _textSecondary,
-                      fontWeight: FontWeight.w500)),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final patient =
-                    _model.patientNameTextController?.text.trim() ?? '';
-                final prescriber =
-                    _model.prescriberTextController?.text.trim() ?? '';
-                if (patient.isEmpty || prescriber.isEmpty) return;
-                final validMeds =
-                    _formMedLines.where((m) => m.drug.isNotEmpty).toList();
-                if (validMeds.isEmpty) return;
-
-                final newRx = Prescription(
-                  rxNumber:
-                      'RX-2024-${(156 + _prescriptions.length + 1).toString().padLeft(4, '0')}',
-                  patientName: patient,
-                  prescriber: prescriber,
-                  medications: validMeds,
-                  status: RxStatus.pending,
-                  date: DateTime.now(),
-                  notes: _model.notesTextController?.text.trim(),
-                  value: validMeds.length * 35.0,
-                );
-
-                safeSetState(() => _prescriptions.insert(0, newRx));
-                Navigator.pop(dialogContext);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 12.0),
-              ),
-              child: Text('Save & Submit',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0)),
-            ),
-          ],
         ),
       ),
     );
@@ -1364,9 +1508,9 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                   value:
                                                       _pendingCount.toString(),
                                                   icon: Icons.schedule,
-                                                  bgColor: _pendingBg,
-                                                  iconColor: _pendingBadge,
-                                                  textColor: _pendingText,
+                                                  bgColor: _duniyaPurpleLight,
+                                                  iconColor: _duniyaPurple,
+                                                  textColor: _duniyaPurpleDark,
                                                 ),
                                               ),
                                               SizedBox(
@@ -1379,9 +1523,9 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                   value:
                                                       _verifiedCount.toString(),
                                                   icon: Icons.verified_outlined,
-                                                  bgColor: _verifiedBg,
-                                                  iconColor: _verifiedBadge,
-                                                  textColor: _verifiedText,
+                                                  bgColor: _duniyaPurpleLight,
+                                                  iconColor: _duniyaPurple,
+                                                  textColor: _duniyaPurpleDark,
                                                 ),
                                               ),
                                               SizedBox(
@@ -1394,9 +1538,9 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
                                                   value: _fulfilledTodayCount
                                                       .toString(),
                                                   icon: Icons.check_circle,
-                                                  bgColor: _fulfilledBg,
-                                                  iconColor: _fulfilledBadge,
-                                                  textColor: _fulfilledText,
+                                                  bgColor: _duniyaPurpleLight,
+                                                  iconColor: _duniyaPurple,
+                                                  textColor: _duniyaPurpleDark,
                                                 ),
                                               ),
                                               SizedBox(

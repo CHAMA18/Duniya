@@ -1998,7 +1998,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                 mainAxisSpacing:
                                                                     22,
                                                                 childAspectRatio:
-                                                                    0.82,
+                                                                    0.66,
                                                               ),
                                                               itemBuilder:
                                                                   (context,
@@ -2050,7 +2050,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                             mainAxisSpacing:
                                                               18,
                                                           childAspectRatio:
-                                                              1.40,
+                                                              0.95,
                                                             ),
                                                             itemBuilder:
                                                                 (context,

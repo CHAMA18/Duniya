@@ -141,6 +141,8 @@ export '/duniya/pharmacies/duniya_pharmacies_widget.dart'
     show DuniyaPharmaciesWidget;
 export '/duniya/pharmacies/pharmacy_detail_widget.dart'
     show PharmacyDetailWidget;
+export '/duniya/supplier_management/supplier_management_widget.dart'
+    show SupplierManagementWidget;
 export '/duniya/onboarding_requests/onboarding_requests_widget.dart'
     show OnboardingRequestsWidget;
 export '/duniya/network_analytics/network_analytics_widget.dart'

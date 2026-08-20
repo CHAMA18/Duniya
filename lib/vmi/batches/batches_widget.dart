@@ -178,8 +178,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text('Batch & Expiry Tracking Report',
-                style: pw.TextStyle(
-                    fontSize: 22, fontWeight: pw.FontWeight.bold)),
+                style:
+                    pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 4),
             pw.Text(
                 'Generated: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
@@ -188,55 +188,47 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             pw.Row(
               children: [
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.red100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
-                  child: pw.Text(
-                      'Expired: ${alertCounts['expired']}',
-                      style: pw.TextStyle(
-                          fontSize: 9, color: PdfColors.red900)),
+                  child: pw.Text('Expired: ${alertCounts['expired']}',
+                      style:
+                          pw.TextStyle(fontSize: 9, color: PdfColors.red900)),
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.orange100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
-                  child: pw.Text(
-                      '< 3 Mo: ${alertCounts['threeMo']}',
+                  child: pw.Text('< 3 Mo: ${alertCounts['threeMo']}',
                       style: pw.TextStyle(
                           fontSize: 9, color: PdfColors.orange900)),
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.yellow100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
-                  child: pw.Text(
-                      '< 6 Mo: ${alertCounts['sixMo']}',
+                  child: pw.Text('< 6 Mo: ${alertCounts['sixMo']}',
                       style: pw.TextStyle(
                           fontSize: 9, color: PdfColors.yellow900)),
                 ),
                 pw.SizedBox(width: 8),
                 pw.Container(
-                  padding:
-                      pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: pw.EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: pw.BoxDecoration(
                     color: PdfColors.grey100,
                     borderRadius: pw.BorderRadius.circular(4),
                   ),
-                  child: pw.Text(
-                      'Total: ${alertCounts['total']}',
-                      style: pw.TextStyle(
-                          fontSize: 9, color: PdfColors.grey800)),
+                  child: pw.Text('Total: ${alertCounts['total']}',
+                      style:
+                          pw.TextStyle(fontSize: 9, color: PdfColors.grey800)),
                 ),
               ],
             ),
@@ -263,8 +255,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               4: pw.FixedColumnWidth(100),
               5: pw.FixedColumnWidth(70),
             },
-            border: pw.TableBorder.all(
-                color: PdfColors.grey300, width: 0.5),
+            border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
           ),
         ],
       ),
@@ -273,7 +264,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
     final bytes = await pdf.save();
     await save(
       bytes: Uint8List.fromList(bytes),
-      fileName: 'batch_expiry_report_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      fileName:
+          'batch_expiry_report_${DateTime.now().millisecondsSinceEpoch}.pdf',
       mimeType: 'application/pdf',
     );
   }
@@ -349,8 +341,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           title: Row(
             children: [
               Container(
@@ -378,13 +370,16 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogBatchTextController,
                   decoration: InputDecoration(
                     labelText: 'Batch Number',
-                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                    labelStyle: TextStyle(
+                        fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-                    prefixIcon: Icon(Icons.tag, color: _duniyaPurple, size: 20.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                    prefixIcon:
+                        Icon(Icons.tag, color: _duniyaPurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -412,10 +407,12 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Expiry Date',
-                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                      labelStyle: TextStyle(
+                          fontFamily: kAppFontFamily, color: _textSecondary),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
-                      prefixIcon: Icon(Icons.calendar_today, color: _duniyaPurple, size: 20.0),
+                      prefixIcon: Icon(Icons.calendar_today,
+                          color: _duniyaPurple, size: 20.0),
                     ),
                     child: Text(
                       _model.dialogExpiryDate != null
@@ -436,13 +433,16 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Quantity',
-                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                    labelStyle: TextStyle(
+                        fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-                    prefixIcon: Icon(Icons.inventory_2, color: _duniyaPurple, size: 20.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                    prefixIcon: Icon(Icons.inventory_2,
+                        color: _duniyaPurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -450,13 +450,16 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogFacilityTextController,
                   decoration: InputDecoration(
                     labelText: 'Facility Location',
-                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                    labelStyle: TextStyle(
+                        fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-                    prefixIcon: Icon(Icons.location_on, color: _duniyaPurple, size: 20.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                    prefixIcon: Icon(Icons.location_on,
+                        color: _duniyaPurple, size: 20.0),
                   ),
                 ),
               ],
@@ -473,7 +476,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             ),
             ElevatedButton(
               onPressed: () async {
-                if (_model.dialogBatchTextController?.text.isEmpty ?? true) return;
+                if (_model.dialogBatchTextController?.text.isEmpty ?? true)
+                  return;
                 if (_model.dialogExpiryDate == null) return;
 
                 final batchData = createBatchRecordData(
@@ -489,7 +493,10 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   updatedAt: DateTime.now(),
                 );
 
-                await FirebaseFirestore.instance.collection('Batch').doc().set(batchData);
+                await FirebaseFirestore.instance
+                    .collection('Batch')
+                    .doc()
+                    .set(batchData);
 
                 Navigator.pop(dialogContext);
                 safeSetState(() {});
@@ -499,8 +506,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 12.0),
               ),
               child: Text('Add Batch',
                   style: TextStyle(
@@ -525,8 +532,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           title: Row(
             children: [
               Container(
@@ -554,13 +561,16 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogBatchTextController,
                   decoration: InputDecoration(
                     labelText: 'Batch Number',
-                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                    labelStyle: TextStyle(
+                        fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-                    prefixIcon: Icon(Icons.tag, color: _duniyaPurple, size: 20.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                    prefixIcon:
+                        Icon(Icons.tag, color: _duniyaPurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -589,10 +599,12 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Expiry Date',
-                      labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                      labelStyle: TextStyle(
+                          fontFamily: kAppFontFamily, color: _textSecondary),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
-                      prefixIcon: Icon(Icons.calendar_today, color: _duniyaPurple, size: 20.0),
+                      prefixIcon: Icon(Icons.calendar_today,
+                          color: _duniyaPurple, size: 20.0),
                     ),
                     child: Text(
                       _model.dialogExpiryDate != null
@@ -613,13 +625,16 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Quantity',
-                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                    labelStyle: TextStyle(
+                        fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-                    prefixIcon: Icon(Icons.inventory_2, color: _duniyaPurple, size: 20.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                    prefixIcon: Icon(Icons.inventory_2,
+                        color: _duniyaPurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -627,13 +642,16 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                   controller: _model.dialogFacilityTextController,
                   decoration: InputDecoration(
                     labelText: 'Facility Location',
-                    labelStyle: TextStyle(fontFamily: kAppFontFamily, color: _textSecondary),
+                    labelStyle: TextStyle(
+                        fontFamily: kAppFontFamily, color: _textSecondary),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
-                        borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-                    prefixIcon: Icon(Icons.location_on, color: _duniyaPurple, size: 20.0),
+                        borderSide:
+                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                    prefixIcon: Icon(Icons.location_on,
+                        color: _duniyaPurple, size: 20.0),
                   ),
                 ),
               ],
@@ -651,13 +669,15 @@ class _BatchesWidgetState extends State<BatchesWidget> {
             ElevatedButton(
               onPressed: () async {
                 final updateData = createBatchRecordData(
-                  batchNumber: _model.dialogBatchTextController?.text ?? batch.batchNumber,
+                  batchNumber: _model.dialogBatchTextController?.text ??
+                      batch.batchNumber,
                   expiryDate: _model.dialogExpiryDate ?? batch.expiryDate,
                   quantity: int.tryParse(
                           _model.dialogQtyTextController?.text ?? '0') ??
                       batch.quantity,
-                  facilityLocation:
-                      _model.dialogFacilityTextController?.text ?? batch.facilityLocation ?? '',
+                  facilityLocation: _model.dialogFacilityTextController?.text ??
+                      batch.facilityLocation ??
+                      '',
                   productId: batch.productId,
                   pharmacyId: batch.pharmacyId,
                   updatedAt: DateTime.now(),
@@ -671,8 +691,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 12.0),
               ),
               child: Text('Save Changes',
                   style: TextStyle(
@@ -701,7 +721,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 color: _expiredBg,
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Icon(Icons.delete_forever, color: _expiredBadge, size: 22.0),
+              child:
+                  Icon(Icons.delete_forever, color: _expiredBadge, size: 22.0),
             ),
             const SizedBox(width: 12.0),
             Text('Delete Batch',
@@ -714,7 +735,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
         content: Text(
           'Are you sure you want to delete batch "${batch.batchNumber}"? This action cannot be undone.',
           style: TextStyle(
-              fontFamily: kAppFontFamily, fontSize: 15.0, color: _textSecondary),
+              fontFamily: kAppFontFamily,
+              fontSize: 15.0,
+              color: _textSecondary),
         ),
         actions: [
           TextButton(
@@ -811,12 +834,14 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                             children: [
                               // ── Header ──
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Batch & Expiry Tracking',
@@ -851,17 +876,26 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                               // ── Data section ──
                               AuthUserStreamWidget(
                                 builder: (context) {
-                                  final parentRef = AccessControl.parentRef(context) ?? currentUserReference;
+                                  // A Pulse user monitors every pharmacy's
+                                  // batches, while pharmacy users only see
+                                  // batches belonging to their own owner scope.
+                                  final parentRef =
+                                      AccessControl.isDuniyaUser(context)
+                                          ? null
+                                          : AccessControl.parentRef(context) ??
+                                              currentUserReference;
 
                                   return StreamBuilder<List<BatchRecord>>(
                                     stream: queryBatchRecord(
                                       queryBuilder: (q) => parentRef != null
-                                          ? q.where('PharmacyId', isEqualTo: parentRef)
-                                          : q.limit(0),
+                                          ? q.where('PharmacyId',
+                                              isEqualTo: parentRef)
+                                          : q,
                                     ),
                                     builder: (context, snapshot) {
                                       // Loading state
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
                                         return _buildLoadingState();
                                       }
                                       // Error state
@@ -873,78 +907,118 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                         return _buildLoadingState();
                                       }
 
-                                      final List<BatchRecord> allBatches = snapshot.data!;
+                                      final List<BatchRecord> allBatches =
+                                          snapshot.data!;
 
                                       // Filter by search
-                                      final searchQuery = _model.searchTextController?.text.toLowerCase() ?? '';
-                                      List<BatchRecord> filteredBatches = allBatches.where((b) {
+                                      final searchQuery = _model
+                                              .searchTextController?.text
+                                              .toLowerCase() ??
+                                          '';
+                                      List<BatchRecord> filteredBatches =
+                                          allBatches.where((b) {
                                         if (searchQuery.isNotEmpty) {
-                                          return b.batchNumber.toLowerCase().contains(searchQuery) ||
-                                              (b.facilityLocation ?? '').toLowerCase().contains(searchQuery);
+                                          return b.batchNumber
+                                                  .toLowerCase()
+                                                  .contains(searchQuery) ||
+                                              (b.facilityLocation ?? '')
+                                                  .toLowerCase()
+                                                  .contains(searchQuery);
                                         }
                                         return true;
                                       }).toList();
 
                                       // Filter by expiry status
-                                      final statusFilter = _model.expiryStatusValue;
-                                      if (statusFilter != null && statusFilter != 'All') {
-                                        filteredBatches = filteredBatches.where((b) {
-                                          final status = _getExpiryStatus(b.expiryDate);
-                                          if (statusFilter == 'Expired') return status == 'Expired';
-                                          if (statusFilter == '< 3 Months') return status == '< 3 Months';
-                                          if (statusFilter == '< 6 Months') return status == '< 6 Months';
-                                          if (statusFilter == 'Safe') return status == 'Safe';
+                                      final statusFilter =
+                                          _model.expiryStatusValue;
+                                      if (statusFilter != null &&
+                                          statusFilter != 'All') {
+                                        filteredBatches =
+                                            filteredBatches.where((b) {
+                                          final status =
+                                              _getExpiryStatus(b.expiryDate);
+                                          if (statusFilter == 'Expired')
+                                            return status == 'Expired';
+                                          if (statusFilter == '< 3 Months')
+                                            return status == '< 3 Months';
+                                          if (statusFilter == '< 6 Months')
+                                            return status == '< 6 Months';
+                                          if (statusFilter == 'Safe')
+                                            return status == 'Safe';
                                           return true;
                                         }).toList();
                                       }
 
                                       // Sort: expired first, then closest to expiry
                                       filteredBatches.sort((a, b) {
-                                        if (a.expiryDate == null && b.expiryDate == null) return 0;
+                                        if (a.expiryDate == null &&
+                                            b.expiryDate == null) return 0;
                                         if (a.expiryDate == null) return 1;
                                         if (b.expiryDate == null) return -1;
-                                        return a.expiryDate!.compareTo(b.expiryDate!);
+                                        return a.expiryDate!
+                                            .compareTo(b.expiryDate!);
                                       });
 
-                                      final alertCounts = _getAlertCounts(allBatches);
+                                      final alertCounts =
+                                          _getAlertCounts(allBatches);
 
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           // Action buttons row
                                           Row(
                                             children: [
                                               // PDF Export
                                               OutlinedButton.icon(
-                                                onPressed: () => _generatePdfReport(filteredBatches),
-                                                icon: Icon(Icons.picture_as_pdf, size: 18.0),
+                                                onPressed: () =>
+                                                    _generatePdfReport(
+                                                        filteredBatches),
+                                                icon: Icon(Icons.picture_as_pdf,
+                                                    size: 18.0),
                                                 label: Text('Export PDF'),
                                                 style: OutlinedButton.styleFrom(
                                                   backgroundColor: Colors.white,
-                                                  side: BorderSide(color: _borderColor, width: 1.0),
+                                                  side: BorderSide(
+                                                      color: _borderColor,
+                                                      width: 1.0),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(9999.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            9999.0),
                                                   ),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 12.0),
                                                 ),
                                               ),
                                               const SizedBox(width: 12.0),
                                               // Add Batch
                                               ElevatedButton.icon(
                                                 onPressed: parentRef != null
-                                                    ? () => _showAddBatchDialog(context, parentRef)
+                                                    ? () => _showAddBatchDialog(
+                                                        context, parentRef)
                                                     : null,
-                                                icon: Icon(Icons.add, size: 18.0),
+                                                icon:
+                                                    Icon(Icons.add, size: 18.0),
                                                 label: Text('Add Batch'),
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: _duniyaPurple,
+                                                  backgroundColor:
+                                                      _duniyaPurple,
                                                   foregroundColor: Colors.white,
-                                                  disabledBackgroundColor: _borderColor,
+                                                  disabledBackgroundColor:
+                                                      _borderColor,
                                                   elevation: 0,
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(9999.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            9999.0),
                                                   ),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 24.0,
+                                                      vertical: 12.0),
                                                 ),
                                               ),
                                             ],
@@ -971,7 +1045,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                 runSpacing: cardSpacing,
                                                 children: [
                                                   SizedBox(
-                                                    width: (constraints.maxWidth -
+                                                    width: (constraints
+                                                                .maxWidth -
                                                             cardSpacing *
                                                                 (cols - 1)) /
                                                         cols,
@@ -987,12 +1062,14 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                    width: (constraints.maxWidth -
+                                                    width: (constraints
+                                                                .maxWidth -
                                                             cardSpacing *
                                                                 (cols - 1)) /
                                                         cols,
                                                     child: _buildAlertCard(
-                                                      title: 'Expiring < 3 Months',
+                                                      title:
+                                                          'Expiring < 3 Months',
                                                       count: alertCounts[
                                                               'threeMo'] ??
                                                           0,
@@ -1004,12 +1081,14 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                    width: (constraints.maxWidth -
+                                                    width: (constraints
+                                                                .maxWidth -
                                                             cardSpacing *
                                                                 (cols - 1)) /
                                                         cols,
                                                     child: _buildAlertCard(
-                                                      title: 'Expiring < 6 Months',
+                                                      title:
+                                                          'Expiring < 6 Months',
                                                       count: alertCounts[
                                                               'sixMo'] ??
                                                           0,
@@ -1020,7 +1099,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                    width: (constraints.maxWidth -
+                                                    width: (constraints
+                                                                .maxWidth -
                                                             cardSpacing *
                                                                 (cols - 1)) /
                                                         cols,
@@ -1050,11 +1130,15 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                             padding: const EdgeInsets.all(16.0),
                                             decoration: BoxDecoration(
                                               color: _surfaceColor,
-                                              borderRadius: BorderRadius.circular(16.0),
-                                              border: Border.all(color: _borderColor, width: 1.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                              border: Border.all(
+                                                  color: _borderColor,
+                                                  width: 1.0),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black.withValues(alpha: 0.04),
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.04),
                                                   blurRadius: 20.0,
                                                   offset: const Offset(0, 4),
                                                 ),
@@ -1065,27 +1149,32 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                 final isCompact =
                                                     constraints.maxWidth < 560;
                                                 final searchField = TextField(
-                                                  controller:
-                                                      _model.searchTextController,
+                                                  controller: _model
+                                                      .searchTextController,
                                                   focusNode:
                                                       _model.searchFocusNode,
                                                   decoration: InputDecoration(
-                                                    hintText: 'Search batches...',
+                                                    hintText:
+                                                        'Search batches...',
                                                     hintStyle: TextStyle(
-                                                        fontFamily: kAppFontFamily,
+                                                        fontFamily:
+                                                            kAppFontFamily,
                                                         color: _textSecondary,
                                                         fontSize: 14.0),
-                                                    prefixIcon: Icon(Icons.search,
+                                                    prefixIcon: Icon(
+                                                        Icons.search,
                                                         color: _duniyaPurple,
                                                         size: 20.0),
                                                     border: InputBorder.none,
                                                     contentPadding:
-                                                        const EdgeInsets.symmetric(
+                                                        const EdgeInsets
+                                                            .symmetric(
                                                             horizontal: 12.0,
                                                             vertical: 10.0),
                                                   ),
                                                   style: TextStyle(
-                                                      fontFamily: kAppFontFamily,
+                                                      fontFamily:
+                                                          kAppFontFamily,
                                                       fontSize: 14.0,
                                                       color: _textPrimary),
                                                   onChanged: (val) =>
@@ -1115,20 +1204,22 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                       'Safe'
                                                     ],
                                                     onChanged: (val) {
-                                                      safeSetState(() =>
-                                                          _model.expiryStatusValue =
-                                                              val);
+                                                      safeSetState(() => _model
+                                                              .expiryStatusValue =
+                                                          val);
                                                     },
                                                     width: 160.0,
                                                     height: 40.0,
                                                     textStyle: TextStyle(
-                                                      fontFamily: kAppFontFamily,
+                                                      fontFamily:
+                                                          kAppFontFamily,
                                                       color: _duniyaPurple,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontSize: 13.0,
                                                     ),
-                                                    icon: Icon(Icons.filter_list,
+                                                    icon: Icon(
+                                                        Icons.filter_list,
                                                         color: _duniyaPurple,
                                                         size: 18.0),
                                                     fillColor:
@@ -1160,7 +1251,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                 }
                                                 return Row(
                                                   children: [
-                                                    Expanded(child: searchField),
+                                                    Expanded(
+                                                        child: searchField),
                                                     const SizedBox(width: 12.0),
                                                     filterDropdown,
                                                   ],
@@ -1175,65 +1267,129 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                           Container(
                                             decoration: BoxDecoration(
                                               color: _surfaceColor,
-                                              borderRadius: BorderRadius.circular(16.0),
-                                              border: Border.all(color: _borderColor, width: 1.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                              border: Border.all(
+                                                  color: _borderColor,
+                                                  width: 1.0),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black.withValues(alpha: 0.04),
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.04),
                                                   blurRadius: 20.0,
                                                   offset: const Offset(0, 4),
                                                 ),
                                               ],
                                             ),
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 // Table header
                                                 Container(
-                                                  padding: const EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          24.0,
+                                                          18.0,
+                                                          24.0,
+                                                          18.0),
                                                   decoration: BoxDecoration(
-                                                    color: _duniyaPurple.withValues(alpha: 0.06),
+                                                    color: _duniyaPurple
+                                                        .withValues(
+                                                            alpha: 0.06),
                                                     border: Border(
-                                                      bottom: BorderSide(color: _borderColor, width: 1.0),
+                                                      bottom: BorderSide(
+                                                          color: _borderColor,
+                                                          width: 1.0),
                                                     ),
                                                   ),
                                                   child: Row(
                                                     children: [
-                                                      _tableHeaderCell('Batch #', 1.2),
-                                                      _tableHeaderCell('Expiry Date', 1.0),
-                                                      _tableHeaderCell('Quantity', 0.7),
-                                                      _tableHeaderCell('Facility', 1.3),
-                                                      _tableHeaderCell('Status', 0.9),
-                                                      _tableHeaderCell('Actions', 0.7),
+                                                      _tableHeaderCell(
+                                                          'Batch #', 1.2),
+                                                      _tableHeaderCell(
+                                                          'Expiry Date', 1.0),
+                                                      _tableHeaderCell(
+                                                          'Quantity', 0.7),
+                                                      _tableHeaderCell(
+                                                          'Facility', 1.3),
+                                                      _tableHeaderCell(
+                                                          'Status', 0.9),
+                                                      _tableHeaderCell(
+                                                          'Actions', 0.7),
                                                     ],
                                                   ),
                                                 ),
                                                 // Table rows or empty state
                                                 if (filteredBatches.isEmpty)
                                                   Container(
-                                                    padding: const EdgeInsets.all(60.0),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            60.0),
                                                     child: Center(
                                                       child: Column(
                                                         children: [
-                                                          Icon(Icons.inventory_2_outlined, size: 56.0, color: _textSecondary.withValues(alpha: 0.4)),
-                                                          const SizedBox(height: 16.0),
-                                                          Text('No batches found', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 16.0, fontWeight: FontWeight.w500, color: _textSecondary)),
-                                                          const SizedBox(height: 8.0),
-                                                          Text('Click "Add Batch" to create your first batch entry', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _textSecondary.withValues(alpha: 0.7))),
+                                                          Icon(
+                                                              Icons
+                                                                  .inventory_2_outlined,
+                                                              size: 56.0,
+                                                              color: _textSecondary
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.4)),
+                                                          const SizedBox(
+                                                              height: 16.0),
+                                                          Text(
+                                                              'No batches found',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      kAppFontFamily,
+                                                                  fontSize:
+                                                                      16.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color:
+                                                                      _textSecondary)),
+                                                          const SizedBox(
+                                                              height: 8.0),
+                                                          Text(
+                                                              'Click "Add Batch" to create your first batch entry',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      kAppFontFamily,
+                                                                  fontSize:
+                                                                      13.0,
+                                                                  color: _textSecondary
+                                                                      .withValues(
+                                                                          alpha:
+                                                                              0.7))),
                                                         ],
                                                       ),
                                                     ),
                                                   )
                                                 else
-                                                  ...filteredBatches.map((batch) {
-                                                    final status = _getExpiryStatus(batch.expiryDate);
-                                                    final rowBg = _getExpiryRowBg(batch.expiryDate);
+                                                  ...filteredBatches
+                                                      .map((batch) {
+                                                    final status =
+                                                        _getExpiryStatus(
+                                                            batch.expiryDate);
+                                                    final rowBg =
+                                                        _getExpiryRowBg(
+                                                            batch.expiryDate);
                                                     return Container(
-                                                      padding: const EdgeInsets.fromLTRB(24.0, 14.0, 24.0, 14.0),
+                                                      padding: const EdgeInsets
+                                                          .fromLTRB(24.0, 14.0,
+                                                          24.0, 14.0),
                                                       decoration: BoxDecoration(
                                                         color: rowBg,
                                                         border: Border(
-                                                          bottom: BorderSide(color: _borderColor.withValues(alpha: 0.5), width: 0.5),
+                                                          bottom: BorderSide(
+                                                              color: _borderColor
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.5),
+                                                              width: 0.5),
                                                         ),
                                                       ),
                                                       child: Row(
@@ -1242,35 +1398,116 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                             flex: 12,
                                                             child: Row(
                                                               children: [
-                                                                Icon(_getExpiryIcon(batch.expiryDate), size: 16.0, color: _getExpiryBadgeBg(batch.expiryDate)),
-                                                                const SizedBox(width: 8.0),
-                                                                Text(batch.batchNumber, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w600, color: _getExpiryTextColor(batch.expiryDate))),
+                                                                Icon(
+                                                                    _getExpiryIcon(
+                                                                        batch
+                                                                            .expiryDate),
+                                                                    size: 16.0,
+                                                                    color: _getExpiryBadgeBg(
+                                                                        batch
+                                                                            .expiryDate)),
+                                                                const SizedBox(
+                                                                    width: 8.0),
+                                                                Text(
+                                                                    batch
+                                                                        .batchNumber,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            kAppFontFamily,
+                                                                        fontSize:
+                                                                            13.0,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        color: _getExpiryTextColor(
+                                                                            batch.expiryDate))),
                                                               ],
                                                             ),
                                                           ),
                                                           Expanded(
                                                             flex: 10,
                                                             child: Text(
-                                                              batch.expiryDate != null
+                                                              batch.expiryDate !=
+                                                                      null
                                                                   ? '${batch.expiryDate!.day}/${batch.expiryDate!.month}/${batch.expiryDate!.year}'
                                                                   : '-',
-                                                              style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _getExpiryTextColor(batch.expiryDate)),
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      kAppFontFamily,
+                                                                  fontSize:
+                                                                      13.0,
+                                                                  color: _getExpiryTextColor(
+                                                                      batch
+                                                                          .expiryDate)),
                                                             ),
                                                           ),
                                                           Expanded(
                                                             flex: 7,
-                                                            child: Text(batch.quantity.toString(), style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, fontWeight: FontWeight.w500, color: _getExpiryTextColor(batch.expiryDate))),
+                                                            child: Text(
+                                                                batch.quantity
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        kAppFontFamily,
+                                                                    fontSize:
+                                                                        13.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: _getExpiryTextColor(
+                                                                        batch
+                                                                            .expiryDate))),
                                                           ),
                                                           Expanded(
                                                             flex: 13,
-                                                            child: Text(batch.facilityLocation ?? '-', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 13.0, color: _getExpiryTextColor(batch.expiryDate)), overflow: TextOverflow.ellipsis),
+                                                            child: Text(
+                                                                batch.facilityLocation ??
+                                                                    '-',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        kAppFontFamily,
+                                                                    fontSize:
+                                                                        13.0,
+                                                                    color: _getExpiryTextColor(
+                                                                        batch
+                                                                            .expiryDate)),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
                                                           ),
                                                           Expanded(
                                                             flex: 9,
                                                             child: Container(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-                                                              decoration: BoxDecoration(color: _getExpiryBadgeBg(batch.expiryDate), borderRadius: BorderRadius.circular(9999.0)),
-                                                              child: Text(status, textAlign: TextAlign.center, style: TextStyle(fontFamily: kAppFontFamily, fontSize: 11.0, fontWeight: FontWeight.w600, color: _getExpiryBadgeText(batch.expiryDate))),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          10.0,
+                                                                      vertical:
+                                                                          4.0),
+                                                              decoration: BoxDecoration(
+                                                                  color: _getExpiryBadgeBg(
+                                                                      batch
+                                                                          .expiryDate),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              9999.0)),
+                                                              child: Text(status,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          kAppFontFamily,
+                                                                      fontSize:
+                                                                          11.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color: _getExpiryBadgeText(
+                                                                          batch
+                                                                              .expiryDate))),
                                                             ),
                                                           ),
                                                           Expanded(
@@ -1278,20 +1515,55 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                             child: Row(
                                                               children: [
                                                                 InkWell(
-                                                                  onTap: () => _showEditBatchDialog(context, batch),
-                                                                  child: Container(
-                                                                    padding: const EdgeInsets.all(6.0),
-                                                                    decoration: BoxDecoration(color: _duniyaPurpleLight, borderRadius: BorderRadius.circular(8.0)),
-                                                                    child: Icon(Icons.edit_outlined, size: 16.0, color: _duniyaPurple),
+                                                                  onTap: () =>
+                                                                      _showEditBatchDialog(
+                                                                          context,
+                                                                          batch),
+                                                                  child:
+                                                                      Container(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            6.0),
+                                                                    decoration: BoxDecoration(
+                                                                        color:
+                                                                            _duniyaPurpleLight,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0)),
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .edit_outlined,
+                                                                        size:
+                                                                            16.0,
+                                                                        color:
+                                                                            _duniyaPurple),
                                                                   ),
                                                                 ),
-                                                                const SizedBox(width: 6.0),
+                                                                const SizedBox(
+                                                                    width: 6.0),
                                                                 InkWell(
-                                                                  onTap: () => _showDeleteConfirmDialog(context, batch),
-                                                                  child: Container(
-                                                                    padding: const EdgeInsets.all(6.0),
-                                                                    decoration: BoxDecoration(color: _expiredBg, borderRadius: BorderRadius.circular(8.0)),
-                                                                    child: Icon(Icons.delete_outline, size: 16.0, color: _expiredBadge),
+                                                                  onTap: () =>
+                                                                      _showDeleteConfirmDialog(
+                                                                          context,
+                                                                          batch),
+                                                                  child:
+                                                                      Container(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            6.0),
+                                                                    decoration: BoxDecoration(
+                                                                        color:
+                                                                            _expiredBg,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0)),
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .delete_outline,
+                                                                        size:
+                                                                            16.0,
+                                                                        color:
+                                                                            _expiredBadge),
                                                                   ),
                                                                 ),
                                                               ],
@@ -1349,7 +1621,11 @@ class _BatchesWidgetState extends State<BatchesWidget> {
           children: [
             SpinKitRing(color: _duniyaPurple, size: 48.0),
             const SizedBox(height: 16.0),
-            Text('Loading batches...', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
+            Text('Loading batches...',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: _textSecondary)),
           ],
         ),
       ),
@@ -1371,12 +1647,22 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 color: _expiredBg,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.error_outline, color: _expiredBadge, size: 32.0),
+              child:
+                  Icon(Icons.error_outline, color: _expiredBadge, size: 32.0),
             ),
             const SizedBox(height: 16.0),
-            Text('Something went wrong', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 18.0, fontWeight: FontWeight.w600, color: _textPrimary)),
+            Text('Something went wrong',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                    color: _textPrimary)),
             const SizedBox(height: 8.0),
-            Text('Unable to load batch data. Please try again later.', style: TextStyle(fontFamily: kAppFontFamily, fontSize: 14.0, color: _textSecondary)),
+            Text('Unable to load batch data. Please try again later.',
+                style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: _textSecondary)),
             const SizedBox(height: 20.0),
             ElevatedButton.icon(
               onPressed: () => safeSetState(() {}),
@@ -1385,7 +1671,8 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: _duniyaPurple,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0)),
               ),
             ),
           ],

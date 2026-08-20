@@ -648,7 +648,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                                       LayoutBuilder(
                                         builder: (context, constraints) {
                                           int cols = 5;
-                                          if (constraints.maxWidth < 1200) {
+                                          if (constraints.maxWidth < 900) {
                                             cols = 3;
                                           }
                                           if (constraints.maxWidth < 800) {

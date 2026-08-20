@@ -630,6 +630,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
+          name: SupplierManagementWidget.routeName,
+          path: SupplierManagementWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => SupplierManagementWidget(),
+        ),
+        FFRoute(
           name: OnboardingRequestsWidget.routeName,
           path: OnboardingRequestsWidget.routePath,
           requireAuth: true,

@@ -1,5 +1,6 @@
 import '/rbac/rbac.dart';
 import '/backend/backend.dart';
+import '/backend/email/email_service.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -136,6 +137,72 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
     return map;
   }
 
+  /// Fetch the owner's email for a pharmacy, returning null if not found.
+  Future<String?> _ownerEmail(PharmacyRecord pharmacy) async {
+    try {
+      final ref = pharmacy.userID;
+      if (ref == null) return null;
+      final snap = await ref.get();
+      if (!snap.exists) return null;
+      final data = snap.data() as Map<String, dynamic>?;
+      return data?['email'] as String?;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _sendApprovalEmail(String email, String pharmacyName) {
+    EmailService.sendEmail(
+      to: email,
+      subject: '🎉 Your pharmacy has been approved on Pulse',
+      html: '''<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5">
+<div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+  <div style="background:#10B981;padding:32px;text-align:center">
+    <h1 style="color:#fff;margin:0;font-size:22px">🎉 Pharmacy Approved</h1>
+  </div>
+  <div style="padding:32px">
+    <p style="font-size:16px;color:#333">Hi there,</p>
+    <p style="font-size:15px;color:#555;line-height:1.6">Great news! <strong>$pharmacyName</strong> has been approved on the <strong>Pulse</strong> network.</p>
+    <p style="font-size:15px;color:#555;line-height:1.6">You can now log in and start managing your pharmacy inventory, sales, and more.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td align="center">
+      <a href="https://thestackone.com/app.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#9900FF,#7C3AED);color:#fff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px">Open Pulse →</a>
+    </td></tr></table>
+    <p style="font-size:15px;color:#555;line-height:1.6">If you have any questions, our support team is here to help.</p>
+  </div>
+  <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
+    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Network</p>
+  </div>
+</div></body></html>''',
+    );
+  }
+
+  void _sendRejectionEmail(String email, String pharmacyName) {
+    EmailService.sendEmail(
+      to: email,
+      subject: 'Update on your Pulse pharmacy application',
+      html: '''<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5">
+<div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+  <div style="background:#6B7280;padding:32px;text-align:center">
+    <h1 style="color:#fff;margin:0;font-size:22px">Application Update</h1>
+  </div>
+  <div style="padding:32px">
+    <p style="font-size:16px;color:#333">Hi there,</p>
+    <p style="font-size:15px;color:#555;line-height:1.6">Thank you for your interest in joining the <strong>Pulse</strong> network with <strong>$pharmacyName</strong>.</p>
+    <p style="font-size:15px;color:#555;line-height:1.6">After reviewing your application, we are unable to approve your pharmacy at this time. This may be due to incomplete registration details, regional coverage, or other factors.</p>
+    <p style="font-size:15px;color:#555;line-height:1.6">If you believe this was a mistake, please contact our support team and we will be happy to review your application again.</p>
+    <p style="font-size:15px;color:#555;margin-top:24px">Best regards,<br>The Pulse Team</p>
+  </div>
+  <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
+    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Network</p>
+  </div>
+</div></body></html>''',
+    );
+  }
+
   Future<void> _approve(PharmacyRecord pharmacy) async {
     if (_processing.contains(pharmacy.reference.path)) return;
     safeSetState(() => _processing.add(pharmacy.reference.path));
@@ -146,6 +213,11 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
       await pharmacy.reference
           .update(createPharmacyRecordData(networkStatus: 'active'));
       _showToast('${pharmacy.name} approved and is now active.');
+      // Send approval email (fire-and-forget)
+      final email = await _ownerEmail(pharmacy);
+      if (email != null && email.isNotEmpty) {
+        _sendApprovalEmail(email, pharmacy.name);
+      }
     } catch (e) {
       _showToast('Failed to approve ${pharmacy.name}. Please try again.',
           isError: true);
@@ -166,6 +238,11 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
       await pharmacy.reference
           .update(createPharmacyRecordData(networkStatus: 'rejected'));
       _showToast('${pharmacy.name} has been rejected.');
+      // Send rejection email (fire-and-forget)
+      final email = await _ownerEmail(pharmacy);
+      if (email != null && email.isNotEmpty) {
+        _sendRejectionEmail(email, pharmacy.name);
+      }
     } catch (e) {
       _showToast('Failed to reject ${pharmacy.name}. Please try again.',
           isError: true);

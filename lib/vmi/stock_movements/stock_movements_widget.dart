@@ -31,8 +31,9 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
 
   /// Format a number with comma separators (e.g. 1248 → '1,248')
   static String _fmtNum(int n) {
-    return n.toString().replaceAllMapped(
-        RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
+    return n
+        .toString()
+        .replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
   }
 
   @override
@@ -118,8 +119,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           builder: (context) =>
                               StreamBuilder<List<StockMovementRecord>>(
                             stream: queryStockMovementRecord(
-                              parent: AccessControl.parentRef(context) ??
-                                  currentUserReference,
+                              // Network staff review movement activity across
+                              // pharmacies; pharmacy users remain owner-scoped.
+                              parent: AccessControl.isDuniyaUser(context)
+                                  ? null
+                                  : AccessControl.parentRef(context) ??
+                                      currentUserReference,
                               queryBuilder: (stockMovementRecord) =>
                                   stockMovementRecord.orderBy('CreatedAt',
                                       descending: true),
@@ -189,22 +194,16 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       _buildLoadingCard(
                                           cardBg, outlineVariant, theme)
                                     else
-                                      FutureBuilder<
-                                          List<ProductMasterRecord>>(
-                                        future:
-                                            queryProductMasterRecordOnce(),
-                                        builder:
-                                            (context, productSnapshot) {
+                                      FutureBuilder<List<ProductMasterRecord>>(
+                                        future: queryProductMasterRecordOnce(),
+                                        builder: (context, productSnapshot) {
                                           if (!productSnapshot.hasData) {
                                             return _buildLoadingCard(
-                                                cardBg,
-                                                outlineVariant,
-                                                theme);
+                                                cardBg, outlineVariant, theme);
                                           }
                                           Map<String, ProductMasterRecord>
                                               productMap = {
-                                            for (var p
-                                                in productSnapshot.data!)
+                                            for (var p in productSnapshot.data!)
                                               p.reference.path: p
                                           };
                                           return _buildMovementLedger(
@@ -385,7 +384,9 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         AuthUserStreamWidget(
           builder: (context) => FutureBuilder<List<PharmacyRecord>>(
             future: queryPharmacyRecordOnce(
-              parent: AccessControl.parentRef(context) ?? currentUserReference,
+              parent: AccessControl.isDuniyaUser(context)
+                  ? null
+                  : AccessControl.parentRef(context) ?? currentUserReference,
             ),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -468,8 +469,9 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     final dayBefore = now.subtract(const Duration(hours: 48));
 
     // Filter movements in last 24h
-    final last24h = movements.where((m) =>
-        m.hasCreatedAt() && m.createdAt!.isAfter(yesterday)).toList();
+    final last24h = movements
+        .where((m) => m.hasCreatedAt() && m.createdAt!.isAfter(yesterday))
+        .toList();
     // Movements in the previous 24h window (for % change)
     final prev24h = movements.where((m) {
       if (!m.hasCreatedAt()) return false;
@@ -479,22 +481,16 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
 
     final totalMovements = last24h.length;
     final prevTotal = prev24h.length;
-    final incoming = last24h
-        .where((m) => m.movementType == 'RECEIVED')
-        .length;
-    final outgoing = last24h
-        .where((m) => m.movementType == 'SOLD')
-        .length;
-    final transfers = last24h
-        .where((m) => m.movementType == 'TRANSFERRED')
-        .length;
+    final incoming = last24h.where((m) => m.movementType == 'RECEIVED').length;
+    final outgoing = last24h.where((m) => m.movementType == 'SOLD').length;
+    final transfers =
+        last24h.where((m) => m.movementType == 'TRANSFERRED').length;
 
     // Pending verification: incoming movements without a reference
     final pendingVerification = last24h
         .where((m) =>
             m.movementType == 'RECEIVED' &&
-            (m.movementReference == null ||
-                m.movementReference!.isEmpty))
+            (m.movementReference == null || m.movementReference!.isEmpty))
         .length;
 
     // In transit: transfers with no reason or still pending
@@ -521,12 +517,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     }
 
     // Outgoing insight
-    final adjustments = last24h
-        .where((m) => m.movementType == 'ADJUSTMENT')
-        .length;
+    final adjustments =
+        last24h.where((m) => m.movementType == 'ADJUSTMENT').length;
     String outgoingDetail;
     if (outgoing > 0 && adjustments > 0) {
-      outgoingDetail = 'Sales & $adjustments adjustment${adjustments > 1 ? 's' : ''}';
+      outgoingDetail =
+          'Sales & $adjustments adjustment${adjustments > 1 ? 's' : ''}';
     } else if (outgoing > 0) {
       outgoingDetail = 'Sales & dispensing';
     } else {
@@ -796,16 +792,19 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           Container(
             height: 220.0,
             padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-            child: _buildBarChart(
-                primaryColor, outlineVariant, onSurface, onSurfaceVariant, movements),
+            child: _buildBarChart(primaryColor, outlineVariant, onSurface,
+                onSurfaceVariant, movements),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBarChart(Color primaryColor, Color outlineVariant,
-      Color onSurface, Color onSurfaceVariant,
+  Widget _buildBarChart(
+      Color primaryColor,
+      Color outlineVariant,
+      Color onSurface,
+      Color onSurfaceVariant,
       List<StockMovementRecord> movements) {
     // ── Aggregate real data into time buckets ──
     final now = DateTime.now();
@@ -822,7 +821,10 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               !m.createdAt!.isAfter(hourEnd);
         }).length;
         return _BarData(
-          height: count > 0 ? (count / (movements.length > 0 ? movements.length : 1)).clamp(0.1, 1.0) : 0.05,
+          height: count > 0
+              ? (count / (movements.length > 0 ? movements.length : 1))
+                  .clamp(0.1, 1.0)
+              : 0.05,
           value: count.toString(),
           isHighlight: i == 5, // highlight the "current" hour
         );
@@ -839,7 +841,10 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               !m.createdAt!.isAfter(dayEnd);
         }).length;
         return _BarData(
-          height: count > 0 ? (count / (movements.length > 0 ? movements.length : 1)).clamp(0.1, 1.0) : 0.05,
+          height: count > 0
+              ? (count / (movements.length > 0 ? movements.length : 1))
+                  .clamp(0.1, 1.0)
+              : 0.05,
           value: count.toString(),
           isHighlight: i == 6, // highlight today
         );
@@ -855,7 +860,10 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
               !m.createdAt!.isAfter(bucketEnd);
         }).length;
         return _BarData(
-          height: count > 0 ? (count / (movements.length > 0 ? movements.length : 1)).clamp(0.1, 1.0) : 0.05,
+          height: count > 0
+              ? (count / (movements.length > 0 ? movements.length : 1))
+                  .clamp(0.1, 1.0)
+              : 0.05,
           value: count.toString(),
           isHighlight: i == 5, // highlight current bucket
         );
@@ -1449,8 +1457,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: Icon(Icons.swap_horiz,
-                    size: 36.0,
-                    color: primaryColor.withValues(alpha: 0.6)),
+                    size: 36.0, color: primaryColor.withValues(alpha: 0.6)),
               ),
               SizedBox(height: 20.0),
               Text(
@@ -1550,15 +1557,15 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       builder: (dialogContext) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(
-              horizontal: 24.0, vertical: 24.0),
+          insetPadding:
+              const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
           child: StatefulBuilder(
             builder: (context, setDialogState) {
               final productSelected = _model.dialogProductValue != null &&
                   (_model.dialogProductValue ?? '').isNotEmpty;
               final qtyText = _model.dialogQtyTextController?.text ?? '';
-              final qtyValid = int.tryParse(qtyText) != null &&
-                  int.parse(qtyText) > 0;
+              final qtyValid =
+                  int.tryParse(qtyText) != null && int.parse(qtyText) > 0;
               final typeSelected = _model.dialogMovementTypeValue != null &&
                   (_model.dialogMovementTypeValue ?? '').isNotEmpty;
               final canSave = productSelected && qtyValid && typeSelected;
@@ -1677,8 +1684,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           IconButton(
                             onPressed: () => Navigator.pop(dialogContext),
                             icon: Icon(Icons.close_rounded,
-                                color: Colors.white.withAlpha(200),
-                                size: 20.0),
+                                color: Colors.white.withAlpha(200), size: 20.0),
                           ),
                         ],
                       ),
@@ -1723,15 +1729,14 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                     options: snapshot.data!
                                         .map((p) => p.name)
                                         .toList(),
-                                    onChanged: (val) => setDialogState(() =>
-                                        _model.dialogProductValue = val),
+                                    onChanged: (val) => setDialogState(
+                                        () => _model.dialogProductValue = val),
                                     width: double.infinity,
                                     height: 48.0,
                                     textStyle: theme.bodyMedium.override(
                                       fontFamily: theme.bodyMediumFamily,
                                       letterSpacing: 0.0,
-                                      useGoogleFonts:
-                                          !theme.bodyMediumIsCustom,
+                                      useGoogleFonts: !theme.bodyMediumIsCustom,
                                     ),
                                     hintText: 'Select a product',
                                     fillColor: theme.primaryBackground,
@@ -1776,9 +1781,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                           : theme.primaryBackground,
                                       borderRadius: BorderRadius.circular(12.0),
                                       border: Border.all(
-                                        color: selected
-                                            ? color
-                                            : theme.alternate,
+                                        color:
+                                            selected ? color : theme.alternate,
                                         width: selected ? 1.5 : 1.0,
                                       ),
                                     ),
@@ -1856,14 +1860,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       TextFormField(
                                         controller:
                                             _model.dialogQtyTextController,
-                                        focusNode:
-                                            _model.dialogQtyFocusNode,
+                                        focusNode: _model.dialogQtyFocusNode,
                                         keyboardType: TextInputType.number,
                                         decoration: _dialogInputDecoration(
                                           theme,
                                           hint: '0',
-                                          valid: qtyValid ||
-                                              qtyText.isEmpty,
+                                          valid: qtyValid || qtyText.isEmpty,
                                         ),
                                         style: theme.bodyMedium.override(
                                           fontFamily: theme.bodyMediumFamily,
@@ -1873,8 +1875,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                           useGoogleFonts:
                                               !theme.bodyMediumIsCustom,
                                         ),
-                                        onChanged: (_) =>
-                                            setDialogState(() {}),
+                                        onChanged: (_) => setDialogState(() {}),
                                       ),
                                     ],
                                   ),
@@ -1894,8 +1895,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       ),
                                       const SizedBox(height: 8.0),
                                       TextFormField(
-                                        controller:
-                                            _model.dialogReferenceTextController,
+                                        controller: _model
+                                            .dialogReferenceTextController,
                                         focusNode:
                                             _model.dialogReferenceFocusNode,
                                         decoration: _dialogInputDecoration(
@@ -1984,8 +1985,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           bottomRight: Radius.circular(24.0),
                         ),
                         border: Border(
-                          top: BorderSide(
-                              color: theme.alternate, width: 1.0),
+                          top: BorderSide(color: theme.alternate, width: 1.0),
                         ),
                       ),
                       child: Row(
@@ -2029,24 +2029,25 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                     final products =
                                         await queryProductMasterRecordOnce();
                                     final product = products.firstWhere(
-                                      (p) => p.name ==
-                                          _model.dialogProductValue,
+                                      (p) =>
+                                          p.name == _model.dialogProductValue,
                                       orElse: () => products.first,
                                     );
                                     final userDoc = currentUserDocument;
                                     if (userDoc == null) return;
-                                    final ref = AccessControl.parentRef(context) ??
-                                        currentUserReference;
+                                    final ref =
+                                        AccessControl.parentRef(context) ??
+                                            currentUserReference;
                                     if (ref == null) return;
                                     final ownerRef = ref;
                                     await StockMovementRecord.createDoc(
                                             ownerRef)
                                         .set(createStockMovementRecordData(
                                       productId: product.reference,
-                                      quantity: int.tryParse(
-                                              _model.dialogQtyTextController
-                                                      ?.text ??
-                                                  '0') ??
+                                      quantity: int.tryParse(_model
+                                                  .dialogQtyTextController
+                                                  ?.text ??
+                                              '0') ??
                                           0,
                                       movementType:
                                           _model.dialogMovementTypeValue,
@@ -2084,8 +2085,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                               BorderRadius.circular(10.0),
                                         ),
                                         margin: const EdgeInsets.all(16.0),
-                                        duration:
-                                            const Duration(seconds: 2),
+                                        duration: const Duration(seconds: 2),
                                       ),
                                     );
                                   }
@@ -2209,7 +2209,6 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       ),
     );
   }
-
 }
 
 // ═══════════════════════════════════════════════════════════
