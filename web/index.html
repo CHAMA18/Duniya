@@ -57,17 +57,11 @@
 
   <link rel="manifest" href="manifest.json?v=%%BUILD_VERSION%%">
 
-  <!-- Font: Use Inter on web (Satoshi causes CanvasKit null-check errors) -->
-  <!-- Inter is visually similar to Satoshi and works reliably with Skia -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Apply Inter globally on web — Satoshi TTF causes null-check errors
-       in CanvasKit's Skia text renderer (font variation table issue).
-       Inter is the same font used on the landing page and is web-safe. */
+    /* Flutter loads the bundled static Satoshi faces through FontManifest.
+       This rule keeps any HTML fallback content aligned with the app. */
     * {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
   </style>
 
@@ -100,11 +94,8 @@
   <!-- Cache-bust: force fresh flutter_bootstrap.js on every deploy -->
   <!-- Build version: %%BUILD_VERSION%% (injected by build.sh) -->
 
-  <!-- Inter is BUNDLED in the app's FontManifest (see pubspec.yaml), so
-       CanvasKit loads it from the asset bundle itself — no need to wait for
-       CSS/Google-Fonts (those never reach CanvasKit anyway, and awaiting
-       document.fonts.ready could hang forever if a font request stalls,
-       leaving the page blank). -->
+  <!-- Satoshi is bundled in FontManifest. CanvasKit loads it from the asset
+       bundle, not CSS, so the Flutter canvas and HTML fallbacks stay aligned. -->
   <script>
     {{flutter_bootstrap_js}}
   </script>

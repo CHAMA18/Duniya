@@ -32,11 +32,11 @@ export 'internationalization.dart' show FFLocalizations;
 export '/backend/firebase_analytics/analytics.dart';
 export 'nav/nav.dart';
 
-// ── Font family: Inter on web, Satoshi on native ──────────────────────
-// Satoshi TTF causes null-check errors in CanvasKit's Skia text renderer
-// on web (font variation table issue). Inter is visually similar and
-// fully web-compatible with CanvasKit.
-const String kAppFontFamily = kIsWeb ? 'Inter' : 'Satoshi';
+// ── Font family: Satoshi on every platform ────────────────────────────
+// The web FontManifest intentionally contains only static Satoshi faces.
+// Variable Satoshi files are excluded because CanvasKit cannot safely load
+// them in this project.
+const String kAppFontFamily = 'Satoshi';
 
 T valueOrDefault<T>(T? value, T defaultValue) =>
     (value is String && value.isEmpty) || value == null ? defaultValue : value;

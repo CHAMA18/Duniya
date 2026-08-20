@@ -26,7 +26,7 @@ import '/onboarding/onboarding_service.dart';
 import '/rbac/rbac.dart';
 
 // kAppFontFamily is defined in flutter_flow_util.dart (imported above).
-// It resolves to 'Inter' on web (CanvasKit-safe) and 'Satoshi' on native.
+// It resolves to the renderer-safe static Satoshi family on every platform.
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

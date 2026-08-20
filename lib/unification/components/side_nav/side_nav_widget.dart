@@ -2,7 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/onboarding/onboarding_overlay.dart';
+import '/onboarding/spotlight_tour.dart';
 import '/components/pulse_logo_widget.dart';
 import '/unification/components/sidebar_link/sidebar_link_widget.dart';
 import '/index.dart';
@@ -621,10 +621,12 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           if (!isCollapsed) _buildSectionHeader('MAIN'),
                           // Home (RBAC)
                           if (_canSee(NavItem.home))
-                            Tooltip(
-                              message: 'Home',
-                              preferBelow: false,
-                              child: InkWell(
+                            KeyedSubtree(
+                              key: DuniyaTourTargets.home,
+                              child: Tooltip(
+                                message: 'Home',
+                                preferBelow: false,
+                                child: InkWell(
                                 splashColor: Colors.transparent,
                                 focusColor: Colors.transparent,
                                 hoverColor: Colors.transparent,
@@ -667,6 +669,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                     isActive:
                                         FFAppState().SelectedPage == 'Home',
                                   ),
+                                ),
                                 ),
                               ),
                             ),
@@ -727,10 +730,12 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           // Human Resource (RBAC)
                           if (_canSee(NavItem.humanResource))
                             AuthUserStreamWidget(
-                              builder: (context) => Tooltip(
-                                message: 'Human Resource',
-                                preferBelow: false,
-                                child: InkWell(
+                              builder: (context) => KeyedSubtree(
+                                key: DuniyaTourTargets.humanResources,
+                                child: Tooltip(
+                                  message: 'Human Resource',
+                                  preferBelow: false,
+                                  child: InkWell(
                                   splashColor: Colors.transparent,
                                   focusColor: Colors.transparent,
                                   hoverColor: Colors.transparent,
@@ -775,6 +780,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                       isActive: FFAppState().SelectedPage ==
                                           'Human Resource',
                                     ),
+                                  ),
                                   ),
                                 ),
                               ),
@@ -898,7 +904,10 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           if (!isCollapsed) _buildSectionHeader('INVENTORY'),
                           if (_canSee(NavItem.storeInventory) ||
                               _canSee(NavItem.productCatalogue))
-                            _buildExpandableInventorySection(isCollapsed),
+                            KeyedSubtree(
+                              key: DuniyaTourTargets.inventory,
+                              child: _buildExpandableInventorySection(isCollapsed),
+                            ),
 
                           // ─── Divider ───
                           _buildDivider(),
@@ -2102,17 +2111,19 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Section header — tappable to expand/collapse
-                                InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () {
+                                KeyedSubtree(
+                                  key: DuniyaTourTargets.quickAccess,
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () {
                                     safeSetState(() {
                                       _isFooterExpanded = !_isFooterExpanded;
                                     });
                                   },
-                                  child: Container(
+                                    child: Container(
                                     width: double.infinity,
                                     height: 36.0,
                                     decoration: BoxDecoration(
@@ -2182,6 +2193,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                         ],
                                       ),
                                     ),
+                                    ),
                                   ),
                                 ),
 
@@ -2216,8 +2228,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                                 'SIDE_NAV_COMP_TAKE_TOUR_ON_TAP');
                                             logFirebaseEvent(
                                                 'SidebarLink_open_onboarding');
-                                            DuniyaOnboardingOverlay.show(
-                                                context);
+                                            DuniyaSpotlightTour.show(context);
                                           },
                                           child: _SidebarFooterItem(
                                             isCollapsed: isCollapsed,
@@ -2282,37 +2293,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                           ),
                                         ),
 
-                                      // Download App Link
-                                      Tooltip(
-                                        message: 'Download App',
-                                        preferBelow: false,
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            logFirebaseEvent(
-                                                'SIDE_NAV_COMP_DOWNLOAD_ON_TAP');
-                                            logFirebaseEvent(
-                                                'SidebarLink_navigate_to');
-                                            await launchURL(
-                                                '/landing.html#download');
-                                          },
-                                          child: _SidebarFooterItem(
-                                            isCollapsed: isCollapsed,
-                                            icon: Icons.download_rounded,
-                                            iconColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            label: 'Download App',
-                                            labelColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
-                                          ),
-                                        ),
-                                      ),
-
                                       // Logout Button
                                       Tooltip(
                                         message: 'Logout',
@@ -2371,7 +2351,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   color: FlutterFlowTheme.of(context).primary,
                                   tooltip: 'Take Tour',
                                   onTap: () {
-                                    DuniyaOnboardingOverlay.show(context);
+                                    DuniyaSpotlightTour.show(context);
                                   },
                                 ),
                                 if (_canSee(NavItem.settings))
@@ -2385,13 +2365,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                       context.goNamed(SettingsWidget.routeName);
                                     },
                                   ),
-                                _CollapsedFooterIcon(
-                                  icon: Icons.download_rounded,
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  tooltip: 'Download App',
-                                  onTap: () =>
-                                      launchURL('/landing.html#download'),
-                                ),
                                 _CollapsedFooterIcon(
                                   icon: Icons.logout_rounded,
                                   color: FlutterFlowTheme.of(context).error,

@@ -41,7 +41,6 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
   String? _invitedName;
   String? _invitedRole;
   String? _pharmacyName;
-  String? _pharmacyId;
   String? _invitationId;
 
   // Account creation
@@ -83,10 +82,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
       final callable = FirebaseFunctions.instance.httpsCallable(
         'verifyStaffInvitation',
       );
-      final result = await callable.call({
-        'token': _token,
-        'email': _email,
-      });
+      final result = await callable.call({'token': _token, 'email': _email});
 
       final data = result.data;
       if (data['valid'] == true) {
@@ -96,7 +92,6 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
           _invitedName = data['name'];
           _invitedRole = data['role'];
           _pharmacyName = data['pharmacyName'];
-          _pharmacyId = data['pharmacyId'];
           _invitationId = data['invitationId'];
         });
       } else {
@@ -154,53 +149,33 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
     try {
       // Create Firebase Auth user
       final userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: _email!,
-        password: pw,
-      );
+          .createUserWithEmailAndPassword(email: _email!, password: pw);
 
       final user = userCredential.user;
       if (user == null) throw Exception('Account creation failed');
 
       // Create user document in Firestore
-      await UserRecord.collection.doc(user.uid).set(
-        createUserRecordData(
-          email: _email,
-          displayName: _invitedName ?? '',
-          role: _invitedRole ?? '',
-          accountType: 'Pharmacy',
-          uid: user.uid,
-          createdTime: getCurrentTimestamp,
-          // If we have a pharmacy reference, set it
-        ),
-      );
+      await UserRecord.collection
+          .doc(user.uid)
+          .set(
+            createUserRecordData(
+              email: _email,
+              displayName: _invitedName ?? '',
+              role: _invitedRole ?? '',
+              accountType: 'Pharmacy',
+              uid: user.uid,
+              createdTime: getCurrentTimestamp,
+              // If we have a pharmacy reference, set it
+            ),
+          );
 
-      // Mark invitation as accepted
+      // Complete acceptance server-side. Client writes to Staff are denied, so
+      // this keeps the HR invitation state authoritative.
       if (_invitationId != null) {
-        await FirebaseFirestore.instance
-            .collection('StaffInvitations')
-            .doc(_invitationId!)
-            .update({
-          'status': 'accepted',
-          'acceptedAt': FieldValue.serverTimestamp(),
-          'acceptedByUid': user.uid,
-        });
-      }
-
-      // Update the staff record with the new user's UID
-      // (if the staff document was created earlier)
-      if (_pharmacyId != null) {
-        final staffQuery = await FirebaseFirestore.instance
-            .collection('Staff')
-            .where('Email', isEqualTo: _email)
-            .limit(1)
-            .get();
-        if (staffQuery.docs.isNotEmpty) {
-          await staffQuery.docs.first.reference.update({
-            'uid': user.uid,
-            'status': 'active',
-          });
-        }
+        final callable = FirebaseFunctions.instance.httpsCallable(
+          'completeStaffInvitation',
+        );
+        await callable.call({'invitationId': _invitationId});
       }
 
       // Navigate to home
@@ -267,7 +242,11 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
             ),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Icon(Icons.mail_outline_rounded, color: Colors.white, size: 28),
+          child: const Icon(
+            Icons.mail_outline_rounded,
+            color: Colors.white,
+            size: 28,
+          ),
         ),
         const SizedBox(height: 24),
         const CircularProgressIndicator(color: _duniyaPurple),
@@ -314,8 +293,11 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               color: const Color(0xFFEF4444).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.error_outline_rounded,
-                color: Color(0xFFEF4444), size: 28),
+            child: const Icon(
+              Icons.error_outline_rounded,
+              color: Color(0xFFEF4444),
+              size: 28,
+            ),
           ),
           const SizedBox(height: 20),
           Text(
@@ -391,8 +373,11 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
                 ),
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: const Icon(Icons.person_add_rounded,
-                  color: Colors.white, size: 30),
+              child: const Icon(
+                Icons.person_add_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
           ),
           const SizedBox(height: 24),
@@ -551,8 +536,10 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               ),
               filled: true,
               fillColor: _surfaceColor,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(color: _borderColor),
@@ -566,10 +553,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
                 borderSide: const BorderSide(color: _duniyaPurple, width: 1.5),
               ),
               errorText: _passwordError,
-              errorStyle: TextStyle(
-                fontSize: 12,
-                fontFamily: kAppFontFamily,
-              ),
+              errorStyle: TextStyle(fontSize: 12, fontFamily: kAppFontFamily),
             ),
           ),
 
@@ -616,8 +600,10 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               ),
               filled: true,
               fillColor: _surfaceColor,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(color: _borderColor),
@@ -686,9 +672,12 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
     final hasDigit = RegExp(r'[0-9]').hasMatch(pw);
     final hasSpecial = RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(pw);
 
-    int score = [hasMinLength, hasUppercase, hasDigit, hasSpecial]
-        .where((x) => x)
-        .length;
+    int score = [
+      hasMinLength,
+      hasUppercase,
+      hasDigit,
+      hasSpecial,
+    ].where((x) => x).length;
 
     Color strengthColor;
     String strengthText;

@@ -154,8 +154,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   // ── Validation helpers ──
   bool get _isNameValid =>
       (_model.nameTextController?.text.trim().length ?? 0) >= 2;
-  bool get _isEmailValid => RegExp(r'^[\w.+-]+@[\w-]+\.[\w.-]+$')
-      .hasMatch(_model.emailAddressTextController?.text.trim() ?? '');
+  bool get _isEmailValid => RegExp(
+    r'^[\w.+-]+@[\w-]+\.[\w.-]+$',
+  ).hasMatch(_model.emailAddressTextController?.text.trim() ?? '');
   bool get _isPhoneValid =>
       (_model.phoneTextController?.text.trim().length ?? 0) >= 7;
   bool get _isRoleValid => _model.selectedRole != null;
@@ -174,16 +175,17 @@ class _AddUserWidgetState extends State<AddUserWidget> {
 
   String? _nameError() =>
       !_isNameValid && (_model.nameTextController?.text.isNotEmpty ?? false)
-          ? 'Name must be at least 2 characters'
-          : null;
-  String? _emailError() => !_isEmailValid &&
+      ? 'Name must be at least 2 characters'
+      : null;
+  String? _emailError() =>
+      !_isEmailValid &&
           (_model.emailAddressTextController?.text.isNotEmpty ?? false)
       ? 'Enter a valid email address'
       : null;
   String? _phoneError() =>
       !_isPhoneValid && (_model.phoneTextController?.text.isNotEmpty ?? false)
-          ? 'Enter a valid phone number'
-          : null;
+      ? 'Enter a valid phone number'
+      : null;
 
   // ── Submit handler (preserved from original FF codegen, with branded
   //    dialog UX and a proper submitting state on the Save button) ──
@@ -229,24 +231,26 @@ class _AddUserWidgetState extends State<AddUserWidget> {
 
         final staffRef = StaffRecord.collection.doc();
         await staffRef.set(
-              createStaffRecordData(
-                ownerRef: currentUserReference,
-                name: _model.nameTextController!.text,
-                // Normalize the role string through AppRole to ensure
-                // only valid role values are written to Firestore.
-                role:
-                    AppRole.fromFirestoreValue(_model.roleTextController!.text)
-                        .displayName,
-                email: _model.emailAddressTextController!.text,
-                phone: _model.phoneTextController!.text,
-                pharmId: _model.pharm?.reference,
-                password: _model.passTextController!.text,
-                deleted: false,
-              ),
-            );
+          createStaffRecordData(
+            ownerRef: currentUserReference,
+            name: _model.nameTextController!.text,
+            // Normalize the role string through AppRole to ensure
+            // only valid role values are written to Firestore.
+            role: AppRole.fromFirestoreValue(
+              _model.roleTextController!.text,
+            ).displayName,
+            email: _model.emailAddressTextController!.text,
+            phone: _model.phoneTextController!.text,
+            pharmId: _model.pharm?.reference,
+            password: _model.passTextController!.text,
+            deleted: false,
+            invitationStatus: 'sending',
+          ),
+        );
         logFirebaseEvent('Button_navigate_to');
 
         // Send staff invitation email via Cloud Function
+        Object? invitationError;
         try {
           final callable = FirebaseFunctions.instance.httpsCallable(
             'sendStaffInvitation',
@@ -255,19 +259,26 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             'staffId': staffRef.id,
             'email': _model.emailAddressTextController!.text,
             'name': _model.nameTextController!.text,
-            'role': AppRole.fromFirestoreValue(_model.roleTextController!.text)
-                .displayName,
+            'role': AppRole.fromFirestoreValue(
+              _model.roleTextController!.text,
+            ).displayName,
             'pharmacyName': _model.pharmValue ?? '',
             'pharmacyId': _model.pharm?.reference.id ?? '',
           });
           logFirebaseEvent('Staff invitation email sent');
         } catch (e) {
-          // Non-fatal — staff record is saved, email failure shouldn't block
+          // The Cloud Function writes the failed status to the staff record.
+          // Keep the account visible in HR so the owner can see delivery state.
           logFirebaseEvent('Staff invitation email failed: $e');
+          invitationError = e;
         }
 
         if (context.mounted) {
-          await _showInvitationSentToast();
+          if (invitationError == null) {
+            await _showInvitationSentToast();
+          } else {
+            await _showInvitationFailedToast();
+          }
           context.pushNamed(HumanResourceUniWidget.routeName);
         }
       } else {
@@ -286,8 +297,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       context: context,
       builder: (alertDialogContext) => WebViewAware(
         child: AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
           title: Row(
             children: [
               Container(
@@ -296,16 +308,22 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   color: _dangerColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child:
-                    Icon(Icons.error_outline, color: _dangerColor, size: 22.0),
+                child: Icon(
+                  Icons.error_outline,
+                  color: _dangerColor,
+                  size: 22.0,
+                ),
               ),
               const SizedBox(width: 12.0),
-              Text('Email already in use',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontWeight: FontWeight.w700,
-                      color: _textPrimary,
-                      fontSize: 18.0)),
+              Text(
+                'Email already in use',
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  fontWeight: FontWeight.w700,
+                  color: _textPrimary,
+                  fontSize: 18.0,
+                ),
+              ),
             ],
           ),
           content: ConstrainedBox(
@@ -314,10 +332,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               'Another staff member is already using this email address. '
               'Please use a different email or remove the existing account.',
               style: TextStyle(
-                  fontFamily: kAppFontFamily,
-                  fontSize: 14.0,
-                  color: _textSecondary,
-                  height: 1.5),
+                fontFamily: kAppFontFamily,
+                fontSize: 14.0,
+                color: _textSecondary,
+                height: 1.5,
+              ),
             ),
           ),
           actionsAlignment: MainAxisAlignment.end,
@@ -329,34 +348,25 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 12.0),
+                  horizontal: 20.0,
+                  vertical: 12.0,
+                ),
               ),
-              child: Text('Got it',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily, fontWeight: FontWeight.w600)),
+              child: Text(
+                'Got it',
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _showSuccessToast() async {
-    final overlay = Overlay.of(context);
-    final entry = OverlayEntry(
-      builder: (_) => _BrandedToast(
-        icon: Icons.check_circle_rounded,
-        iconColor: _successColor,
-        title: 'Staff member added',
-        message:
-            '${_model.nameTextController?.text.trim() ?? "New staff"} has been added to ${_model.pharmValue ?? "your pharmacy"}.',
-      ),
-    );
-    overlay.insert(entry);
-    await Future.delayed(const Duration(seconds: 3));
-    entry.remove();
   }
 
   Future<void> _showInvitationSentToast() async {
@@ -372,6 +382,22 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     );
     overlay.insert(entry);
     await Future.delayed(const Duration(seconds: 4));
+    entry.remove();
+  }
+
+  Future<void> _showInvitationFailedToast() async {
+    final overlay = Overlay.of(context);
+    final entry = OverlayEntry(
+      builder: (_) => const _BrandedToast(
+        icon: Icons.mail_outline_rounded,
+        iconColor: Color(0xFFEF4444),
+        title: 'Staff member added',
+        message:
+            'The invitation could not be sent. Check its status in Human Resources before retrying.',
+      ),
+    );
+    overlay.insert(entry);
+    await Future.delayed(const Duration(seconds: 5));
     entry.remove();
   }
 
@@ -396,12 +422,13 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               child: SideNavWidget(),
             ),
           ),
-          appBar: responsiveVisibility(
-            context: context,
-            tablet: false,
-            tabletLandscape: false,
-            desktop: false,
-          )
+          appBar:
+              responsiveVisibility(
+                context: context,
+                tablet: false,
+                tabletLandscape: false,
+                desktop: false,
+              )
               ? AppBar(
                   backgroundColor: _surfaceColor,
                   automaticallyImplyLeading: false,
@@ -417,7 +444,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     ),
                     onPressed: () async {
                       logFirebaseEvent(
-                          'ADD_USER_chevron_left_rounded_ICN_ON_TAP');
+                        'ADD_USER_chevron_left_rounded_ICN_ON_TAP',
+                      );
                       logFirebaseEvent('IconButton_navigate_back');
                       context.pop();
                     },
@@ -486,18 +514,21 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                           Expanded(
                             child: SingleChildScrollView(
                               padding: EdgeInsets.symmetric(
-                                horizontal: responsiveVisibility(
-                                        context: context,
-                                        phone: false,
-                                        tablet: false)
+                                horizontal:
+                                    responsiveVisibility(
+                                      context: context,
+                                      phone: false,
+                                      tablet: false,
+                                    )
                                     ? 40.0
                                     : 20.0,
                                 vertical: 28.0,
                               ),
                               child: Center(
                                 child: ConstrainedBox(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 920.0),
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 920.0,
+                                  ),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -510,14 +541,18 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: _surfaceColor,
-                                          borderRadius:
-                                              BorderRadius.circular(24.0),
+                                          borderRadius: BorderRadius.circular(
+                                            24.0,
+                                          ),
                                           border: Border.all(
-                                              color: _borderColor, width: 1.0),
+                                            color: _borderColor,
+                                            width: 1.0,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black
-                                                  .withValues(alpha: 0.04),
+                                              color: Colors.black.withValues(
+                                                alpha: 0.04,
+                                              ),
                                               blurRadius: 30.0,
                                               offset: const Offset(0, 8),
                                             ),
@@ -628,10 +663,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                                     visible:
                                                         _model.passVisibility,
                                                     onToggleVisibility: () =>
-                                                        safeSetState(() => _model
-                                                                .passVisibility =
-                                                            !_model
-                                                                .passVisibility),
+                                                        safeSetState(
+                                                          () => _model.passVisibility =
+                                                              !_model
+                                                                  .passVisibility,
+                                                        ),
                                                     showStrength: true,
                                                     required: true,
                                                   ),
@@ -646,10 +682,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                                                     visible:
                                                         _model.passrVisibility,
                                                     onToggleVisibility: () =>
-                                                        safeSetState(() => _model
-                                                                .passrVisibility =
-                                                            !_model
-                                                                .passrVisibility),
+                                                        safeSetState(
+                                                          () => _model.passrVisibility =
+                                                              !_model
+                                                                  .passrVisibility,
+                                                        ),
                                                     showMatch: true,
                                                     required: true,
                                                   ),
@@ -689,13 +726,13 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   Widget _buildHeroHeader() {
     final initials =
         (_model.nameTextController?.text.trim().isNotEmpty ?? false)
-            ? _model.nameTextController!.text
-                .trim()
-                .split(' ')
-                .take(2)
-                .map((s) => s[0].toUpperCase())
-                .join()
-            : '?';
+        ? _model.nameTextController!.text
+              .trim()
+              .split(' ')
+              .take(2)
+              .map((s) => s[0].toUpperCase())
+              .join()
+        : '?';
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -753,7 +790,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     color: Colors.white.withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(20.0),
                     border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.4), width: 2.0),
+                      color: Colors.white.withValues(alpha: 0.4),
+                      width: 2.0,
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: Text(
@@ -776,19 +815,25 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       // Step pill
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 6.0),
+                          horizontal: 12.0,
+                          vertical: 6.0,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(9999.0),
                           border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              width: 1.0),
+                            color: Colors.white.withValues(alpha: 0.3),
+                            width: 1.0,
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: const [
-                            Icon(Icons.group_add_rounded,
-                                color: Colors.white, size: 14.0),
+                            Icon(
+                              Icons.group_add_rounded,
+                              color: Colors.white,
+                              size: 14.0,
+                            ),
                             SizedBox(width: 6.0),
                             Text(
                               'NEW STAFF MEMBER',
@@ -862,20 +907,26 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(title,
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.0,
-                      color: _textPrimary,
-                      letterSpacing: -0.01)),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16.0,
+                  color: _textPrimary,
+                  letterSpacing: -0.01,
+                ),
+              ),
               const SizedBox(height: 2.0),
-              Text(subtitle,
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontSize: 13.0,
-                      color: _textSecondary,
-                      height: 1.4)),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  fontSize: 13.0,
+                  color: _textSecondary,
+                  height: 1.4,
+                ),
+              ),
             ],
           ),
         ),
@@ -936,20 +987,26 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       children: [
         Row(
           children: [
-            Text(label,
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13.0,
-                    color: _textPrimary)),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.0,
+                color: _textPrimary,
+              ),
+            ),
             if (required) ...[
               const SizedBox(width: 4.0),
-              Text('*',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      color: _dangerColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14.0)),
+              Text(
+                '*',
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  color: _dangerColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14.0,
+                ),
+              ),
             ],
           ],
         ),
@@ -960,26 +1017,32 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           keyboardType: keyboardType,
           textCapitalization: capitalization,
           style: TextStyle(
-              fontFamily: kAppFontFamily,
-              fontSize: 14.0,
-              color: _textPrimary,
-              fontWeight: FontWeight.w500),
+            fontFamily: kAppFontFamily,
+            fontSize: 14.0,
+            color: _textPrimary,
+            fontWeight: FontWeight.w500,
+          ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-                fontFamily: kAppFontFamily,
-                fontSize: 14.0,
-                color: _textSecondary.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w400),
+              fontFamily: kAppFontFamily,
+              fontSize: 14.0,
+              color: _textSecondary.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w400,
+            ),
             prefixIcon: Icon(icon, size: 18.0, color: _duniyaPurpleDark),
             filled: true,
             fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14.0,
+              vertical: 14.0,
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide(
-                  color: hasError ? _dangerColor : _borderColor, width: 1.0),
+                color: hasError ? _dangerColor : _borderColor,
+                width: 1.0,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -995,10 +1058,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ),
             errorText: hasError ? errorText : null,
             errorStyle: TextStyle(
-                fontFamily: kAppFontFamily,
-                fontSize: 11.0,
-                color: _dangerColor,
-                height: 1.2),
+              fontFamily: kAppFontFamily,
+              fontSize: 11.0,
+              color: _dangerColor,
+              height: 1.2,
+            ),
           ),
         ),
       ],
@@ -1020,8 +1084,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       decoration: BoxDecoration(
         color: _duniyaPurpleLight,
         borderRadius: BorderRadius.circular(16.0),
-        border:
-            Border.all(color: _duniyaPurple.withValues(alpha: 0.2), width: 1.5),
+        border: Border.all(
+          color: _duniyaPurple.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1041,12 +1107,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 alignment: Alignment.center,
-                child: Text(initials,
-                    style: const TextStyle(
-                        fontFamily: kAppFontFamily,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16.0,
-                        color: Colors.white)),
+                child: Text(
+                  initials,
+                  style: const TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
               ),
               const SizedBox(width: 12.0),
               Expanded(
@@ -1054,22 +1123,28 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Live preview',
-                        style: TextStyle(
-                            fontFamily: kAppFontFamily,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.6,
-                            color: _duniyaPurpleDark)),
+                    Text(
+                      'Live preview',
+                      style: TextStyle(
+                        fontFamily: kAppFontFamily,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.6,
+                        color: _duniyaPurpleDark,
+                      ),
+                    ),
                     const SizedBox(height: 2.0),
-                    Text(name.isEmpty ? 'New staff member' : name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontFamily: kAppFontFamily,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14.0,
-                            color: _textPrimary)),
+                    Text(
+                      name.isEmpty ? 'New staff member' : name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: kAppFontFamily,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14.0,
+                        color: _textPrimary,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1081,41 +1156,58 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (email.isNotEmpty)
-                  Row(children: [
-                    Icon(Icons.mail_outline, size: 12.0, color: _textSecondary),
-                    const SizedBox(width: 6.0),
-                    Expanded(
-                      child: Text(email,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.mail_outline,
+                        size: 12.0,
+                        color: _textSecondary,
+                      ),
+                      const SizedBox(width: 6.0),
+                      Expanded(
+                        child: Text(
+                          email,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontFamily: kAppFontFamily,
-                              fontSize: 11.5,
-                              color: _textSecondary)),
-                    ),
-                  ]),
-                if (role != '—') ...[
-                  const SizedBox(height: 4.0),
-                  Row(children: [
-                    Icon(_roleIcon(role), size: 12.0, color: _textSecondary),
-                    const SizedBox(width: 6.0),
-                    Text(role,
-                        style: TextStyle(
                             fontFamily: kAppFontFamily,
                             fontSize: 11.5,
                             color: _textSecondary,
-                            fontWeight: FontWeight.w500)),
-                  ]),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                if (role != '—') ...[
+                  const SizedBox(height: 4.0),
+                  Row(
+                    children: [
+                      Icon(_roleIcon(role), size: 12.0, color: _textSecondary),
+                      const SizedBox(width: 6.0),
+                      Text(
+                        role,
+                        style: TextStyle(
+                          fontFamily: kAppFontFamily,
+                          fontSize: 11.5,
+                          color: _textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ],
             )
           else
-            Text('Start typing to see the staff card preview.',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontSize: 11.5,
-                    color: _textSecondary.withValues(alpha: 0.7),
-                    fontStyle: FontStyle.italic)),
+            Text(
+              'Start typing to see the staff card preview.',
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                fontSize: 11.5,
+                color: _textSecondary.withValues(alpha: 0.7),
+                fontStyle: FontStyle.italic,
+              ),
+            ),
         ],
       ),
     );
@@ -1131,19 +1223,25 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       children: [
         Row(
           children: [
-            Text('Role',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13.0,
-                    color: _textPrimary)),
+            Text(
+              'Role',
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.0,
+                color: _textPrimary,
+              ),
+            ),
             const SizedBox(width: 4.0),
-            Text('*',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    color: _dangerColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14.0)),
+            Text(
+              '*',
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                color: _dangerColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 14.0,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 10.0),
@@ -1165,7 +1263,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 12.0),
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? _duniyaPurple
@@ -1188,20 +1288,28 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(_roleIcon(role),
-                          size: 16.0,
-                          color: isSelected ? Colors.white : _duniyaPurpleDark),
+                      Icon(
+                        _roleIcon(role),
+                        size: 16.0,
+                        color: isSelected ? Colors.white : _duniyaPurpleDark,
+                      ),
                       const SizedBox(width: 8.0),
-                      Text(role,
-                          style: TextStyle(
-                              fontFamily: kAppFontFamily,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13.0,
-                              color: isSelected ? Colors.white : _textPrimary)),
+                      Text(
+                        role,
+                        style: TextStyle(
+                          fontFamily: kAppFontFamily,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13.0,
+                          color: isSelected ? Colors.white : _textPrimary,
+                        ),
+                      ),
                       if (isSelected) ...[
                         const SizedBox(width: 6.0),
-                        const Icon(Icons.check_circle,
-                            size: 14.0, color: Colors.white),
+                        const Icon(
+                          Icons.check_circle,
+                          size: 14.0,
+                          color: Colors.white,
+                        ),
                       ],
                     ],
                   ),
@@ -1225,19 +1333,25 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       children: [
         Row(
           children: [
-            Text('Pharmacy',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13.0,
-                    color: _textPrimary)),
+            Text(
+              'Pharmacy',
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.0,
+                color: _textPrimary,
+              ),
+            ),
             const SizedBox(width: 4.0),
-            Text('*',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    color: _dangerColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14.0)),
+            Text(
+              '*',
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                color: _dangerColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 14.0,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 8.0),
@@ -1255,9 +1369,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 : null,
           ),
           child: StreamBuilder<List<PharmacyRecord>>(
-            stream: queryPharmacyRecord(
-              parent: currentUserReference,
-            ),
+            stream: queryPharmacyRecord(parent: currentUserReference),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
@@ -1292,8 +1404,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   logFirebaseEvent('pharm_firestore_query');
                   _model.pharma = await queryPharmacyRecordOnce(
                     parent: currentUserReference,
-                    queryBuilder: (pharmacyRecord) => pharmacyRecord
-                        .where('Name', isEqualTo: _model.pharmValue),
+                    queryBuilder: (pharmacyRecord) => pharmacyRecord.where(
+                      'Name',
+                      isEqualTo: _model.pharmValue,
+                    ),
                     singleRecord: true,
                   ).then((s) => s.firstOrNull);
                   logFirebaseEvent('pharm_update_app_state');
@@ -1321,8 +1435,12 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 borderColor: _isPharmacyValid ? _duniyaPurple : _borderColor,
                 borderWidth: _isPharmacyValid ? 1.5 : 1.0,
                 borderRadius: 12.0,
-                margin:
-                    const EdgeInsetsDirectional.fromSTEB(12.0, 4.0, 12.0, 4.0),
+                margin: const EdgeInsetsDirectional.fromSTEB(
+                  12.0,
+                  4.0,
+                  12.0,
+                  4.0,
+                ),
                 hidesUnderline: true,
                 isSearchable: false,
                 isMultiSelect: false,
@@ -1333,17 +1451,21 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         const SizedBox(height: 6.0),
         Row(
           children: [
-            Icon(Icons.info_outline,
-                size: 12.0, color: _textSecondary.withValues(alpha: 0.7)),
+            Icon(
+              Icons.info_outline,
+              size: 12.0,
+              color: _textSecondary.withValues(alpha: 0.7),
+            ),
             const SizedBox(width: 6.0),
             Expanded(
               child: Text(
                 'The staff member will only see data for the pharmacy you select here.',
                 style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontSize: 11.5,
-                    color: _textSecondary.withValues(alpha: 0.8),
-                    height: 1.4),
+                  fontFamily: kAppFontFamily,
+                  fontSize: 11.5,
+                  color: _textSecondary.withValues(alpha: 0.8),
+                  height: 1.4,
+                ),
               ),
             ),
           ],
@@ -1373,20 +1495,26 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       children: [
         Row(
           children: [
-            Text(label,
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13.0,
-                    color: _textPrimary)),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.0,
+                color: _textPrimary,
+              ),
+            ),
             if (required) ...[
               const SizedBox(width: 4.0),
-              Text('*',
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      color: _dangerColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14.0)),
+              Text(
+                '*',
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  color: _dangerColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14.0,
+                ),
+              ),
             ],
           ],
         ),
@@ -1396,19 +1524,24 @@ class _AddUserWidgetState extends State<AddUserWidget> {
           focusNode: focusNode,
           obscureText: !visible,
           style: TextStyle(
-              fontFamily: kAppFontFamily,
-              fontSize: 14.0,
-              color: _textPrimary,
-              fontWeight: FontWeight.w500),
+            fontFamily: kAppFontFamily,
+            fontSize: 14.0,
+            color: _textPrimary,
+            fontWeight: FontWeight.w500,
+          ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-                fontFamily: kAppFontFamily,
-                fontSize: 14.0,
-                color: _textSecondary.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w400),
-            prefixIcon:
-                Icon(Icons.lock_outline, size: 18.0, color: _duniyaPurpleDark),
+              fontFamily: kAppFontFamily,
+              fontSize: 14.0,
+              color: _textSecondary.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w400,
+            ),
+            prefixIcon: Icon(
+              Icons.lock_outline,
+              size: 18.0,
+              color: _duniyaPurpleDark,
+            ),
             suffixIcon: InkWell(
               onTap: onToggleVisibility,
               borderRadius: BorderRadius.circular(20.0),
@@ -1425,8 +1558,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ),
             filled: true,
             fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14.0,
+              vertical: 14.0,
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide(color: _borderColor, width: 1.0),
@@ -1493,12 +1628,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         Row(
           children: [
             if (label.isNotEmpty)
-              Text(label,
-                  style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontSize: 11.0,
-                      fontWeight: FontWeight.w600,
-                      color: color)),
+              Text(
+                label,
+                style: TextStyle(
+                  fontFamily: kAppFontFamily,
+                  fontSize: 11.0,
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
+              ),
             if (label.isNotEmpty) const SizedBox(width: 12.0),
             Expanded(
               child: Wrap(
@@ -1507,13 +1645,18 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 children: [
                   _buildStrengthChip('8+', password.length >= 8),
                   _buildStrengthChip(
-                      'Aa',
-                      RegExp(r'[A-Z]').hasMatch(password) &&
-                          RegExp(r'[a-z]').hasMatch(password)),
+                    'Aa',
+                    RegExp(r'[A-Z]').hasMatch(password) &&
+                        RegExp(r'[a-z]').hasMatch(password),
+                  ),
                   _buildStrengthChip(
-                      '0-9', RegExp(r'[0-9]').hasMatch(password)),
+                    '0-9',
+                    RegExp(r'[0-9]').hasMatch(password),
+                  ),
                   _buildStrengthChip(
-                      '!@#', RegExp(r'[^A-Za-z0-9]').hasMatch(password)),
+                    '!@#',
+                    RegExp(r'[^A-Za-z0-9]').hasMatch(password),
+                  ),
                 ],
               ),
             ),
@@ -1535,15 +1678,21 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(met ? Icons.check : Icons.circle_outlined,
-              size: 10.0, color: met ? _successColor : _textSecondary),
+          Icon(
+            met ? Icons.check : Icons.circle_outlined,
+            size: 10.0,
+            color: met ? _successColor : _textSecondary,
+          ),
           const SizedBox(width: 4.0),
-          Text(label,
-              style: TextStyle(
-                  fontFamily: kAppFontFamily,
-                  fontSize: 10.0,
-                  fontWeight: FontWeight.w600,
-                  color: met ? _successColor : _textSecondary)),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: kAppFontFamily,
+              fontSize: 10.0,
+              fontWeight: FontWeight.w600,
+              color: met ? _successColor : _textSecondary,
+            ),
+          ),
         ],
       ),
     );
@@ -1559,16 +1708,20 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     }
     return Row(
       children: [
-        Icon(isMatch ? Icons.check_circle : Icons.cancel,
-            size: 14.0, color: isMatch ? _successColor : _dangerColor),
+        Icon(
+          isMatch ? Icons.check_circle : Icons.cancel,
+          size: 14.0,
+          color: isMatch ? _successColor : _dangerColor,
+        ),
         const SizedBox(width: 6.0),
         Text(
           isMatch ? 'Passwords match' : 'Passwords do not match',
           style: TextStyle(
-              fontFamily: kAppFontFamily,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w600,
-              color: isMatch ? _successColor : _dangerColor),
+            fontFamily: kAppFontFamily,
+            fontSize: 11.5,
+            fontWeight: FontWeight.w600,
+            color: isMatch ? _successColor : _dangerColor,
+          ),
         ),
       ],
     );
@@ -1620,12 +1773,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             alignment: Alignment.center,
             child: allMet
                 ? Icon(Icons.check_rounded, color: _successColor, size: 20.0)
-                : Text('$metCount/$requiredCount',
+                : Text(
+                    '$metCount/$requiredCount',
                     style: TextStyle(
-                        fontFamily: kAppFontFamily,
-                        fontSize: 11.0,
-                        fontWeight: FontWeight.w700,
-                        color: _duniyaPurpleDark)),
+                      fontFamily: kAppFontFamily,
+                      fontSize: 11.0,
+                      fontWeight: FontWeight.w700,
+                      color: _duniyaPurpleDark,
+                    ),
+                  ),
           ),
           const SizedBox(width: 14.0),
           Expanded(
@@ -1638,10 +1794,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       ? 'Ready to save'
                       : 'Complete $requiredCount required fields',
                   style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w700,
-                      color: _textPrimary),
+                    fontFamily: kAppFontFamily,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w700,
+                    color: _textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 2.0),
                 Text(
@@ -1649,10 +1806,11 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       ? 'Click Save to add this staff member.'
                       : 'Fill in the remaining $requiredCount - $metCount field${requiredCount - metCount == 1 ? '' : 's'} to enable Save.',
                   style: TextStyle(
-                      fontFamily: kAppFontFamily,
-                      fontSize: 11.5,
-                      color: _textSecondary,
-                      height: 1.3),
+                    fontFamily: kAppFontFamily,
+                    fontSize: 11.5,
+                    color: _textSecondary,
+                    height: 1.3,
+                  ),
                 ),
               ],
             ),
@@ -1666,15 +1824,21 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               backgroundColor: _surfaceColor,
               side: BorderSide(color: _borderColor, width: 1.0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(9999.0)),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14.0),
+                borderRadius: BorderRadius.circular(9999.0),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 14.0,
+              ),
             ),
-            child: Text('Cancel',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13.0)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontFamily: kAppFontFamily,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.0,
+              ),
+            ),
           ),
           const SizedBox(width: 10.0),
           // Save button (gradient pill, disabled until valid)
@@ -1685,12 +1849,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(9999.0),
-                onTap:
-                    _isFormValid && !_model.isSubmitting ? _handleSave : null,
+                onTap: _isFormValid && !_model.isSubmitting
+                    ? _handleSave
+                    : null,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 28.0, vertical: 14.0),
+                    horizontal: 28.0,
+                    vertical: 14.0,
+                  ),
                   decoration: BoxDecoration(
                     gradient: _isFormValid
                         ? const LinearGradient(
@@ -1716,21 +1883,28 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     children: [
                       if (_model.isSubmitting)
                         const SizedBox(
-                            width: 14.0,
-                            height: 14.0,
-                            child: CircularProgressIndicator(
-                                color: Colors.white, strokeWidth: 2.0))
+                          width: 14.0,
+                          height: 14.0,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.0,
+                          ),
+                        )
                       else
-                        const Icon(Icons.person_add_alt_1_rounded,
-                            color: Colors.white, size: 16.0),
+                        const Icon(
+                          Icons.person_add_alt_1_rounded,
+                          color: Colors.white,
+                          size: 16.0,
+                        ),
                       const SizedBox(width: 8.0),
                       Text(
                         _model.isSubmitting ? 'Saving…' : 'Save Staff Member',
                         style: const TextStyle(
-                            fontFamily: kAppFontFamily,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13.0,
-                            color: Colors.white),
+                          fontFamily: kAppFontFamily,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.0,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -1812,8 +1986,10 @@ class _BrandedToastState extends State<_BrandedToast>
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16.0),
-                    border:
-                        Border.all(color: const Color(0xFFE2E8F0), width: 1.0),
+                    border: Border.all(
+                      color: const Color(0xFFE2E8F0),
+                      width: 1.0,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.12),
@@ -1830,8 +2006,11 @@ class _BrandedToastState extends State<_BrandedToast>
                           color: widget.iconColor.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
-                        child: Icon(widget.icon,
-                            color: widget.iconColor, size: 22.0),
+                        child: Icon(
+                          widget.icon,
+                          color: widget.iconColor,
+                          size: 22.0,
+                        ),
                       ),
                       const SizedBox(width: 12.0),
                       Expanded(
@@ -1839,19 +2018,25 @@ class _BrandedToastState extends State<_BrandedToast>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(widget.title,
-                                style: const TextStyle(
-                                    fontFamily: kAppFontFamily,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14.0,
-                                    color: Color(0xFF0B1C30))),
+                            Text(
+                              widget.title,
+                              style: const TextStyle(
+                                fontFamily: kAppFontFamily,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14.0,
+                                color: Color(0xFF0B1C30),
+                              ),
+                            ),
                             const SizedBox(height: 2.0),
-                            Text(widget.message,
-                                style: const TextStyle(
-                                    fontFamily: kAppFontFamily,
-                                    fontSize: 12.5,
-                                    color: Color(0xFF64748B),
-                                    height: 1.4)),
+                            Text(
+                              widget.message,
+                              style: const TextStyle(
+                                fontFamily: kAppFontFamily,
+                                fontSize: 12.5,
+                                color: Color(0xFF64748B),
+                                height: 1.4,
+                              ),
+                            ),
                           ],
                         ),
                       ),

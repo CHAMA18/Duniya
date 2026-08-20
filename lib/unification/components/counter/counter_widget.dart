@@ -15,11 +15,13 @@ class CounterWidget extends StatefulWidget {
     this.parameter1,
     this.parameter3,
     required this.productQuantity,
+    this.width,
   });
 
   final String? parameter1;
   final double? parameter3;
   final int? productQuantity;
+  final double? width;
 
   @override
   State<CounterWidget> createState() => _CounterWidgetState();
@@ -54,7 +56,7 @@ class _CounterWidgetState extends State<CounterWidget> {
     context.watch<FFAppState>();
 
     return Container(
-      width: 160.0,
+      width: widget.width ?? 160.0,
       height: 50.0,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,

@@ -8,10 +8,8 @@ import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
 class StaffRecord extends FirestoreRecord {
-  StaffRecord._(
-    DocumentReference reference,
-    Map<String, dynamic> data,
-  ) : super(reference, data) {
+  StaffRecord._(DocumentReference reference, Map<String, dynamic> data)
+    : super(reference, data) {
     _initializeFields();
   }
 
@@ -60,6 +58,15 @@ class StaffRecord extends FirestoreRecord {
   bool get deleted => _deleted ?? false;
   bool hasDeleted() => _deleted != null;
 
+  // Invitation fields are maintained by Cloud Functions and surfaced in HR.
+  String? _invitationStatus;
+  String get invitationStatus => _invitationStatus ?? '';
+  bool hasInvitationStatus() => _invitationStatus != null;
+
+  String? _invitationId;
+  String get invitationId => _invitationId ?? '';
+  bool hasInvitationId() => _invitationId != null;
+
   void _initializeFields() {
     _ownerRef = snapshotData['OwnerRef'] as DocumentReference?;
     _name = snapshotData['Name'] as String?;
@@ -70,6 +77,8 @@ class StaffRecord extends FirestoreRecord {
     _pharmId = snapshotData['PharmId'] as DocumentReference?;
     _password = snapshotData['Password'] as String?;
     _deleted = snapshotData['deleted'] as bool?;
+    _invitationStatus = snapshotData['invitationStatus'] as String?;
+    _invitationId = snapshotData['invitationId'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -82,15 +91,14 @@ class StaffRecord extends FirestoreRecord {
       ref.get().then((s) => StaffRecord.fromSnapshot(s));
 
   static StaffRecord fromSnapshot(DocumentSnapshot snapshot) => StaffRecord._(
-        snapshot.reference,
-        mapFromFirestore(snapshot.data() as Map<String, dynamic>),
-      );
+    snapshot.reference,
+    mapFromFirestore(snapshot.data() as Map<String, dynamic>),
+  );
 
   static StaffRecord getDocumentFromData(
     Map<String, dynamic> data,
     DocumentReference reference,
-  ) =>
-      StaffRecord._(reference, mapFromFirestore(data));
+  ) => StaffRecord._(reference, mapFromFirestore(data));
 
   @override
   String toString() =>
@@ -115,6 +123,8 @@ Map<String, dynamic> createStaffRecordData({
   DocumentReference? pharmId,
   String? password,
   bool? deleted,
+  String? invitationStatus,
+  String? invitationId,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -127,6 +137,8 @@ Map<String, dynamic> createStaffRecordData({
       'PharmId': pharmId,
       'Password': password,
       'deleted': deleted,
+      'invitationStatus': invitationStatus,
+      'invitationId': invitationId,
     }.withoutNulls,
   );
 
@@ -146,21 +158,25 @@ class StaffRecordDocumentEquality implements Equality<StaffRecord> {
         e1?.userRef == e2?.userRef &&
         e1?.pharmId == e2?.pharmId &&
         e1?.password == e2?.password &&
-        e1?.deleted == e2?.deleted;
+        e1?.deleted == e2?.deleted &&
+        e1?.invitationStatus == e2?.invitationStatus &&
+        e1?.invitationId == e2?.invitationId;
   }
 
   @override
   int hash(StaffRecord? e) => const ListEquality().hash([
-        e?.ownerRef,
-        e?.name,
-        e?.role,
-        e?.email,
-        e?.phone,
-        e?.userRef,
-        e?.pharmId,
-        e?.password,
-        e?.deleted
-      ]);
+    e?.ownerRef,
+    e?.name,
+    e?.role,
+    e?.email,
+    e?.phone,
+    e?.userRef,
+    e?.pharmId,
+    e?.password,
+    e?.deleted,
+    e?.invitationStatus,
+    e?.invitationId,
+  ]);
 
   @override
   bool isValidKey(Object? o) => o is StaffRecord;

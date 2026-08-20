@@ -11,6 +11,31 @@ admin.initializeApp();
 // Never hardcode API keys in source code.
 
 const RESEND_API_URL = "https://api.resend.com";
+const DEFAULT_RESEND_FROM = "Duniya <noreply@thestackone.com>";
+const DEFAULT_PORTAL_URL = "https://thestackone.com/app.html";
+
+function getInvitationDeliveryStatus(eventType) {
+  const statuses = {
+    "email.sent": "sent",
+    "email.delivered": "delivered",
+    "email.delivery_delayed": "delayed",
+    "email.bounced": "bounced",
+    "email.complained": "complained",
+    "email.opened": "opened",
+    "email.clicked": "clicked",
+  };
+  return statuses[eventType] || "sent";
+}
+
+function getConfiguredPortalUrl() {
+  const configuredUrl = functions.config().app?.url || DEFAULT_PORTAL_URL;
+  return configuredUrl.replace(/\/+$/, "");
+}
+
+function getConfiguredResendFrom() {
+  // Resend validates this configured sender against its approved domain.
+  return functions.config().resend?.from || DEFAULT_RESEND_FROM;
+}
 
 /**
  * Send an email via Resend.
@@ -569,27 +594,32 @@ exports.onResendWebhook = functions
       return;
     }
 
-    // Verify webhook signature if Svix secret is configured
+    // Reject unverified requests. Delivery state is security-sensitive because
+    // it appears in the HR portal and must only originate from Resend.
     const svixSecret = functions.config().resend?.webhook_secret;
-    if (svixSecret) {
-      try {
-        const { Webhook } = require("svix");
-        const wh = new Webhook(svixSecret);
-        wh.verify(
-          JSON.stringify(req.body),
-          {
-            "svix-id": req.headers["svix-id"],
-            "svix-timestamp": req.headers["svix-timestamp"],
-            "svix-signature": req.headers["svix-signature"],
-          }
-        );
-      } catch (err) {
-        console.error("Webhook signature verification failed:", err.message);
-        res.status(401).send("Invalid signature");
-        return;
-      }
+    if (!svixSecret) {
+      console.error("Resend webhook secret is not configured.");
+      res.status(503).send("Webhook verification is not configured");
+      return;
+    }
+    try {
+      const { Webhook } = require("svix");
+      const wh = new Webhook(svixSecret);
+      wh.verify(
+        JSON.stringify(req.body),
+        {
+          "svix-id": req.headers["svix-id"],
+          "svix-timestamp": req.headers["svix-timestamp"],
+          "svix-signature": req.headers["svix-signature"],
+        }
+      );
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err.message);
+      res.status(401).send("Invalid signature");
+      return;
     }
 
+    const firestore = admin.firestore();
     const event = req.body;
     const eventType = event.type || "unknown";
     const emailData = event.data || {};
@@ -656,6 +686,33 @@ exports.onResendWebhook = functions
             deliveryRef: deliveryRef.path,
           });
         }
+
+        const invitationQuery = await firestore
+          .collection("StaffInvitations")
+          .where("resendMessageId", "==", messageId)
+          .limit(1)
+          .get();
+        if (!invitationQuery.empty) {
+          const invitationDoc = invitationQuery.docs[0];
+          const invitation = invitationDoc.data();
+          const deliveryStatus = getInvitationDeliveryStatus(eventType);
+          await invitationDoc.ref.update({
+            deliveryStatus,
+            deliveryStatusAt: admin.firestore.FieldValue.serverTimestamp(),
+            lastDeliveryEvent: eventType,
+          });
+
+          // Keep completed invitations terminal if a late delivery event arrives.
+          if (invitation.status !== "accepted" && invitation.staffId) {
+            await firestore.collection("Staff").doc(invitation.staffId).set(
+              {
+                invitationStatus: deliveryStatus,
+                invitationUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+              },
+              { merge: true }
+            );
+          }
+        }
       }
 
       console.log(`[Webhook] Stored ${eventType} event: ${deliveryRef.id}`);
@@ -696,14 +753,34 @@ exports.sendStaffInvitation = functions
 
     const { staffId, email, name, role, pharmacyName, pharmacyId } = data;
 
-    if (!email || !name || !role) {
+    if (!staffId || !email || !name || !role) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        "email, name, and role are required."
+        "staffId, email, name, and role are required."
       );
     }
 
     const firestore = admin.firestore();
+    const normalizedEmail = email.toLowerCase().trim();
+    const staffRef = firestore.collection("Staff").doc(staffId);
+    const staffSnapshot = await staffRef.get();
+    if (!staffSnapshot.exists) {
+      throw new functions.https.HttpsError("not-found", "Staff record not found.");
+    }
+
+    const staff = staffSnapshot.data();
+    if (staff.OwnerRef?.id !== context.auth.uid) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "You can only invite staff in your own pharmacy workspace."
+      );
+    }
+    if ((staff.Email || "").toLowerCase().trim() !== normalizedEmail) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "The invitation email must match the staff record."
+      );
+    }
 
     // Generate a secure random token for the invitation
     const crypto = require("crypto");
@@ -711,9 +788,13 @@ exports.sendStaffInvitation = functions
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7); // 7-day expiry
 
-    // Create the invitation document
+    const fromAddress = getConfiguredResendFrom();
+    const portalUrl = getConfiguredPortalUrl();
+
+    // Create the invitation before calling Resend so failed delivery attempts
+    // still have a visible, auditable state in the HR portal.
     const invitationRef = await firestore.collection("StaffInvitations").add({
-      email: email.toLowerCase().trim(),
+      email: normalizedEmail,
       name: name,
       role: role,
       pharmacyName: pharmacyName || "",
@@ -722,13 +803,19 @@ exports.sendStaffInvitation = functions
       inviterUid: context.auth.uid,
       token: token,
       status: "pending",
+      deliveryStatus: "sending",
+      from: fromAddress,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       expiresAt: expiresAt,
     });
+    await staffRef.update({
+      invitationId: invitationRef.id,
+      invitationStatus: "sending",
+      invitationUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
 
     // Build the invitation URL
-    const appUrl = `https://thestackone.com/app.html`;
-    const invitationUrl = `${appUrl}/#/accept-invitation?token=${token}&email=${encodeURIComponent(email)}`;
+    const invitationUrl = `${portalUrl}/#/accept-invitation?token=${token}&email=${encodeURIComponent(normalizedEmail)}`;
 
     // Role display label
     const roleLabel = role;
@@ -737,6 +824,15 @@ exports.sendStaffInvitation = functions
     const resendKey = functions.config().resend?.key;
     if (!resendKey) {
       console.error("[StaffInvitation] Resend API key not configured.");
+      await invitationRef.update({
+        deliveryStatus: "failed",
+        failureReason: "Email service is not configured.",
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await staffRef.update({
+        invitationStatus: "failed",
+        invitationUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
       throw new functions.https.HttpsError(
         "internal",
         "Email service not configured."
@@ -766,7 +862,7 @@ exports.sendStaffInvitation = functions
           <td style="padding:32px;">
             <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">Hi <strong>${name}</strong>,</p>
             <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">
-              You've been invited to join <strong>${pharmacyName || 'a pharmacy'}</strong> as a <strong>${roleLabel}</strong> on Pulse — a modern pharmacy management platform.
+              You've been invited to join <strong>${pharmacyName || 'a pharmacy'}</strong> as a <strong>${roleLabel}</strong> on Duniya — a modern pharmacy management platform.
             </p>
             <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">
               Click the button below to create your account and get started:
@@ -808,7 +904,7 @@ exports.sendStaffInvitation = functions
         <tr>
           <td style="padding:16px 32px 24px;text-align:center;border-top:1px solid #F1F5F9;">
             <p style="margin:0;color:#94A3B8;font-size:11px;">
-              © 2025 Pulse by StackOne · Powered by Resend
+              © 2025 Duniya · Powered by Resend
             </p>
           </td>
         </tr>
@@ -818,15 +914,13 @@ exports.sendStaffInvitation = functions
 </body>
 </html>`;
 
-    const fromAddress = "Pulse <noreply@thestackone.com>";
-
     try {
       const response = await axios.post(
         `${RESEND_API_URL}/emails`,
         {
           from: fromAddress,
           to: [email.toLowerCase().trim()],
-          subject: `You're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel}`,
+          subject: `You're invited to join ${pharmacyName || 'Duniya'} as ${roleLabel}`,
           html: emailHtml,
         },
         {
@@ -842,14 +936,20 @@ exports.sendStaffInvitation = functions
       // Update invitation with message ID
       await invitationRef.update({
         resendMessageId: messageId || null,
+        deliveryStatus: "sent",
         sentAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await staffRef.update({
+        invitationStatus: "sent",
+        invitationSentAt: admin.firestore.FieldValue.serverTimestamp(),
+        invitationUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 
       // Log to EmailLogs for audit trail
       await firestore.collection("EmailLogs").add({
         from: fromAddress,
         to: [email.toLowerCase().trim()],
-        subject: `You're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel}`,
+        subject: `You're invited to join ${pharmacyName || 'Duniya'} as ${roleLabel}`,
         messageId: messageId,
         type: "staff_invitation",
         staffInvitationRef: invitationRef.path,
@@ -859,12 +959,92 @@ exports.sendStaffInvitation = functions
       console.log(`[StaffInvitation] Email sent to ${email}: ${messageId}`);
       return { success: true, invitationId: invitationRef.id, messageId };
     } catch (error) {
-      console.error(`[StaffInvitation] Failed to send email to ${email}:`, error.message);
+      const errorMessage =
+        error.response?.data?.message || error.message || "Unable to send invitation.";
+      console.error(`[StaffInvitation] Failed to send email to ${email}:`, errorMessage);
+      await invitationRef.update({
+        deliveryStatus: "failed",
+        failureReason: errorMessage,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await staffRef.update({
+        invitationStatus: "failed",
+        invitationUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
       throw new functions.https.HttpsError(
         "internal",
-        `Failed to send invitation email: ${error.message}`
+        "Unable to send the invitation email."
       );
     }
+  });
+
+// Completes acceptance server-side because client writes to Staff are denied.
+exports.completeStaffInvitation = functions
+  .region("us-central1")
+  .https.onCall(async (data, context) => {
+    if (!context.auth || !context.auth.token.email) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "Sign in to accept this invitation."
+      );
+    }
+    const invitationId = data.invitationId;
+    if (!invitationId) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "invitationId is required."
+      );
+    }
+
+    const firestore = admin.firestore();
+    const invitationRef = firestore.collection("StaffInvitations").doc(invitationId);
+    await firestore.runTransaction(async (transaction) => {
+      const invitationSnapshot = await transaction.get(invitationRef);
+      if (!invitationSnapshot.exists) {
+        throw new functions.https.HttpsError("not-found", "Invitation not found.");
+      }
+
+      const invitation = invitationSnapshot.data();
+      if (invitation.status !== "pending") {
+        throw new functions.https.HttpsError(
+          "failed-precondition",
+          "This invitation is no longer active."
+        );
+      }
+      if (invitation.email !== context.auth.token.email.toLowerCase()) {
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "This invitation belongs to another email address."
+        );
+      }
+      if (invitation.expiresAt?.toDate && invitation.expiresAt.toDate() < new Date()) {
+        throw new functions.https.HttpsError(
+          "deadline-exceeded",
+          "This invitation has expired."
+        );
+      }
+
+      transaction.update(invitationRef, {
+        status: "accepted",
+        deliveryStatus: "accepted",
+        acceptedAt: admin.firestore.FieldValue.serverTimestamp(),
+        acceptedByUid: context.auth.uid,
+      });
+      if (invitation.staffId) {
+        transaction.set(
+          firestore.collection("Staff").doc(invitation.staffId),
+          {
+            UserRef: firestore.collection("User").doc(context.auth.uid),
+            invitationStatus: "accepted",
+            invitationUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            status: "active",
+          },
+          { merge: true }
+        );
+      }
+    });
+
+    return { success: true };
   });
 
 // ══════════════════════════════════════════════════════════════

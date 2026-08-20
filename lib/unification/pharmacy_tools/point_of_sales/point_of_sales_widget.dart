@@ -534,17 +534,20 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
               ],
             ),
             const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final useStackedFooter = constraints.maxWidth < 390;
+                final priceDetails = Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       'ZMK ${formatNumber(
                         stock.price,
                         formatType: FormatType.compact,
                       )}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style:
                           FlutterFlowTheme.of(context).headlineSmall.override(
                                 fontFamily: FlutterFlowTheme.of(context)
@@ -559,6 +562,8 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                     ),
                     Text(
                       '$quantity in stock',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: FlutterFlowTheme.of(context).bodySmall.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodySmallFamily,
@@ -569,14 +574,34 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                           ),
                     ),
                   ],
-                ),
-                CounterWidget(
+                );
+                final counter = CounterWidget(
                   key: Key('pos_counter_${stock.reference.id}'),
                   parameter1: stock.name,
                   parameter3: stock.price,
                   productQuantity: stock.quantity,
-                ),
-              ],
+                  width: useStackedFooter ? double.infinity : 150,
+                );
+
+                if (useStackedFooter) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      priceDetails,
+                      const SizedBox(height: 12),
+                      counter,
+                    ],
+                  );
+                }
+
+                return Row(
+                  children: [
+                    Expanded(child: priceDetails),
+                    const SizedBox(width: 12),
+                    counter,
+                  ],
+                );
+              },
             ),
           ],
         ),

@@ -16,8 +16,8 @@
 #   - Pinned to FLUTTER_VERSION 3.38.2 for package compatibility
 #     (font_awesome_flutter 11.0.0 needs Dart >=3.9).
 #   - Uses --no-native-null-assertions to bypass strict compile-time
-#     null enforcement that fails on legacy code patterns. The Inter
-#     font (replacing Satoshi) prevents CanvasKit runtime crashes.
+#     null enforcement that fails on legacy code patterns. The bundled static
+#     Satoshi faces are CanvasKit-safe; variable Satoshi files are excluded.
 #   - Skips --tree-shake-icons (long, memory-heavy step with no
 #     observable bundle-size benefit for this app).
 # =====================================================================
@@ -68,7 +68,7 @@ flutter pub get
 # ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
-echo "==> flutter build web (CanvasKit renderer + Inter font = no null-check crash)"
+echo "==> flutter build web (CanvasKit renderer + static Satoshi font)"
 flutter build web --release \
   --no-tree-shake-icons \
   --no-native-null-assertions
@@ -158,18 +158,16 @@ fi
 echo "==> Cache busting complete. Build version: ${BUILD_VERSION}"
 
 # ---------------------------------------------------------------------
-# 6b. Strip native-only fonts from the web FontManifest.
-#     The web app requests 'Inter' (bundled in pubspec); Satoshi /
-#     EraerRegular / GrutchShaded are only used on native and their TTFs
-#     can trip CanvasKit's text renderer. Remove them from the WEB
-#     manifest only (native builds are unaffected).
+# 6b. Strip legacy-only fonts from the web FontManifest. Static Satoshi is
+#     retained for the brand; variable Satoshi files are never registered in
+#     pubspec.yaml, so CanvasKit only sees safe static font instances.
 # ---------------------------------------------------------------------
 if [[ -f "build/web/assets/FontManifest.json" ]]; then
-  # Failing the filter (e.g. 'Inter' missing from the manifest) means the
+  # Failing the filter (e.g. 'Satoshi' missing from the manifest) means the
   # web app would ship broken — abort the deploy in that case.
   if "${FLUTTER_HOME}/bin/cache/dart-sdk/bin/dart" \
     tool/filter_web_font_manifest.dart build/web/assets/FontManifest.json; then
-    echo "==> Web FontManifest filtered: native-only fonts removed, Inter kept"
+    echo "==> Web FontManifest filtered: legacy fonts removed, Satoshi kept"
   else
     echo "==> ERROR: font manifest filter failed — aborting deploy"
     exit 1

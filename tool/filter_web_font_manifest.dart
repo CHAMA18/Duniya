@@ -5,14 +5,12 @@
 // build/web/assets/FontManifest.json to remove font families that are only
 // needed on native platforms:
 //
-//   - Satoshi        — the native brand font (TTFs with variable-style tables
-//                      that can trip CanvasKit's Skia text renderer). On web
-//                      the app requests 'Inter' (kAppFontFamily), never
-//                      'Satoshi', so dropping it is safe.
 //   - EraerRegular   — unused legacy font (no references in lib/).
 //   - GrutchShaded   — unused legacy font (no references in lib/).
 //
-// Keeping 'Inter' (bundled for web) + MaterialIcons + package icon fonts.
+// Keeping static Satoshi + MaterialIcons + package icon fonts. The Flutter
+// asset declaration excludes Satoshi's variable font files, which CanvasKit
+// cannot load safely in this project.
 //
 // Native builds are unaffected — this script only touches build/web output.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -36,7 +34,7 @@ void main(List<String> args) {
     exit(0);
   }
 
-  const nativeOnlyFamilies = {'Satoshi', 'EraerRegular', 'GrutchShaded'};
+  const nativeOnlyFamilies = {'EraerRegular', 'GrutchShaded'};
   final kept = <dynamic>[];
   var dropped = 0;
   for (final entry in decoded) {
@@ -54,19 +52,18 @@ void main(List<String> args) {
 
   file.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(kept));
 
-  // Safety check: the web app hard-requires 'Inter' (kAppFontFamily on
-  // web). If it ever disappears from the manifest, the app ships with the
-  // CanvasKit null-font blank-page crash. Fail the build instead of
-  // silently shipping a broken app.
-  final hasInter = kept.any((entry) =>
+  // Safety check: the web app hard-requires static Satoshi. If it ever
+  // disappears from the manifest, fail instead of silently shipping a font
+  // fallback or reintroducing the CanvasKit null-font blank-page crash.
+  final hasSatoshi = kept.any((entry) =>
       entry is Map<String, dynamic> &&
-      (entry['family'] as String? ?? '').trim() == 'Inter');
+      (entry['family'] as String? ?? '').trim() == 'Satoshi');
   stdout.writeln(
       'filter_web_font_manifest: kept ${kept.length}/${decoded.length} '
-      'families (dropped $dropped native-only). Inter present: $hasInter');
-  if (!hasInter) {
+      'families (dropped $dropped native-only). Satoshi present: $hasSatoshi');
+  if (!hasSatoshi) {
     stderr.writeln(
-        'filter_web_font_manifest: ERROR — "Inter" family is missing from '
+        'filter_web_font_manifest: ERROR — "Satoshi" family is missing from '
         'the web FontManifest. The web app will crash (CanvasKit null-font). '
         'Check pubspec.yaml fonts section.');
     exit(1);
