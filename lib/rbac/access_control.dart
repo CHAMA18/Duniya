@@ -83,8 +83,8 @@ class AccessControl {
     final userDoc = currentUserDocument;
     if (userDoc == null) return AppRole.unknown;
 
-    final accountType = userDoc.accountType ?? '';
-    final role = userDoc.role ?? '';
+    final accountType = userDoc.accountType;
+    final role = userDoc.role;
 
     // Pulse network users — resolve duniyaAdmin vs duniyaStaff from the
     // Firestore `role` field.  Only explicit admin/owner values map to

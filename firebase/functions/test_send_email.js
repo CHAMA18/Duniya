@@ -17,7 +17,7 @@ async function main() {
   const payload = JSON.stringify({
     data: {
       to: "developer@thestackone.com",
-      subject: "✅ Duniya Email Service Test",
+      subject: "✅ Pulse Email Service Test",
       html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
@@ -27,7 +27,7 @@ async function main() {
     <h1 style="color:#fff;margin:0;font-size:24px">✅ Email Service is Live!</h1>
   </div>
   <div style="padding:32px">
-    <p style="font-size:16px;color:#333">This is an automated test from <strong>Duniya</strong>.</p>
+    <p style="font-size:16px;color:#333">This is an automated test from <strong>Pulse</strong>.</p>
     <p style="font-size:15px;color:#555;line-height:1.6">The Resend email integration is working end-to-end.</p>
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin:20px 0">
       <p style="margin:0;font-size:14px;color:#059669;font-weight:600">🎉 Everything is working perfectly.</p>
@@ -35,7 +35,7 @@ async function main() {
     <p style="font-size:14px;color:#999;margin-top:24px">Sent at ${new Date().toISOString()}</p>
   </div>
   <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
-    <p style="font-size:12px;color:#999;margin:0">Duniya — Pharmacy Management</p>
+    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Management</p>
   </div>
 </div>
 </body>
@@ -62,9 +62,9 @@ async function main() {
     const response = await axios.post(
       "https://api.resend.com/emails",
       {
-        from: "Duniya <noreply@thestackone.com>",
+        from: "Pulse <noreply@thestackone.com>",
         to: ["developer@thestackone.com"],
-        subject: "✅ Duniya Email Service Test",
+        subject: "✅ Pulse Email Service Test",
         html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
@@ -74,7 +74,7 @@ async function main() {
     <h1 style="color:#fff;margin:0;font-size:24px">✅ Email Service is Live!</h1>
   </div>
   <div style="padding:32px">
-    <p style="font-size:16px;color:#333">This is an automated test from <strong>Duniya</strong>.</p>
+    <p style="font-size:16px;color:#333">This is an automated test from <strong>Pulse</strong>.</p>
     <p style="font-size:15px;color:#555;line-height:1.6">The Resend email integration is working end-to-end. You're receiving this because:</p>
     <ol style="font-size:15px;color:#555;line-height:1.8;padding-left:20px">
       <li>Cloud Functions are deployed ✅</li>
@@ -87,12 +87,12 @@ async function main() {
     <p style="font-size:14px;color:#999;margin-top:24px">Sent at ${new Date().toISOString()}</p>
   </div>
   <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
-    <p style="font-size:12px;color:#999;margin:0">Duniya — Pharmacy Management</p>
+    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Management</p>
   </div>
 </div>
 </body>
 </html>`,
-        text: "Duniya Email Service is live and working!",
+        text: "Pulse Email Service is live and working!",
       },
       {
         headers: {

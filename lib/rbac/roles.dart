@@ -86,7 +86,7 @@ enum AppRole {
   /// missing accountType should not grant network admin access.
   static bool isDuniyaAccountType(String? accountType) {
     if (accountType == null || accountType.isEmpty) return false;
-    return accountType.toLowerCase() == 'duniya';
+    return accountType.trim().toLowerCase() == 'pulse';
   }
 
   /// Human-readable display name for the role.

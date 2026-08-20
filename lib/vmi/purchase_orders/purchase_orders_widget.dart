@@ -53,10 +53,10 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   List<_PoLineItem> _lineItems = [];
 
   // ── KPI CACHE ──
-  int _kpiPendingApproval = 3;
-  int _kpiInTransit = 2;
-  int _kpiDeliveredMonth = 8;
-  double _kpiTotalValueMonth = 186750.00;
+  int _kpiPendingApproval = 0;
+  int _kpiInTransit = 0;
+  int _kpiDeliveredMonth = 0;
+  double _kpiTotalValueMonth = 0.0;
 
   // ── MOCK DATA ──
   late List<_PurchaseOrder> _purchaseOrders;
@@ -89,102 +89,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     super.dispose();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //   MOCK DATA
-  // ═══════════════════════════════════════════════════════════════
 
-  List<_PurchaseOrder> _buildMockData() {
-    return [
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0048',
-        supplier: 'Medline Pharmaceuticals',
-        itemCount: 12,
-        totalValue: 34500.00,
-        status: 'Pending Approval',
-        createdDate: DateTime(2024, 12, 18),
-        requestedBy: 'Dr. Amina K.',
-        fulfillment: 0.0,
-        items: ['Paracetamol 500mg', 'Amoxicillin 250mg', 'Omeprazole 20mg'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0047',
-        supplier: 'Medline Pharmaceuticals',
-        itemCount: 8,
-        totalValue: 12450.00,
-        status: 'Ordered',
-        createdDate: DateTime(2024, 12, 16),
-        requestedBy: 'Pharm. James M.',
-        fulfillment: 0.45,
-        items: ['Cetirizine 10mg', 'Ibuprofen 400mg'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0046',
-        supplier: 'Beta Healthcare',
-        itemCount: 5,
-        totalValue: 8750.00,
-        status: 'Delivered',
-        createdDate: DateTime(2024, 12, 14),
-        requestedBy: 'Dr. Amina K.',
-        fulfillment: 1.0,
-        items: ['Metformin 500mg', 'Amlodipine 5mg'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0045',
-        supplier: 'Global Medical Supplies',
-        itemCount: 15,
-        totalValue: 67800.00,
-        status: 'Approved',
-        createdDate: DateTime(2024, 12, 12),
-        requestedBy: 'Pharm. James M.',
-        fulfillment: 0.0,
-        items: ['Diazepam 5mg', 'Lisinopril 10mg', 'Salbutamol Inhaler'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0044',
-        supplier: 'Zambian Drug House',
-        itemCount: 3,
-        totalValue: 4200.00,
-        status: 'Draft',
-        createdDate: DateTime(2024, 12, 19),
-        requestedBy: 'Dr. Amina K.',
-        fulfillment: 0.0,
-        items: ['Artemether/Lumefantrine'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0043',
-        supplier: 'Medline Pharmaceuticals',
-        itemCount: 10,
-        totalValue: 28900.00,
-        status: 'Delivered',
-        createdDate: DateTime(2024, 12, 10),
-        requestedBy: 'Pharm. Grace N.',
-        fulfillment: 1.0,
-        items: ['Ciprofloxacin 500mg', 'Azithromycin 250mg'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0042',
-        supplier: 'Beta Healthcare',
-        itemCount: 6,
-        totalValue: 15600.00,
-        status: 'Pending Approval',
-        createdDate: DateTime(2024, 12, 17),
-        requestedBy: 'Dr. Amina K.',
-        fulfillment: 0.0,
-        items: ['Co-trimoxazole 480mg', 'Fluconazole 150mg'],
-      ),
-      _PurchaseOrder(
-        poNumber: 'PO-2024-0041',
-        supplier: 'Global Medical Supplies',
-        itemCount: 20,
-        totalValue: 15300.00,
-        status: 'Cancelled',
-        createdDate: DateTime(2024, 12, 8),
-        requestedBy: 'Pharm. James M.',
-        fulfillment: 0.0,
-        items: ['Ranitidine 150mg'],
-      ),
-    ];
-  }
 
   // ═══════════════════════════════════════════════════════════════
   //   STATUS HELPERS

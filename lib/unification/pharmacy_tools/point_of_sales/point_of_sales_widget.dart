@@ -45,6 +45,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
   bool _seededDefaultPharmacy = false;
   String _searchQuery = '';
   String _selectedCategory = 'All';
+  bool _redirectingPulseUser = false;
 
   @override
   void initState() {
@@ -53,6 +54,18 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
 
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'PointOfSales'});
+
+    // POS is a pharmacy workspace. Pulse-network users administer the
+    // platform and must never enter a pharmacy's checkout environment.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted ||
+          _redirectingPulseUser ||
+          !AccessControl.isDuniyaUser(context)) {
+        return;
+      }
+      _redirectingPulseUser = true;
+      context.goNamed(HomeWidget.routeName);
+    });
   }
 
   @override
@@ -255,7 +268,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
   }) {
     return Container(
       constraints: const BoxConstraints(minHeight: 150),
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(22),
@@ -416,7 +429,6 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
         : 'No expiry set';
 
     return Container(
-      constraints: const BoxConstraints(minHeight: 270),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(24),
@@ -432,9 +444,10 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(22),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -488,7 +501,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
             Text(
               title,
               maxLines: 2,
@@ -502,7 +515,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                         !FlutterFlowTheme.of(context).titleLargeIsCustom,
                   ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Text(
               subtitle,
               maxLines: 1,
@@ -515,7 +528,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                         !FlutterFlowTheme.of(context).bodyMediumIsCustom,
                   ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -533,7 +546,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                 ),
               ],
             ),
-            const Spacer(),
+            const SizedBox(height: 16),
             LayoutBuilder(
               builder: (context, constraints) {
                 final useStackedFooter = constraints.maxWidth < 390;
@@ -829,7 +842,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(24),
@@ -968,7 +981,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(24),
@@ -1178,6 +1191,20 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     context.watch<FFAppState>();
     final isWide = MediaQuery.sizeOf(context).width >= 1200;
 
+    if (AccessControl.isDuniyaUser(context)) {
+      // Avoid flashing POS while the scheduled redirect above is processed.
+      if (!_redirectingPulseUser) {
+        _redirectingPulseUser = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) context.goNamed(HomeWidget.routeName);
+        });
+      }
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        body: const SizedBox.shrink(),
+      );
+    }
+
     return Title(
       title: 'PointOfSales',
       color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
@@ -1188,7 +1215,9 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
         },
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: const Color(0xFFF7F3FF),
+          // Keep the page canvas in sync with the selected app theme. The
+          // previous fixed lavender value left a bright gutter in dark mode.
+          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           // Mobile drawer: full SideNav accessible via hamburger menu
           drawer: Drawer(
             elevation: 16.0,
@@ -1278,9 +1307,9 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                       Expanded(
                         child: SingleChildScrollView(
                           padding: EdgeInsets.fromLTRB(
-                            isWide ? 24 : 16,
+                            isWide ? 32 : 16,
                             18,
-                            isWide ? 24 : 16,
+                            isWide ? 32 : 16,
                             28,
                           ),
                           child: Column(
@@ -1309,7 +1338,8 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                         iconPadding: EdgeInsets.zero,
                                         iconColor: FlutterFlowTheme.of(context)
                                             .secondary,
-                                        color: Colors.white,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
@@ -1354,7 +1384,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                 const SizedBox(height: 18),
                               ],
                               _buildHeader(context, isWide, activePharmacyName),
-                              const SizedBox(height: 18),
+                              const SizedBox(height: 22),
                               StreamBuilder<List<PharmacyRecord>>(
                                 stream: queryPharmacyRecord(
                                     parent: pharmaciesParent),
@@ -1396,7 +1426,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                         pharmacies,
                                         isWide: isWide,
                                       ),
-                                      const SizedBox(height: 18),
+                                      const SizedBox(height: 22),
                                       StreamBuilder<List<StockRecord>>(
                                         stream: resolvedPharmacyName.isEmpty
                                             ? Stream<List<StockRecord>>.value(
@@ -1631,12 +1661,10 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                           0xFFF59E0B),
                                                     ),
                                                   ],
-                                                ),
-                                              const SizedBox(height: 18),
+                                                ),                                              const SizedBox(height: 22),
                                               Container(
                                                 width: double.infinity,
-                                                padding:
-                                                    const EdgeInsets.all(18),
+                                                padding: const EdgeInsets.all(22),
                                                 decoration: BoxDecoration(
                                                   color: FlutterFlowTheme.of(
                                                           context)
@@ -1938,18 +1966,16 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                              const SizedBox(height: 18),
-                                              if (isWide)
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: visibleStocks
-                                                              .isEmpty
-                                                          ? _buildEmptyState(
+                                              ),              const SizedBox(height: 22),
+                                      if (isWide)
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: visibleStocks
+                                                      .isEmpty
+                                                  ? _buildEmptyState(
                                                               context,
                                                               title: allStocks
                                                                       .isEmpty
@@ -1968,11 +1994,11 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                 crossAxisCount:
                                                                     3,
                                                                 crossAxisSpacing:
-                                                                    18,
+                                                                    22,
                                                                 mainAxisSpacing:
-                                                                    18,
+                                                                    22,
                                                                 childAspectRatio:
-                                                                    0.92,
+                                                                    0.82,
                                                               ),
                                                               itemBuilder:
                                                                   (context,
@@ -2019,13 +2045,12 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                     .length,
                                                             gridDelegate:
                                                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                                              crossAxisCount: 1,
-                                                              crossAxisSpacing:
-                                                                  16,
-                                                              mainAxisSpacing:
-                                                                  16,
-                                                              childAspectRatio:
-                                                                  1.55,
+                                                              crossAxisCount: 1,                                                      crossAxisSpacing:
+                                                              18,
+                                                            mainAxisSpacing:
+                                                              18,
+                                                          childAspectRatio:
+                                                              1.40,
                                                             ),
                                                             itemBuilder:
                                                                 (context,
@@ -2038,7 +2063,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                   stock);
                                                             },
                                                           ),
-                                                    const SizedBox(height: 18),
+                                                    const SizedBox(height: 22),
                                                     _buildCashierSidebar(
                                                       context,
                                                       allStocks,

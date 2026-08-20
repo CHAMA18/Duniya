@@ -11,7 +11,7 @@ admin.initializeApp();
 // Never hardcode API keys in source code.
 
 const RESEND_API_URL = "https://api.resend.com";
-const DEFAULT_RESEND_FROM = "Duniya <noreply@thestackone.com>";
+const DEFAULT_RESEND_FROM = "Pulse <noreply@thestackone.com>";
 const DEFAULT_PORTAL_URL = "https://thestackone.com/app.html";
 
 function getInvitationDeliveryStatus(eventType) {
@@ -862,7 +862,7 @@ exports.sendStaffInvitation = functions
           <td style="padding:32px;">
             <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">Hi <strong>${name}</strong>,</p>
             <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">
-              You've been invited to join <strong>${pharmacyName || 'a pharmacy'}</strong> as a <strong>${roleLabel}</strong> on Duniya — a modern pharmacy management platform.
+              You've been invited to join <strong>${pharmacyName || 'a pharmacy'}</strong> as a <strong>${roleLabel}</strong> on Pulse — a modern pharmacy management platform.
             </p>
             <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">
               Click the button below to create your account and get started:
@@ -904,7 +904,7 @@ exports.sendStaffInvitation = functions
         <tr>
           <td style="padding:16px 32px 24px;text-align:center;border-top:1px solid #F1F5F9;">
             <p style="margin:0;color:#94A3B8;font-size:11px;">
-              © 2025 Duniya · Powered by Resend
+              © 2025 Pulse · Powered by Resend
             </p>
           </td>
         </tr>
@@ -920,7 +920,7 @@ exports.sendStaffInvitation = functions
         {
           from: fromAddress,
           to: [email.toLowerCase().trim()],
-          subject: `You're invited to join ${pharmacyName || 'Duniya'} as ${roleLabel}`,
+          subject: `You're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel}`,
           html: emailHtml,
         },
         {
@@ -949,7 +949,7 @@ exports.sendStaffInvitation = functions
       await firestore.collection("EmailLogs").add({
         from: fromAddress,
         to: [email.toLowerCase().trim()],
-        subject: `You're invited to join ${pharmacyName || 'Duniya'} as ${roleLabel}`,
+        subject: `You're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel}`,
         messageId: messageId,
         type: "staff_invitation",
         staffInvitationRef: invitationRef.path,

@@ -1798,11 +1798,11 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           if (_isDuniyaUser) _buildDivider(),
 
                           // ============================================================
-                          // PULSE NETWORK SECTION (Duniya users only)
+                          // PULSE NETWORK SECTION (Pulse users only)
                           // ============================================================
                           if (_isDuniyaUser) ...[
                             if (!isCollapsed)
-                              _buildSectionHeader('DUNIYA NETWORK'),
+                              _buildSectionHeader('PULSE NETWORK'),
                             // Pulse Pharmacies (RBAC)
                             if (_canSee(NavItem.duniyaPharmacies))
                               Tooltip(
