@@ -112,35 +112,6 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
     return '$day/$month/${dt.year}';
   }
 
-  void _showToast(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isError
-                  ? Icons.error_outline_rounded
-                  : Icons.check_circle_rounded,
-              color: Colors.white,
-              size: 18.0,
-            ),
-            const SizedBox(width: 8.0),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: isError
-            ? const Color(0xFFEF4444)
-            : FlutterFlowTheme.of(context).primary,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        margin: const EdgeInsets.all(16.0),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
   /// Fetches a map of `ownerRef.path → UserRecord` for all unique owner refs
   /// across the supplied pharmacies. Failures are swallowed so a single bad
   /// user doc won't break the whole listing.
@@ -859,7 +830,14 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16.0),
-          onTap: () => _showToast('Opening details for ${pharmacy.name}…'),
+          onTap: () {
+            context.pushNamed(
+              PharmacyDetailWidget.routeName,
+              queryParameters: {
+                'pharmacyName': serializeParam(pharmacy.name, ParamType.String),
+              }.withoutNulls,
+            );
+          },
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(
                 16.0, 14.0, 16.0, 14.0),

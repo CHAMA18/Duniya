@@ -10,6 +10,7 @@ import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import 'package:collection/collection.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'goods_received_detail_model.dart';
@@ -63,6 +64,20 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
+  bool get _isPulseUser => AccessControl.isDuniyaUser(context);
+
+  String get _workflowName =>
+      _isPulseUser ? 'Goods Dispatched' : 'Goods Received';
+
+  Future<List<PharmacyRecord>> _availablePharmacies() {
+    return queryPharmacyRecordOnce(
+      parent: _isPulseUser ? null : _receiptScopeParent(),
+      queryBuilder: (pharmacyRecord) => _isPulseUser
+          ? pharmacyRecord.where('NetworkStatus', isEqualTo: 'active')
+          : pharmacyRecord,
+    );
+  }
+
   Future<PharmacyRecord?> _resolvePharmacyByName(String? pharmacyName) async {
     final name = pharmacyName?.trim() ?? '';
     if (name.isEmpty) {
@@ -70,11 +85,14 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     }
 
     final pharmacies = await queryPharmacyRecordOnce(
-      parent: _receiptScopeParent(),
-      queryBuilder: (pharmacyRecord) => pharmacyRecord.where(
-        'Name',
-        isEqualTo: name,
-      ),
+      parent: _isPulseUser ? null : _receiptScopeParent(),
+      queryBuilder: (pharmacyRecord) {
+        var query = pharmacyRecord.where('Name', isEqualTo: name);
+        if (_isPulseUser) {
+          query = query.where('NetworkStatus', isEqualTo: 'active');
+        }
+        return query;
+      },
       singleRecord: true,
     );
     return pharmacies.firstOrNull;
@@ -184,7 +202,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   @override
   Widget build(BuildContext context) {
     return Title(
-        title: 'Goods Received Detail',
+        title: _workflowName,
         color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
         child: GestureDetector(
           onTap: () {
@@ -219,7 +237,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       },
                     ),
                     title: Text(
-                      'Goods Received Detail',
+                      _workflowName,
                       style: TextStyle(
                         color: _textPrimary,
                         fontSize: 18,
@@ -349,7 +367,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       size: 16, color: _duniyaPurple),
                   SizedBox(width: 6),
                   Text(
-                    'Back to Goods Received',
+                    'Back to $_workflowName',
                     style: TextStyle(
                       color: _duniyaPurple,
                       fontSize: 13,
@@ -396,7 +414,11 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isEditing ? 'Edit Goods Receipt' : 'New Goods Receipt',
+                  isEditing
+                      ? 'Edit $_workflowName'
+                      : _isPulseUser
+                          ? 'Dispatch Goods'
+                          : 'New Goods Receipt',
                   style: TextStyle(
                     color: _textPrimary,
                     fontSize: 26,
@@ -407,7 +429,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Record delivered inventory and verify quantities against the delivery note before stocking.',
+                  _isPulseUser
+                      ? 'Ship inventory only to a registered, approved pharmacy. Pulse records the dispatch directly in that pharmacy workspace.'
+                      : 'Record delivered inventory and verify quantities against the delivery note before stocking.',
                   style: TextStyle(
                     color: _textSecondary,
                     fontSize: 14,
@@ -525,8 +549,10 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           children: [
             _buildSectionHeader(
               icon: Icons.receipt_long_rounded,
-              title: 'Receipt Information',
-              subtitle: 'Capture delivery note details and pharmacy',
+              title: _isPulseUser ? 'Dispatch Information' : 'Receipt Information',
+              subtitle: _isPulseUser
+                  ? 'Choose an approved pharmacy destination and dispatch details'
+                  : 'Capture delivery note details and pharmacy',
               stepNumber: 1,
               rightSlot: _buildLiveBadge(
                 label: 'Live',
@@ -550,7 +576,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       SizedBox(width: 16),
                       Expanded(
                           child: _buildLabeledField(
-                        label: 'Pharmacy',
+                        label: _isPulseUser
+                            ? 'Approved destination pharmacy'
+                            : 'Pharmacy',
                         isRequired: true,
                         child: _buildPharmacyField(),
                       )),
@@ -572,7 +600,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       ),
                       SizedBox(height: 16),
                       _buildLabeledField(
-                        label: 'Pharmacy',
+                        label: _isPulseUser
+                            ? 'Approved destination pharmacy'
+                            : 'Pharmacy',
                         isRequired: true,
                         child: _buildPharmacyField(),
                       ),
@@ -703,9 +733,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   Widget _buildPharmacyField() {
     return AuthUserStreamWidget(
       builder: (context) => FutureBuilder<List<PharmacyRecord>>(
-        future: queryPharmacyRecordOnce(
-          parent: AccessControl.parentRef(context) ?? currentUserReference,
-        ),
+        future: _availablePharmacies(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Container(
@@ -735,7 +763,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
-              hintText: 'Select pharmacy',
+              hintText: _isPulseUser
+                  ? 'Select an approved pharmacy'
+                  : 'Select pharmacy',
               icon: Icon(
                 Icons.keyboard_arrow_down_rounded,
                 color: _textSecondary,
@@ -749,7 +779,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               margin: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
               hidesUnderline: true,
               isOverButton: false,
-              isSearchable: false,
+              isSearchable: _isPulseUser,
               isMultiSelect: false,
             ),
           );
@@ -1633,8 +1663,10 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
         ),
         SizedBox(width: 10),
         _PrimaryButton(
-          label: 'Confirm Receipt',
-          icon: Icons.check_rounded,
+          label: _isPulseUser ? 'Dispatch to pharmacy' : 'Confirm Receipt',
+          icon: _isPulseUser
+              ? Icons.local_shipping_rounded
+              : Icons.check_rounded,
           onPressed: _isFormValid ? _confirmReceipt : null,
         ),
       ],
@@ -2385,6 +2417,11 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       return;
     }
 
+    if (_isPulseUser) {
+      await _dispatchFromPulse(selectedPharmacy);
+      return;
+    }
+
     final overallDiscrepancy =
         _model.discrepancyTextController?.text.trim() ?? '';
     final hasLineDiscrepancy = _lineItems.any((item) {
@@ -2449,6 +2486,57 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       ),
     );
     context.pop();
+  }
+
+  Future<void> _dispatchFromPulse(PharmacyRecord pharmacy) async {
+    if (pharmacy.networkStatus != 'active') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only approved active pharmacies can receive a dispatch.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    try {
+      final callable =
+          FirebaseFunctions.instance.httpsCallable('dispatchGoodsToPharmacy');
+      await callable.call(<String, dynamic>{
+        'pharmacyPath': pharmacy.reference.path,
+        'deliveryNoteNumber': _model.deliveryNoteTextController?.text.trim(),
+        'deliveryDate': _model.deliveryDate?.millisecondsSinceEpoch,
+        'items': _lineItems.map((item) {
+          final productRef = item['productId'] as DocumentReference?;
+          return <String, dynamic>{
+            'productPath': productRef?.path,
+            'quantityDelivered': item['quantityDelivered'],
+            'quantityReceived': item['quantityReceived'],
+            'batchNumber': item['batchNumber'],
+            'expiryDate': (item['expiryDate'] as DateTime?)
+                ?.millisecondsSinceEpoch,
+            'discrepancy': item['discrepancy'],
+          };
+        }).toList(),
+      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Goods dispatched to ${pharmacy.name}.'),
+          backgroundColor: _success,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      context.pop();
+    } on FirebaseFunctionsException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Unable to dispatch goods.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 }
 

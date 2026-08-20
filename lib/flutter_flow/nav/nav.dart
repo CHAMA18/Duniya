@@ -619,6 +619,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => DuniyaPharmaciesWidget(),
         ),
         FFRoute(
+          name: PharmacyDetailWidget.routeName,
+          path: PharmacyDetailWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => PharmacyDetailWidget(
+            pharmacyName: params.getParam(
+              'pharmacyName',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
           name: OnboardingRequestsWidget.routeName,
           path: OnboardingRequestsWidget.routePath,
           requireAuth: true,

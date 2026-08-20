@@ -139,6 +139,8 @@ export '/duniya/stock_balance_visibility/duniya_stock_balances_widget.dart'
     show DuniyaStockBalancesWidget;
 export '/duniya/pharmacies/duniya_pharmacies_widget.dart'
     show DuniyaPharmaciesWidget;
+export '/duniya/pharmacies/pharmacy_detail_widget.dart'
+    show PharmacyDetailWidget;
 export '/duniya/onboarding_requests/onboarding_requests_widget.dart'
     show OnboardingRequestsWidget;
 export '/duniya/network_analytics/network_analytics_widget.dart'

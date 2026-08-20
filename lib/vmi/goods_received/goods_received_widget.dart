@@ -71,6 +71,11 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
     return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
+  bool get _isPulseUser => AccessControl.isDuniyaUser(context);
+
+  String get _workflowName =>
+      _isPulseUser ? 'Goods Dispatched' : 'Goods Received';
+
   DocumentReference? _resolvePharmacyRef(List<PharmacyRecord> pharmacies) {
     final name = (_model.pharmacyValue ?? '').trim();
     if (name.isEmpty || name == 'All Pharmacies') {
@@ -163,7 +168,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
   @override
   Widget build(BuildContext context) {
     return Title(
-        title: 'Goods Received',
+        title: _workflowName,
         color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
         child: GestureDetector(
           onTap: () {
@@ -419,7 +424,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               Icon(Icons.chevron_right,
                   color: Colors.white.withAlpha(120), size: 14),
               Text(
-                'Goods Received',
+                _workflowName,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,
@@ -458,8 +463,8 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Goods Received',
+                    Text(
+                      _workflowName,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -470,7 +475,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      'Track every delivery, reconcile discrepancies, and keep your inventory audit-ready across all pharmacies.',
+                      _isPulseUser
+                          ? 'Dispatch stock only to approved pharmacies and keep every shipment traceable from Pulse.'
+                          : 'Track every delivery, reconcile discrepancies, and keep your inventory audit-ready across all pharmacies.',
                       style: TextStyle(
                         color: Colors.white.withAlpha(200),
                         fontSize: 14,
@@ -503,7 +510,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 const SizedBox(width: 8.0),
                 _HeroActionButton(
                   icon: Icons.add_rounded,
-                  label: 'Add Receipt',
+                  label: _isPulseUser ? 'Dispatch Goods' : 'Add Receipt',
                   onTap: () async {
                     context.pushNamed(GoodsReceivedDetailWidget.routeName);
                   },
@@ -1529,8 +1536,10 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
           // Heading
           Text(
             hasActiveFilters
-                ? 'No matching receipts'
-                : 'No goods received yet',
+                ? 'No matching ${_isPulseUser ? 'dispatches' : 'receipts'}'
+                : _isPulseUser
+                    ? 'No goods dispatched yet'
+                    : 'No goods received yet',
             style: theme.headlineSmall.override(
               fontFamily: theme.headlineSmallFamily,
               fontWeight: FontWeight.w700,
@@ -1547,7 +1556,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             child: Text(
               hasActiveFilters
                   ? 'Try adjusting your search terms or clearing filters to see more receipts. Check the pharmacy, status, or time period you have selected.'
-                  : 'Goods received records track every delivery into your pharmacy — delivery note numbers, dates, line items, and any discrepancies. Add your first receipt to start building an audit-ready receiving history.',
+                  : _isPulseUser
+                      ? 'Dispatch stock only to registered, approved pharmacies. Each dispatch is recorded in the selected pharmacy workspace for an audit-ready handoff.'
+                      : 'Goods received records track every delivery into your pharmacy — delivery note numbers, dates, line items, and any discrepancies. Add your first receipt to start building an audit-ready receiving history.',
               textAlign: TextAlign.center,
               style: theme.bodyMedium.override(
                 fontFamily: theme.bodyMediumFamily,

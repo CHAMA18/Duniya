@@ -720,37 +720,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           Icons.analytics_rounded,
         ),
         const SizedBox(height: 16),
-        if (isPhone)
-          Column(
-            children: [
-              _buildAnalyticsOverviewCard(
-                  isPhone: isPhone, stockParent: stockParent),
-              const SizedBox(height: 20),
-              _buildInventorySummaryCard(
-                  isPhone: isPhone, stockParent: stockParent),
-            ],
-          )
-        else
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: _buildAnalyticsOverviewCard(
-                  isPhone: isPhone,
-                  stockParent: stockParent,
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                flex: 1,
-                child: _buildInventorySummaryCard(
-                  isPhone: isPhone,
-                  stockParent: stockParent,
-                ),
-              ),
-            ],
-          ),
+        _buildAnalyticsOverviewCard(
+          isPhone: isPhone,
+          stockParent: stockParent,
+        ),
+        const SizedBox(height: 20),
+        _buildInventorySummaryCard(
+          isPhone: isPhone,
+          stockParent: stockParent,
+        ),
       ],
     );
   }
@@ -1312,30 +1290,19 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 },
               ),
               const SizedBox(height: 16),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final columns = constraints.maxWidth >= 1200
-                      ? 2
-                      : constraints.maxWidth >= 780
-                          ? 2
-                          : 1;
-                  return GridView.count(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: columns == 1 ? 1.6 : 1.1,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: data.pharmacySnapshots
-                        .map(
-                          (snapshot) => _buildPharmacyFinanceCard(
-                            context,
-                            snapshot: snapshot,
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
+              Column(
+                children: [
+                  for (var index = 0;
+                      index < data.pharmacySnapshots.length;
+                      index++) ...[
+                    _buildPharmacyFinanceCard(
+                      context,
+                      snapshot: data.pharmacySnapshots[index],
+                    ),
+                    if (index != data.pharmacySnapshots.length - 1)
+                      const SizedBox(height: 12),
+                  ],
+                ],
               ),
             ],
           );
@@ -1365,10 +1332,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final showsCompactRow = constraints.maxWidth >= 1040;
+          final showsMetricGrid = constraints.maxWidth >= 580;
+          final pharmacyIdentity = Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -1402,6 +1370,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       snapshot.pharmacy.name.isNotEmpty
                           ? snapshot.pharmacy.name
                           : 'Unnamed Pharmacy',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: FlutterFlowTheme.of(context).titleMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).titleMediumFamily,
@@ -1429,32 +1399,35 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  '${snapshot.profitMargin.toStringAsFixed(1)}% margin',
-                  style: FlutterFlowTheme.of(context).labelMedium.override(
-                        fontFamily:
-                            FlutterFlowTheme.of(context).labelMediumFamily,
-                        color: const Color(0xFF059669),
-                        fontWeight: FontWeight.w600,
-                        useGoogleFonts:
-                            !FlutterFlowTheme.of(context).labelMediumIsCustom,
-                      ),
+              Flexible(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: FittedBox(
+                    alignment: Alignment.centerRight,
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${snapshot.profitMargin.toStringAsFixed(1)}% margin',
+                      maxLines: 1,
+                      style: FlutterFlowTheme.of(context).labelMedium.override(
+                            fontFamily: FlutterFlowTheme.of(context)
+                                .labelMediumFamily,
+                            color: const Color(0xFF059669),
+                            fontWeight: FontWeight.w600,
+                            useGoogleFonts: !FlutterFlowTheme.of(context)
+                                .labelMediumIsCustom,
+                          ),
+                    ),
+                  ),
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 18),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
+          );
+          final financePills = [
               _buildFinancePill(
                 context,
                 label: 'Revenue',
@@ -1479,9 +1452,58 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 value: _formatCurrency(snapshot.costOfGoods),
                 tint: const Color(0xFFEF4444),
               ),
+            ];
+
+          if (showsCompactRow) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 280, child: pharmacyIdentity),
+                const SizedBox(width: 16),
+                for (var index = 0; index < financePills.length; index++) ...[
+                  Expanded(child: financePills[index]),
+                  if (index != financePills.length - 1)
+                    const SizedBox(width: 10),
+                ],
+              ],
+            );
+          }
+
+          if (!showsMetricGrid) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                pharmacyIdentity,
+                const SizedBox(height: 12),
+                for (var index = 0; index < financePills.length; index++) ...[
+                  financePills[index],
+                  if (index != financePills.length - 1)
+                    const SizedBox(height: 8),
+                ],
+              ],
+            );
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              pharmacyIdentity,
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: financePills
+                    .map(
+                      (pill) => SizedBox(
+                        width: (constraints.maxWidth - 10) / 2,
+                        child: pill,
+                      ),
+                    )
+                    .toList(),
+              ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -1493,7 +1515,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     required Color tint,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: tint.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
@@ -1504,6 +1526,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         children: [
           Text(
             label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: FlutterFlowTheme.of(context).labelSmall.override(
                   fontFamily: FlutterFlowTheme.of(context).labelSmallFamily,
                   color: FlutterFlowTheme.of(context).secondaryText,
@@ -1513,15 +1537,24 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 ),
           ),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                  color: tint,
-                  fontWeight: FontWeight.w800,
-                  useGoogleFonts:
-                      !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                ),
+          SizedBox(
+            width: double.infinity,
+            child: FittedBox(
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                maxLines: 1,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily:
+                          FlutterFlowTheme.of(context).bodyMediumFamily,
+                      color: tint,
+                      fontWeight: FontWeight.w800,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                    ),
+              ),
+            ),
           ),
         ],
       ),
@@ -3010,9 +3043,18 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            if (!isPhone) ...[
-                                              const SizedBox(width: 16),
+                                            ),                                            if (!isPhone) ...[
+                                              if (AccessControl.hasAnyPermission(
+                                                  context, [
+                                                Permission.posView,
+                                                Permission.posCreateSale
+                                              ]))
+                                                const SizedBox(width: 16),
+                                              if (AccessControl.hasAnyPermission(
+                                                  context, [
+                                                Permission.posView,
+                                                Permission.posCreateSale
+                                              ]))
                                               _buildDashboardActionButton(
                                                 label: 'Open POS',
                                                 icon:
@@ -3021,9 +3063,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 iconColor:
                                                     FlutterFlowTheme.of(context)
                                                         .primary,
-                                                textColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                textColor: FlutterFlowTheme.of(
+                                                        context)
+                                                    .primary,
                                                 onTap: () async {
                                                   context.pushNamed(
                                                     PointOfSalesWidget
@@ -3147,8 +3189,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                   const SizedBox(height: 22),
                                   LayoutBuilder(
                                     builder: (context, constraints) {
-                                      final isWide =
-                                          constraints.maxWidth >= 1180;
+                                      // Four compact cards fit comfortably on
+                                      // standard desktop widths. The former
+                                      // 1180px cutoff treated many desktop
+                                      // viewports as mobile and stacked every
+                                      // metric into an oversized column.
+                                      final showsSingleMetricRow =
+                                          constraints.maxWidth >= 920;
+                                      final showsMetricGrid =
+                                          constraints.maxWidth >= 560;
                                       final heroCards = [
                                         _buildPharmacyMetricCard(
                                           context,
@@ -3194,18 +3243,55 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                         ),
                                       ];
 
-                                      final headerRow = isWide
+                                      final headerRow = showsSingleMetricRow
                                           ? Row(
                                               children: [
-                                                Expanded(child: heroCards[0]),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 164,
+                                                    child: heroCards[0],
+                                                  ),
+                                                ),
                                                 const SizedBox(width: 16),
-                                                Expanded(child: heroCards[1]),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 164,
+                                                    child: heroCards[1],
+                                                  ),
+                                                ),
                                                 const SizedBox(width: 16),
-                                                Expanded(child: heroCards[2]),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 164,
+                                                    child: heroCards[2],
+                                                  ),
+                                                ),
                                                 const SizedBox(width: 16),
-                                                Expanded(child: heroCards[3]),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 164,
+                                                    child: heroCards[3],
+                                                  ),
+                                                ),
                                               ],
                                             )
+                                          : showsMetricGrid
+                                              ? Wrap(
+                                                  spacing: 12,
+                                                  runSpacing: 12,
+                                                  children: heroCards
+                                                      .map(
+                                                        (card) => SizedBox(
+                                                          width: (constraints
+                                                                      .maxWidth -
+                                                                  12) /
+                                                              2,
+                                                          height: 154,
+                                                          child: card,
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                )
                                           : Column(
                                               children: [
                                                 for (var i = 0;
@@ -3224,7 +3310,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                         children: [
                                           headerRow,
                                           const SizedBox(height: 24),
-                                          if (isWide)
+                                          if (showsSingleMetricRow)
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -3475,6 +3561,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                   actionConstraints.maxWidth >=
                                                       980;
                                               final actionCards = [
+                                                if (AccessControl.hasAnyPermission(
+                                                    context, [
+                                                  Permission.posView,
+                                                  Permission.posCreateSale
+                                                ]))
                                                 _buildPharmacyActionCard(
                                                   context,
                                                   title: 'Point of Sale',
@@ -3746,6 +3837,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 const SizedBox(height: 2),
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -3757,6 +3850,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: FlutterFlowTheme.of(context).bodySmall.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodySmallFamily,

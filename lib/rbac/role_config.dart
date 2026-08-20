@@ -451,6 +451,8 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.dashboardViewFinanceNetwork,
     Permission.dashboardViewSalesAnalytics,
     Permission.dashboardViewInventoryMix,
+    Permission.goodsReceivedView,
+    Permission.goodsReceivedCreate,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -466,6 +468,8 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
     Permission.settingsView,
     Permission.notificationsView,
     Permission.dashboardViewSalesAnalytics,
+    Permission.goodsReceivedView,
+    Permission.goodsReceivedCreate,
   },
 
   // ═══════════════════════════════════════════════════════════════════
@@ -675,6 +679,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   // ═══ Pulse Admin ═══
   AppRole.duniyaAdmin: {
     NavItem.home,
+    NavItem.goodsReceived,
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.duniyaPharmacies,
@@ -688,6 +693,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   // ═══ Pulse Staff ═══
   AppRole.duniyaStaff: {
     NavItem.home,
+    NavItem.goodsReceived,
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.duniyaPharmacies,

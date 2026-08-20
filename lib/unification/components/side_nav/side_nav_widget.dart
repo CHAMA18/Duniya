@@ -35,6 +35,10 @@ class _SideNavWidgetState extends State<SideNavWidget> {
   /// Returns true if the current user can see the given navigation item.
   bool _canSee(NavItem item) => AccessControl.canSeeNavItem(context, item);
 
+  /// A section is meaningful only when it contains at least one permitted
+  /// destination. This prevents Pulse users from seeing empty category labels.
+  bool _hasAnyNav(Iterable<NavItem> items) => items.any(_canSee);
+
   /// Returns a human-readable role label.
   String get _roleLabel {
     switch (_currentRole) {
@@ -368,6 +372,48 @@ class _SideNavWidgetState extends State<SideNavWidget> {
     final isCollapsed = FFAppState().SidebarCollapsed;
     final sidebarWidth = isCollapsed ? 88.0 : 280.0;
     final theme = FlutterFlowTheme.of(context);
+    final hasMain = _hasAnyNav([
+      NavItem.home,
+      NavItem.myPharmacies,
+      NavItem.humanResource,
+      NavItem.finances,
+      NavItem.pendingApprovals,
+    ]);
+    final hasInventory = _hasAnyNav([
+      NavItem.storeInventory,
+      NavItem.productCatalogue,
+    ]);
+    final hasStock = _hasAnyNav([
+      NavItem.stockBalances,
+      NavItem.stockMovements,
+      NavItem.stockCounts,
+    ]);
+    final hasOperations = _hasAnyNav([
+      NavItem.goodsReceived,
+      NavItem.salesDispensing,
+      NavItem.pointOfSale,
+    ]);
+    final hasMonitoring = _hasAnyNav([
+      NavItem.batchesExpiry,
+      NavItem.expiryTracking,
+      NavItem.lowStockAlerts,
+      NavItem.replenishment,
+      NavItem.coldChain,
+    ]);
+    final hasClinical = _hasAnyNav([
+      NavItem.prescriptions,
+      NavItem.insurance,
+      NavItem.patientRecords,
+      NavItem.drugInteractions,
+    ]);
+    final hasProcurement = _hasAnyNav([NavItem.purchaseOrders]);
+    final hasAdmin = _hasAnyNav([NavItem.auditLogs]);
+    final hasPulseNetwork = _hasAnyNav([
+      NavItem.duniyaPharmacies,
+      NavItem.duniyaStockBalances,
+      NavItem.duniyaOnboardingRequests,
+      NavItem.duniyaNetworkAnalytics,
+    ]);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -618,7 +664,8 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           // ============================================================
                           // MAIN SECTION
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('MAIN'),
+                          if (!isCollapsed && hasMain)
+                            _buildSectionHeader('MAIN'),
                           // Home (RBAC)
                           if (_canSee(NavItem.home))
                             KeyedSubtree(
@@ -896,12 +943,13 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          _buildDivider(),
+                          if (hasMain && hasInventory) _buildDivider(),
 
                           // ============================================================
                           // INVENTORY SECTION — Expandable parent with sub-items
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('INVENTORY'),
+                          if (!isCollapsed && hasInventory)
+                            _buildSectionHeader('INVENTORY'),
                           if (_canSee(NavItem.storeInventory) ||
                               _canSee(NavItem.productCatalogue))
                             KeyedSubtree(
@@ -910,12 +958,13 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          _buildDivider(),
+                          if (hasInventory && hasStock) _buildDivider(),
 
                           // ============================================================
                           // STOCK SECTION
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('STOCK'),
+                          if (!isCollapsed && hasStock)
+                            _buildSectionHeader('STOCK'),
                           // Stock Balances (RBAC)
                           if (_canSee(NavItem.stockBalances))
                             Tooltip(
@@ -1089,16 +1138,19 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          _buildDivider(),
+                          if (hasStock && hasOperations) _buildDivider(),
 
                           // ============================================================
                           // OPERATIONS SECTION
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('OPERATIONS'),
-                          // Goods Received (RBAC)
+                          if (!isCollapsed && hasOperations)
+                            _buildSectionHeader('OPERATIONS'),
+                          // Goods Received / Pulse dispatch (RBAC)
                           if (_canSee(NavItem.goodsReceived))
                             Tooltip(
-                              message: 'Goods Received',
+                              message: _isDuniyaUser
+                                  ? 'Goods Dispatched'
+                                  : 'Goods Received',
                               preferBelow: false,
                               child: InkWell(
                                 splashColor: Colors.transparent,
@@ -1129,13 +1181,17 @@ class _SideNavWidgetState extends State<SideNavWidget> {
 
                                   logFirebaseEvent(
                                       'SidebarLink_update_app_state');
-                                  FFAppState().SelectedPage = 'Goods Received';
+                                  FFAppState().SelectedPage = _isDuniyaUser
+                                      ? 'Goods Dispatched'
+                                      : 'Goods Received';
                                 },
                                 child: wrapWithModel(
                                   model: _model.sidebarLinkModel12,
                                   updateCallback: () => safeSetState(() {}),
                                   child: SidebarLinkWidget(
-                                    linkText: 'Goods Received',
+                                    linkText: _isDuniyaUser
+                                        ? 'Goods Dispatched'
+                                        : 'Goods Received',
                                     activeIcon: Icon(
                                       Icons.local_shipping,
                                       color:
@@ -1147,7 +1203,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                           .secondaryText,
                                     ),
                                     isActive: FFAppState().SelectedPage ==
-                                        'Goods Received',
+                                            'Goods Received' ||
+                                        FFAppState().SelectedPage ==
+                                            'Goods Dispatched',
                                   ),
                                 ),
                               ),
@@ -1212,12 +1270,13 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          _buildDivider(),
+                          if (hasOperations && hasMonitoring) _buildDivider(),
 
                           // ============================================================
                           // MONITORING SECTION
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('MONITORING'),
+                          if (!isCollapsed && hasMonitoring)
+                            _buildSectionHeader('MONITORING'),
                           // Batch & Expiry (RBAC)
                           if (_canSee(NavItem.batchesExpiry))
                             Tooltip(
@@ -1472,12 +1531,13 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          _buildDivider(),
+                          if (hasMonitoring && hasClinical) _buildDivider(),
 
                           // ============================================================
                           // CLINICAL SECTION
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('CLINICAL'),
+                          if (!isCollapsed && hasClinical)
+                            _buildSectionHeader('CLINICAL'),
                           // Prescriptions (RBAC)
                           if (_canSee(NavItem.prescriptions))
                             Tooltip(
@@ -1678,12 +1738,13 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          _buildDivider(),
+                          if (hasClinical && hasProcurement) _buildDivider(),
 
                           // ============================================================
                           // PROCUREMENT SECTION
                           // ============================================================
-                          if (!isCollapsed) _buildSectionHeader('PROCUREMENT'),
+                          if (!isCollapsed && hasProcurement)
+                            _buildSectionHeader('PROCUREMENT'),
                           // Purchase Orders (RBAC)
                           if (_canSee(NavItem.purchaseOrders))
                             Tooltip(
@@ -1735,12 +1796,12 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ),
 
                           // ─── Divider ───
-                          if (_canSee(NavItem.auditLogs)) _buildDivider(),
+                          if (hasProcurement && hasAdmin) _buildDivider(),
 
                           // ============================================================
                           // ADMIN SECTION
                           // ============================================================
-                          if (_canSee(NavItem.auditLogs)) ...[
+                          if (hasAdmin) ...[
                             if (!isCollapsed) _buildSectionHeader('ADMIN'),
                             // Audit Logs (RBAC)
                             Tooltip(
@@ -1795,12 +1856,12 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           ],
 
                           // ─── Divider ───
-                          if (_isDuniyaUser) _buildDivider(),
+                          if (_isDuniyaUser && hasPulseNetwork) _buildDivider(),
 
                           // ============================================================
                           // PULSE NETWORK SECTION (Pulse users only)
                           // ============================================================
-                          if (_isDuniyaUser) ...[
+                          if (_isDuniyaUser && hasPulseNetwork) ...[
                             if (!isCollapsed)
                               _buildSectionHeader('PULSE NETWORK'),
                             // Pulse Pharmacies (RBAC)

@@ -1103,6 +1103,120 @@ exports.verifyStaffInvitation = functions
     };
   });
 
+// Dispatch stock from Pulse to an approved pharmacy. Client-side writes to a
+// pharmacy workspace are intentionally forbidden by Firestore rules, so this
+// callable validates the platform user and destination before writing there.
+exports.dispatchGoodsToPharmacy = functions
+  .region("us-central1")
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "Sign in to dispatch goods."
+      );
+    }
+
+    const { pharmacyPath, deliveryNoteNumber, deliveryDate, items } = data || {};
+    if (!pharmacyPath || !deliveryNoteNumber || !Array.isArray(items) || !items.length) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "A destination pharmacy, delivery note, and at least one item are required."
+      );
+    }
+
+    const firestore = admin.firestore();
+    const callerSnapshot = await firestore.collection("User").doc(context.auth.uid).get();
+    const caller = callerSnapshot.data() || {};
+    if (String(caller.account_type || "").trim().toLowerCase() !== "pulse") {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Only Pulse accounts can dispatch goods to pharmacies."
+      );
+    }
+
+    if (!/^User\/[^/]+\/Pharmacy\/[^/]+$/.test(pharmacyPath)) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "The destination pharmacy reference is invalid."
+      );
+    }
+    const pharmacyRef = firestore.doc(pharmacyPath);
+    const pharmacySnapshot = await pharmacyRef.get();
+    const pharmacy = pharmacySnapshot.data() || {};
+    if (!pharmacySnapshot.exists || pharmacy.NetworkStatus !== "active" || !pharmacy.UserID) {
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "Goods can only be dispatched to an approved active pharmacy."
+      );
+    }
+
+    const normalizedItems = items.map((item) => {
+      const quantityDelivered = Number(item.quantityDelivered);
+      const quantityReceived = Number(item.quantityReceived ?? item.quantityDelivered);
+      if (!/^ProductMaster\/[^/]+$/.test(String(item.productPath || "")) ||
+          !Number.isInteger(quantityDelivered) || quantityDelivered <= 0 ||
+          !Number.isInteger(quantityReceived) || quantityReceived < 0) {
+        throw new functions.https.HttpsError(
+          "invalid-argument",
+          "Each dispatched item needs a product and valid quantities."
+        );
+      }
+      return {
+        productId: firestore.doc(item.productPath),
+        quantityDelivered,
+        quantityReceived,
+        batchNumber: String(item.batchNumber || "").trim(),
+        discrepancy: String(item.discrepancy || "").trim(),
+        expiryDate: item.expiryDate ? admin.firestore.Timestamp.fromMillis(Number(item.expiryDate)) : null,
+      };
+    });
+
+    const destinationOwnerRef = pharmacy.UserID;
+    const receiptRef = destinationOwnerRef.collection("GoodsReceived").doc();
+    const now = admin.firestore.FieldValue.serverTimestamp();
+    const dispatchDate = deliveryDate
+      ? admin.firestore.Timestamp.fromMillis(Number(deliveryDate))
+      : admin.firestore.Timestamp.now();
+    const batch = firestore.batch();
+    batch.set(receiptRef, {
+      DeliveryNoteNumber: String(deliveryNoteNumber).trim(),
+      OutletId: pharmacyRef,
+      ReceivedById: firestore.collection("User").doc(context.auth.uid),
+      DeliveryDate: dispatchDate,
+      ReceivedDate: now,
+      Status: "CONFIRMED",
+      DispatchSource: "Pulse",
+      CreatedAt: now,
+      UpdatedAt: now,
+    });
+
+    for (const item of normalizedItems) {
+      const itemRef = receiptRef.collection("GoodsReceivedItem").doc();
+      batch.set(itemRef, {
+        ProductId: item.productId,
+        QuantityDelivered: item.quantityDelivered,
+        QuantityReceived: item.quantityReceived,
+        BatchNumber: item.batchNumber || null,
+        ExpiryDate: item.expiryDate,
+        Discrepancy: item.discrepancy || null,
+      });
+      const movementRef = destinationOwnerRef.collection("StockMovement").doc();
+      batch.set(movementRef, {
+        ProductId: item.productId,
+        OutletId: pharmacyRef,
+        Quantity: item.quantityReceived,
+        MovementType: "RECEIVED",
+        Reason: "PULSE_DISPATCH",
+        MovementReference: String(deliveryNoteNumber).trim(),
+        RecordedById: firestore.collection("User").doc(context.auth.uid),
+        CreatedAt: now,
+      });
+    }
+
+    await batch.commit();
+    return { success: true, receiptId: receiptRef.id, pharmacyName: pharmacy.Name || "" };
+  });
+
 // ══════════════════════════════════════════════════════════════
 // Existing Functions
 // ══════════════════════════════════════════════════════════════

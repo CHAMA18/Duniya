@@ -50,6 +50,8 @@ enum AppRole {
         return AppRole.owner;
       case 'outlet_manager':
       case 'outletmanager':
+      case 'pharmacy_manager':
+      case 'pharmacymanager':
         return AppRole.outletManager;
       case 'pharmacist':
         return AppRole.pharmacist;
