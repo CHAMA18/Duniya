@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'supplier_management_widget.dart' show SupplierManagementWidget;
+import 'supplier_management_widget.dart'
+    show SupplierManagementWidget, SupplierDisplay;
 
 /// ═══════════════════════════════════════════════════════════════
 ///   SupplierManagementModel
@@ -21,9 +22,9 @@ class SupplierManagementModel
   /// Construct a model for use inside the Add / Edit dialog.
   /// If `existing` is null, all fields start empty (Add mode).
   /// Otherwise the controllers are prefilled from the existing
-  /// `_SupplierDisplay` (Edit mode).
+  /// `SupplierDisplay` (Edit mode).
   factory SupplierManagementModel.forDialog({
-    _SupplierDisplay? existing,
+    SupplierDisplay? existing,
   }) {
     final m = SupplierManagementModel._();
     m.nameController =
@@ -82,7 +83,7 @@ class SupplierManagementModel
   String? categoryValue;
   String? paymentTermsValue;
   String statusValue = 'active';
-  _SupplierDisplay? existing;
+  SupplierDisplay? existing;
 
   void disposeDialog() {
     nameController.dispose();

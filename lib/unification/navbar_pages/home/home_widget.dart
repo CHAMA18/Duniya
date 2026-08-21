@@ -4362,7 +4362,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     List<ProductMasterRecord> productMaster = [];
     try {
       productMaster = await queryProductMasterRecordOnce(
-        parent: scope,
         queryBuilder: (query) => query.where('IsActive', isEqualTo: true),
       );
     } catch (_) {}

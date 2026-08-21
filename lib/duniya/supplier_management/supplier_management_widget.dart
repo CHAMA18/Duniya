@@ -198,10 +198,10 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                           // Build the display list from real Supplier
                           // records + any derived suppliers not yet
                           // migrated (from Stock.manufacturer).
-                          final displayList = <_SupplierDisplay>[];
+                          final displayList = <SupplierDisplay>[];
 
                           for (final s in suppliers) {
-                            displayList.add(_SupplierDisplay(
+                            displayList.add(SupplierDisplay(
                               reference: s.reference,
                               name: s.name,
                               contactName: s.contactName,
@@ -218,6 +218,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                               notes: s.notes,
                               website: s.website,
                               bankAccount: s.bankAccount,
+                              createdBy: s.createdBy,
                               createdAt: s.createdAt,
                               isDerived: false,
                               linkedProducts:
@@ -234,7 +235,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                             final exists = suppliers.any(
                                 (s) => s.name.toLowerCase() == d.name.toLowerCase());
                             if (exists) continue;
-                            displayList.add(_SupplierDisplay(
+                            displayList.add(SupplierDisplay(
                               reference: null,
                               name: d.name,
                               contactName: null,
@@ -251,6 +252,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                               notes: null,
                               website: null,
                               bankAccount: null,
+                              createdBy: null,
                               createdAt: null,
                               isDerived: true,
                               linkedProducts:
@@ -766,7 +768,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
     );
   }
 
-  Widget _supplierTable(List<_SupplierDisplay> suppliers, bool isWide) {
+  Widget _supplierTable(List<SupplierDisplay> suppliers, bool isWide) {
     return Container(
       decoration: BoxDecoration(
         color: _surface,
@@ -822,7 +824,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
             letterSpacing: 0.6));
   }
 
-  Widget _supplierRow(_SupplierDisplay s, bool isWide) {
+  Widget _supplierRow(SupplierDisplay s, bool isWide) {
     final statusColor = s.status == 'active'
         ? _green
         : s.status == 'blacklisted'
@@ -1050,7 +1052,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
 
   void _openAddDialog() => _openEditDialog(null);
 
-  void _openEditDialog(_SupplierDisplay? existing) {
+  void _openEditDialog(SupplierDisplay? existing) {
     final model = SupplierManagementModel.forDialog(existing: existing);
 
     showDialog(
@@ -1064,14 +1066,14 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
     );
   }
 
-  void _openDetailDrawer(_SupplierDisplay s) {
+  void _openDetailDrawer(SupplierDisplay s) {
     showDialog(
       context: context,
       builder: (ctx) => _SupplierDetailDialog(supplier: s),
     );
   }
 
-  void _toggleStatus(_SupplierDisplay s) async {
+  void _toggleStatus(SupplierDisplay s) async {
     if (s.reference == null) {
       // Derived supplier — convert to real Supplier record on toggle.
       // For now just prompt to add it.
@@ -1096,7 +1098,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
     }
   }
 
-  void _confirmDelete(_SupplierDisplay s) async {
+  void _confirmDelete(SupplierDisplay s) async {
     if (s.reference == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -1246,7 +1248,7 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
             ? null
             : widget.model.bankController.text.trim(),
         createdBy: widget.isEditing
-            ? widget.model.existing?.reference?.get('CreatedBy') as DocumentReference?
+            ? widget.model.existing?.createdBy
             : currentUserReference,
         createdAt: widget.isEditing ? widget.model.existing?.createdAt : now,
         updatedAt: now,
@@ -1869,7 +1871,7 @@ class _CsvImportDialogState extends State<_CsvImportDialog> {
 // ═══════════════════════════════════════════════════════════════
 
 class _SupplierDetailDialog extends StatelessWidget {
-  final _SupplierDisplay supplier;
+  final SupplierDisplay supplier;
 
   const _SupplierDetailDialog({required this.supplier});
 
@@ -2252,7 +2254,7 @@ class _SupplierDetailDialog extends StatelessWidget {
 //   derived suppliers
 // ═══════════════════════════════════════════════════════════════
 
-class _SupplierDisplay {
+class SupplierDisplay {
   final DocumentReference? reference;
   final String name;
   final String? contactName;
@@ -2269,6 +2271,7 @@ class _SupplierDisplay {
   final String? notes;
   final String? website;
   final String? bankAccount;
+  final DocumentReference? createdBy;
   final DateTime? createdAt;
   final bool isDerived;
   final List<ProductMasterRecord> linkedProducts;
@@ -2279,7 +2282,7 @@ class _SupplierDisplay {
   final int derivedProductCount;
   final Set<String> derivedCategories;
 
-  _SupplierDisplay({
+  SupplierDisplay({
     required this.reference,
     required this.name,
     required this.contactName,
@@ -2296,6 +2299,7 @@ class _SupplierDisplay {
     required this.notes,
     required this.website,
     required this.bankAccount,
+    required this.createdBy,
     required this.createdAt,
     required this.isDerived,
     required this.linkedProducts,
