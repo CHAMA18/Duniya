@@ -420,137 +420,119 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     final title = stock.name.isNotEmpty ? stock.name : 'Untitled item';
     final subtitle =
         stock.manufacturer.isNotEmpty ? stock.manufacturer : stock.category;
-    final expiryText = stock.hasExpiryDate()
-        ? dateTimeFormat(
-            'yMMMd',
-            stock.expiryDate!,
-            locale: FFLocalizations.of(context).languageCode,
-          )
-        : 'No expiry set';
 
     return Container(
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: accent.withValues(alpha: 0.16),
+          color: accent.withValues(alpha: 0.12),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Compact header row: icon + status dot
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
                     color: accent.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     _stockIcon(stock),
                     color: accent,
-                    size: 26,
+                    size: 18,
                   ),
                 ),
                 const Spacer(),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: _isLowStock(stock)
-                        ? const Color(0xFFFFF1F2)
-                        : _isNearExpiry(stock)
-                            ? const Color(0xFFFFF7ED)
-                            : const Color(0xFFE8FAF1),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    _isLowStock(stock)
-                        ? 'Low stock'
-                        : _isNearExpiry(stock)
-                            ? 'Expiring'
-                            : 'Healthy',
-                    style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily:
-                              FlutterFlowTheme.of(context).bodySmallFamily,
-                          color: _isLowStock(stock)
-                              ? const Color(0xFFEF4444)
-                              : _isNearExpiry(stock)
-                                  ? const Color(0xFFF59E0B)
-                                  : const Color(0xFF10B981),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.0,
-                          useGoogleFonts:
-                              !FlutterFlowTheme.of(context).bodySmallIsCustom,
+                // Compact status dot (replaces the full badge)
+                Tooltip(
+                  message: _isLowStock(stock)
+                      ? 'Low stock'
+                      : _isNearExpiry(stock)
+                          ? 'Expiring soon'
+                          : 'Healthy stock',
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                      color: _isLowStock(stock)
+                          ? const Color(0xFFEF4444)
+                          : _isNearExpiry(stock)
+                              ? const Color(0xFFF59E0B)
+                              : const Color(0xFF10B981),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: (_isLowStock(stock)
+                                  ? const Color(0xFFEF4444)
+                                  : _isNearExpiry(stock)
+                                      ? const Color(0xFFF59E0B)
+                                      : const Color(0xFF10B981))
+                              .withValues(alpha: 0.4),
+                          blurRadius: 6,
+                          spreadRadius: 0,
                         ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            // Product name — compact
             Text(
               title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: FlutterFlowTheme.of(context).titleLarge.override(
-                    fontFamily: FlutterFlowTheme.of(context).titleLargeFamily,
-                    fontSize: 22,
+              style: FlutterFlowTheme.of(context).titleMedium.override(
+                    fontFamily:
+                        FlutterFlowTheme.of(context).titleMediumFamily,
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 0.0,
+                    letterSpacing: -0.2,
+                    lineHeight: 1.3,
                     useGoogleFonts:
-                        !FlutterFlowTheme.of(context).titleLargeIsCustom,
+                        !FlutterFlowTheme.of(context).titleMediumIsCustom,
                   ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 2),
+            // Subtitle — compact, single line
             Text(
               subtitle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                    fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+              style: FlutterFlowTheme.of(context).bodySmall.override(
+                    fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
                     color: FlutterFlowTheme.of(context).secondaryText,
+                    fontSize: 11,
                     letterSpacing: 0.0,
                     useGoogleFonts:
-                        !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                        !FlutterFlowTheme.of(context).bodySmallIsCustom,
                   ),
             ),
-            const SizedBox(height: 14),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+            const Spacer(),
+            // Price + stock — compact footer
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _buildInfoPill(
-                  context,
-                  icon: Icons.badge_outlined,
-                  text:
-                      stock.category.isNotEmpty ? stock.category : 'Inventory',
-                ),
-                _buildInfoPill(
-                  context,
-                  icon: Icons.event_rounded,
-                  text: expiryText,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final useStackedFooter = constraints.maxWidth < 390;
-                final priceDetails = Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -561,64 +543,60 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                       )}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style:
-                          FlutterFlowTheme.of(context).headlineSmall.override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .headlineSmallFamily,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.3,
-                                useGoogleFonts: !FlutterFlowTheme.of(context)
-                                    .headlineSmallIsCustom,
-                              ),
+                      style: FlutterFlowTheme.of(context).titleLarge
+                          .override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).titleLargeFamily,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.5,
+                        useGoogleFonts: !FlutterFlowTheme.of(context)
+                            .titleLargeIsCustom,
+                      ),
                     ),
                     Text(
                       '$quantity in stock',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: FlutterFlowTheme.of(context).bodySmall.override(
-                            fontFamily:
-                                FlutterFlowTheme.of(context).bodySmallFamily,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            letterSpacing: 0.0,
-                            useGoogleFonts:
-                                !FlutterFlowTheme.of(context).bodySmallIsCustom,
-                          ),
+                      style: FlutterFlowTheme.of(context).bodySmall
+                          .override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).bodySmallFamily,
+                        color: _isLowStock(stock)
+                            ? const Color(0xFFEF4444)
+                            : FlutterFlowTheme.of(context).secondaryText,
+                        fontSize: 10,
+                        fontWeight: _isLowStock(stock)
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                        useGoogleFonts: !FlutterFlowTheme.of(context)
+                            .bodySmallIsCustom,
+                      ),
                     ),
                   ],
-                );
-                final counter = CounterWidget(
-                  key: Key('pos_counter_${stock.reference.id}'),
-                  parameter1: stock.name,
-                  parameter3: stock.price,
-                  productQuantity: stock.quantity,
-                  width: useStackedFooter ? double.infinity : 150,
-                );
-
-                if (useStackedFooter) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      priceDetails,
-                      const SizedBox(height: 12),
-                      counter,
-                    ],
-                  );
-                }
-
-                return Row(
-                  children: [
-                    Expanded(child: priceDetails),
-                    const SizedBox(width: 12),
-                    counter,
-                  ],
-                );
-              },
+                ),
+                const Spacer(),
+                // Compact add-to-cart button
+                _buildCompactAddButton(context, stock),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  /// Compact add-to-cart button — a small purple pill with a + icon
+  /// that opens the CounterWidget (quantity selector) used by the
+  /// existing cart flow.
+  Widget _buildCompactAddButton(BuildContext context, StockRecord stock) {
+    return CounterWidget(
+      key: Key('pos_counter_${stock.reference.id}'),
+      parameter1: stock.name,
+      parameter3: stock.price,
+      productQuantity: stock.quantity,
+      width: 120,
     );
   }
 
@@ -1992,13 +1970,13 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                               gridDelegate:
                                                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                                                 crossAxisCount:
-                                                                    3,
+                                                                    4,
                                                                 crossAxisSpacing:
-                                                                    22,
+                                                                    12,
                                                                 mainAxisSpacing:
-                                                                    22,
+                                                                    12,
                                                                 childAspectRatio:
-                                                                    0.66,
+                                                                    0.82,
                                                               ),
                                                               itemBuilder:
                                                                   (context,
@@ -2045,12 +2023,14 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                     .length,
                                                             gridDelegate:
                                                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                                              crossAxisCount: 1,                                                      crossAxisSpacing:
-                                                              18,
-                                                            mainAxisSpacing:
-                                                              18,
-                                                          childAspectRatio:
-                                                              0.95,
+                                                              crossAxisCount:
+                                                                  2,
+                                                              crossAxisSpacing:
+                                                                  12,
+                                                              mainAxisSpacing:
+                                                                  12,
+                                                              childAspectRatio:
+                                                                  0.82,
                                                             ),
                                                             itemBuilder:
                                                                 (context,
