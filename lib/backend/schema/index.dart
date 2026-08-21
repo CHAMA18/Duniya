@@ -8,6 +8,7 @@ export 'structs/index.dart';
 export 'outlet_record.dart';
 export 'pharmacy_user_record.dart';
 export 'product_master_record.dart';
+export 'supplier_record.dart';
 export 'stock_balance_record.dart';
 export 'stock_movement_record.dart';
 export 'goods_received_record.dart';
