@@ -342,7 +342,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
   }
 
   Widget _revenueChart(List<_DayRev> data, dynamic theme) {
-    final maxRev = data.isEmpty
+    var maxRev = data.isEmpty
         ? 1.0
         : data.map((d) => d.revenue).reduce((a, b) => a > b ? a : b);
     if (maxRev == 0) maxRev = 1.0;
