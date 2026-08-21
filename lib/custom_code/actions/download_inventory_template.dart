@@ -1,14 +1,3 @@
-// Automatic FlutterFlow imports
-import '/backend/backend.dart';
-import '/backend/schema/structs/index.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
-import '/flutter_flow/custom_functions.dart'; // Imports custom functions
-import 'package:flutter/material.dart';
-// Begin custom action code
-// DO NOT REMOVE OR MODIFY THE CODE ABOVE!
-
 import '/flutter_flow/platform_download.dart';
 import 'dart:typed_data';
 import 'package:excel/excel.dart';
@@ -115,12 +104,7 @@ Future<void> downloadInventoryTemplate() async {
       '8.50'
     ],
     ['BatchNumber', 'Batch or lot identifier', 'No', 'B-2024-001'],
-    [
-      'ExpiryDate',
-      'YYYY-MM-DD or DD/MM/YYYY',
-      'No',
-      '2026-12-31'
-    ],
+    ['ExpiryDate', 'YYYY-MM-DD or DD/MM/YYYY', 'No', '2026-12-31'],
     [
       'LimitNotice',
       'Low-stock threshold (alerts when quantity falls to this level)',
@@ -153,6 +137,7 @@ Future<void> downloadInventoryTemplate() async {
   await save(
     bytes: Uint8List.fromList(bytes),
     fileName: 'Pulse_Inventory_Template.xlsx',
-    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    mimeType:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   );
 }

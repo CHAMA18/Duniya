@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import '/rbac/rbac.dart';
 import '/backend/backend.dart';
+import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -35,6 +39,7 @@ class PulsePharmaciesWidget extends StatefulWidget {
 
 class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   late PulsePharmaciesModel _model;
+  late Stream<List<PharmacyRecord>> _pharmaciesStream;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   /// Active status filter pill. One of: 'All', 'Active', 'Pending', 'Rejected'.
@@ -44,6 +49,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PulsePharmaciesModel());
+    _pharmaciesStream = _createPharmaciesStream();
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'PulsePharmacies'});
     _model.searchTextController ??= TextEditingController();
@@ -62,6 +68,30 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   void dispose() {
     _model.dispose();
     super.dispose();
+  }
+
+  /// Keeps query errors visible to this page. The shared generated query helper
+  /// logs and absorbs stream errors, which otherwise leaves a StreamBuilder in
+  /// its loading state forever.
+  Stream<List<PharmacyRecord>> _createPharmaciesStream() {
+    return PharmacyRecord.collection()
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map(PharmacyRecord.fromSnapshot)
+            .toList(growable: false))
+        .timeout(
+      const Duration(seconds: 20),
+      onTimeout: (sink) {
+        sink.addError(TimeoutException(
+          'The pharmacy list did not respond in time.',
+        ));
+        sink.close();
+      },
+    );
+  }
+
+  void _refreshPharmacies() {
+    setState(() => _pharmaciesStream = _createPharmaciesStream());
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -267,6 +297,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
         }
         return int.tryParse(raw.replaceAll(RegExp(r'[^0-9-]'), '')) ?? -1;
       }
+
       double decimalAt(List<dynamic> row, String key) {
         final raw = valueAt(row, key);
         if (raw.isEmpty) return -1;
@@ -274,9 +305,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
           final computed = _evalFormula(raw, row, isInt: false);
           if (computed != null) return computed.toDouble();
         }
-        return double.tryParse(
-                raw.replaceAll(RegExp(r'[^0-9.-]'), '')) ??
-            -1;
+        return double.tryParse(raw.replaceAll(RegExp(r'[^0-9.-]'), '')) ?? -1;
       }
 
       final records = <Map<String, dynamic>>[];
@@ -624,11 +653,14 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
                 phone: false,
                 tablet: false,
               )) ...[
+                _heroAction(Icons.download_rounded, 'Template',
+                    downloadReconciliationTemplate),
+                const SizedBox(width: 10.0),
                 _heroAction(Icons.upload_file_rounded, 'Import reconciliation',
                     _importSosMpiloReconciliation),
                 const SizedBox(width: 10.0),
-                _heroAction(Icons.refresh_rounded, 'Refresh',
-                    () => safeSetState(() {})),
+                _heroAction(
+                    Icons.refresh_rounded, 'Refresh', _refreshPharmacies),
               ],
             ],
           ),
@@ -676,8 +708,11 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
 
   Widget _buildPharmacyContent() {
     return StreamBuilder<List<PharmacyRecord>>(
-      stream: queryPharmacyRecord(),
+      stream: _pharmaciesStream,
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return _buildLoadErrorState();
+        }
         if (!snapshot.hasData) {
           return _buildLoadingState();
         }
@@ -1266,6 +1301,68 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
               fontSize: 12.0,
               letterSpacing: 0.0,
               useGoogleFonts: !theme.bodySmallIsCustom,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadErrorState() {
+    final theme = FlutterFlowTheme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsetsDirectional.fromSTEB(32.0, 56.0, 32.0, 56.0),
+      decoration: BoxDecoration(
+        color: theme.secondaryBackground,
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(color: theme.alternate, width: 1.0),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.cloud_off_rounded, color: theme.secondaryText, size: 44),
+          const SizedBox(height: 16.0),
+          Text(
+            'Unable to load network pharmacies',
+            style: theme.titleLarge.override(
+              fontFamily: theme.titleLargeFamily,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.2,
+              useGoogleFonts: !theme.titleLargeIsCustom,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            'Check your connection and try again. If the problem continues, verify that this account can access the Pulse network.',
+            style: theme.bodyMedium.override(
+              fontFamily: theme.bodyMediumFamily,
+              color: theme.secondaryText,
+              letterSpacing: 0.0,
+              useGoogleFonts: !theme.bodyMediumIsCustom,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20.0),
+          FFButtonWidget(
+            onPressed: _refreshPharmacies,
+            text: 'Try again',
+            icon: const Icon(Icons.refresh_rounded, size: 18.0),
+            options: FFButtonOptions(
+              height: 42.0,
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(18.0, 0.0, 18.0, 0.0),
+              color: theme.primary,
+              textStyle: theme.labelLarge.override(
+                fontFamily: theme.labelLargeFamily,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.0,
+                useGoogleFonts: !theme.labelLargeIsCustom,
+              ),
+              elevation: 0.0,
+              borderRadius: BorderRadius.circular(10.0),
             ),
           ),
         ],

@@ -914,72 +914,30 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                     extra: <String, dynamic>{
                                       '__transition_info__': TransitionInfo(
                                         hasTransition: true,
-                                        transitionType:
-                                            PageTransitionType.fade,
-                                        duration:
-                                            Duration(milliseconds: 0),
+                                        transitionType: PageTransitionType.fade,
+                                        duration: Duration(milliseconds: 0),
                                       ),
                                     },
                                   );
                                   logFirebaseEvent(
                                       'SidebarLink_update_app_state');
-                                  FFAppState().SelectedPage =
-                                      'Sales Analytics';
+                                  FFAppState().SelectedPage = 'Sales Analytics';
                                 },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      isCollapsed ? 0.0 : 12.0,
-                                      8.0,
-                                      isCollapsed ? 0.0 : 12.0,
-                                      8.0),
-                                  decoration: BoxDecoration(
-                                    color: FFAppState().SelectedPage ==
-                                            'Sales Analytics'
-                                        ? theme.primary.withValues(alpha: 0.08)
-                                        : Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.circular(8.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Icon(
-                                        FFAppState().SelectedPage ==
-                                                'Sales Analytics'
-                                            ? Icons.analytics_rounded
-                                            : Icons.analytics_outlined,
-                                        size: 22.0,
-                                        color: FFAppState().SelectedPage ==
-                                                'Sales Analytics'
-                                            ? theme.primary
-                                            : theme.secondaryText,
-                                      ),
-                                      if (!isCollapsed) ...[
-                                        const SizedBox(width: 12.0),
-                                        Expanded(
-                                          child: Text(
-                                            'Sales Analytics',
-                                            style: theme.bodyMedium
-                                                .override(
-                                              fontFamily: theme
-                                                  .bodyMediumFamily,
-                                              color: FFAppState().SelectedPage ==
-                                                      'Sales Analytics'
-                                                  ? theme.primary
-                                                  : theme.secondaryText,
-                                              fontWeight:
-                                                  FFAppState().SelectedPage ==
-                                                          'Sales Analytics'
-                                                      ? FontWeight.w600
-                                                      : FontWeight.w500,
-                                              useGoogleFonts:
-                                                  !theme.bodyMediumIsCustom,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ],
+                                child: wrapWithModel(
+                                  model: _model.sidebarLinkModelSalesAnalytics,
+                                  updateCallback: () => safeSetState(() {}),
+                                  child: SidebarLinkWidget(
+                                    linkText: 'Sales Analytics',
+                                    activeIcon: Icon(
+                                      Icons.analytics_rounded,
+                                      color: theme.primary,
+                                    ),
+                                    inactiveIcon: Icon(
+                                      Icons.analytics_outlined,
+                                      color: theme.secondaryText,
+                                    ),
+                                    isActive: FFAppState().SelectedPage ==
+                                        'Sales Analytics',
                                   ),
                                 ),
                               ),

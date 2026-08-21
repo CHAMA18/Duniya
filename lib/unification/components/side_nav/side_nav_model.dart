@@ -61,6 +61,8 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModelInsurance;
   late SidebarLinkModel sidebarLinkModelColdChain;
   late SidebarLinkModel sidebarLinkModelPatientRecords;
+  // Model for the Sales Analytics SidebarLink component.
+  late SidebarLinkModel sidebarLinkModelSalesAnalytics;
   // State field(s) for SwitchListTile widget.
   bool? switchListTileValue;
 
@@ -90,13 +92,20 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15dup = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel16dup = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel17dup = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelDrugInteractions = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelExpiryTracking = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelPurchaseOrders = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelPrescription = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelDrugInteractions =
+        createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelExpiryTracking =
+        createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelPurchaseOrders =
+        createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelPrescription =
+        createModel(context, () => SidebarLinkModel());
     sidebarLinkModelInsurance = createModel(context, () => SidebarLinkModel());
     sidebarLinkModelColdChain = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelPatientRecords = createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelPatientRecords =
+        createModel(context, () => SidebarLinkModel());
+    sidebarLinkModelSalesAnalytics =
+        createModel(context, () => SidebarLinkModel());
   }
 
   @override
@@ -131,5 +140,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModelInsurance.dispose();
     sidebarLinkModelColdChain.dispose();
     sidebarLinkModelPatientRecords.dispose();
+    sidebarLinkModelSalesAnalytics.dispose();
   }
 }
