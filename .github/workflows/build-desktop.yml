@@ -65,9 +65,12 @@ jobs:
           flutter build windows --release --build-name="$version" --build-number="${{ github.run_number }}"
 
       - name: Create Windows installer
-        uses: nicoj04/inno-setup-action@v1
-        with:
-          script-file: installer/duniya_setup.iss
+        # Install Inno Setup 6 directly via Chocolatey and compile with
+        # `iscc` — more reliable than the unmaintained
+        # nicoj04/inno-setup-action@v1 which failed on 2026-08-20.
+        run: |
+          choco install innosetup -y --no-progress
+          iscc installer/duniya_setup.iss
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -130,15 +133,34 @@ jobs:
   # -------------------------------------------------------------------
   # Create GitHub Release
   # -------------------------------------------------------------------
+  # Runs on tag pushes (the canonical release flow) AND on manual
+  # workflow_dispatch from the Actions tab — in the dispatch case the
+  # release is created as a DRAFT so the maintainer can review the
+  # built assets before publishing them to end users via the
+  # "latest/download/Pulse-Windows.zip" alias URLs.
   create-release:
     name: Create Release
     needs: [build-windows, build-macos]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Resolve release tag name
+        id: rel
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            INPUT="${{ github.event.inputs.version }}"
+            TAG="${INPUT:-dev-$(date +%Y%m%d-%H%M%S)}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Publishing as: $TAG"
 
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
@@ -155,29 +177,41 @@ jobs:
       - name: Create ZIP for Windows
         run: |
           cd release/windows
-          zip -r ../Pulse-Setup-${{ github.ref_name }}.zip ./
+          zip -r ../Pulse-Setup-${{ steps.rel.outputs.tag }}.zip ./
           cd ../..
 
       - name: Rename macOS DMG
         run: |
-          mv release/macos/Pulse.dmg release/Pulse-${{ github.ref_name }}.dmg
+          mv release/macos/Pulse.dmg release/Pulse-${{ steps.rel.outputs.tag }}.dmg
 
       - name: Create stable download aliases
         run: |
-          cp release/Pulse-Setup-${{ github.ref_name }}.zip release/Pulse-Windows.zip
-          cp release/Pulse-${{ github.ref_name }}.dmg release/Pulse-macOS.dmg
+          cp release/Pulse-Setup-${{ steps.rel.outputs.tag }}.zip release/Pulse-Windows.zip
+          cp release/Pulse-${{ steps.rel.outputs.tag }}.dmg release/Pulse-macOS.dmg
+
+      - name: Decide draft / prerelease
+        id: dflags
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "draft=true"  >> "$GITHUB_OUTPUT"
+            echo "pre=true"    >> "$GITHUB_OUTPUT"
+          else
+            echo "draft=false" >> "$GITHUB_OUTPUT"
+            echo "pre=false"   >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          name: Pulse ${{ github.ref_name }}
+          tag_name: ${{ steps.rel.outputs.tag }}
+          name: Pulse ${{ steps.rel.outputs.tag }}
           body: |
-            ## Pulse ${{ github.ref_name }}
+            ## Pulse ${{ steps.rel.outputs.tag }}
 
             ### Downloads
-            - **Windows**: Download `Pulse-Setup-${{ github.ref_name }}.zip` — extract and run `Pulse-Setup.exe`, then follow the installer wizard
-            - **macOS**: Download `Pulse-${{ github.ref_name }}.dmg` — open and drag Pulse to Applications
-            - Stable links: `Pulse-Windows.zip` and `Pulse-macOS.dmg` always point to the latest release.
+            - **Windows**: Download `Pulse-Setup-${{ steps.rel.outputs.tag }}.zip` — extract and run `Pulse-Setup.exe`, then follow the installer wizard
+            - **macOS**: Download `Pulse-${{ steps.rel.outputs.tag }}.dmg` — open and drag Pulse to Applications
+            - Stable links: `Pulse-Windows.zip` and `Pulse-macOS.dmg` always point to the latest published release.
 
             ### System Requirements
             - Windows 10+ (64-bit) or macOS 12+ (Apple Silicon & Intel)
@@ -187,11 +221,11 @@ jobs:
             ### What's New
             See the commit history for changes in this release.
           files: |
-            release/Pulse-Setup-${{ github.ref_name }}.zip
-            release/Pulse-${{ github.ref_name }}.dmg
+            release/Pulse-Setup-${{ steps.rel.outputs.tag }}.zip
+            release/Pulse-${{ steps.rel.outputs.tag }}.dmg
             release/Pulse-Windows.zip
             release/Pulse-macOS.dmg
-          draft: false
-          prerelease: false
+          draft: ${{ steps.dflags.outputs.draft }}
+          prerelease: ${{ steps.dflags.outputs.pre }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

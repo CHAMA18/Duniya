@@ -144,13 +144,13 @@
       border-bottom-color: var(--line);
     }
     .nav-inner { width: min(1180px, 92%); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-    .logo { font-family: var(--font-display); font-weight: 900; font-size: 23px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+    .logo { font-family: var(--font-display); font-weight: 400; font-size: 16px; letter-spacing: -0.2px; display: flex; align-items: center; gap: 8px; }
     .logo-mark {
-      width: 34px; height: 34px; border-radius: 10px; position: relative; flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 8px; position: relative; flex-shrink: 0;
       background: conic-gradient(from 210deg, #9900FF, #5B00E8, #B44DFF, #9900FF);
       box-shadow: 0 4px 24px var(--glow), inset 0 1px 0 rgba(255,255,255,0.35);
     }
-    .logo-mark::after { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #E8D5FF); }
+    .logo-mark::after { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #E8D5FF); }
     .logo span { background: linear-gradient(135deg, #fff 30%, var(--purple-light)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .nav-links { display: flex; align-items: center; gap: 34px; }
     .nav-links a { font-family: var(--font-display); font-weight: 500; font-size: 14.5px; color: var(--text-2); position: relative; padding: 6px 0; transition: color 0.25s var(--ease); }
@@ -350,6 +350,153 @@
     .kicker::after { background: linear-gradient(90deg, rgba(153,0,255,0.6), transparent); }
     .sec-head h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; font-size: clamp(30px, 4.6vw, 52px); margin-bottom: 18px; }
     .sec-head p { color: var(--text-2); font-size: 17px; line-height: 1.7; }
+
+    /* ══════════════════════════════════════════════════════════════
+       FILM — cinematic brand video section
+       ══════════════════════════════════════════════════════════════ */
+    .film-sec { padding: 60px 0 100px; }
+    .film-head { text-align: center; max-width: 720px; margin: 0 auto 40px; }
+    .film-head h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; font-size: clamp(28px, 4vw, 46px); margin-bottom: 14px; }
+    .film-head p { color: var(--text-2); font-size: 17px; line-height: 1.7; }
+
+    .film-frame {
+      position: relative;
+      width: min(1200px, 92%);
+      margin: 0 auto;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #050507;
+      border: 1px solid var(--border);
+      box-shadow:
+        0 60px 140px -40px var(--glow),
+        0 0 0 1px rgba(255,255,255,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      transform: translateZ(0);
+    }
+    .film-frame::before {
+      /* Outer glow ring — pulses subtly to draw the eye. */
+      content: '';
+      position: absolute; inset: -2px;
+      border-radius: 26px;
+      background: conic-gradient(from 180deg,
+        rgba(153,0,255,0) 0deg,
+        rgba(153,0,255,0.45) 90deg,
+        rgba(180,77,255,0.30) 180deg,
+        rgba(153,0,255,0) 360deg);
+      filter: blur(18px);
+      opacity: 0.45;
+      z-index: -1;
+      animation: film-glow 6s ease-in-out infinite alternate;
+    }
+    @keyframes film-glow {
+      from { opacity: 0.30; }
+      to   { opacity: 0.60; }
+    }
+
+    .film-video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #050507;
+      object-fit: cover;
+      outline: none;
+    }
+
+    /* Top-left badge — "Watch the film" pill */
+    .film-badge {
+      position: absolute;
+      top: 20px; left: 20px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px 8px 12px;
+      background: rgba(7,7,11,0.65);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      font-family: var(--font-display);
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--text);
+      pointer-events: none;
+      z-index: 3;
+    }
+    .film-badge .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--purple-light);
+      box-shadow: 0 0 10px var(--purple-light);
+      animation: film-badge-pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes film-badge-pulse {
+      0%, 100% { opacity: 0.5; transform: scale(0.85); }
+      50%      { opacity: 1;   transform: scale(1); }
+    }
+
+    /* Center play/pause button */
+    .film-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      background: rgba(153,0,255,0.18);
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      border: 1px solid rgba(180,77,255,0.55);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 4;
+      transition: transform 0.3s var(--ease), background 0.3s var(--ease), opacity 0.3s var(--ease);
+      box-shadow: 0 20px 60px -10px var(--glow), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .film-play:hover { transform: translate(-50%, -50%) scale(1.06); background: rgba(153,0,255,0.28); }
+    .film-play:active { transform: translate(-50%, -50%) scale(0.97); }
+    .film-play svg { width: 32px; height: 32px; }
+    .film-play.is-playing { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(0.85); }
+    .film-frame:hover .film-play.is-playing { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+
+    /* Bottom-right runtime chip */
+    .film-runtime {
+      position: absolute;
+      bottom: 20px; right: 20px;
+      padding: 6px 12px;
+      background: rgba(7,7,11,0.65);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 12px; font-weight: 500;
+      color: var(--text-2);
+      letter-spacing: 0.4px;
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* Skeleton placeholder shown before the video loads */
+    .film-skeleton {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(153,0,255,0.18), transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(91,0,232,0.16), transparent 50%),
+        #07070B;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 1;
+      transition: opacity 0.6s var(--ease);
+    }
+    .film-skeleton.hide { opacity: 0; }
+    .film-skeleton .shimmer {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 2px solid rgba(180,77,255,0.25);
+      border-top-color: var(--purple-light);
+      animation: film-spin 0.9s linear infinite;
+    }
+    @keyframes film-spin { to { transform: rotate(360deg); } }
 
     /* ══════════════════════════════════════════════════════════════
        FEATURES — bento grid
@@ -600,12 +747,12 @@
             <span class="dl-body"><span class="dl-name">Web</span><span class="dl-meta">Instant access</span></span>
             <svg class="dl-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </a>
-          <a class="dl-btn" data-download="windows" href="https://github.com/CHAMA18/Pulse/releases/latest/download/Pulse-Windows.zip" target="_blank" rel="noopener" title="Download Pulse for Windows">
+          <a class="dl-btn" data-download="windows" href="https://github.com/CHAMA18/Duniya/releases/latest/download/Pulse-Windows.zip" target="_blank" rel="noopener" title="Download Pulse for Windows">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.55L24 0v11.4H10.949V1.899zM0 12.6h9.75v9.451L0 20.699V12.6zm10.949 0H24v11.4l-12.9-1.75V12.6z"/></svg>
             <span class="dl-body"><span class="dl-name">Windows</span><span class="dl-meta"><span class="v" data-version-for="windows">latest</span> · Installer</span></span>
             <svg class="dl-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </a>
-          <a class="dl-btn" data-download="macos" href="https://github.com/CHAMA18/Pulse/releases/latest/download/Pulse-macOS.dmg" target="_blank" rel="noopener" title="Download Pulse for macOS">
+          <a class="dl-btn" data-download="macos" href="https://github.com/CHAMA18/Duniya/releases/latest/download/Pulse-macOS.dmg" target="_blank" rel="noopener" title="Download Pulse for macOS">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.44-2.62 3.6-.81.95-1.56 1.63-2.26 2.02-.42.24-.83.24-1.25 0-.7-.39-1.45-1.07-2.26-2.02a46.4 46.4 0 01-2.62-3.6c-.61-.95-1.13-1.87-1.56-2.77-.42-.88-.74-1.7-.96-2.46C4.76 13.46 4.62 12.75 4.62 12c0-2.07.66-3.79 1.98-5.17C7.92 5.44 9.73 4.75 12 4.75s4.08.69 5.4 2.08C18.72 8.21 19.38 9.93 19.38 12c0 .75-.14 1.46-.41 2.17-.22.76-.54 1.58-.96 2.46-.43.9-.95 1.82-1.56 2.77l.26.1z"/></svg>
             <span class="dl-body"><span class="dl-name">macOS</span><span class="dl-meta"><span class="v" data-version-for="macos">latest</span> · DMG</span></span>
             <svg class="dl-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
@@ -664,6 +811,53 @@
       <div class="hstat reveal d2"><div class="n"><span data-count="10">0</span>+</div><div class="l">Languages</div></div>
       <div class="hstat reveal d3"><div class="n">99.9<span style="font-size:.55em">%</span></div><div class="l">Uptime</div></div>
       <div class="hstat reveal d4"><div class="n"><span data-count="24">0</span>/7</div><div class="l">Support</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ FILM — cinematic brand video ══════════════════ -->
+  <section class="film-sec" id="film">
+    <div class="film-head reveal d1">
+      <span class="kicker">The Film</span>
+      <h2>See Pulse in motion.</h2>
+      <p>A 74-second cinematic walkthrough of the platform — from problem to product to impact. Press play, sound on if you want the full effect.</p>
+    </div>
+
+    <div class="film-frame reveal d2" id="filmFrame">
+      <!-- Skeleton placeholder (replaced once the video is loaded) -->
+      <div class="film-skeleton" id="filmSkeleton">
+        <div class="shimmer"></div>
+      </div>
+
+      <!-- Lazy-loaded video: data-src is swapped to src when the section
+           scrolls into view (see JS at the bottom of the page). -->
+      <video
+        class="film-video"
+        id="filmVideo"
+        data-src="/pulse-pharmacy.mp4"
+        muted
+        loop
+        playsinline
+        preload="none"
+        plays-inline
+        aria-label="Pulse pharmacy platform brand film — 74 seconds"
+        tabindex="0"
+      ></video>
+
+      <!-- Top-left LIVE-style badge -->
+      <div class="film-badge">
+        <span class="dot"></span>
+        Brand Film · 1:14
+      </div>
+
+      <!-- Center play/pause toggle -->
+      <button class="film-play" id="filmPlay" type="button" aria-label="Play film">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+
+      <!-- Bottom-right runtime chip -->
+      <div class="film-runtime" id="filmRuntime">0:00 / 1:14</div>
     </div>
   </section>
 
@@ -903,11 +1097,11 @@
           <p>Join 500+ pharmacies already managing inventory, dispensing and patients with Pulse. Free to start — live in under an hour.</p>
           <div class="cta-actions">
             <a class="btn btn-primary btn-lg" data-app-entry href="/app.html?route=%2FregisterUni">Start Free Trial</a>
-            <a class="dl-btn" data-download="windows" href="https://github.com/CHAMA18/Pulse/releases/latest/download/Pulse-Windows.zip" target="_blank" rel="noopener">
+            <a class="dl-btn" data-download="windows" href="https://github.com/CHAMA18/Duniya/releases/latest/download/Pulse-Windows.zip" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.55L24 0v11.4H10.949V1.899zM0 12.6h9.75v9.451L0 20.699V12.6zm10.949 0H24v11.4l-12.9-1.75V12.6z"/></svg>
               <span class="dl-body"><span class="dl-name">Windows</span><span class="dl-meta"><span class="v" data-version-for="windows">latest</span></span></span>
             </a>
-            <a class="dl-btn" data-download="macos" href="https://github.com/CHAMA18/Pulse/releases/latest/download/Pulse-macOS.dmg" target="_blank" rel="noopener">
+            <a class="dl-btn" data-download="macos" href="https://github.com/CHAMA18/Duniya/releases/latest/download/Pulse-macOS.dmg" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M18.71 19.5c-.83 1.24-1.71 2.44-2.62 3.6-.81.95-1.56 1.63-2.26 2.02-.42.24-.83.24-1.25 0-.7-.39-1.45-1.07-2.26-2.02a46.4 46.4 0 01-2.62-3.6c-.61-.95-1.13-1.87-1.56-2.77-.42-.88-.74-1.7-.96-2.46C4.76 13.46 4.62 12.75 4.62 12c0-2.07.66-3.79 1.98-5.17C7.92 5.44 9.73 4.75 12 4.75s4.08.69 5.4 2.08C18.72 8.21 19.38 9.93 19.38 12c0 .75-.14 1.46-.41 2.17-.22.76-.54 1.58-.96 2.46-.43.9-.95 1.82-1.56 2.77l.26.1z"/></svg>
               <span class="dl-body"><span class="dl-name">macOS</span><span class="dl-meta"><span class="v" data-version-for="macos">latest</span></span></span>
             </a>
@@ -943,9 +1137,9 @@
           <h4>Downloads</h4>
           <ul>
             <li><a href="#download">Download Pulse</a></li>
-            <li><a data-download="windows" href="https://github.com/CHAMA18/Pulse/releases/latest/download/Pulse-Windows.zip" target="_blank" rel="noopener">Windows app</a></li>
-            <li><a data-download="macos" href="https://github.com/CHAMA18/Pulse/releases/latest/download/Pulse-macOS.dmg" target="_blank" rel="noopener">macOS app</a></li>
-            <li><a href="https://github.com/CHAMA18/Pulse/releases" target="_blank" rel="noopener">All releases</a></li>
+            <li><a data-download="windows" href="https://github.com/CHAMA18/Duniya/releases/latest/download/Pulse-Windows.zip" target="_blank" rel="noopener">Windows app</a></li>
+            <li><a data-download="macos" href="https://github.com/CHAMA18/Duniya/releases/latest/download/Pulse-macOS.dmg" target="_blank" rel="noopener">macOS app</a></li>
+            <li><a href="https://github.com/CHAMA18/Duniya/releases" target="_blank" rel="noopener">All releases</a></li>
           </ul>
         </div>
         <div>
@@ -1100,14 +1294,42 @@
       });
 
       /* ── Live download links (GitHub release assets) ──────────── */
-      var GITHUB_REPO = 'CHAMA18/Pulse';
+      var GITHUB_REPO = 'CHAMA18/Duniya';
+      var RELEASES_PAGE_URL = 'https://github.com/' + GITHUB_REPO + '/releases';
       /* Platform buttons start with stable latest-release asset URLs. When a release
          exists, the API lookup below replaces them with the exact versioned asset;
          if the API is unavailable, the stable aliases still download the latest
-         published Windows ZIP or macOS DMG. */
+         published Windows ZIP or macOS DMG.
+
+         Graceful fallback: if no release exists yet (HTTP 404) or the release
+         has no installable asset, the buttons are repointed to the repo's
+         Releases page so the visitor sees "no releases yet" instead of a
+         confusing 404 — and the version label is switched to "Coming soon". */
+      function applyFallback(platform) {
+        document.querySelectorAll('[data-download="' + platform + '"]').forEach(function (a) {
+          a.href = RELEASES_PAGE_URL;
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
+        });
+        document.querySelectorAll('[data-version-for="' + platform + '"]').forEach(function (v) {
+          v.textContent = 'Coming soon';
+          v.style.color = '#a78bfa';
+        });
+      }
       function resolveDownloads() {
         fetch('https://api.github.com/repos/' + GITHUB_REPO + '/releases/latest')
-          .then(function (res) { if (!res.ok) throw new Error('no release'); return res.json(); })
+          .then(function (res) {
+            if (!res.ok) {
+              /* 404 = no release yet. Apply graceful fallback so the
+                 buttons don't link to broken direct-download URLs. */
+              if (res.status === 404) {
+                applyFallback('windows');
+                applyFallback('macos');
+              }
+              throw new Error('no release');
+            }
+            return res.json();
+          })
           .then(function (release) {
             var tag = (release.tag_name || '').replace(/^v/, '');
             var assets = release.assets || [];
@@ -1120,6 +1342,8 @@
                 a.setAttribute('rel', 'noopener');
               });
               document.querySelectorAll('[data-version-for="windows"]').forEach(function (v) { v.textContent = tag ? 'v' + tag : 'latest'; });
+            } else {
+              applyFallback('windows');
             }
             if (macAsset) {
               document.querySelectorAll('[data-download="macos"]').forEach(function (a) {
@@ -1128,13 +1352,118 @@
                 a.setAttribute('rel', 'noopener');
               });
               document.querySelectorAll('[data-version-for="macos"]').forEach(function (v) { v.textContent = tag ? 'v' + tag : 'latest'; });
+            } else {
+              applyFallback('macos');
             }
           })
           .catch(function () {
-            /* Keep the stable direct-download links when the API is unavailable. */
+            /* Network/API failure — keep stable direct-download links. */
           });
       }
       resolveDownloads();
+
+      /* ── Film section — lazy-load + play/pause + runtime ─────── */
+      /* The 10 MB MP4 is only fetched once the film section scrolls
+         into view (or when the user clicks play early). This keeps
+         the initial landing-page paint fast even on slow connections. */
+      (function initFilm() {
+        var video   = document.getElementById('filmVideo');
+        var playBtn = document.getElementById('filmPlay');
+        var skeleton = document.getElementById('filmSkeleton');
+        var runtime = document.getElementById('filmRuntime');
+        var frame   = document.getElementById('filmFrame');
+        if (!video || !playBtn) return;
+
+        var PLAY_ICON  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+        var PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+
+        function fmt(s) {
+          s = Math.max(0, Math.floor(s || 0));
+          var m = Math.floor(s / 60);
+          var sec = (s % 60).toString().padStart(2, '0');
+          return m + ':' + sec;
+        }
+
+        function loadVideo() {
+          if (video.getAttribute('src')) return; /* already loaded */
+          var src = video.getAttribute('data-src');
+          if (!src) return;
+          video.setAttribute('src', src);
+          video.load();
+        }
+
+        function startPlayback() {
+          loadVideo();
+          var p = video.play();
+          if (p && p.catch) p.catch(function () { /* autoplay blocked — user can click play */ });
+        }
+
+        function showPlaying() {
+          playBtn.classList.add('is-playing');
+          playBtn.setAttribute('aria-label', 'Pause film');
+          playBtn.innerHTML = PAUSE_ICON;
+        }
+        function showPaused() {
+          playBtn.classList.remove('is-playing');
+          playBtn.setAttribute('aria-label', 'Play film');
+          playBtn.innerHTML = PLAY_ICON;
+        }
+
+        playBtn.addEventListener('click', function () {
+          if (video.paused) startPlayback();
+          else video.pause();
+        });
+
+        video.addEventListener('play',  showPlaying);
+        video.addEventListener('pause', showPaused);
+
+        video.addEventListener('loadeddata', function () {
+          if (skeleton) skeleton.classList.add('hide');
+        });
+        video.addEventListener('canplay', function () {
+          if (skeleton) skeleton.classList.add('hide');
+        });
+
+        video.addEventListener('timeupdate', function () {
+          if (!runtime) return;
+          var cur = video.currentTime || 0;
+          var dur = video.duration || 74;
+          runtime.textContent = fmt(cur) + ' / ' + fmt(dur);
+        });
+        video.addEventListener('loadedmetadata', function () {
+          if (runtime && video.duration) {
+            runtime.textContent = '0:00 / ' + fmt(video.duration);
+          }
+        });
+
+        /* Lazy-load + autoplay when the section scrolls into view.
+           Margins trigger the load slightly before the section is
+           visible so playback can start immediately on arrival. */
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                loadVideo();
+                startPlayback();
+                io.unobserve(e.target);
+              }
+            });
+          }, { rootMargin: '300px 0px', threshold: 0.15 });
+          io.observe(frame);
+        } else {
+          /* Old browsers — load eagerly */
+          loadVideo();
+        }
+
+        /* Keyboard accessibility: space toggles play on the section */
+        frame.setAttribute('tabindex', '0');
+        frame.addEventListener('keydown', function (e) {
+          if (e.key === ' ' || e.key === 'Spacebar' || e.code === 'Space') {
+            e.preventDefault();
+            playBtn.click();
+          }
+        });
+      })();
 
       // Begin fetching the Flutter entry shell when someone shows intent to
       // authenticate. Navigation remains a standard link, but the shell is

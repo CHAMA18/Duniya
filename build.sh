@@ -199,3 +199,16 @@ for favfile in favicon-16x16.png favicon-32x32.png apple-touch-icon.png; do
     echo "==> Copied web/${favfile} -> build/web/${favfile}"
   fi
 done
+
+# ---------------------------------------------------------------------
+# 8. Copy the Pulse brand film so the landing page can lazy-load it.
+#    The file is ~10 MB; the landing.html film section uses preload="none"
+#    + IntersectionObserver so it is only fetched when the section
+#    scrolls into view. Set PULSE_FILM_SKIP=1 to skip during local dev.
+# ---------------------------------------------------------------------
+if [[ -f "web/pulse-pharmacy.mp4" ]]; then
+  cp "web/pulse-pharmacy.mp4" "build/web/pulse-pharmacy.mp4"
+  echo "==> Copied web/pulse-pharmacy.mp4 -> build/web/pulse-pharmacy.mp4 ($(du -h web/pulse-pharmacy.mp4 | cut -f1))"
+else
+  echo "==> WARN: web/pulse-pharmacy.mp4 not found — landing film section will show skeleton only."
+fi

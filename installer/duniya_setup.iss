@@ -9,8 +9,8 @@
 #define MyAppName "Pulse"
 #define MyAppVersion "1.8.0"
 #define MyAppPublisher "Pulse Healthcare"
-#define MyAppURL "https://ivm.pulsehealthcare.com"
-#define MyAppExeName "pulse.exe"
+#define MyAppURL "https://ivm.duniyahealthcare.com"
+#define MyAppExeName "duniya.exe"
 
 [Setup]
 AppId={{7D2C1A3E-5B4A-4C9F-9E6A-D8B1F2C4E6A8}
