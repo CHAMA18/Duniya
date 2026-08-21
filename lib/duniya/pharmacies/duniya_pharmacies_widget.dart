@@ -156,10 +156,11 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     };
     final match = RegExp(r'(\d{1,2})\s*([A-Z]{3,})', caseSensitive: false)
         .firstMatch(fileName);
-    final month = match == null
+    final monthText = match?.group(2)?.toUpperCase();
+    final month = monthText == null || monthText.length < 3
         ? null
-        : months[match.group(2)!.toUpperCase().substring(0, 3)];
-    final day = match == null ? null : int.tryParse(match.group(1)!);
+        : months[monthText.substring(0, 3)];
+    final day = int.tryParse(match?.group(1) ?? '');
     if (month != null && day != null && day >= 1 && day <= 31) {
       return DateTime.utc(DateTime.now().year, month, day, 12);
     }
@@ -214,7 +215,8 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
       }
 
       String valueAt(List<dynamic> row, String key) {
-        final index = columns[key]!;
+        final index = columns[key];
+        if (index == null) return '';
         return index < row.length ? cellValue(row[index]) : '';
       }
 
@@ -240,9 +242,14 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
         final m = RegExp(r'^([A-Za-z]+)\d+\s*([+\-*/])\s*([A-Za-z]+)\d+$')
             .firstMatch(expr);
         if (m == null) return null;
-        final leftColIdx = _excelColToIndex(m.group(1)!);
-        final rightColIdx = _excelColToIndex(m.group(3)!);
-        final op = m.group(2)!;
+        final leftColumn = m.group(1);
+        final rightColumn = m.group(3);
+        final op = m.group(2);
+        if (leftColumn == null || rightColumn == null || op == null) {
+          return null;
+        }
+        final leftColIdx = _excelColToIndex(leftColumn);
+        final rightColIdx = _excelColToIndex(rightColumn);
         if (leftColIdx == null || rightColIdx == null) return null;
         if (leftColIdx >= row.length || rightColIdx >= row.length) return null;
         final leftStr = cellValue(row[leftColIdx]);
