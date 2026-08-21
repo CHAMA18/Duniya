@@ -171,6 +171,7 @@ Stream<List<PharmacyRecord>> queryPharmacyRecord({
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
+      fallbackToEmptyOnError: false,
     );
 
 Future<List<PharmacyRecord>> queryPharmacyRecordOnce({
@@ -2197,6 +2198,7 @@ Stream<List<T>> queryCollection<T>(
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
+  bool fallbackToEmptyOnError = true,
 }) {
   final builder = queryBuilder ?? (q) => q;
   var query = builder(collection);
@@ -2208,19 +2210,18 @@ Stream<List<T>> queryCollection<T>(
   // of those pages reaches its normal empty state instead of loading forever.
   // The error is still logged for diagnosis and a later stream event can
   // replace the empty state with fresh data.
-  return query
-      .snapshots()
-      .map((s) => s.docs
-          .map(
-            (d) => safeGet(
-              () => recordBuilder(d),
-              (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-            ),
-          )
-          .where((d) => d != null)
-          .map((d) => d!)
-          .toList())
-      .transform(
+  final records = query.snapshots().map((s) => s.docs
+      .map(
+        (d) => safeGet(
+          () => recordBuilder(d),
+          (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
+        ),
+      )
+      .where((d) => d != null)
+      .map((d) => d!)
+      .toList());
+  if (!fallbackToEmptyOnError) return records;
+  return records.transform(
     StreamTransformer<List<T>, List<T>>.fromHandlers(
       handleError: (error, stackTrace, sink) {
         print(
