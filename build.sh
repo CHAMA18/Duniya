@@ -229,5 +229,3 @@ if [[ -d "web/downloads" ]]; then
   cp web/downloads/*.zip build/web/downloads/ 2>/dev/null || true
   echo "==> Copied web/downloads/*.zip -> build/web/downloads/"
 fi
-
-fi
