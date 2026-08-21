@@ -45,6 +45,21 @@ class SaleRecordVMI extends FirestoreRecord {
   DateTime? get createdAt => _createdAt;
   bool hasCreatedAt() => _createdAt != null;
 
+  // "PaymentMethod" field.
+  // Stores the user's chosen checkout method: "Cash", "Card", or
+  // "MobileMoney". Set by the cart checkout flow from the
+  // _PaymentMethod enum on _CartWidgetState.
+  String? _paymentMethod;
+  String? get paymentMethod => _paymentMethod;
+  bool hasPaymentMethod() => _paymentMethod != null;
+
+  // "MobileMoneyProvider" field.
+  // Only set when PaymentMethod == "MobileMoney". Values: "Airtel",
+  // "MTN", or "Zamtel".
+  String? _mobileMoneyProvider;
+  String? get mobileMoneyProvider => _mobileMoneyProvider;
+  bool hasMobileMoneyProvider() => _mobileMoneyProvider != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -54,6 +69,8 @@ class SaleRecordVMI extends FirestoreRecord {
     _patientRef = snapshotData['PatientRef'] as String?;
     _totalAmount = castToType<double>(snapshotData['TotalAmount']);
     _createdAt = snapshotData['CreatedAt'] as DateTime?;
+    _paymentMethod = snapshotData['PaymentMethod'] as String?;
+    _mobileMoneyProvider = snapshotData['MobileMoneyProvider'] as String?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -102,6 +119,8 @@ Map<String, dynamic> createSaleRecordVMIData({
   String? patientRef,
   double? totalAmount,
   DateTime? createdAt,
+  String? paymentMethod,
+  String? mobileMoneyProvider,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -111,6 +130,8 @@ Map<String, dynamic> createSaleRecordVMIData({
       'PatientRef': patientRef,
       'TotalAmount': totalAmount,
       'CreatedAt': createdAt,
+      'PaymentMethod': paymentMethod,
+      'MobileMoneyProvider': mobileMoneyProvider,
     }.withoutNulls,
   );
 
@@ -127,7 +148,9 @@ class SaleRecordVMIDocumentEquality implements Equality<SaleRecordVMI> {
         e1?.saleDate == e2?.saleDate &&
         e1?.patientRef == e2?.patientRef &&
         e1?.totalAmount == e2?.totalAmount &&
-        e1?.createdAt == e2?.createdAt;
+        e1?.createdAt == e2?.createdAt &&
+        e1?.paymentMethod == e2?.paymentMethod &&
+        e1?.mobileMoneyProvider == e2?.mobileMoneyProvider;
   }
 
   @override
@@ -137,7 +160,9 @@ class SaleRecordVMIDocumentEquality implements Equality<SaleRecordVMI> {
         e?.saleDate,
         e?.patientRef,
         e?.totalAmount,
-        e?.createdAt
+        e?.createdAt,
+        e?.paymentMethod,
+        e?.mobileMoneyProvider
       ]);
 
   @override

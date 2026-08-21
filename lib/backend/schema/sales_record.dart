@@ -45,6 +45,21 @@ class SalesRecord extends FirestoreRecord {
   DocumentReference? get ownerRef => _ownerRef;
   bool hasOwnerRef() => _ownerRef != null;
 
+  // "PaymentMethod" field.
+  // Stores the user's chosen checkout method: "Cash", "Card", or
+  // "MobileMoney". Set by the cart checkout flow from the
+  // _PaymentMethod enum on _CartWidgetState.
+  String? _paymentMethod;
+  String? get paymentMethod => _paymentMethod;
+  bool hasPaymentMethod() => _paymentMethod != null;
+
+  // "MobileMoneyProvider" field.
+  // Only set when PaymentMethod == "MobileMoney". Values: "Airtel",
+  // "MTN", or "Zamtel".
+  String? _mobileMoneyProvider;
+  String? get mobileMoneyProvider => _mobileMoneyProvider;
+  bool hasMobileMoneyProvider() => _mobileMoneyProvider != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -54,6 +69,8 @@ class SalesRecord extends FirestoreRecord {
     _userID = snapshotData['UserID'] as DocumentReference?;
     _pharmaID = snapshotData['PharmaID'] as DocumentReference?;
     _ownerRef = snapshotData['OwnerRef'] as DocumentReference?;
+    _paymentMethod = snapshotData['PaymentMethod'] as String?;
+    _mobileMoneyProvider = snapshotData['MobileMoneyProvider'] as String?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -101,6 +118,8 @@ Map<String, dynamic> createSalesRecordData({
   DocumentReference? userID,
   DocumentReference? pharmaID,
   DocumentReference? ownerRef,
+  String? paymentMethod,
+  String? mobileMoneyProvider,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -110,6 +129,8 @@ Map<String, dynamic> createSalesRecordData({
       'UserID': userID,
       'PharmaID': pharmaID,
       'OwnerRef': ownerRef,
+      'PaymentMethod': paymentMethod,
+      'MobileMoneyProvider': mobileMoneyProvider,
     }.withoutNulls,
   );
 
@@ -126,7 +147,9 @@ class SalesRecordDocumentEquality implements Equality<SalesRecord> {
         e1?.numberOfItems == e2?.numberOfItems &&
         e1?.userID == e2?.userID &&
         e1?.pharmaID == e2?.pharmaID &&
-        e1?.ownerRef == e2?.ownerRef;
+        e1?.ownerRef == e2?.ownerRef &&
+        e1?.paymentMethod == e2?.paymentMethod &&
+        e1?.mobileMoneyProvider == e2?.mobileMoneyProvider;
   }
 
   @override
@@ -136,7 +159,9 @@ class SalesRecordDocumentEquality implements Equality<SalesRecord> {
         e?.numberOfItems,
         e?.userID,
         e?.pharmaID,
-        e?.ownerRef
+        e?.ownerRef,
+        e?.paymentMethod,
+        e?.mobileMoneyProvider
       ]);
 
   @override

@@ -523,6 +523,26 @@ class _CartWidgetState extends State<CartWidget> {
 
                               var salesRecordReference =
                                   SalesRecord.createDoc(cartParent);
+                              // Resolve the chosen payment method + (if
+                              // Mobile Money) the provider into strings
+                              // to persist on the Sales record.
+                              final _paymentMethodStr =
+                                  switch (_selectedPaymentMethod) {
+                                _PaymentMethod.cash => 'Cash',
+                                _PaymentMethod.card => 'Card',
+                                _PaymentMethod.mobileMoney => 'MobileMoney',
+                              };
+                              final _mobileMoneyProviderStr =
+                                  _selectedPaymentMethod ==
+                                          _PaymentMethod.mobileMoney
+                                      ? switch (_selectedMobileMoneyProvider) {
+                                          _MobileMoneyProvider.airtel =>
+                                            'Airtel',
+                                          _MobileMoneyProvider.mtn => 'MTN',
+                                          _MobileMoneyProvider.zamtel =>
+                                            'Zamtel',
+                                        }
+                                      : null;
                               await salesRecordReference
                                   .set(createSalesRecordData(
                                 date: getCurrentTimestamp,
@@ -535,6 +555,8 @@ class _CartWidgetState extends State<CartWidget> {
                                 pharmaID: FFAppState().Cart.pharmId,
                                 ownerRef: AccessControl.parentRef(context) ??
                                     currentUserReference,
+                                paymentMethod: _paymentMethodStr,
+                                mobileMoneyProvider: _mobileMoneyProviderStr,
                               ));
                               _model.sales = SalesRecord.getDocumentFromData(
                                   createSalesRecordData(
@@ -549,6 +571,9 @@ class _CartWidgetState extends State<CartWidget> {
                                     ownerRef:
                                         AccessControl.parentRef(context) ??
                                             currentUserReference,
+                                    paymentMethod: _paymentMethodStr,
+                                    mobileMoneyProvider:
+                                        _mobileMoneyProviderStr,
                                   ),
                                   salesRecordReference);
                               logFirebaseEvent('Button_firestore_query');
