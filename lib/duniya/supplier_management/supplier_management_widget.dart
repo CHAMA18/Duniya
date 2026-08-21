@@ -1,4 +1,5 @@
 import '/rbac/rbac.dart';
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
@@ -1318,7 +1319,7 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
                   color: Colors.white.withAlpha(38),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(widget.isEditing
+                child: Icon(widget.isEditing
                     ? Icons.edit_rounded
                     : Icons.add_rounded,
                     color: Colors.white),

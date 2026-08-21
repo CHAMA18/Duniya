@@ -1338,7 +1338,7 @@ Future<String?> _showStockLevelNotice({
                                     FlutterFlowTheme.of(ctx).primaryText,
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w400,
-                                height: 1.5,
+                                lineHeight: 1.5,
                                 useGoogleFonts: !FlutterFlowTheme.of(ctx)
                                     .bodyMediumIsCustom,
                               ),
