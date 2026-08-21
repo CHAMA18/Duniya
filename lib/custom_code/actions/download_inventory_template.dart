@@ -8,14 +8,9 @@ import 'package:excel/excel.dart';
 Future<void> downloadInventoryTemplate() async {
   final excel = Excel.createExcel();
 
-  // The default sheet is 'Sheet1'. Rename it to 'Inventory Template'.
-  const sheetName = 'Inventory Template';
-  final defaultSheet = excel.getDefaultSheet();
-  if (defaultSheet != null && defaultSheet != sheetName) {
-    excel.rename(defaultSheet, sheetName);
-  }
-
-  final sheet = excel[sheetName];
+  // The Excel package cannot safely rename the default sheet on web.
+  // The inventory importer reads the first worksheet, so keep it in place.
+  final sheet = excel[excel.getDefaultSheet() ?? 'Sheet1'];
 
   // Header row
   final headers = [
@@ -125,11 +120,6 @@ Future<void> downloadInventoryTemplate() async {
   instructionsSheet.setColWidth(1, 60.0);
   instructionsSheet.setColWidth(2, 25.0);
   instructionsSheet.setColWidth(3, 25.0);
-
-  // Delete the default 'Sheet1' if it still exists
-  if (excel.sheets.containsKey('Sheet1')) {
-    excel.delete('Sheet1');
-  }
 
   final bytes = excel.encode();
   if (bytes == null) return;

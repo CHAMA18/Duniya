@@ -226,6 +226,6 @@ fi
 # ---------------------------------------------------------------------
 if [[ -d "web/downloads" ]]; then
   mkdir -p build/web/downloads
-  cp web/downloads/*.zip build/web/downloads/ 2>/dev/null || true
-  echo "==> Copied web/downloads/*.zip -> build/web/downloads/"
+  find web/downloads -maxdepth 1 -type f -exec cp {} build/web/downloads/ \;
+  echo "==> Copied web/downloads/ -> build/web/downloads/"
 fi
