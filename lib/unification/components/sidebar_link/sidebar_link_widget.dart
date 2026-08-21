@@ -128,8 +128,8 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                     width: 18.0,
                     height: 18.0,
                     child: isSelected
-                        ? widget.activeIcon!
-                        : widget.inactiveIcon!,
+                        ? (widget.activeIcon ?? const SizedBox.shrink())
+                        : (widget.inactiveIcon ?? const SizedBox.shrink()),
                   ),
                 ),
               ),
@@ -155,7 +155,7 @@ class _SidebarLinkWidgetState extends State<SidebarLinkWidget> {
                       useGoogleFonts: !theme.bodyMediumIsCustom,
                     ),
                     child: Text(
-                      widget.linkText!,
+                      widget.linkText ?? '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       softWrap: false,
