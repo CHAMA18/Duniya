@@ -14,7 +14,7 @@ void _writeAuditLog(String eventName, Map<String, Object> parameters) {
   final uid = currentUserUid;
   if (uid.isEmpty) return;
 
-  final scopeId = AppRole.isDuniyaAccountType(currentUserDocument?.accountType)
+  final scopeId = AppRole.isPulseAccountType(currentUserDocument?.accountType)
       ? 'Pulse'
       : currentUserDocument?.ownerRef?.path ?? 'User/$uid';
   final payload = <String, Object?>{

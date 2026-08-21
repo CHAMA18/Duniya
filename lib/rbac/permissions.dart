@@ -102,12 +102,12 @@ enum Permission {
   settingsView,
   settingsManage,
 
-  // ─── Duniya Network ───────────────────────────────────────────────
-  duniyaPharmaciesView,
-  duniyaStockBalancesView,
-  duniyaOnboardingView,
-  duniyaNetworkAnalyticsView,
-  duniyaApprovePharmacies,
+  // ─── Pulse Network ───────────────────────────────────────────────
+  pulsePharmaciesView,
+  pulseStockBalancesView,
+  pulseOnboardingView,
+  pulseNetworkAnalyticsView,
+  pulseApprovePharmacies,
 
   // ─── Dashboard ────────────────────────────────────────────────────
   dashboardViewOwnerMetrics,

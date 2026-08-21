@@ -17,7 +17,7 @@ import 'goods_received_model.dart';
 export 'goods_received_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — GOODS RECEIVED (World-Class Redesign)
+///   PULSE — GOODS RECEIVED (World-Class Redesign)
 ///   Top 1% receiving UX: hero header, KPI cards, smart filters,
 ///   status pills, beautiful card list with status badges and
 ///   inline quick actions, and a stunning empty state.
@@ -74,7 +74,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
     return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
-  bool get _isPulseUser => AccessControl.isDuniyaUser(context);
+  bool get _isPulseUser => AccessControl.isPulseUser(context);
 
   String get _workflowName =>
       _isPulseUser ? 'Goods Dispatched' : 'Goods Received';

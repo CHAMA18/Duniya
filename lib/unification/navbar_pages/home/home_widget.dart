@@ -75,8 +75,8 @@ class _PharmacyFinanceSnapshot {
   double get profitMargin => revenue > 0 ? (grossProfit / revenue) * 100 : 0.0;
 }
 
-class _DuniyaFinanceOverviewData {
-  const _DuniyaFinanceOverviewData({
+class _PulseFinanceOverviewData {
+  const _PulseFinanceOverviewData({
     required this.pharmacySnapshots,
     required this.totalRevenue,
     required this.totalGrossProfit,
@@ -140,7 +140,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       // lands on Home. Subsequent visits can replay it from the sidebar.
       if (!mounted) return;
       if (!OnboardingService.instance.hasCompletedTour) {
-        DuniyaSpotlightTour.show(context);
+        PulseSpotlightTour.show(context);
       }
     });
 
@@ -935,7 +935,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     );
   }
 
-  Future<_DuniyaFinanceOverviewData> _loadDuniyaFinanceOverview({
+  Future<_PulseFinanceOverviewData> _loadPulseFinanceOverview({
     required DocumentReference ownerRef,
   }) async {
     final pharmacyRecords = await queryPharmacyRecordOnce(
@@ -965,7 +965,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     final sortedSnapshots = [...pharmacySnapshots]
       ..sort((a, b) => b.revenue.compareTo(a.revenue));
 
-    return _DuniyaFinanceOverviewData(
+    return _PulseFinanceOverviewData(
       pharmacySnapshots: sortedSnapshots,
       totalRevenue: sortedSnapshots.fold<double>(
         0.0,
@@ -990,8 +990,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     final ownerRef = currentUserReference!;
 
     return AuthUserStreamWidget(
-      builder: (context) => FutureBuilder<_DuniyaFinanceOverviewData>(
-        future: _loadDuniyaFinanceOverview(ownerRef: ownerRef),
+      builder: (context) => FutureBuilder<_PulseFinanceOverviewData>(
+        future: _loadPulseFinanceOverview(ownerRef: ownerRef),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildPremiumCard(
@@ -2976,7 +2976,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (!AccessControl.isDuniyaUser(context)) ...[
+                                  if (!AccessControl.isPulseUser(context)) ...[
                                     Container(
                                       width: double.infinity,
                                       padding:
@@ -3573,7 +3573,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                                 ),
                                               ],
                                             ),
-                                          if (!AccessControl.isDuniyaUser(
+                                          if (!AccessControl.isPulseUser(
                                               context)) ...[
                                             const SizedBox(height: 22),
                                             _buildPharmacySectionHeader(

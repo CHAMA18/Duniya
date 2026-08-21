@@ -64,9 +64,9 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -490,7 +490,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
 
     return Title(
       title: 'Expiry Tracking Dashboard',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -604,11 +604,11 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                   Container(
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      color: _duniyaPurpleLight,
+                      color: _pulsePurpleLight,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Icon(Icons.timer_off_outlined,
-                        color: _duniyaPurple, size: 24.0),
+                        color: _pulsePurple, size: 24.0),
                   ),
                   const SizedBox(width: 14.0),
                   Column(
@@ -898,7 +898,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
           // Section title
           Row(
             children: [
-              Icon(Icons.timeline, color: _duniyaPurple, size: 20.0),
+              Icon(Icons.timeline, color: _pulsePurple, size: 20.0),
               const SizedBox(width: 8.0),
               Text(
                 'Expiry Timeline',
@@ -1022,7 +1022,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                   fontFamily: kAppFontFamily,
                   color: _textSecondary,
                   fontSize: 14.0),
-              prefixIcon: Icon(Icons.search, color: _duniyaPurple, size: 20.0),
+              prefixIcon: Icon(Icons.search, color: _pulsePurple, size: 20.0),
               border: InputBorder.none,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
@@ -1037,7 +1037,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
           final filterDropdown = Container(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             decoration: BoxDecoration(
-              color: _duniyaPurpleLight,
+              color: _pulsePurpleLight,
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: FlutterFlowDropDown<String>(
@@ -1057,11 +1057,11 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               height: 40.0,
               textStyle: TextStyle(
                 fontFamily: kAppFontFamily,
-                color: _duniyaPurple,
+                color: _pulsePurple,
                 fontWeight: FontWeight.w500,
                 fontSize: 13.0,
               ),
-              icon: Icon(Icons.filter_list, color: _duniyaPurple, size: 18.0),
+              icon: Icon(Icons.filter_list, color: _pulsePurple, size: 18.0),
               fillColor: Colors.transparent,
               elevation: 0,
               borderColor: Colors.transparent,
@@ -1148,7 +1148,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
           Container(
             padding: const EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
             decoration: BoxDecoration(
-              color: _duniyaPurple.withValues(alpha: 0.06),
+              color: _pulsePurple.withValues(alpha: 0.06),
               border: Border(
                 bottom: BorderSide(color: _borderColor, width: 1.0),
               ),
@@ -1382,11 +1382,11 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             Container(
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Icon(Icons.inventory_2_outlined,
-                  color: _duniyaPurple, size: 22.0),
+                  color: _pulsePurple, size: 22.0),
             ),
             const SizedBox(width: 12.0),
             Expanded(
@@ -1420,12 +1420,12 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
             Container(
               padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: _duniyaPurple, size: 16.0),
+                  Icon(Icons.info_outline, color: _pulsePurple, size: 16.0),
                   const SizedBox(width: 8.0),
                   Expanded(
                     child: Text(
@@ -1433,7 +1433,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                       style: TextStyle(
                         fontFamily: kAppFontFamily,
                         fontSize: 12.0,
-                        color: _duniyaPurpleDark,
+                        color: _pulsePurpleDark,
                       ),
                     ),
                   ),
@@ -1460,7 +1460,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                     '$actionTitle for ${batch.batchNumber} — recorded.',
                     style: TextStyle(fontFamily: kAppFontFamily),
                   ),
-                  backgroundColor: _duniyaPurple,
+                  backgroundColor: _pulsePurple,
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
@@ -1468,7 +1468,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: _duniyaPurple,
+              backgroundColor: _pulsePurple,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
@@ -1515,7 +1515,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                 fontSize: 12.0,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.08,
-                color: isActive ? _duniyaPurple : _duniyaPurpleDark,
+                color: isActive ? _pulsePurple : _pulsePurpleDark,
               ),
             ),
             if (isActive) ...[
@@ -1525,7 +1525,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                     ? Icons.arrow_upward
                     : Icons.arrow_downward,
                 size: 14.0,
-                color: _duniyaPurple,
+                color: _pulsePurple,
               ),
             ],
           ],
@@ -1544,7 +1544,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
           fontSize: 12.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.08,
-          color: _duniyaPurpleDark,
+          color: _pulsePurpleDark,
         ),
       ),
     );
@@ -1588,7 +1588,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SpinKitRing(color: _duniyaPurple, size: 48.0),
+            SpinKitRing(color: _pulsePurple, size: 48.0),
             const SizedBox(height: 16.0),
             Text('Loading expiry data...',
                 style: TextStyle(
@@ -1612,10 +1612,10 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
               width: 72.0,
               height: 72.0,
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_outline, color: _duniyaPurple, size: 36.0),
+              child: Icon(Icons.lock_outline, color: _pulsePurple, size: 36.0),
             ),
             const SizedBox(height: 20.0),
             Text('Access Restricted',

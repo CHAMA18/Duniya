@@ -30,10 +30,10 @@ enum AppRole {
   salesAssistant,
 
   /// Pulse network admin — oversees the entire Pulse network
-  duniyaAdmin,
+  pulseAdmin,
 
   /// Pulse staff — operational staff within the Pulse network
-  duniyaStaff,
+  pulseStaff,
 
   /// Subscriber — external user with limited read access
   subscriber,
@@ -70,10 +70,10 @@ enum AppRole {
       case 'duniya_admin':
       case 'duniyaadmin':
       case 'duniya':
-        return AppRole.duniyaAdmin;
+        return AppRole.pulseAdmin;
       case 'duniya_staff':
       case 'duniyastaff':
-        return AppRole.duniyaStaff;
+        return AppRole.pulseStaff;
       case 'subscriber':
       case 'subscription':
         return AppRole.subscriber;
@@ -86,7 +86,7 @@ enum AppRole {
   /// the user is a Pulse network user or a pharmacy user.
   /// Defaults to pharmacy (false) when null/empty for security —
   /// missing accountType should not grant network admin access.
-  static bool isDuniyaAccountType(String? accountType) {
+  static bool isPulseAccountType(String? accountType) {
     if (accountType == null || accountType.isEmpty) return false;
     return accountType.trim().toLowerCase() == 'pulse';
   }
@@ -106,9 +106,9 @@ enum AppRole {
         return 'Cashier';
       case AppRole.salesAssistant:
         return 'Sales Assistant';
-      case AppRole.duniyaAdmin:
+      case AppRole.pulseAdmin:
         return 'Pulse Admin';
-      case AppRole.duniyaStaff:
+      case AppRole.pulseStaff:
         return 'Pulse Staff';
       case AppRole.subscriber:
         return 'Subscriber';
@@ -118,8 +118,8 @@ enum AppRole {
   }
 
   /// Whether this role belongs to the Pulse network side.
-  bool get isDuniyaRole =>
-      this == AppRole.duniyaAdmin || this == AppRole.duniyaStaff;
+  bool get isPulseRole =>
+      this == AppRole.pulseAdmin || this == AppRole.pulseStaff;
 
   /// Whether this role belongs to the pharmacy side.
   bool get isPharmacyRole =>
@@ -146,9 +146,9 @@ enum AppRole {
         return 'Cashier';
       case AppRole.salesAssistant:
         return 'Sales Assistant';
-      case AppRole.duniyaAdmin:
+      case AppRole.pulseAdmin:
         return 'admin';
-      case AppRole.duniyaStaff:
+      case AppRole.pulseStaff:
         return 'staff';
       case AppRole.subscriber:
         return 'subscriber';
@@ -158,7 +158,7 @@ enum AppRole {
   }
 
   /// The Firestore `accountType` string for this AppRole's side.
-  String get accountTypeValue => isDuniyaRole ? 'Pulse' : 'Pharmacy';
+  String get accountTypeValue => isPulseRole ? 'Pulse' : 'Pharmacy';
 
   /// Whether this role has Owner-level admin privileges.
   bool get isOwnerLevel => this == AppRole.owner;
@@ -197,11 +197,11 @@ enum NavItem {
   pointOfSale,
   aiAssistant,
   bmiCalculator,
-  duniyaPharmacies,
-  duniyaStockBalances,
-  duniyaOnboardingRequests,
-  duniyaNetworkAnalytics,
-  duniyaSupplierManagement,
+  pulsePharmacies,
+  pulseStockBalances,
+  pulseOnboardingRequests,
+  pulseNetworkAnalytics,
+  pulseSupplierManagement,
   vmiDashboard,
   auditLogs,
   userManagement,

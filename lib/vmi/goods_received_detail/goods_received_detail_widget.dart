@@ -41,9 +41,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   List<Map<String, dynamic>> _lineItems = [];
 
   // Design tokens — Pulse purple design system
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -64,7 +64,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     return AccessControl.parentRef(context) ?? currentUserReference;
   }
 
-  bool get _isPulseUser => AccessControl.isDuniyaUser(context);
+  bool get _isPulseUser => AccessControl.isPulseUser(context);
 
   String get _workflowName =>
       _isPulseUser ? 'Goods Dispatched' : 'Goods Received';
@@ -229,7 +229,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       buttonSize: 60.0,
                       icon: Icon(
                         Icons.chevron_left_rounded,
-                        color: _duniyaPurple,
+                        color: _pulsePurple,
                         size: 30.0,
                       ),
                       onPressed: () async {
@@ -364,12 +364,12 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.arrow_back_rounded,
-                      size: 16, color: _duniyaPurple),
+                      size: 16, color: _pulsePurple),
                   SizedBox(width: 6),
                   Text(
                     'Back to $_workflowName',
                     style: TextStyle(
-                      color: _duniyaPurple,
+                      color: _pulsePurple,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),
@@ -393,12 +393,12 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [_duniyaPurple, _duniyaPurpleDark],
+                  colors: [_pulsePurple, _pulsePurpleDark],
                 ),
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: _duniyaPurple.withValues(alpha: 0.28),
+                    color: _pulsePurple.withValues(alpha: 0.28),
                     blurRadius: 18,
                     offset: Offset(0, 8),
                   ),
@@ -465,15 +465,15 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: _duniyaPurpleLight,
+              color: _pulsePurpleLight,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: _duniyaPurple.withValues(alpha: 0.4)),
+              border: Border.all(color: _pulsePurple.withValues(alpha: 0.4)),
             ),
             child: Center(
               child: Text(
                 '$stepNumber',
                 style: TextStyle(
-                  color: _duniyaPurpleDark,
+                  color: _pulsePurpleDark,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                 ),
@@ -486,10 +486,10 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: _duniyaPurpleLight,
+            color: _pulsePurpleLight,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, color: _duniyaPurpleDark, size: 20),
+          child: Icon(icon, color: _pulsePurpleDark, size: 20),
         ),
         SizedBox(width: 12),
         Expanded(
@@ -741,7 +741,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               decoration: _inputBoxDecoration(),
               child: Center(
                 child: SpinKitRing(
-                  color: _duniyaPurple,
+                  color: _pulsePurple,
                   size: 18,
                   lineWidth: 2,
                 ),
@@ -814,7 +814,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             Icon(
               Icons.calendar_today_rounded,
               size: 16,
-              color: hasDate ? _duniyaPurple : _textTertiary,
+              color: hasDate ? _pulsePurple : _textTertiary,
             ),
             SizedBox(width: 10),
             Expanded(
@@ -861,7 +861,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: _borderColor),
             ),
-            child: Icon(icon, size: 16, color: _duniyaPurpleDark),
+            child: Icon(icon, size: 16, color: _pulsePurpleDark),
           ),
           SizedBox(width: 12),
           Expanded(
@@ -977,13 +977,13 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        color: _duniyaPurpleLight,
+                        color: _pulsePurpleLight,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         '${_lineItems.length} ${_lineItems.length == 1 ? 'item' : 'items'}',
                         style: TextStyle(
-                          color: _duniyaPurpleDark,
+                          color: _pulsePurpleDark,
                           fontSize: 11.5,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.2,
@@ -1095,7 +1095,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               child: Container(
                 width: 4,
                 decoration: BoxDecoration(
-                  color: hasDiscrepancy ? _warning : _duniyaPurple,
+                  color: hasDiscrepancy ? _warning : _pulsePurple,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12),
                     bottomLeft: Radius.circular(12),
@@ -1134,14 +1134,14 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           width: 28,
           height: 28,
           decoration: BoxDecoration(
-            color: _duniyaPurpleLight,
+            color: _pulsePurpleLight,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               '${idx + 1}',
               style: TextStyle(
-                color: _duniyaPurpleDark,
+                color: _pulsePurpleDark,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -1284,14 +1284,14 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               width: 26,
               height: 26,
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 borderRadius: BorderRadius.circular(7),
               ),
               child: Center(
                 child: Text(
                   '${idx + 1}',
                   style: TextStyle(
-                    color: _duniyaPurpleDark,
+                    color: _pulsePurpleDark,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1400,7 +1400,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
         color: _bgColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _duniyaPurple.withValues(alpha: 0.15),
+          color: _pulsePurple.withValues(alpha: 0.15),
           style: BorderStyle.solid,
         ),
       ),
@@ -1414,15 +1414,15 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  _duniyaPurpleLight,
-                  _duniyaPurple.withValues(alpha: 0.08),
+                  _pulsePurpleLight,
+                  _pulsePurple.withValues(alpha: 0.08),
                 ],
               ),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.add_box_rounded,
-              color: _duniyaPurple,
+              color: _pulsePurple,
               size: 36,
             ),
           ),
@@ -1470,7 +1470,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       ),
       child: Row(
         children: [
-          Icon(Icons.summarize_rounded, size: 18, color: _duniyaPurpleDark),
+          Icon(Icons.summarize_rounded, size: 18, color: _pulsePurpleDark),
           SizedBox(width: 10),
           Expanded(
             child: Wrap(
@@ -1700,7 +1700,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
+        borderSide: BorderSide(color: _pulsePurple, width: 1.5),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
@@ -1762,7 +1762,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [_duniyaPurple, _duniyaPurpleDark],
+                            colors: [_pulsePurple, _pulsePurpleDark],
                           ),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(18),
@@ -1838,7 +1838,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                     decoration: _inputBoxDecoration(),
                                     child: Center(
                                       child: SpinKitRing(
-                                        color: _duniyaPurple,
+                                        color: _pulsePurple,
                                         size: 18,
                                         lineWidth: 2,
                                       ),
@@ -2014,7 +2014,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                                                 size: 16,
                                                 color: _model.lineExpiryDate !=
                                                         null
-                                                    ? _duniyaPurple
+                                                    ? _pulsePurple
                                                     : _textTertiary,
                                               ),
                                               SizedBox(width: 10),

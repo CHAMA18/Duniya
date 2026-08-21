@@ -113,12 +113,12 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     String? selectedPharmacy;
     String? validationMessage;
 
-    final pharmacyParent = AccessControl.isDuniyaUser(context)
+    final pharmacyParent = AccessControl.isPulseUser(context)
         ? null
         : AccessControl.parentRef(context) ?? currentUserReference;
     final pharmacies = await queryPharmacyRecordOnce(parent: pharmacyParent);
     if (!mounted) return;
-    if (!AccessControl.isDuniyaUser(context) && pharmacies.isNotEmpty) {
+    if (!AccessControl.isPulseUser(context) && pharmacies.isNotEmpty) {
       selectedPharmacy = pharmacies.first.name;
     }
 
@@ -1409,7 +1409,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     Color surfaceContainerLow,
   ) {
     final parentRef =
-        AccessControl.isDuniyaUser(context) ? null : _getParentRef();
+        AccessControl.isPulseUser(context) ? null : _getParentRef();
 
     return Container(
       decoration: BoxDecoration(

@@ -164,10 +164,10 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
             createUserRecordData(
               createdTime: getCurrentTimestamp,
               role: _selectedMode == 0
-                  ? AppRole.duniyaAdmin.firestoreValue
+                  ? AppRole.pulseAdmin.firestoreValue
                   : AppRole.owner.firestoreValue,
               accountType: _selectedMode == 0
-                  ? AppRole.duniyaAdmin.accountTypeValue
+                  ? AppRole.pulseAdmin.accountTypeValue
                   : AppRole.owner.accountTypeValue,
               displayName: displayName.isNotEmpty ? displayName : null,
               email: email,
@@ -721,14 +721,14 @@ class _RegisterUniWidgetState extends State<RegisterUniWidget> {
                                                           role: _selectedMode ==
                                                                   0
                                                               ? AppRole
-                                                                  .duniyaAdmin
+                                                                  .pulseAdmin
                                                                   .firestoreValue
                                                               : AppRole.owner
                                                                   .firestoreValue,
                                                           accountType: _selectedMode ==
                                                                   0
                                                               ? AppRole
-                                                                  .duniyaAdmin
+                                                                  .pulseAdmin
                                                                   .accountTypeValue
                                                               : AppRole.owner
                                                                   .accountTypeValue,

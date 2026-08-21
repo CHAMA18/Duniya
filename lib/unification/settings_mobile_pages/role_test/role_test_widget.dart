@@ -167,8 +167,8 @@ class _RoleTestWidgetState extends State<RoleTestWidget> {
 
                   // Pulse Roles
                   _buildRoleSection('Pulse Network Roles', [
-                    AppRole.duniyaAdmin,
-                    AppRole.duniyaStaff,
+                    AppRole.pulseAdmin,
+                    AppRole.pulseStaff,
                   ], theme),
 
                   const SizedBox(height: 16),

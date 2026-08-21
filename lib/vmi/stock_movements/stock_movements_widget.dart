@@ -121,7 +121,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                             stream: queryStockMovementRecord(
                               // Network staff review movement activity across
                               // pharmacies; pharmacy users remain owner-scoped.
-                              parent: AccessControl.isDuniyaUser(context)
+                              parent: AccessControl.isPulseUser(context)
                                   ? null
                                   : AccessControl.parentRef(context) ??
                                       currentUserReference,
@@ -384,7 +384,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         AuthUserStreamWidget(
           builder: (context) => FutureBuilder<List<PharmacyRecord>>(
             future: queryPharmacyRecordOnce(
-              parent: AccessControl.isDuniyaUser(context)
+              parent: AccessControl.isPulseUser(context)
                   ? null
                   : AccessControl.parentRef(context) ?? currentUserReference,
             ),

@@ -15,7 +15,7 @@ import 'low_stock_alerts_model.dart';
 export 'low_stock_alerts_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — LOW STOCK ALERTS (World-Class Redesign)
+///   PULSE — LOW STOCK ALERTS (World-Class Redesign)
 ///   Top 1% alerts UX: hero header, KPI cards, smart filters,
 ///   status pills, beautiful alert cards with stock-level
 ///   progress bars and inline quick actions.

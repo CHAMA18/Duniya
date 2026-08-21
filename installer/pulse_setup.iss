@@ -10,7 +10,7 @@
 #define MyAppVersion "1.8.0"
 #define MyAppPublisher "Pulse Healthcare"
 #define MyAppURL "https://ivm.duniyahealthcare.com"
-#define MyAppExeName "duniya.exe"
+#define MyAppExeName "pulse.exe"
 
 [Setup]
 AppId={{7D2C1A3E-5B4A-4C9F-9E6A-D8B1F2C4E6A8}
@@ -48,3 +48,4 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+

@@ -607,16 +607,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ReplenishmentWidget(),
         ),
         FFRoute(
-          name: DuniyaStockBalancesWidget.routeName,
-          path: DuniyaStockBalancesWidget.routePath,
+          name: PulseStockBalancesWidget.routeName,
+          path: PulseStockBalancesWidget.routePath,
           requireAuth: true,
-          builder: (context, params) => DuniyaStockBalancesWidget(),
+          builder: (context, params) => PulseStockBalancesWidget(),
         ),
         FFRoute(
-          name: DuniyaPharmaciesWidget.routeName,
-          path: DuniyaPharmaciesWidget.routePath,
+          name: PulsePharmaciesWidget.routeName,
+          path: PulsePharmaciesWidget.routePath,
           requireAuth: true,
-          builder: (context, params) => DuniyaPharmaciesWidget(),
+          builder: (context, params) => PulsePharmaciesWidget(),
         ),
         FFRoute(
           name: PharmacyDetailWidget.routeName,

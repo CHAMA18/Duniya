@@ -1,0 +1,19 @@
+{
+  "name": "aura-demo",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render src/index.ts DoppelgangerDemo out/aura-demo.mp4",
+    "render": "remotion render src/index.ts DoppelgangerDemo out/aura-demo.mp4"
+  },
+  "dependencies": {
+    "remotion": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0"
+  }
+}

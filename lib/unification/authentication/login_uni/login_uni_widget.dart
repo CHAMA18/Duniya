@@ -669,7 +669,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                       .isNotEmpty
                                   ? userDoc.accountType.trim()
                                   : (AppRole.fromFirestoreValue(userDoc.role)
-                                          .isDuniyaRole
+                                          .isPulseRole
                                       ? 'Pulse'
                                       : 'Pharmacy');
 
@@ -713,7 +713,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             logFirebaseEvent('Button_navigate_to');
                             context.goNamedAuth(
                               _selectedMode == 0
-                                  ? DuniyaPharmaciesWidget.routeName
+                                  ? PulsePharmaciesWidget.routeName
                                   : WelcomeWidget.routeName,
                               context.mounted,
                             );
@@ -811,11 +811,11 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                           createdTime: getCurrentTimestamp,
                                           role: _selectedMode == 0
                                               ? AppRole
-                                                  .duniyaAdmin.firestoreValue
+                                                  .pulseAdmin.firestoreValue
                                               : AppRole.owner.firestoreValue,
                                           accountType: _selectedMode == 0
                                               ? AppRole
-                                                  .duniyaAdmin.accountTypeValue
+                                                  .pulseAdmin.accountTypeValue
                                               : AppRole.owner.accountTypeValue,
                                         ));
                                   } else {

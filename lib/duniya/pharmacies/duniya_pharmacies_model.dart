@@ -2,14 +2,14 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import 'duniya_pharmacies_widget.dart' show DuniyaPharmaciesWidget;
+import 'duniya_pharmacies_widget.dart' show PulsePharmaciesWidget;
 import 'package:flutter/material.dart';
 
 /// Model for the Pulse Pharmacies listing page.
 ///
 /// Holds the [SideNavModel], [TopNavModel], and [MobileNavbarModel] used by the
 /// page chrome, plus the search field state used to filter the pharmacy list.
-class DuniyaPharmaciesModel extends FlutterFlowModel<DuniyaPharmaciesWidget> {
+class PulsePharmaciesModel extends FlutterFlowModel<PulsePharmaciesWidget> {
   late SideNavModel sideNavModel;
   late TopNavModel topNavModel;
   late MobileNavbarModel mobileNavbarModel;

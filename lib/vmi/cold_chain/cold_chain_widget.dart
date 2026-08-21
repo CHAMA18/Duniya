@@ -121,9 +121,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -767,7 +767,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
 
     return Title(
       title: 'Cold Chain Monitoring',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -878,11 +878,11 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                   Container(
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      color: _duniyaPurpleLight,
+                      color: _pulsePurpleLight,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Icon(Icons.thermostat,
-                        color: _duniyaPurple, size: 24.0),
+                        color: _pulsePurple, size: 24.0),
                   ),
                   const SizedBox(width: 12.0),
                   Text(
@@ -931,10 +931,10 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
               width: 72.0,
               height: 72.0,
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_outline, color: _duniyaPurple, size: 36.0),
+              child: Icon(Icons.lock_outline, color: _pulsePurple, size: 36.0),
             ),
             const SizedBox(height: 20.0),
             Text('Access Restricted',
@@ -1027,9 +1027,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                   title: 'Monitored Units',
                   value: monitored.toString(),
                   icon: Icons.sensors,
-                  bgColor: _duniyaPurpleLight,
-                  iconColor: _duniyaPurple,
-                  textColor: _duniyaPurpleDark,
+                  bgColor: _pulsePurpleLight,
+                  iconColor: _pulsePurple,
+                  textColor: _pulsePurpleDark,
                 )),
             SizedBox(
                 width: cardWidth,
@@ -1037,9 +1037,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                   title: 'In Range',
                   value: inRange.toString(),
                   icon: Icons.check_circle,
-                  bgColor: _duniyaPurpleLight,
-                  iconColor: _duniyaPurple,
-                  textColor: _duniyaPurpleDark,
+                  bgColor: _pulsePurpleLight,
+                  iconColor: _pulsePurple,
+                  textColor: _pulsePurpleDark,
                 )),
             SizedBox(
                 width: cardWidth,
@@ -1047,9 +1047,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                   title: 'Temperature Alerts',
                   value: alerts.toString(),
                   icon: Icons.warning_amber_rounded,
-                  bgColor: _duniyaPurpleLight,
-                  iconColor: _duniyaPurple,
-                  textColor: _duniyaPurpleDark,
+                  bgColor: _pulsePurpleLight,
+                  iconColor: _pulsePurple,
+                  textColor: _pulsePurpleDark,
                 )),
             SizedBox(
                 width: cardWidth,
@@ -1059,9 +1059,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                       ? 'No data'
                       : _formatTimeAgo(lastReading),
                   icon: Icons.schedule,
-                  bgColor: _duniyaPurpleLight,
-                  iconColor: _duniyaPurple,
-                  textColor: _duniyaPurpleDark,
+                  bgColor: _pulsePurpleLight,
+                  iconColor: _pulsePurple,
+                  textColor: _pulsePurpleDark,
                 )),
           ],
         );
@@ -1177,7 +1177,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                       color: _textSecondary,
                       fontSize: 14.0),
                   prefixIcon:
-                      Icon(Icons.search, color: _duniyaPurple, size: 20.0),
+                      Icon(Icons.search, color: _pulsePurple, size: 20.0),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide(color: _borderColor)),
@@ -1186,7 +1186,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                       borderSide: BorderSide(color: _borderColor)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
+                      borderSide: BorderSide(color: _pulsePurple, width: 2.0)),
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 12.0, vertical: 10.0),
                   filled: true,
@@ -1219,7 +1219,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                 child: Column(
                   children: [
                     Icon(Icons.thermostat_auto_outlined,
-                        size: 44.0, color: _duniyaPurple),
+                        size: 44.0, color: _pulsePurple),
                     const SizedBox(height: 12.0),
                     Text(
                       _storageUnits.isEmpty
@@ -1495,14 +1495,14 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
           Container(
             padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
             decoration: BoxDecoration(
-              color: _duniyaPurple.withValues(alpha: 0.06),
+              color: _pulsePurple.withValues(alpha: 0.06),
               border:
                   Border(bottom: BorderSide(color: _borderColor, width: 1.0)),
             ),
             child: Row(
               children: [
                 Icon(Icons.warning_amber_rounded,
-                    color: _duniyaPurple, size: 20.0),
+                    color: _pulsePurple, size: 20.0),
                 const SizedBox(width: 10.0),
                 Text('Active Temperature Alerts',
                     style: TextStyle(
@@ -1685,7 +1685,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                 safeSetState(() => alert.acknowledged = true);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -1743,14 +1743,14 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
           Container(
             padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
             decoration: BoxDecoration(
-              color: _duniyaPurple.withValues(alpha: 0.06),
+              color: _pulsePurple.withValues(alpha: 0.06),
               border:
                   Border(bottom: BorderSide(color: _borderColor, width: 1.0)),
             ),
             child: Row(
               children: [
                 Icon(Icons.settings_input_antenna,
-                    color: _duniyaPurple, size: 20.0),
+                    color: _pulsePurple, size: 20.0),
                 const SizedBox(width: 10.0),
                 Text('Sensor Management',
                     style: TextStyle(
@@ -1764,7 +1764,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                   icon: Icon(Icons.add, size: 16.0),
                   label: Text('Register Sensor'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _duniyaPurple,
+                    backgroundColor: _pulsePurple,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -1940,10 +1940,10 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.add_circle, color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.add_circle, color: _pulsePurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Register New Sensor',
@@ -1969,9 +1969,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon:
-                        Icon(Icons.sensors, color: _duniyaPurple, size: 20.0),
+                        Icon(Icons.sensors, color: _pulsePurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -1986,9 +1986,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon:
-                        Icon(Icons.kitchen, color: _duniyaPurple, size: 20.0),
+                        Icon(Icons.kitchen, color: _pulsePurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -2003,9 +2003,9 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon:
-                        Icon(Icons.category, color: _duniyaPurple, size: 20.0),
+                        Icon(Icons.category, color: _pulsePurple, size: 20.0),
                   ),
                   items: [
                     'TempTale4',
@@ -2055,7 +2055,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
                 Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),

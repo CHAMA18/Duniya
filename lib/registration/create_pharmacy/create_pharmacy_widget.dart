@@ -15,7 +15,7 @@ import 'create_pharmacy_model.dart';
 export 'create_pharmacy_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — CREATE PHARMACY (World-Class Onboarding)
+///   PULSE — CREATE PHARMACY (World-Class Onboarding)
 ///   Top 1% onboarding UX: split-screen hero + form card with
 ///   branded header, labeled fields with icons, live validation,
 ///   helpful tips, and a clear primary action.

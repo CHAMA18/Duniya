@@ -7,14 +7,13 @@
 const PULSE_BUILD_VERSION = '%%BUILD_VERSION%%';
 
 // ─── Pulse PWA: register the offline service worker ──────────────
-// This runs BEFORE the Flutter engine loads so the SW is controlling
-// the page by the time the app boots. The SW (duniya_service_worker.js)
+// This runs BEFORE the Flutter engine loads so the SW is controlling  // the page by the time the app boots. The SW (pulse_service_worker.js)
 // caches the app shell + assets for offline use.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     // Cache-bust the service worker URL so the browser always fetches
     // the latest version (defeats HTTP caches and CDN edge caches).
-    var swUrl = '/duniya_service_worker.js?v=' + PULSE_BUILD_VERSION;
+    var swUrl = '/pulse_service_worker.js?v=' + PULSE_BUILD_VERSION;
     navigator.serviceWorker
       .register(swUrl, { updateViaCache: 'none' })
       .then(function (registration) {
@@ -77,3 +76,4 @@ _flutter.loader.load({
     }
   }
 });
+

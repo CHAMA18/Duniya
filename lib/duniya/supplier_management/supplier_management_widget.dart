@@ -98,7 +98,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'SupplierManagement'});
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!AccessControl.isDuniyaUser(context)) {
+      if (!AccessControl.isPulseUser(context)) {
         context.goNamed(HomeWidget.routeName);
       }
     });

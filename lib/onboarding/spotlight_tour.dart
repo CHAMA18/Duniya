@@ -4,38 +4,38 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'onboarding_service.dart';
 
 /// Stable anchors for controls that form the live, in-context product tour.
-class DuniyaTourTargets {
+class PulseTourTargets {
   static final home = GlobalKey(debugLabel: 'tour-home');
   static final inventory = GlobalKey(debugLabel: 'tour-inventory');
   static final humanResources = GlobalKey(debugLabel: 'tour-human-resources');
   static final quickAccess = GlobalKey(debugLabel: 'tour-quick-access');
 }
 
-class DuniyaSpotlightTour {
-  DuniyaSpotlightTour._();
+class PulseSpotlightTour {
+  PulseSpotlightTour._();
 
   static void show(BuildContext context) {
     final steps = <({GlobalKey key, String title, String body})>[
       (
-        key: DuniyaTourTargets.home,
+        key: PulseTourTargets.home,
         title: 'Your dashboard',
         body:
             'Start here for a live overview of sales, stock value, and alerts for your active pharmacy.',
       ),
       (
-        key: DuniyaTourTargets.inventory,
+        key: PulseTourTargets.inventory,
         title: 'Manage inventory',
         body:
             'Use Inventory to find products, review stock levels, and record stock movements.',
       ),
       (
-        key: DuniyaTourTargets.humanResources,
+        key: PulseTourTargets.humanResources,
         title: 'Manage your team',
         body:
             'Human Resources is where you add staff and track their invitation status.',
       ),
       (
-        key: DuniyaTourTargets.quickAccess,
+        key: PulseTourTargets.quickAccess,
         title: 'Quick access',
         body:
             'Return here any time to replay this walkthrough or open your account tools.',

@@ -15,7 +15,7 @@ import 'duniya_pharmacies_model.dart';
 export 'duniya_pharmacies_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — PHARMACIES (Network-Wide Listing)
+///   PULSE — PHARMACIES (Network-Wide Listing)
 ///
 ///   Lists every pharmacy on the Pulse network (active, pending
 ///   approval, and rejected) with their owner email, registered
@@ -23,18 +23,18 @@ export 'duniya_pharmacies_model.dart';
 ///   by status, and click into a pharmacy to view its details.
 /// ═══════════════════════════════════════════════════════════════
 
-class DuniyaPharmaciesWidget extends StatefulWidget {
-  const DuniyaPharmaciesWidget({super.key});
+class PulsePharmaciesWidget extends StatefulWidget {
+  const PulsePharmaciesWidget({super.key});
 
-  static String routeName = 'DuniyaPharmacies';
-  static String routePath = '/duniyaPharmacies';
+  static String routeName = 'PulsePharmacies';
+  static String routePath = '/pulsePharmacies';
 
   @override
-  State<DuniyaPharmaciesWidget> createState() => _DuniyaPharmaciesWidgetState();
+  State<PulsePharmaciesWidget> createState() => _PulsePharmaciesWidgetState();
 }
 
-class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
-  late DuniyaPharmaciesModel _model;
+class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
+  late PulsePharmaciesModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   /// Active status filter pill. One of: 'All', 'Active', 'Pending', 'Rejected'.
@@ -43,14 +43,14 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DuniyaPharmaciesModel());
+    _model = createModel(context, () => PulsePharmaciesModel());
     logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'DuniyaPharmacies'});
+        parameters: {'screen_name': 'PulsePharmacies'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
     // RBAC guard — only Pulse network users can access this page
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!AccessControl.isDuniyaUser(context)) {
+      if (!AccessControl.isPulseUser(context)) {
         context.goNamed(HomeWidget.routeName);
         return;
       }

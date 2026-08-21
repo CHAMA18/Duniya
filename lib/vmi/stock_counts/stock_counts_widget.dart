@@ -16,7 +16,7 @@ import 'stock_counts_model.dart';
 export 'stock_counts_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — STOCK COUNTS (World-Class Redesign)
+///   PULSE — STOCK COUNTS (World-Class Redesign)
 ///   Top 1% inventory count UX: hero header, KPI cards, smart
 ///   filters, status pills, beautiful card list with status
 ///   badges and inline actions, and a stunning empty state.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =====================================================================
-# Duniya — Render static site build script
+# Pulse — Render static site build script
 # =====================================================================
 # Called by Render on every deploy (see render.yaml `buildCommand`).
 # Also runnable locally to reproduce the production build:
@@ -112,9 +112,9 @@ BUILD_VERSION="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')-$(dat
 echo "==> Injecting cache-bust version: ${BUILD_VERSION}"
 
 # Replace the placeholder in the service worker with the build version.
-if [[ -f "build/web/duniya_service_worker.js" ]]; then
-  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/duniya_service_worker.js
-  echo "==> Injected version into duniya_service_worker.js"
+if [[ -f "build/web/pulse_service_worker.js" ]]; then
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/pulse_service_worker.js
+  echo "==> Injected version into pulse_service_worker.js"
 fi
 
 # Replace the DEV placeholder and %%BUILD_VERSION%% in index.html (now the
@@ -228,4 +228,6 @@ if [[ -d "web/downloads" ]]; then
   mkdir -p build/web/downloads
   cp web/downloads/*.zip build/web/downloads/ 2>/dev/null || true
   echo "==> Copied web/downloads/*.zip -> build/web/downloads/"
+fi
+
 fi

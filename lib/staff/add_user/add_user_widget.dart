@@ -34,10 +34,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse brand tokens (kept in sync with the rest of the app) ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
-  static const Color _duniyaPurpleDeep = Color(0xFF6A00D9);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurpleDeep = Color(0xFF6A00D9);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -344,7 +344,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ElevatedButton(
               onPressed: () => Navigator.pop(alertDialogContext),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -405,7 +405,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   Widget build(BuildContext context) {
     return Title(
       title: 'Add Staff Member',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -439,7 +439,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     buttonSize: 60.0,
                     icon: Icon(
                       Icons.chevron_left_rounded,
-                      color: _duniyaPurpleDark,
+                      color: _pulsePurpleDark,
                       size: 30.0,
                     ),
                     onPressed: () async {
@@ -487,7 +487,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(
-                          child: SpinKitRing(color: _duniyaPurple, size: 48.0),
+                          child: SpinKitRing(color: _pulsePurple, size: 48.0),
                         );
                       }
                       return Column(
@@ -738,13 +738,13 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24.0),
         gradient: const LinearGradient(
-          colors: [_duniyaPurpleDeep, _duniyaPurple, _duniyaPurpleDark],
+          colors: [_pulsePurpleDeep, _pulsePurple, _pulsePurpleDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: _duniyaPurple.withValues(alpha: 0.3),
+            color: _pulsePurple.withValues(alpha: 0.3),
             blurRadius: 24.0,
             offset: const Offset(0, 12),
           ),
@@ -896,10 +896,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         Container(
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
-            color: _duniyaPurpleLight,
+            color: _pulsePurpleLight,
             borderRadius: BorderRadius.circular(12.0),
           ),
-          child: Icon(icon, color: _duniyaPurple, size: 20.0),
+          child: Icon(icon, color: _pulsePurple, size: 20.0),
         ),
         const SizedBox(width: 12.0),
         Expanded(
@@ -1030,9 +1030,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               color: _textSecondary.withValues(alpha: 0.7),
               fontWeight: FontWeight.w400,
             ),
-            prefixIcon: Icon(icon, size: 18.0, color: _duniyaPurpleDark),
+            prefixIcon: Icon(icon, size: 18.0, color: _pulsePurpleDark),
             filled: true,
-            fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
+            fillColor: _pulsePurpleLight.withValues(alpha: 0.4),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14.0,
               vertical: 14.0,
@@ -1046,7 +1046,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+              borderSide: BorderSide(color: _pulsePurple, width: 2.0),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -1082,10 +1082,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: _duniyaPurpleLight,
+        color: _pulsePurpleLight,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
-          color: _duniyaPurple.withValues(alpha: 0.2),
+          color: _pulsePurple.withValues(alpha: 0.2),
           width: 1.5,
         ),
       ),
@@ -1100,7 +1100,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 height: 44.0,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [_duniyaPurple, _duniyaPurpleDark],
+                    colors: [_pulsePurple, _pulsePurpleDark],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -1130,7 +1130,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                         fontSize: 10.0,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.6,
-                        color: _duniyaPurpleDark,
+                        color: _pulsePurpleDark,
                       ),
                     ),
                     const SizedBox(height: 2.0),
@@ -1268,17 +1268,17 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? _duniyaPurple
-                        : _duniyaPurpleLight.withValues(alpha: 0.5),
+                        ? _pulsePurple
+                        : _pulsePurpleLight.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
-                      color: isSelected ? _duniyaPurple : _borderColor,
+                      color: isSelected ? _pulsePurple : _borderColor,
                       width: isSelected ? 1.5 : 1.0,
                     ),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: _duniyaPurple.withValues(alpha: 0.25),
+                              color: _pulsePurple.withValues(alpha: 0.25),
                               blurRadius: 12.0,
                               offset: const Offset(0, 4),
                             ),
@@ -1291,7 +1291,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       Icon(
                         _roleIcon(role),
                         size: 16.0,
-                        color: isSelected ? Colors.white : _duniyaPurpleDark,
+                        color: isSelected ? Colors.white : _pulsePurpleDark,
                       ),
                       const SizedBox(width: 8.0),
                       Text(
@@ -1361,7 +1361,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             boxShadow: _isPharmacyValid
                 ? [
                     BoxShadow(
-                      color: _duniyaPurple.withValues(alpha: 0.08),
+                      color: _pulsePurple.withValues(alpha: 0.08),
                       blurRadius: 8.0,
                       offset: const Offset(0, 2),
                     ),
@@ -1375,7 +1375,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 return Container(
                   height: 56.0,
                   decoration: BoxDecoration(
-                    color: _duniyaPurpleLight.withValues(alpha: 0.4),
+                    color: _pulsePurpleLight.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(color: _borderColor, width: 1.0),
                   ),
@@ -1384,7 +1384,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       width: 24.0,
                       height: 24.0,
                       child: SpinKitRing(
-                        color: _duniyaPurple,
+                        color: _pulsePurple,
                         size: 24.0,
                         lineWidth: 2.0,
                       ),
@@ -1427,12 +1427,12 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 hintText: 'Select the pharmacy branch…',
                 icon: Icon(
                   Icons.local_pharmacy_outlined,
-                  color: _duniyaPurpleDark,
+                  color: _pulsePurpleDark,
                   size: 18.0,
                 ),
-                fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
+                fillColor: _pulsePurpleLight.withValues(alpha: 0.4),
                 elevation: 2.0,
-                borderColor: _isPharmacyValid ? _duniyaPurple : _borderColor,
+                borderColor: _isPharmacyValid ? _pulsePurple : _borderColor,
                 borderWidth: _isPharmacyValid ? 1.5 : 1.0,
                 borderRadius: 12.0,
                 margin: const EdgeInsetsDirectional.fromSTEB(
@@ -1540,7 +1540,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             prefixIcon: Icon(
               Icons.lock_outline,
               size: 18.0,
-              color: _duniyaPurpleDark,
+              color: _pulsePurpleDark,
             ),
             suffixIcon: InkWell(
               onTap: onToggleVisibility,
@@ -1557,7 +1557,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               ),
             ),
             filled: true,
-            fillColor: _duniyaPurpleLight.withValues(alpha: 0.4),
+            fillColor: _pulsePurpleLight.withValues(alpha: 0.4),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14.0,
               vertical: 14.0,
@@ -1568,7 +1568,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: _duniyaPurple, width: 2.0),
+              borderSide: BorderSide(color: _pulsePurple, width: 2.0),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -1768,7 +1768,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               shape: BoxShape.circle,
               color: allMet
                   ? _successColor.withValues(alpha: 0.12)
-                  : _duniyaPurpleLight,
+                  : _pulsePurpleLight,
             ),
             alignment: Alignment.center,
             child: allMet
@@ -1779,7 +1779,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                       fontFamily: kAppFontFamily,
                       fontSize: 11.0,
                       fontWeight: FontWeight.w700,
-                      color: _duniyaPurpleDark,
+                      color: _pulsePurpleDark,
                     ),
                   ),
           ),
@@ -1861,7 +1861,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   decoration: BoxDecoration(
                     gradient: _isFormValid
                         ? const LinearGradient(
-                            colors: [_duniyaPurple, _duniyaPurpleDark],
+                            colors: [_pulsePurple, _pulsePurpleDark],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           )
@@ -1871,7 +1871,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     boxShadow: _isFormValid
                         ? [
                             BoxShadow(
-                              color: _duniyaPurple.withValues(alpha: 0.3),
+                              color: _pulsePurple.withValues(alpha: 0.3),
                               blurRadius: 12.0,
                               offset: const Offset(0, 4),
                             ),

@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.duniyahealthcare" "\0"
-            VALUE "FileDescription", "duniya" "\0"
+            VALUE "CompanyName", "Pulse Healthcare" "\0"
+            VALUE "FileDescription", "Pulse" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "duniya" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.duniyahealthcare. All rights reserved." "\0"
-            VALUE "OriginalFilename", "duniya.exe" "\0"
-            VALUE "ProductName", "duniya" "\0"
+            VALUE "InternalName", "Pulse" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Pulse Healthcare. All rights reserved." "\0"
+            VALUE "OriginalFilename", "pulse.exe" "\0"
+            VALUE "ProductName", "Pulse" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
@@ -119,3 +119,4 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+DIO_INVOKED

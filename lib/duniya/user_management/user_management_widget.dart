@@ -29,7 +29,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (AccessControl.currentRole(context) != AppRole.duniyaAdmin) {
+      if (AccessControl.currentRole(context) != AppRole.pulseAdmin) {
         context.goNamed(HomeWidget.routeName);
         return;
       }
@@ -38,7 +38,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
   }
 
   bool _isPulseUser(UserRecord user) =>
-      AppRole.isDuniyaAccountType(user.accountType);
+      AppRole.isPulseAccountType(user.accountType);
 
   bool _matches(UserRecord user) {
     final query = _search.trim().toLowerCase();

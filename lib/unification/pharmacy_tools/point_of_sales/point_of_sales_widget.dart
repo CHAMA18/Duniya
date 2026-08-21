@@ -60,7 +60,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted ||
           _redirectingPulseUser ||
-          !AccessControl.isDuniyaUser(context)) {
+          !AccessControl.isPulseUser(context)) {
         return;
       }
       _redirectingPulseUser = true;
@@ -1169,7 +1169,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     context.watch<FFAppState>();
     final isWide = MediaQuery.sizeOf(context).width >= 1200;
 
-    if (AccessControl.isDuniyaUser(context)) {
+    if (AccessControl.isPulseUser(context)) {
       // Avoid flashing POS while the scheduled redirect above is processed.
       if (!_redirectingPulseUser) {
         _redirectingPulseUser = true;

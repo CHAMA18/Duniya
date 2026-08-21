@@ -7,7 +7,7 @@
 # Strategy:
 #   - index.html (the SPA shell): NEVER cache — always revalidate.
 #     This ensures users always get the latest JS bundle references.
-#   - flutter_bootstrap.js / duniya_service_worker.js: NEVER cache —
+#   - flutter_bootstrap.js / pulse_service_worker.js: NEVER cache —
 #     these change on every deploy (version injected by build.sh).
 #   - _redirects / _headers: never cache (admin files).
 #   - manifest.json: short cache (may change each deploy).
@@ -46,7 +46,7 @@
   Pragma: no-cache
   Expires: 0
 
-/duniya_service_worker.js
+/pulse_service_worker.js
   Cache-Control: no-cache, no-store, must-revalidate
   Pragma: no-cache
   Expires: 0
@@ -107,3 +107,4 @@
 
 /*.ico
   Cache-Control: public, max-age=604800
+0

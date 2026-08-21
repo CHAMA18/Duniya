@@ -43,7 +43,7 @@ class _AuditLogsWidgetState extends State<AuditLogsWidget> {
 
   Query<Map<String, dynamic>>? _auditQuery() {
     if (currentUserUid.isEmpty) return null;
-    final scopeId = AccessControl.isDuniyaUser(context)
+    final scopeId = AccessControl.isPulseUser(context)
         ? 'Pulse'
         : currentUserDocument?.ownerRef?.path ?? 'User/$currentUserUid';
     return FirebaseFirestore.instance

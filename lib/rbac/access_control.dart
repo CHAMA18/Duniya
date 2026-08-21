@@ -73,7 +73,7 @@ class AccessControl {
   /// canonical AppRole.
   ///
   /// Logic:
-  ///   1. If accountType is 'Pulse' → duniyaAdmin or duniyaStaff
+  ///   1. If accountType is 'Pulse' → pulseAdmin or pulseStaff
   ///   2. If accountType is 'Pharmacy' → use the `role` field
   ///   3. Fallback → unknown
   static AppRole currentRole(BuildContext context) {
@@ -86,19 +86,19 @@ class AccessControl {
     final accountType = userDoc.accountType;
     final role = userDoc.role;
 
-    // Pulse network users — resolve duniyaAdmin vs duniyaStaff from the
+    // Pulse network users — resolve pulseAdmin vs pulseStaff from the
     // Firestore `role` field.  Only explicit admin/owner values map to
-    // duniyaAdmin; everything else (including empty/missing) maps to
-    // duniyaStaff for least-privilege safety.
-    if (AppRole.isDuniyaAccountType(accountType)) {
+    // pulseAdmin; everything else (including empty/missing) maps to
+    // pulseStaff for least-privilege safety.
+    if (AppRole.isPulseAccountType(accountType)) {
       final normalizedRole = role.toLowerCase().replaceAll(' ', '_');
       if (normalizedRole == 'admin' ||
           normalizedRole == 'owner' ||
           normalizedRole == 'duniya_admin' ||
           normalizedRole == 'duniyaadmin') {
-        return AppRole.duniyaAdmin;
+        return AppRole.pulseAdmin;
       }
-      return AppRole.duniyaStaff; // Least-privilege default for Duniya users
+      return AppRole.pulseStaff; // Least-privilege default for Pulse users
     }
 
     // Pharmacy users — map from the role field
@@ -106,8 +106,8 @@ class AccessControl {
   }
 
   /// Whether the current user is a Pulse network user.
-  static bool isDuniyaUser(BuildContext context) {
-    return currentRole(context).isDuniyaRole;
+  static bool isPulseUser(BuildContext context) {
+    return currentRole(context).isPulseRole;
   }
 
   /// Whether the current user is a pharmacy-side user.
@@ -222,11 +222,11 @@ class AccessControl {
     return isOwner(context);
   }
 
-  /// Backward-compatible check for the old `_isDuniyaUser` pattern.
+  /// Backward-compatible check for the old `_isPulseUser` pattern.
   /// Returns true if the user is a Pulse network user.
   ///
-  /// Prefer using `isDuniyaUser()` for new code.
-  static bool isDuniyaLegacy(BuildContext context) {
-    return isDuniyaUser(context);
+  /// Prefer using `isPulseUser()` for new code.
+  static bool isPulseLegacy(BuildContext context) {
+    return isPulseUser(context);
   }
 }

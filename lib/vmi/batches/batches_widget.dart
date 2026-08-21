@@ -31,9 +31,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -348,10 +348,10 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.add_circle, color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.add_circle, color: _pulsePurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Add New Batch',
@@ -377,9 +377,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon:
-                        Icon(Icons.tag, color: _duniyaPurple, size: 20.0),
+                        Icon(Icons.tag, color: _pulsePurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -393,7 +393,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                       builder: (ctx, child) => Theme(
                         data: Theme.of(ctx).copyWith(
                           colorScheme: ColorScheme.light(
-                            primary: _duniyaPurple,
+                            primary: _pulsePurple,
                             onPrimary: Colors.white,
                           ),
                         ),
@@ -412,7 +412,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       prefixIcon: Icon(Icons.calendar_today,
-                          color: _duniyaPurple, size: 20.0),
+                          color: _pulsePurple, size: 20.0),
                     ),
                     child: Text(
                       _model.dialogExpiryDate != null
@@ -440,9 +440,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon: Icon(Icons.inventory_2,
-                        color: _duniyaPurple, size: 20.0),
+                        color: _pulsePurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -457,9 +457,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon: Icon(Icons.location_on,
-                        color: _duniyaPurple, size: 20.0),
+                        color: _pulsePurple, size: 20.0),
                   ),
                 ),
               ],
@@ -502,7 +502,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 safeSetState(() {});
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -539,10 +539,10 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.edit, color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.edit, color: _pulsePurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Edit Batch',
@@ -568,9 +568,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon:
-                        Icon(Icons.tag, color: _duniyaPurple, size: 20.0),
+                        Icon(Icons.tag, color: _pulsePurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -585,7 +585,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                       builder: (ctx, child) => Theme(
                         data: Theme.of(ctx).copyWith(
                           colorScheme: ColorScheme.light(
-                            primary: _duniyaPurple,
+                            primary: _pulsePurple,
                             onPrimary: Colors.white,
                           ),
                         ),
@@ -604,7 +604,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       prefixIcon: Icon(Icons.calendar_today,
-                          color: _duniyaPurple, size: 20.0),
+                          color: _pulsePurple, size: 20.0),
                     ),
                     child: Text(
                       _model.dialogExpiryDate != null
@@ -632,9 +632,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon: Icon(Icons.inventory_2,
-                        color: _duniyaPurple, size: 20.0),
+                        color: _pulsePurple, size: 20.0),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -649,9 +649,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide:
-                            BorderSide(color: _duniyaPurple, width: 2.0)),
+                            BorderSide(color: _pulsePurple, width: 2.0)),
                     prefixIcon: Icon(Icons.location_on,
-                        color: _duniyaPurple, size: 20.0),
+                        color: _pulsePurple, size: 20.0),
                   ),
                 ),
               ],
@@ -687,7 +687,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                 safeSetState(() {});
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -779,7 +779,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
 
     return Title(
       title: 'Batch & Expiry Tracking',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -880,7 +880,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                   // batches, while pharmacy users only see
                                   // batches belonging to their own owner scope.
                                   final parentRef =
-                                      AccessControl.isDuniyaUser(context)
+                                      AccessControl.isPulseUser(context)
                                           ? null
                                           : AccessControl.parentRef(context) ??
                                               currentUserReference;
@@ -1005,7 +1005,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                 label: Text('Add Batch'),
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                      _duniyaPurple,
+                                                      _pulsePurple,
                                                   foregroundColor: Colors.white,
                                                   disabledBackgroundColor:
                                                       _borderColor,
@@ -1112,10 +1112,10 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                       icon: Icons
                                                           .inventory_2_outlined,
                                                       bgColor:
-                                                          _duniyaPurpleLight,
-                                                      iconColor: _duniyaPurple,
+                                                          _pulsePurpleLight,
+                                                      iconColor: _pulsePurple,
                                                       textColor:
-                                                          _duniyaPurpleDark,
+                                                          _pulsePurpleDark,
                                                     ),
                                                   ),
                                                 ],
@@ -1163,7 +1163,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                         fontSize: 14.0),
                                                     prefixIcon: Icon(
                                                         Icons.search,
-                                                        color: _duniyaPurple,
+                                                        color: _pulsePurple,
                                                         size: 20.0),
                                                     border: InputBorder.none,
                                                     contentPadding:
@@ -1187,7 +1187,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                       .symmetric(
                                                       horizontal: 12.0),
                                                   decoration: BoxDecoration(
-                                                    color: _duniyaPurpleLight,
+                                                    color: _pulsePurpleLight,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0),
@@ -1213,14 +1213,14 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                     textStyle: TextStyle(
                                                       fontFamily:
                                                           kAppFontFamily,
-                                                      color: _duniyaPurple,
+                                                      color: _pulsePurple,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       fontSize: 13.0,
                                                     ),
                                                     icon: Icon(
                                                         Icons.filter_list,
-                                                        color: _duniyaPurple,
+                                                        color: _pulsePurple,
                                                         size: 18.0),
                                                     fillColor:
                                                         Colors.transparent,
@@ -1294,7 +1294,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                           24.0,
                                                           18.0),
                                                   decoration: BoxDecoration(
-                                                    color: _duniyaPurple
+                                                    color: _pulsePurple
                                                         .withValues(
                                                             alpha: 0.06),
                                                     border: Border(
@@ -1527,7 +1527,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                                             6.0),
                                                                     decoration: BoxDecoration(
                                                                         color:
-                                                                            _duniyaPurpleLight,
+                                                                            _pulsePurpleLight,
                                                                         borderRadius:
                                                                             BorderRadius.circular(8.0)),
                                                                     child: Icon(
@@ -1536,7 +1536,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                                         size:
                                                                             16.0,
                                                                         color:
-                                                                            _duniyaPurple),
+                                                                            _pulsePurple),
                                                                   ),
                                                                 ),
                                                                 const SizedBox(
@@ -1619,7 +1619,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SpinKitRing(color: _duniyaPurple, size: 48.0),
+            SpinKitRing(color: _pulsePurple, size: 48.0),
             const SizedBox(height: 16.0),
             Text('Loading batches...',
                 style: TextStyle(
@@ -1669,7 +1669,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
               icon: Icon(Icons.refresh, size: 18.0),
               label: Text('Retry'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -1691,7 +1691,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
           fontSize: 12.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.08,
-          color: _duniyaPurpleDark,
+          color: _pulsePurpleDark,
         ),
       ),
     );

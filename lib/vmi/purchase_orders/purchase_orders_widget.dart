@@ -10,7 +10,7 @@ import 'purchase_orders_model.dart';
 export 'purchase_orders_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — PURCHASE ORDER AUTOMATION (World-Class Design)
+///   PULSE — PURCHASE ORDER AUTOMATION (World-Class Design)
 ///   Stripe-quality billing dashboard UX: hero header, KPI cards,
 ///   auto-generate panel, smart status filters, PO cards with
 ///   fulfillment progress, inline actions, and create-PO form.

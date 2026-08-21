@@ -75,9 +75,9 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -680,7 +680,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
 
     return Title(
       title: 'Patient Medication Records',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -833,10 +833,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               width: 72.0,
               height: 72.0,
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_outline, color: _duniyaPurple, size: 36.0),
+              child: Icon(Icons.lock_outline, color: _pulsePurple, size: 36.0),
             ),
             const SizedBox(height: 20.0),
             Text('Access Restricted',
@@ -912,9 +912,9 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 title: 'Total Patients',
                 value: _totalPatients.toString(),
                 icon: Icons.people,
-                bgColor: _duniyaPurpleLight,
-                iconColor: _duniyaPurple,
-                textColor: _duniyaPurpleDark,
+                bgColor: _pulsePurpleLight,
+                iconColor: _pulsePurple,
+                textColor: _pulsePurpleDark,
               ),
             ),
             SizedBox(
@@ -945,9 +945,9 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 title: 'Adherence Rate',
                 value: '${_avgAdherence.toStringAsFixed(0)}%',
                 icon: Icons.trending_up,
-                bgColor: _duniyaPurpleLight,
-                iconColor: _duniyaPurple,
-                textColor: _duniyaPurpleDark,
+                bgColor: _pulsePurpleLight,
+                iconColor: _pulsePurple,
+                textColor: _pulsePurpleDark,
               ),
             ),
           ],
@@ -1045,7 +1045,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                   fontFamily: kAppFontFamily,
                   color: _textSecondary,
                   fontSize: 14.0),
-              prefixIcon: Icon(Icons.search, color: _duniyaPurple, size: 20.0),
+              prefixIcon: Icon(Icons.search, color: _pulsePurple, size: 20.0),
               border: InputBorder.none,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
@@ -1062,7 +1062,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             icon: Icon(Icons.person_add, size: 18.0),
             label: Text('Add Patient'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: _duniyaPurple,
+              backgroundColor: _pulsePurple,
               foregroundColor: Colors.white,
               disabledBackgroundColor: _borderColor,
               elevation: 0,
@@ -1123,7 +1123,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
           Container(
             padding: const EdgeInsets.fromLTRB(24.0, 18.0, 24.0, 18.0),
             decoration: BoxDecoration(
-              color: _duniyaPurple.withValues(alpha: 0.06),
+              color: _pulsePurple.withValues(alpha: 0.06),
               border: Border(
                 bottom: BorderSide(color: _borderColor, width: 1.0),
               ),
@@ -1218,7 +1218,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         width: 36.0,
                         height: 36.0,
                         decoration: BoxDecoration(
-                          color: _duniyaPurpleLight,
+                          color: _pulsePurpleLight,
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Center(
@@ -1228,7 +1228,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                               fontFamily: kAppFontFamily,
                               fontSize: 14.0,
                               fontWeight: FontWeight.w700,
-                              color: _duniyaPurple,
+                              color: _pulsePurple,
                             ),
                           ),
                         ),
@@ -1272,7 +1272,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 4.0),
                     decoration: BoxDecoration(
-                      color: _duniyaPurpleLight,
+                      color: _pulsePurpleLight,
                       borderRadius: BorderRadius.circular(9999.0),
                     ),
                     child: Text('${patient.activeMeds} meds',
@@ -1281,7 +1281,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                             fontFamily: kAppFontFamily,
                             fontSize: 11.0,
                             fontWeight: FontWeight.w600,
-                            color: _duniyaPurple)),
+                            color: _pulsePurple)),
                   ),
                 ),
                 // Last visit
@@ -1330,10 +1330,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                       child: Container(
                         padding: const EdgeInsets.all(6.0),
                         decoration: BoxDecoration(
-                            color: _duniyaPurpleLight,
+                            color: _pulsePurpleLight,
                             borderRadius: BorderRadius.circular(8.0)),
                         child: Icon(Icons.edit_outlined,
-                            size: 16.0, color: _duniyaPurple),
+                            size: 16.0, color: _pulsePurple),
                       ),
                     ),
                   ),
@@ -1368,7 +1368,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         color: _bgColor,
         borderRadius: BorderRadius.circular(12.0),
         border:
-            Border.all(color: _duniyaPurple.withValues(alpha: 0.2), width: 1.0),
+            Border.all(color: _pulsePurple.withValues(alpha: 0.2), width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1378,10 +1378,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               Container(
                 padding: const EdgeInsets.all(6.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Icon(Icons.history, size: 18.0, color: _duniyaPurple),
+                child: Icon(Icons.history, size: 18.0, color: _pulsePurple),
               ),
               const SizedBox(width: 10.0),
               Text('Medication History',
@@ -1431,14 +1431,14 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 width: 12.0,
                 height: 12.0,
                 decoration: BoxDecoration(
-                  color: _duniyaPurple,
+                  color: _pulsePurple,
                   shape: BoxShape.circle,
                 ),
               ),
               Expanded(
                 child: Container(
                   width: 2.0,
-                  color: _duniyaPurple.withValues(alpha: 0.2),
+                  color: _pulsePurple.withValues(alpha: 0.2),
                 ),
               ),
             ],
@@ -1466,7 +1466,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                             fontFamily: kAppFontFamily,
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
-                            color: _duniyaPurple,
+                            color: _pulsePurple,
                           ),
                         ),
                         const Spacer(),
@@ -1518,14 +1518,14 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10.0, vertical: 4.0),
                         decoration: BoxDecoration(
-                          color: _duniyaPurpleLight,
+                          color: _pulsePurpleLight,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Text(event.notes!,
                             style: TextStyle(
                                 fontFamily: kAppFontFamily,
                                 fontSize: 11.0,
-                                color: _duniyaPurpleDark)),
+                                color: _pulsePurpleDark)),
                       ),
                     ],
                   ],
@@ -1583,10 +1583,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.person_add, color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.person_add, color: _pulsePurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Add New Patient',
@@ -1617,7 +1617,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                       builder: (ctx, child) => Theme(
                         data: Theme.of(ctx).copyWith(
                           colorScheme: ColorScheme.light(
-                            primary: _duniyaPurple,
+                            primary: _pulsePurple,
                             onPrimary: Colors.white,
                           ),
                         ),
@@ -1636,7 +1636,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       prefixIcon: Icon(Icons.calendar_today,
-                          color: _duniyaPurple, size: 20.0),
+                          color: _pulsePurple, size: 20.0),
                     ),
                     child: Text(
                       _model.dobDate != null
@@ -1708,7 +1708,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -1753,10 +1753,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Icon(Icons.edit, color: _duniyaPurple, size: 22.0),
+                child: Icon(Icons.edit, color: _pulsePurple, size: 22.0),
               ),
               const SizedBox(width: 12.0),
               Text('Edit Patient',
@@ -1828,7 +1828,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                 Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _duniyaPurple,
+                backgroundColor: _pulsePurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
@@ -1867,8 +1867,8 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(color: _duniyaPurple, width: 2.0)),
-        prefixIcon: Icon(icon, color: _duniyaPurple, size: 20.0),
+            borderSide: BorderSide(color: _pulsePurple, width: 2.0)),
+        prefixIcon: Icon(icon, color: _pulsePurple, size: 20.0),
       ),
     );
   }
@@ -1883,7 +1883,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
           fontSize: 12.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.08,
-          color: _duniyaPurpleDark,
+          color: _pulsePurpleDark,
         ),
       ),
     );

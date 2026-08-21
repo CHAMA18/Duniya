@@ -427,18 +427,18 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // DUNIYA ADMIN — Full network administrative access
+  // PULSE ADMIN — Full network administrative access
   // ═══════════════════════════════════════════════════════════════════
-  AppRole.duniyaAdmin: {
+  AppRole.pulseAdmin: {
     Permission.catalogueView,
     Permission.catalogueCreate,
     Permission.catalogueEdit,
     Permission.catalogueDelete,
-    Permission.duniyaPharmaciesView,
-    Permission.duniyaStockBalancesView,
-    Permission.duniyaOnboardingView,
-    Permission.duniyaNetworkAnalyticsView,
-    Permission.duniyaApprovePharmacies,
+    Permission.pulsePharmaciesView,
+    Permission.pulseStockBalancesView,
+    Permission.pulseOnboardingView,
+    Permission.pulseNetworkAnalyticsView,
+    Permission.pulseApprovePharmacies,
     Permission.pendingApprovalsView,
     Permission.pendingApprovalsApprove,
     Permission.pendingApprovalsReject,
@@ -468,13 +468,13 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // DUNIYA STAFF — Operational staff within the Pulse network
+  // PULSE STAFF — Operational staff within the Pulse network
   // ═══════════════════════════════════════════════════════════════════
-  AppRole.duniyaStaff: {
+  AppRole.pulseStaff: {
     Permission.catalogueView,
-    Permission.duniyaPharmaciesView,
-    Permission.duniyaStockBalancesView,
-    Permission.duniyaOnboardingView,
+    Permission.pulsePharmaciesView,
+    Permission.pulseStockBalancesView,
+    Permission.pulseOnboardingView,
     Permission.pendingApprovalsView,
     Permission.financesView,
     Permission.auditLogsView,
@@ -697,7 +697,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   // ═══ Pulse Admin ═══
   // Full network visibility including cold chain, expiry tracking,
   // and AI assistant — added in the Week 1 sidebar expansion.
-  AppRole.duniyaAdmin: {
+  AppRole.pulseAdmin: {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
@@ -709,11 +709,11 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.coldChain,
     NavItem.finances,
     NavItem.pendingApprovals,
-    NavItem.duniyaPharmacies,
-    NavItem.duniyaStockBalances,
-    NavItem.duniyaOnboardingRequests,
-    NavItem.duniyaNetworkAnalytics,
-    NavItem.duniyaSupplierManagement,
+    NavItem.pulsePharmacies,
+    NavItem.pulseStockBalances,
+    NavItem.pulseOnboardingRequests,
+    NavItem.pulseNetworkAnalytics,
+    NavItem.pulseSupplierManagement,
     NavItem.auditLogs,
     NavItem.userManagement,
     NavItem.aiAssistant,
@@ -723,7 +723,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
 
   // ═══ Pulse Staff ═══
   // Expanded with cold chain, expiry tracking, and AI assistant.
-  AppRole.duniyaStaff: {
+  AppRole.pulseStaff: {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
@@ -735,10 +735,10 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.coldChain,
     NavItem.finances,
     NavItem.pendingApprovals,
-    NavItem.duniyaPharmacies,
-    NavItem.duniyaStockBalances,
-    NavItem.duniyaOnboardingRequests,
-    NavItem.duniyaSupplierManagement,
+    NavItem.pulsePharmacies,
+    NavItem.pulseStockBalances,
+    NavItem.pulseOnboardingRequests,
+    NavItem.pulseSupplierManagement,
     NavItem.auditLogs,
     NavItem.aiAssistant,
     NavItem.salesAnalytics,

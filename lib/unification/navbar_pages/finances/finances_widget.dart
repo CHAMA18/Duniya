@@ -31,19 +31,56 @@ class _FinancesWidgetState extends State<FinancesWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Purple-tinted finance tokens aligned with the app shell.
-  static const Color _clinicalBlue = Color(0xFF8B5CF6);
-  static const Color _primaryDeep = Color(0xFF6D28D9);
-  static const Color _background = Color(0xFFF8F5FF);
-  static const Color _surfaceContainerLow = Color(0xFFF4ECFF);
-  static const Color _surfaceContainerHigh = Color(0xFFE7D8FF);
-  static const Color _surfaceContainer = Color(0xFFF1E6FF);
-  static const Color _onSurface = Color(0xFF0B1C30);
-  static const Color _onSurfaceVariant = Color(0xFF434656);
-  static const Color _outline = Color(0xFF737688);
-  static const Color _outlineVariant = Color(0xFFC3C5D9);
-  static const Color _errorColor = Color(0xFFBA1A1A);
-  static const Color _errorContainer = Color(0xFFFFDAD6);
+  // ═══════════════════════════════════════════════════════════
+  // Theme-aware colour tokens — resolve at build-time so the
+  // Finances page looks correct in both light and dark mode.
+  // ═══════════════════════════════════════════════════════════
+  bool get _isDark => Theme.of(context).brightness == Brightness.dark;
+
+  // Accent
+  Color get _clinicalBlue => const Color(0xFF9900FF);
+  Color get _primaryDeep => _isDark ? const Color(0xFF7C3AED) : const Color(0xFF6D28D9);
+
+  // Backgrounds
+  Color get _background => _isDark ? const Color(0xFF0F0A1A) : const Color(0xFFF8F5FF);
+  Color get _surfaceCard => _isDark ? const Color(0xFF1A1330) : Colors.white;
+  Color get _surfaceContainerLow => _isDark ? const Color(0xFF161025) : const Color(0xFFF4ECFF);
+  Color get _surfaceContainerHigh => _isDark ? const Color(0xFF2A2040) : const Color(0xFFE7D8FF);
+  Color get _surfaceContainer => _isDark ? const Color(0xFF201835) : const Color(0xFFF1E6FF);
+
+  // Text
+  Color get _onSurface => _isDark ? const Color(0xFFF3F4F6) : const Color(0xFF0B1C30);
+  Color get _onSurfaceVariant => _isDark ? const Color(0xFF9CA3AF) : const Color(0xFF434656);
+
+  // Borders
+  Color get _outline => _isDark ? const Color(0xFF6B7280) : const Color(0xFF737688);
+  Color get _outlineVariant => _isDark ? const Color(0xFF374151) : const Color(0xFFC3C5D9);
+
+  // Error
+  Color get _errorColor => _isDark ? const Color(0xFFF87171) : const Color(0xFFBA1A1A);
+  Color get _errorContainer => _isDark ? const Color(0xFF3B1111) : const Color(0xFFFFDAD6);
+
+  // Additional surface / border tokens for inline use
+  Color get _cardBorder => _isDark ? const Color(0xFF2D2450) : const Color(0xFFE9DCF9);
+  Color get _chartBorder => _isDark ? const Color(0xFF2D2450) : const Color(0xFFE2E8F0);
+  Color get _tableHeaderBg => _isDark ? const Color(0xFF161025) : const Color(0xFFF1F5F9);
+  Color get _shadowColor => _isDark ? Colors.black.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.035);
+  Color get _shadowColorMd => _isDark ? Colors.black.withValues(alpha: 0.25) : Colors.black.withValues(alpha: 0.04);
+
+  // Status badge colours
+  Color get _statusCompletedBg => _isDark ? const Color(0xFF0C2D2A) : const Color(0xFFE0F2FE);
+  Color get _statusCompletedText => _isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7);
+  Color get _statusPendingBg => _isDark ? const Color(0xFF2D2A0C) : const Color(0xFFFEF9C3);
+  Color get _statusPendingText => _isDark ? const Color(0xFFFBBF24) : const Color(0xFFA16207);
+  Color get _statusOverdueBg => _isDark ? const Color(0xFF2D0C0C) : const Color(0xFFFEE2E2);
+  Color get _statusOverdueText => _isDark ? const Color(0xFFF87171) : const Color(0xFFB91C1C);
+
+  // Badge colours (pending approvals)
+  Color get _pharmacyBadgeBg => _isDark ? const Color(0xFF231640) : const Color(0xFFF3F0FF);
+  Color get _pharmacyBadgeText => const Color(0xFF9900FF);
+  Color get _pulseBadgeBg => _isDark ? const Color(0xFF2D2A0C) : const Color(0xFFFEF9C3);
+  Color get _pulseBadgeText => _isDark ? const Color(0xFFFBBF24) : const Color(0xFF854D0E);
+  Color get _successColor => const Color(0xFF16A34A);
 
   // Chart time period state
   String _selectedPeriod = '1M';
@@ -124,15 +161,15 @@ class _FinancesWidgetState extends State<FinancesWidget> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.86),
+        color: _surfaceCard,
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
-          color: const Color(0xFFE9DCF9).withValues(alpha: 0.95),
+          color: _cardBorder,
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.035),
+            color: _shadowColor,
             blurRadius: 18.0,
             offset: const Offset(0, 6),
           ),
@@ -225,13 +262,13 @@ class _FinancesWidgetState extends State<FinancesWidget> {
   Widget _buildRevenueChart(FinanceRecord? financeRecord) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.8),
+        color: _surfaceCard,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
-            color: const Color(0xFFE2E8F0).withValues(alpha: 0.8), width: 1.0),
+            color: _chartBorder, width: 1.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: _shadowColorMd,
             blurRadius: 20.0,
             offset: const Offset(0, 4),
           ),
@@ -354,16 +391,16 @@ class _FinancesWidgetState extends State<FinancesWidget> {
     Color textColor;
     switch (status.toLowerCase()) {
       case 'completed':
-        bgColor = const Color(0xFFE0F2FE);
-        textColor = const Color(0xFF0284C7);
+        bgColor = _statusCompletedBg;
+        textColor = _statusCompletedText;
         break;
       case 'pending':
-        bgColor = const Color(0xFFFEF9C3);
-        textColor = const Color(0xFFA16207);
+        bgColor = _statusPendingBg;
+        textColor = _statusPendingText;
         break;
       case 'overdue':
-        bgColor = const Color(0xFFFEE2E2);
-        textColor = const Color(0xFFB91C1C);
+        bgColor = _statusOverdueBg;
+        textColor = _statusOverdueText;
         break;
       default:
         bgColor = _surfaceContainerHigh;
@@ -546,7 +583,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                   // Export report action
                                                 },
                                                 style: OutlinedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
+                                                  backgroundColor: _surfaceCard,
                                                   side: BorderSide(
                                                       color: _outlineVariant,
                                                       width: 1.0),
@@ -698,19 +735,16 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                       // ── Recent Transactions Table ──
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.white
-                                              .withValues(alpha: 0.86),
+                                          color: _surfaceCard,
                                           borderRadius:
                                               BorderRadius.circular(16.0),
                                           border: Border.all(
-                                            color: const Color(0xFFE9DCF9)
-                                                .withValues(alpha: 0.95),
+                                            color: _cardBorder,
                                             width: 1.0,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black
-                                                  .withValues(alpha: 0.035),
+                                              color: _shadowColor,
                                               blurRadius: 18.0,
                                               offset: const Offset(0, 6),
                                             ),
@@ -726,8 +760,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                                   const EdgeInsets.fromLTRB(
                                                       24.0, 20.0, 24.0, 20.0),
                                               decoration: BoxDecoration(
-                                                color: Colors.white
-                                                    .withValues(alpha: 0.5),
+                                                color: _surfaceContainerLow,
                                                 border: Border(
                                                   bottom: BorderSide(
                                                     color: _outlineVariant
@@ -883,7 +916,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 24.0, vertical: 16.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
+                    color: _tableHeaderBg,
                     border: Border(
                       bottom: BorderSide(
                         color: _outlineVariant.withValues(alpha: 0.3),
@@ -1018,14 +1051,14 @@ class _FinancesWidgetState extends State<FinancesWidget> {
           return Container(
             padding: const EdgeInsets.all(24.0),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: _surfaceCard,
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(
-                  color: const Color(0xFFE2E8F0).withValues(alpha: 0.8),
+                  color: _chartBorder,
                   width: 1.0),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
+                    color: _shadowColorMd,
                     blurRadius: 20.0,
                     offset: const Offset(0, 4))
               ],
@@ -1039,19 +1072,19 @@ class _FinancesWidgetState extends State<FinancesWidget> {
         final pendingPharmacies =
             pendingUsers.where((u) => AppRole.isPharmacyAccountType(u.accountType)).toList();
         final pendingPulseUsers = pendingUsers
-            .where((u) => AppRole.isDuniyaAccountType(u.accountType) || u.accountType.isEmpty)
+            .where((u) => AppRole.isPulseAccountType(u.accountType) || u.accountType.isEmpty)
             .toList();
 
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.8),
+            color: _surfaceCard,
             borderRadius: BorderRadius.circular(12.0),
             border: Border.all(
-                color: const Color(0xFFE2E8F0).withValues(alpha: 0.8),
+                color: _chartBorder,
                 width: 1.0),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
+                  color: _shadowColorMd,
                   blurRadius: 20.0,
                   offset: const Offset(0, 4))
             ],
@@ -1062,7 +1095,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
               Container(
                 padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 20.0),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: _surfaceContainerLow,
                   border: Border(
                       bottom: BorderSide(
                           color: _outlineVariant.withValues(alpha: 0.3),
@@ -1076,7 +1109,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                         Container(
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                              color: const Color(0xFFF3F0FF),
+                              color: _pharmacyBadgeBg,
                               borderRadius: BorderRadius.circular(10.0)),
                           child: Icon(Icons.pending_actions,
                               size: 20.0, color: const Color(0xFF9900FF)),
@@ -1098,21 +1131,21 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12.0, vertical: 4.0),
                           decoration: BoxDecoration(
-                              color: const Color(0xFFF3F0FF),
+                              color: _pharmacyBadgeBg,
                               borderRadius: BorderRadius.circular(9999.0)),
                           child: Text('${pendingPharmacies.length} Pharmacies',
                               style: TextStyle(
                                   fontFamily: kAppFontFamily,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF9900FF))),
+                                  color: _pharmacyBadgeText)),
                         ),
                         const SizedBox(width: 8.0),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12.0, vertical: 4.0),
                           decoration: BoxDecoration(
-                              color: const Color(0xFFFEF9C3),
+                              color: _pulseBadgeBg,
                               borderRadius: BorderRadius.circular(9999.0)),
                           child: Text(
                               '${pendingPulseUsers.length} Pulse Users',
@@ -1120,7 +1153,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                   fontFamily: kAppFontFamily,
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF854D0E))),
+                                  color: _pulseBadgeText)),
                         ),
                       ],
                     ),
@@ -1136,7 +1169,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                         Icon(Icons.check_circle_outline,
                             size: 48.0,
                             color:
-                                const Color(0xFF16A34A).withValues(alpha: 0.5)),
+                                _successColor.withValues(alpha: 0.5)),
                         const SizedBox(height: 12.0),
                         Text('All accounts are approved',
                             style: TextStyle(
@@ -1173,8 +1206,8 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                           height: 40.0,
                           decoration: BoxDecoration(
                               color: isPharmacy
-                                  ? const Color(0xFFF3F0FF)
-                                  : const Color(0xFFFEF9C3),
+                                  ? _pharmacyBadgeBg
+                                  : _pulseBadgeBg,
                               borderRadius: BorderRadius.circular(12.0)),
                           child: Center(
                               child: Text(
@@ -1188,8 +1221,8 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w700,
                                       color: isPharmacy
-                                          ? const Color(0xFF9900FF)
-                                          : const Color(0xFF854D0E)))),
+                                          ? _pharmacyBadgeText
+                                          : _pulseBadgeText))),
                         ),
                         const SizedBox(width: 16.0),
                         Expanded(
@@ -1217,8 +1250,8 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                               horizontal: 12.0, vertical: 4.0),
                           decoration: BoxDecoration(
                               color: isPharmacy
-                                  ? const Color(0xFFF3F0FF)
-                                  : const Color(0xFFFEF9C3),
+                                  ? _pharmacyBadgeBg
+                                  : _pulseBadgeBg,
                               borderRadius: BorderRadius.circular(9999.0)),
                           child: Text(isPharmacy ? 'Pharmacy' : 'Pulse',
                               style: TextStyle(
@@ -1226,8 +1259,8 @@ class _FinancesWidgetState extends State<FinancesWidget> {
                                   fontSize: 11.0,
                                   fontWeight: FontWeight.w600,
                                   color: isPharmacy
-                                      ? const Color(0xFF9900FF)
-                                      : const Color(0xFF854D0E))),
+                                      ? _pharmacyBadgeText
+                                      : _pulseBadgeText)),
                         ),
                         const SizedBox(width: 12.0),
                         ElevatedButton(

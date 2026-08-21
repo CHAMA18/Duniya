@@ -138,9 +138,9 @@ export '/vmi/patient_records/patient_records_widget.dart'
 
 // Pulse dashboard pages
 export '/duniya/stock_balance_visibility/duniya_stock_balances_widget.dart'
-    show DuniyaStockBalancesWidget;
+    show PulseStockBalancesWidget;
 export '/duniya/pharmacies/duniya_pharmacies_widget.dart'
-    show DuniyaPharmaciesWidget;
+    show PulsePharmaciesWidget;
 export '/duniya/pharmacies/pharmacy_detail_widget.dart'
     show PharmacyDetailWidget;
 export '/duniya/supplier_management/supplier_management_widget.dart'

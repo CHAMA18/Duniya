@@ -12,8 +12,8 @@ import 'duniya_stock_balances_model.dart';
 export 'duniya_stock_balances_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — STOCK BALANCE VISIBILITY (Network-Wide)
-///   THE most important feature for Duniya users.
+///   PULSE — STOCK BALANCE VISIBILITY (Network-Wide)
+///   THE most important feature for Pulse users.
 ///
 ///   Shows current stock balances by product across ALL participating
 ///   pharmacies. For each product × pharmacy combination, displays:
@@ -27,20 +27,20 @@ export 'duniya_stock_balances_model.dart';
 ///   - Days of stock remaining
 /// ═══════════════════════════════════════════════════════════════
 
-class DuniyaStockBalancesWidget extends StatefulWidget {
-  const DuniyaStockBalancesWidget({super.key});
+class PulseStockBalancesWidget extends StatefulWidget {
+  const PulseStockBalancesWidget({super.key});
 
-  static String routeName = 'DuniyaStockBalances';
-  static String routePath = '/duniyaStockBalances';
+  static String routeName = 'PulseStockBalances';
+  static String routePath = '/pulseStockBalances';
 
   @override
-  State<DuniyaStockBalancesWidget> createState() =>
-      _DuniyaStockBalancesWidgetState();
+  State<PulseStockBalancesWidget> createState() =>
+      _PulseStockBalancesWidgetState();
 }
 
-class _DuniyaStockBalancesWidgetState
-    extends State<DuniyaStockBalancesWidget> {
-  late DuniyaStockBalancesModel _model;
+class _PulseStockBalancesWidgetState
+    extends State<PulseStockBalancesWidget> {
+  late PulseStockBalancesModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String _statusFilter = 'All';
@@ -50,13 +50,13 @@ class _DuniyaStockBalancesWidgetState
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DuniyaStockBalancesModel());
+    _model = createModel(context, () => PulseStockBalancesModel());
     logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'DuniyaStockBalances'});
+        parameters: {'screen_name': 'PulseStockBalances'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!AccessControl.isDuniyaUser(context)) {
+      if (!AccessControl.isPulseUser(context)) {
         context.goNamed(HomeWidget.routeName);
         return;
       }

@@ -15,7 +15,7 @@ import 'stock_count_detail_model.dart';
 export 'stock_count_detail_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — STOCK COUNT DETAIL (World-Class Redesign)
+///   PULSE — STOCK COUNT DETAIL (World-Class Redesign)
 ///   Top 1% stock count UX: hero header with workflow stepper,
 ///   smart location selector, KPI progress cards, beautiful
 ///   count items list with variance indicators, sticky action bar,

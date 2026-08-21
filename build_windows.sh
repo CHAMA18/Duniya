@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # =====================================================================
-# Duniya — Build Windows Desktop App
+# Pulse — Build Windows Desktop App
 # =====================================================================
-# Builds a Windows .exe installer for Duniya.
+# Builds a Windows .exe installer for Pulse.
 #
 # Prerequisites:
 #   - Flutter SDK 3.24+ with Windows desktop support enabled
@@ -18,7 +18,7 @@
 # =====================================================================
 set -euo pipefail
 
-APP_NAME="Duniya"
+APP_NAME="Pulse"
 APP_VERSION="$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1)"
 BUILD_DIR="build/windows/x64/runner/Release"
 RELEASE_DIR="release"
@@ -73,11 +73,11 @@ echo "==> ZIP created: ${RELEASE_DIR}/${APP_NAME}-${APP_VERSION}-windows.zip"
 # ---------------------------------------------------------------------
 if command -v iscc &> /dev/null; then
   echo "==> Creating installer with Inno Setup"
-  cat > /tmp/duniya_setup.iss <<EOF
+  cat > /tmp/pulse_setup.iss <<EOF
 [Setup]
 AppName=${APP_NAME}
 AppVersion=${APP_VERSION}
-AppPublisher=Duniya Healthcare
+AppPublisher=Pulse Healthcare
 AppPublisherURL=https://ivm.duniyahealthcare.com
 DefaultDirName={autopf}\\${APP_NAME}
 DefaultGroupName=${APP_NAME}
@@ -98,7 +98,7 @@ Name: "{autodesktop}\\${APP_NAME}"; Filename: "{app}\\${APP_NAME}.exe"
 Filename: "{app}\\${APP_NAME}.exe"; Description: "Launch ${APP_NAME}"; Flags: nowait postinstall skipifsilent
 EOF
 
-  iscc /tmp/duniya_setup.iss
+  iscc /tmp/pulse_setup.iss
   mv /tmp/Output/${APP_NAME}-Setup.exe "${RELEASE_DIR}/" 2>/dev/null || true
   echo "==> Installer created: ${RELEASE_DIR}/${APP_NAME}-Setup.exe"
 else
@@ -109,3 +109,4 @@ fi
 echo "==> Windows build complete!"
 echo "    Release files in: ${RELEASE_DIR}/"
 ls -la "${RELEASE_DIR}/"
+/"

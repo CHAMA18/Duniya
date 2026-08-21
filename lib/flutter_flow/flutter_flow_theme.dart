@@ -172,7 +172,7 @@ class LightModeTheme extends FlutterFlowTheme {
   Color get tertiaryColor => tertiary;
 
   // ═══════════════════════════════════════════════════════════
-  // DUNIYA BRAND THEME — Purple #9900FF
+  // PULSE BRAND THEME — Purple #9900FF
   // ═══════════════════════════════════════════════════════════
   late Color primary = const Color(0xFF9900FF); // Pulse Purple
   late Color secondary = const Color(0xFF7C3AED); // Violet 600
@@ -689,7 +689,7 @@ class DarkModeTheme extends FlutterFlowTheme {
   Color get tertiaryColor => tertiary;
 
   // ═══════════════════════════════════════════════════════════
-  // DUNIYA BRAND DARK THEME — Purple #9900FF
+  // PULSE BRAND DARK THEME — Purple #9900FF
   // ═══════════════════════════════════════════════════════════
   late Color primary = const Color(0xFF9900FF); // Pulse Purple
   late Color secondary = const Color(0xFFA78BFA); // Violet 400

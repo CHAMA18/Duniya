@@ -23,11 +23,11 @@ class _SideNavWidgetState extends State<SideNavWidget> {
 
   /// Returns true if the current user is a Pulse network admin.
   /// Now powered by the centralized RBAC system (AccessControl).
-  bool get _isDuniyaUser => AccessControl.isDuniyaUser(context);
+  bool get _isPulseUser => AccessControl.isPulseUser(context);
 
   /// Inventory has one portal-specific destination. Keeping this decision in
   /// the sidebar prevents both labels from ever appearing together.
-  bool get _showsStoreInventory => !_isDuniyaUser;
+  bool get _showsStoreInventory => !_isPulseUser;
 
   /// Returns the current user's resolved AppRole from the RBAC system.
   AppRole get _currentRole => AccessControl.currentRole(context);
@@ -54,9 +54,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
         return 'Cashier';
       case AppRole.salesAssistant:
         return 'Sales Assistant';
-      case AppRole.duniyaAdmin:
+      case AppRole.pulseAdmin:
         return 'Network Admin';
-      case AppRole.duniyaStaff:
+      case AppRole.pulseStaff:
         return 'Network Staff';
       case AppRole.subscriber:
         return 'Subscriber';
@@ -382,7 +382,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
     ]);
     // Pulse users share the operational navigation, but inventory keeps its
     // portal-specific destination: Product Catalogue instead of Store Inventory.
-    final isPulseNetwork = _isDuniyaUser;
+    final isPulseNetwork = _isPulseUser;
     final hasInventory = _hasAnyNav([
       NavItem.storeInventory,
       NavItem.productCatalogue,
@@ -415,11 +415,11 @@ class _SideNavWidgetState extends State<SideNavWidget> {
         !isPulseNetwork && _hasAnyNav([NavItem.purchaseOrders]);
     final hasAdmin = _hasAnyNav([NavItem.auditLogs, NavItem.userManagement]);
     final hasPulseNetwork = _hasAnyNav([
-      NavItem.duniyaPharmacies,
-      NavItem.duniyaStockBalances,
-      NavItem.duniyaOnboardingRequests,
-      NavItem.duniyaNetworkAnalytics,
-      NavItem.duniyaSupplierManagement,
+      NavItem.pulsePharmacies,
+      NavItem.pulseStockBalances,
+      NavItem.pulseOnboardingRequests,
+      NavItem.pulseNetworkAnalytics,
+      NavItem.pulseSupplierManagement,
     ]);
 
     return LayoutBuilder(
@@ -676,7 +676,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           // Home (RBAC)
                           if (_canSee(NavItem.home))
                             KeyedSubtree(
-                              key: DuniyaTourTargets.home,
+                              key: PulseTourTargets.home,
                               child: Tooltip(
                                 message: 'Home',
                                 preferBelow: false,
@@ -786,7 +786,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           if (_canSee(NavItem.humanResource))
                             AuthUserStreamWidget(
                               builder: (context) => KeyedSubtree(
-                                key: DuniyaTourTargets.humanResources,
+                                key: PulseTourTargets.humanResources,
                                 child: Tooltip(
                                   message: 'Human Resource',
                                   preferBelow: false,
@@ -1051,7 +1051,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           if (_canSee(NavItem.storeInventory) ||
                               _canSee(NavItem.productCatalogue))
                             KeyedSubtree(
-                              key: DuniyaTourTargets.inventory,
+                              key: PulseTourTargets.inventory,
                               child:
                                   _buildExpandableInventorySection(isCollapsed),
                             ),
@@ -1247,7 +1247,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           // Goods Received / Pulse dispatch (RBAC)
                           if (_canSee(NavItem.goodsReceived))
                             Tooltip(
-                              message: _isDuniyaUser
+                              message: _isPulseUser
                                   ? 'Goods Dispatched'
                                   : 'Goods Received',
                               preferBelow: false,
@@ -1280,7 +1280,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
 
                                   logFirebaseEvent(
                                       'SidebarLink_update_app_state');
-                                  FFAppState().SelectedPage = _isDuniyaUser
+                                  FFAppState().SelectedPage = _isPulseUser
                                       ? 'Goods Dispatched'
                                       : 'Goods Received';
                                 },
@@ -1288,7 +1288,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   model: _model.sidebarLinkModel12,
                                   updateCallback: () => safeSetState(() {}),
                                   child: SidebarLinkWidget(
-                                    linkText: _isDuniyaUser
+                                    linkText: _isPulseUser
                                         ? 'Goods Dispatched'
                                         : 'Goods Received',
                                     activeIcon: Icon(
@@ -1981,16 +1981,16 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                           ],
 
                           // ─── Divider ───
-                          if (_isDuniyaUser && hasPulseNetwork) _buildDivider(),
+                          if (_isPulseUser && hasPulseNetwork) _buildDivider(),
 
                           // ============================================================
                           // PULSE NETWORK SECTION (Pulse users only)
                           // ============================================================
-                          if (_isDuniyaUser && hasPulseNetwork) ...[
+                          if (_isPulseUser && hasPulseNetwork) ...[
                             if (!isCollapsed)
                               _buildSectionHeader('PULSE NETWORK'),
                             // Pulse Pharmacies (RBAC)
-                            if (_canSee(NavItem.duniyaPharmacies))
+                            if (_canSee(NavItem.pulsePharmacies))
                               Tooltip(
                                 message: 'Pulse Pharmacies',
                                 preferBelow: false,
@@ -2001,10 +2001,10 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
                                     logFirebaseEvent(
-                                        'SIDE_NAV_Duniya_Pharmacies_ON_TAP');
+                                        'SIDE_NAV_Pulse_Pharmacies_ON_TAP');
                                     logFirebaseEvent('SidebarLink_navigate_to');
                                     context.goNamed(
-                                        DuniyaPharmaciesWidget.routeName);
+                                        PulsePharmaciesWidget.routeName);
                                     logFirebaseEvent(
                                         'SidebarLink_update_app_state');
                                     FFAppState().SelectedPage =
@@ -2032,7 +2032,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             // Stock Balance Visibility (RBAC)
-                            if (_canSee(NavItem.duniyaStockBalances))
+                            if (_canSee(NavItem.pulseStockBalances))
                               Tooltip(
                                 message: 'Stock Balance Visibility',
                                 preferBelow: false,
@@ -2046,7 +2046,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                         'SIDE_NAV_Stock_Visibility_ON_TAP');
                                     logFirebaseEvent('SidebarLink_navigate_to');
                                     context.goNamed(
-                                        DuniyaStockBalancesWidget.routeName);
+                                        PulseStockBalancesWidget.routeName);
                                     logFirebaseEvent(
                                         'SidebarLink_update_app_state');
                                     FFAppState().SelectedPage =
@@ -2074,7 +2074,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             // Onboarding Requests (RBAC)
-                            if (_canSee(NavItem.duniyaOnboardingRequests))
+                            if (_canSee(NavItem.pulseOnboardingRequests))
                               Tooltip(
                                 message: 'Onboarding Requests',
                                 preferBelow: false,
@@ -2116,7 +2116,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             // Network Analytics (RBAC)
-                            if (_canSee(NavItem.duniyaNetworkAnalytics))
+                            if (_canSee(NavItem.pulseNetworkAnalytics))
                               Tooltip(
                                 message: 'Network Analytics',
                                 preferBelow: false,
@@ -2158,7 +2158,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             // Supplier Management (RBAC)
-                            if (_canSee(NavItem.duniyaSupplierManagement))
+                            if (_canSee(NavItem.pulseSupplierManagement))
                               Tooltip(
                                 message: 'Supplier Management',
                                 preferBelow: false,
@@ -2340,7 +2340,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                               children: [
                                 // Section header — tappable to expand/collapse
                                 KeyedSubtree(
-                                  key: DuniyaTourTargets.quickAccess,
+                                  key: PulseTourTargets.quickAccess,
                                   child: InkWell(
                                     splashColor: Colors.transparent,
                                     focusColor: Colors.transparent,
@@ -2461,7 +2461,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                                 'SIDE_NAV_COMP_TAKE_TOUR_ON_TAP');
                                             logFirebaseEvent(
                                                 'SidebarLink_open_onboarding');
-                                            DuniyaSpotlightTour.show(context);
+                                            PulseSpotlightTour.show(context);
                                           },
                                           child: _SidebarFooterItem(
                                             isCollapsed: isCollapsed,
@@ -2584,7 +2584,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                   color: FlutterFlowTheme.of(context).primary,
                                   tooltip: 'Take Tour',
                                   onTap: () {
-                                    DuniyaSpotlightTour.show(context);
+                                    PulseSpotlightTour.show(context);
                                   },
                                 ),
                                 if (_canSee(NavItem.settings))

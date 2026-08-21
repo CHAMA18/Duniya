@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AURA — Simply Explained</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', Arial, sans-serif; background: #fff; color: #1a1a2e; }
+
+  .page {
+    width: 210mm; min-height: 297mm;
+    padding: 25mm 28mm 20mm 28mm;
+    position: relative;
+  }
+
+  /* Header */
+  .header { display: flex; align-items: center; gap: 4mm; margin-bottom: 8mm; }
+  .logo { font-size: 28px; font-weight: 800; color: #4A0E8F; letter-spacing: 6px; }
+  .divider { flex: 1; height: 1px; background: linear-gradient(90deg, #7C3AED 0%, #E9DCF9 100%); }
+  .subtitle { font-size: 11px; color: #9CA3AF; letter-spacing: 2px; }
+
+  h1 { font-size: 26px; font-weight: 800; color: #0B1C30; line-height: 1.2; margin-bottom: 4mm; }
+  h1 span { color: #7C3AED; }
+
+  .lead { font-size: 14px; color: #434656; line-height: 1.6; margin-bottom: 6mm; max-width: 150mm; }
+
+  /* The Problem */
+  .problem-section { margin-bottom: 6mm; }
+  .problem-title { font-size: 16px; font-weight: 700; color: #EF4444; margin-bottom: 3mm; display: flex; align-items: center; gap: 2mm; }
+  .problem-box {
+    display: flex; gap: 4mm;
+  }
+  .problem-card {
+    flex: 1;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 8px;
+    padding: 4mm 5mm;
+  }
+  .problem-card h3 { font-size: 12px; color: #B91C1C; margin-bottom: 2mm; }
+  .problem-card p { font-size: 11px; color: #6B7280; line-height: 1.4; }
+
+  .gap-box {
+    background: #FEF2F2;
+    border: 2px dashed #EF4444;
+    border-radius: 8px;
+    padding: 3mm 5mm;
+    margin: 3mm 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #EF4444;
+  }
+
+  /* The Insight */
+  .insight-box {
+    background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+    border-left: 4px solid #7C3AED;
+    border-radius: 0 10px 10px 0;
+    padding: 5mm 6mm;
+    margin: 5mm 0;
+  }
+  .insight-box h2 { font-size: 16px; font-weight: 700; color: #4A0E8F; margin-bottom: 2mm; }
+  .insight-box p { font-size: 13px; color: #434656; line-height: 1.5; }
+
+  /* The Solution */
+  .solution-section { margin: 6mm 0; }
+  .solution-title { font-size: 16px; font-weight: 700; color: #10B981; margin-bottom: 3mm; }
+  .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .pillar {
+    background: #F8F5FF;
+    border: 1px solid #E9DCF9;
+    border-radius: 8px;
+    padding: 4mm 5mm;
+    display: flex;
+    gap: 3mm;
+    align-items: flex-start;
+  }
+  .pillar-num {
+    background: #7C3AED;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    width: 6mm;
+    height: 6mm;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .pillar h3 { font-size: 12px; font-weight: 700; color: #0B1C30; margin-bottom: 1mm; }
+  .pillar p { font-size: 10px; color: #6B7280; line-height: 1.4; }
+
+  /* Analogy */
+  .analogy-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 8px;
+    padding: 4mm 5mm;
+    margin: 5mm 0;
+    display: flex;
+    gap: 4mm;
+    align-items: center;
+  }
+  .analogy-icon { font-size: 28px; }
+  .analogy-text { font-size: 12px; color: #92400E; line-height: 1.4; }
+  .analogy-text strong { color: #78350F; }
+
+  /* Impact */
+  .impact-strip {
+    display: flex; gap: 3mm; margin: 5mm 0;
+  }
+  .impact-card {
+    flex: 1;
+    text-align: center;
+    padding: 3mm;
+    border-radius: 8px;
+  }
+  .impact-card.green { background: #ECFDF5; border: 1px solid #A7F3D0; }
+  .impact-card.purple { background: #F5F3FF; border: 1px solid #DDD6FE; }
+  .impact-card.amber { background: #FFFBEB; border: 1px solid #FDE68A; }
+  .impact-card .value { font-size: 18px; font-weight: 800; }
+  .impact-card.green .value { color: #059669; }
+  .impact-card.purple .value { color: #7C3AED; }
+  .impact-card.amber .value { color: #D97706; }
+  .impact-card .label { font-size: 9px; color: #6B7280; letter-spacing: 1px; margin-top: 1mm; }
+
+  /* Bottom line */
+  .bottom-line {
+    background: #0B0614;
+    color: #F3F4F6;
+    border-radius: 10px;
+    padding: 5mm 6mm;
+    margin-top: 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bottom-line h2 { font-size: 18px; font-weight: 700; color: #fff; }
+  .bottom-line p { font-size: 11px; color: #9CA3AF; max-width: 100mm; line-height: 1.4; }
+
+  .footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 28mm;
+    right: 28mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: #9CA3AF;
+    border-top: 1px solid #E9DCF9;
+    padding-top: 2mm;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo">AURA</div>
+    <div class="divider"></div>
+    <div class="subtitle">SIMPLY EXPLAINED</div>
+  </div>
+
+  <h1>What is <span>AURA</span>?</h1>
+  <p class="lead">
+    Banks lose <strong>$487 billion every year</strong> to fraud and bad loans. The reason? Two separate teams — credit and fraud — never talk to each other. AURA fixes this by combining both into <strong>one intelligent system</strong>.
+  </p>
+
+  <!-- THE PROBLEM -->
+  <div class="problem-section">
+    <div class="problem-title">🔴 The Problem</div>
+    <div class="problem-box">
+      <div class="problem-card">
+        <h3>Credit Team asks: "Can they repay?"</h3>
+        <p>Uses old-fashioned models. Checks income and collateral. Updates once every few months.</p>
+      </div>
+      <div class="problem-card">
+        <h3>Fraud Team asks: "Will they repay?"</h3>
+        <p>Uses fast AI. Watches every transaction. Updates in milliseconds.</p>
+      </div>
+    </div>
+    <div class="gap-box">⚡ THE GAP — Where these two teams meet is where $487B in losses disappear every year</div>
+  </div>
+
+  <!-- THE INSIGHT -->
+  <div class="insight-box">
+    <h2>💡 The Big Idea</h2>
+    <p>
+      Credit default and fraud are actually <strong>the same thing</strong> — just seen through different time windows. A loan that defaults after 18 months? That's slow-motion fraud. A stolen card used for 30 seconds? That's fast-motion credit loss. <strong>AURA watches both windows at once.</strong>
+    </p>
+  </div>
+
+  <!-- THE SOLUTION -->
+  <div class="solution-section">
+    <div class="solution-title">🟢 The Solution — 4 Simple Pieces</div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-num">1</div>
+        <div>
+          <h3>One Brain</h3>
+          <p>One AI model that understands both credit risk AND fraud — instead of two separate models that never share notes.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">2</div>
+        <div>
+          <h3>Your Digital Twin</h3>
+          <p>A "doppelgänger" for each customer that predicts their normal behaviour. When reality diverges — alert.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">3</div>
+        <div>
+          <h3>Time Telescopes</h3>
+          <p>Looks at the same person through two time windows: seconds (fraud) and months (credit). Catches what neither team sees alone.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">4</div>
+        <div>
+          <h3>Self-Attacking System</h3>
+          <p>AI agents constantly attack the system in shadow mode — like a immune system training itself against new threats.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALOGY -->
+  <div class="analogy-box">
+    <div class="analogy-icon">🏥</div>
+    <div class="analogy-text">
+      <strong>Think of it like this:</strong> Right now, banks have a doctor for your heart and a separate doctor for your lungs — but neither talks to the other. AURA is like having <strong>one specialist who sees the whole body</strong> and catches problems before they become emergencies.
+    </div>
+  </div>
+
+  <!-- IMPACT -->
+  <div class="impact-strip">
+    <div class="impact-card green">
+      <div class="value">20–30%</div>
+      <div class="label">LESS BAD LOANS</div>
+    </div>
+    <div class="impact-card purple">
+      <div class="value">40–50%</div>
+      <div class="label">LESS FRAUD</div>
+    </div>
+    <div class="impact-card amber">
+      <div class="value">$50–80M</div>
+      <div class="label">SAVED PER YEAR</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div>
+      <h2>The Bottom Line</h2>
+      <p>AURA makes one smart system that catches both credit problems and fraud — saving banks billions. It starts free for 90 days, and only gets paid when it works.</p>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 10px; color: #7C3AED; font-weight: 700; letter-spacing: 2px;">CONTINUUM RISK LABS</div>
+      <div style="font-size: 9px; color: #6B7280; margin-top: 2mm;">Global Fintech Hackelerator<br>Singapore · 2026</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA · Simply Explained</span>
+  </div>
+</div>
+</body>
+</html>

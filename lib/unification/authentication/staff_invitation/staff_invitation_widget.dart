@@ -24,7 +24,7 @@ class StaffInvitationWidget extends StatefulWidget {
 
 class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
   // Brand tokens
-  static const Color _duniyaPurple = Color(0xFF9900FF);
+  static const Color _pulsePurple = Color(0xFF9900FF);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -238,7 +238,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
           height: 56,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [_duniyaPurple, Color(0xFF1D4ED8)],
+              colors: [_pulsePurple, Color(0xFF1D4ED8)],
             ),
             borderRadius: BorderRadius.circular(16),
           ),
@@ -249,7 +249,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
           ),
         ),
         const SizedBox(height: 24),
-        const CircularProgressIndicator(color: _duniyaPurple),
+        const CircularProgressIndicator(color: _pulsePurple),
         const SizedBox(height: 16),
         Text(
           'Verifying your invitation...',
@@ -327,7 +327,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
             options: FFButtonOptions(
               height: 44,
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              color: _duniyaPurple,
+              color: _pulsePurple,
               textStyle: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -369,7 +369,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               height: 64,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [_duniyaPurple, Color(0xFF1D4ED8)],
+                  colors: [_pulsePurple, Color(0xFF1D4ED8)],
                 ),
                 borderRadius: BorderRadius.circular(18),
               ),
@@ -423,10 +423,10 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: _duniyaPurple.withValues(alpha: 0.1),
+                    color: _pulsePurple.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(roleIcon, color: _duniyaPurple, size: 22),
+                  child: Icon(roleIcon, color: _pulsePurple, size: 22),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -550,7 +550,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: _duniyaPurple, width: 1.5),
+                borderSide: const BorderSide(color: _pulsePurple, width: 1.5),
               ),
               errorText: _passwordError,
               errorStyle: TextStyle(fontSize: 12, fontFamily: kAppFontFamily),
@@ -614,7 +614,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: _duniyaPurple, width: 1.5),
+                borderSide: const BorderSide(color: _pulsePurple, width: 1.5),
               ),
             ),
           ),
@@ -630,7 +630,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
               options: FFButtonOptions(
                 height: 48,
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                color: _isFormValid ? _duniyaPurple : _borderColor,
+                color: _isFormValid ? _pulsePurple : _borderColor,
                 textStyle: TextStyle(
                   color: _isFormValid ? Colors.white : _textSecondary,
                   fontWeight: FontWeight.w600,
@@ -653,7 +653,7 @@ class _StaffInvitationWidgetState extends State<StaffInvitationWidget> {
                 'Already have an account? Sign in',
                 style: TextStyle(
                   fontSize: 13,
-                  color: _duniyaPurple,
+                  color: _pulsePurple,
                   fontWeight: FontWeight.w600,
                   fontFamily: kAppFontFamily,
                 ),

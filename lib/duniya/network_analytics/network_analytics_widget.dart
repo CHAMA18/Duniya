@@ -12,7 +12,7 @@ import 'network_analytics_model.dart';
 export 'network_analytics_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — NETWORK ANALYTICS
+///   PULSE — NETWORK ANALYTICS
 ///
 ///   Aggregate KPIs across every active pharmacy on the Pulse
 ///   network: total pharmacies, total stock value, products
@@ -81,7 +81,7 @@ class _NetworkAnalyticsWidgetState extends State<NetworkAnalyticsWidget> {
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'NetworkAnalytics'});
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!AccessControl.isDuniyaUser(context)) {
+      if (!AccessControl.isPulseUser(context)) {
         context.goNamed(HomeWidget.routeName);
         return;
       }

@@ -21,7 +21,7 @@ import 'stock_balances_model.dart';
 export 'stock_balances_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — STOCK BALANCES (World-Class Redesign)
+///   PULSE — STOCK BALANCES (World-Class Redesign)
 ///   Top 1% inventory UX: hero header, KPI cards, smart filters,
 ///   beautiful empty state, and a modern data table with status
 ///   badges, progress bars, and inline quick actions.

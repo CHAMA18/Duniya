@@ -14,7 +14,7 @@ import 'onboarding_requests_model.dart';
 export 'onboarding_requests_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   DUNIYA — ONBOARDING REQUESTS
+///   PULSE — ONBOARDING REQUESTS
 ///
 ///   Approve or reject pharmacies that have self-registered on the
 ///   Pulse network. Each row shows the pharmacy name, address,
@@ -49,7 +49,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'OnboardingRequests'});
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!AccessControl.isDuniyaUser(context)) {
+      if (!AccessControl.isPulseUser(context)) {
         context.goNamed(HomeWidget.routeName);
         return;
       }

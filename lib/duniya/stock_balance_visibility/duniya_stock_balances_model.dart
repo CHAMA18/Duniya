@@ -3,11 +3,11 @@ import '/flutter_flow/form_field_controller.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import 'duniya_stock_balances_widget.dart' show DuniyaStockBalancesWidget;
+import 'duniya_stock_balances_widget.dart' show PulseStockBalancesWidget;
 import 'package:flutter/material.dart';
 
-class DuniyaStockBalancesModel
-    extends FlutterFlowModel<DuniyaStockBalancesWidget> {
+class PulseStockBalancesModel
+    extends FlutterFlowModel<PulseStockBalancesWidget> {
   late SideNavModel sideNavModel;
   late TopNavModel topNavModel;
   late MobileNavbarModel mobileNavbarModel;

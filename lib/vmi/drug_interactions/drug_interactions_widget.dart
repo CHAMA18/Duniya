@@ -86,9 +86,9 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -530,7 +530,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
 
     return Title(
       title: 'Drug Interaction Alerts',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -644,11 +644,11 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   Container(
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      color: _duniyaPurpleLight,
+                      color: _pulsePurpleLight,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Icon(Icons.shield_outlined,
-                        color: _duniyaPurple, size: 24.0),
+                        color: _pulsePurple, size: 24.0),
                   ),
                   const SizedBox(width: 14.0),
                   Column(
@@ -794,12 +794,12 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
         Expanded(
             child: _buildStatCard(
           icon: Icons.search_rounded,
-          iconBg: _duniyaPurpleLight,
-          iconColor: _duniyaPurple,
+          iconBg: _pulsePurpleLight,
+          iconColor: _pulsePurple,
           title: 'Checks Today',
           value: (todayChecks * animatedValue).round().toString(),
           subtitle: 'Interaction queries run',
-          accentColor: _duniyaPurple,
+          accentColor: _pulsePurple,
         )),
         const SizedBox(width: 16.0),
         Expanded(
@@ -925,11 +925,11 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Icon(Icons.science_outlined,
-                    color: _duniyaPurple, size: 20.0),
+                    color: _pulsePurple, size: 20.0),
               ),
               const SizedBox(width: 12.0),
               Text('Interaction Checker',
@@ -977,7 +977,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                           color: _textSecondary.withValues(alpha: 0.5),
                         ),
                         prefixIcon: Icon(Icons.medication_outlined,
-                            color: _duniyaPurple, size: 20.0),
+                            color: _pulsePurple, size: 20.0),
                         filled: true,
                         fillColor: _bgColor,
                         contentPadding: const EdgeInsets.symmetric(
@@ -993,7 +993,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                              BorderSide(color: _duniyaPurple, width: 1.5),
+                              BorderSide(color: _pulsePurple, width: 1.5),
                         ),
                       ),
                       style: TextStyle(
@@ -1013,10 +1013,10 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                   width: 40.0,
                   height: 40.0,
                   decoration: BoxDecoration(
-                    color: _duniyaPurpleLight,
+                    color: _pulsePurpleLight,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.add, color: _duniyaPurple, size: 20.0),
+                  child: Icon(Icons.add, color: _pulsePurple, size: 20.0),
                 ),
               ),
               const SizedBox(width: 16.0),
@@ -1044,7 +1044,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                           color: _textSecondary.withValues(alpha: 0.5),
                         ),
                         prefixIcon: Icon(Icons.medication_outlined,
-                            color: _duniyaPurple, size: 20.0),
+                            color: _pulsePurple, size: 20.0),
                         filled: true,
                         fillColor: _bgColor,
                         contentPadding: const EdgeInsets.symmetric(
@@ -1060,7 +1060,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                              BorderSide(color: _duniyaPurple, width: 1.5),
+                              BorderSide(color: _pulsePurple, width: 1.5),
                         ),
                       ),
                       style: TextStyle(
@@ -1097,7 +1097,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                           fontWeight: FontWeight.w600,
                         )),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _duniyaPurple,
+                      backgroundColor: _pulsePurple,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       shape: RoundedRectangleBorder(
@@ -1309,7 +1309,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: Text('${filtered.length} alerts',
@@ -1317,7 +1317,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       fontFamily: kAppFontFamily,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w600,
-                      color: _duniyaPurple,
+                      color: _pulsePurple,
                     )),
               ),
               const Spacer(),
@@ -1351,7 +1351,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(color: _duniyaPurple, width: 1.5),
+                      borderSide: BorderSide(color: _pulsePurple, width: 1.5),
                     ),
                   ),
                   style: TextStyle(
@@ -1503,7 +1503,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 3.0),
                       decoration: BoxDecoration(
-                        color: _duniyaPurpleLight,
+                        color: _pulsePurpleLight,
                         borderRadius: BorderRadius.circular(6.0),
                       ),
                       child: Text(alert.interactionType,
@@ -1511,7 +1511,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                             fontFamily: kAppFontFamily,
                             fontSize: 9.0,
                             fontWeight: FontWeight.w500,
-                            color: _duniyaPurple,
+                            color: _pulsePurple,
                             letterSpacing: 0.3,
                           )),
                     ),
@@ -1589,11 +1589,11 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child:
-                    Icon(Icons.rule_rounded, color: _duniyaPurple, size: 20.0),
+                    Icon(Icons.rule_rounded, color: _pulsePurple, size: 20.0),
               ),
               const SizedBox(width: 12.0),
               Text('Rules Database',
@@ -1608,7 +1608,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
                 decoration: BoxDecoration(
-                  color: _duniyaPurpleLight,
+                  color: _pulsePurpleLight,
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: Text('${rules.length} rules',
@@ -1616,7 +1616,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       fontFamily: kAppFontFamily,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w600,
-                      color: _duniyaPurple,
+                      color: _pulsePurple,
                     )),
               ),
               const Spacer(),
@@ -1628,7 +1628,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Add Rule — coming soon'),
-                        backgroundColor: _duniyaPurple,
+                        backgroundColor: _pulsePurple,
                         behavior: SnackBarBehavior.floating,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -1644,7 +1644,7 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                         fontWeight: FontWeight.w600,
                       )),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _duniyaPurple,
+                    backgroundColor: _pulsePurple,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     shape: RoundedRectangleBorder(
@@ -1816,12 +1816,12 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
                       children: [
                         _iconActionButton(
                           icon: Icons.edit_outlined,
-                          color: _duniyaPurple,
+                          color: _pulsePurple,
                           onTap: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Edit ${rule.id} — coming soon'),
-                                backgroundColor: _duniyaPurple,
+                                backgroundColor: _pulsePurple,
                                 behavior: SnackBarBehavior.floating,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -1910,10 +1910,10 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
               width: 72.0,
               height: 72.0,
               decoration: BoxDecoration(
-                color: _duniyaPurpleLight,
+                color: _pulsePurpleLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.lock_outline, color: _duniyaPurple, size: 36.0),
+              child: Icon(Icons.lock_outline, color: _pulsePurple, size: 36.0),
             ),
             const SizedBox(height: 20.0),
             Text('Access Restricted',

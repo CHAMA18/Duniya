@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA Proposal — Continuum Risk Labs — Global Fintech Hackelerator 2026</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1a2e;
+    background: #fff;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 40mm 30mm 35mm 30mm;
+    page-break-after: always;
+    position: relative;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  /* ── Cover page ── */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 297mm;
+    background: linear-gradient(135deg, #0B0614 0%, #1A1330 50%, #0F0A1A 100%);
+    color: #F3F4F6;
+    padding: 50mm 35mm;
+  }
+  .cover .logo { font-size: 14px; letter-spacing: 8px; color: #7C3AED; margin-bottom: 8mm; font-weight: 700; }
+  .cover h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 6mm; color: #fff; }
+  .cover h1 span { color: #A78BFA; }
+  .cover .subtitle { font-size: 20px; color: #9CA3AF; margin-bottom: 15mm; font-weight: 300; }
+  .cover .kpis { display: flex; gap: 20mm; margin-bottom: 20mm; }
+  .cover .kpi { border-top: 2px solid #7C3AED; padding-top: 4mm; }
+  .cover .kpi .value { font-size: 28px; font-weight: 700; color: #A78BFA; }
+  .cover .kpi .label { font-size: 10px; color: #9CA3AF; letter-spacing: 2px; text-transform: uppercase; margin-top: 2mm; }
+  .cover .meta { font-size: 12px; color: #6B7280; }
+  .cover .meta strong { color: #A78BFA; }
+  .cover .accent-line { width: 60px; height: 3px; background: #7C3AED; margin-bottom: 10mm; }
+
+  /* ── Content pages ── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E9DCF9;
+    padding-bottom: 3mm;
+    margin-bottom: 8mm;
+  }
+  .page-header .brand { font-size: 10px; color: #7C3AED; letter-spacing: 3px; font-weight: 600; }
+  .page-header .page-num { font-size: 10px; color: #9CA3AF; }
+
+  h2 { font-size: 24px; font-weight: 700; color: #0B1C30; margin-bottom: 4mm; line-height: 1.2; }
+  h3 { font-size: 16px; font-weight: 600; color: #4A0E8F; margin-bottom: 3mm; margin-top: 6mm; }
+  p { margin-bottom: 3mm; color: #434656; }
+  .lead { font-size: 16px; color: #1a1a2e; line-height: 1.5; margin-bottom: 5mm; }
+
+  /* ── Cards ── */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 5mm 0; }
+  .card {
+    background: #F8F5FF;
+    border: 1px solid #E9DCF9;
+    border-radius: 8px;
+    padding: 5mm;
+  }
+  .card.accent { border-color: #7C3AED; background: #F4ECFF; }
+  .card.dark { background: #1A1330; color: #F3F4F6; border-color: #374151; }
+  .card.dark h3 { color: #A78BFA; }
+  .card.dark p { color: #9CA3AF; }
+  .card .num { font-size: 28px; font-weight: 700; color: #7C3AED; }
+  .card .num.green { color: #10B981; }
+  .card .num.amber { color: #F59E0B; }
+  .card .num.red { color: #EF4444; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 13px; }
+  th { background: #4A0E8F; color: #fff; padding: 3mm 4mm; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 1px; }
+  td { padding: 3mm 4mm; border-bottom: 1px solid #E9DCF9; }
+  tr:nth-child(even) td { background: #F8F5FF; }
+  td.highlight { color: #10B981; font-weight: 600; }
+  td.amber { color: #F59E0B; font-weight: 600; }
+
+  /* ── Callout ── */
+  .callout {
+    background: #F0FDF4;
+    border-left: 3px solid #10B981;
+    padding: 4mm 5mm;
+    margin: 5mm 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout.warning { background: #FFFBEB; border-color: #F59E0B; }
+  .callout.info { background: #F0F4FF; border-color: #7C3AED; }
+  .callout strong { color: #1a1a2e; }
+
+  /* ── Lists ── */
+  ul { margin: 2mm 0 3mm 6mm; }
+  li { margin-bottom: 1.5mm; color: #434656; }
+
+  /* ── Footer ── */
+  .page-footer {
+    position: absolute;
+    bottom: 10mm;
+    left: 30mm;
+    right: 30mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #9CA3AF;
+    border-top: 1px solid #E9DCF9;
+    padding-top: 3mm;
+  }
+
+  /* ── Misc ── */
+  .section-num { color: #7C3AED; font-weight: 700; margin-right: 2mm; }
+  .tag { display: inline-block; background: #F4ECFF; color: #7C3AED; font-size: 10px; font-weight: 600; padding: 1mm 3mm; border-radius: 20px; letter-spacing: 1px; }
+  .tag.green { background: #ECFDF5; color: #10B981; }
+  .pill { display: inline-block; background: #7C3AED; color: #fff; font-size: 10px; padding: 1mm 4mm; border-radius: 20px; font-weight: 600; }
+  .flex { display: flex; gap: 5mm; }
+  .flex > * { flex: 1; }
+  .mt-5 { margin-top: 5mm; }
+  .mt-8 { margin-top: 8mm; }
+  strong { color: #0B1C30; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 1: COVER -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page cover">
+  <div class="accent-line"></div>
+  <div class="logo">AURA</div>
+  <h1>Adaptive Unified<br><span>Risk Architecture</span></h1>
+  <div class="subtitle">One model of you. Every risk you'll ever be.</div>
+  <div class="kpis">
+    <div class="kpi">
+      <div class="value">20–30%</div>
+      <div class="label">Credit Loss Reduction</div>
+    </div>
+    <div class="kpi">
+      <div class="value">40–50%</div>
+      <div class="label">Fraud Loss Reduction</div>
+    </div>
+    <div class="kpi">
+      <div class="value">~$50–80M</div>
+      <div class="label">Annual P&L Impact</div>
+    </div>
+  </div>
+  <div class="meta">
+    <strong>Proposal · Submitted to GXS Bank · 2026</strong><br><br>
+    Prepared by <strong>Continuum Risk Labs Pte. Ltd.</strong><br>
+    Submission: 21 August 2026<br>
+    Global Fintech Hackelerator · Singapore
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 2: EXECUTIVE SUMMARY -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">AURA · CONTINUUM RISK LABS</span>
+    <span class="page-num">02</span>
+  </div>
+
+  <h2><span class="section-num">01</span> Executive Summary</h2>
+
+  <p class="lead">
+    AURA is the first risk architecture where credit and fraud are not separate models — they are the <strong>same model observed through different time horizons</strong>, with a live adversarial Arena that attacks itself so real fraudsters discover the blind spots second.
+  </p>
+
+  <div class="card-grid">
+    <div class="card accent">
+      <div class="num">$487B</div>
+      <h3>The Problem</h3>
+      <p>Global annual fraud + credit losses at the seam between silos. For 70 years, banks have treated these as two separate sciences with different teams, models, and data. The handoff points are precisely where losses compound.</p>
+    </div>
+    <div class="card dark">
+      <div class="num green">1 Unified Model</div>
+      <h3>The Solution</h3>
+      <p>A 256-dimensional latent space that captures both capacity and intent simultaneously. Personal Doppelgängers detect divergence from the customer's own behaviour. Counterfactual RL learns from decisions never taken.</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>Core Insight:</strong> Credit default and fraud are the same phenomenon — the divergence between the customer you underwrote and the customer revealed by their behaviour. Today's labels (credit default, bust-out, application fraud) are merely different time signatures of the same underlying risk event.
+  </div>
+
+  <h3>Why GXS Bank Specifically</h3>
+  <p>GXS serves thin-file customers the bureau can't price — gig workers, young earners, the underbanked. When there's no credit history, <strong>behaviour is the only signal</strong>. AURA is a behaviour-first engine, and GXS's digital-native data exhaust is exactly the fuel this system needs.</p>
+
+  <div class="card-grid mt-5">
+    <div class="card">
+      <h3>Four Pillars</h3>
+      <ul>
+        <li><strong>Unified Embedding</strong> — One 256-dim latent space per customer</li>
+        <li><strong>Personal Doppelgänger</strong> — Generative twin streaming residuals</li>
+        <li><strong>Counterfactual RL</strong> — Doubly-robust causal estimation</li>
+        <li><strong>Adversarial Arena</strong> — Live AI agents attack the system 24/7</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Business Alignment</h3>
+      <ul>
+        <li><strong>90-day shadow pilot</strong> — Zero licence cost</li>
+        <li><strong>Performance-linked fees</strong> — We earn when your losses fall</li>
+        <li><strong>Capped at 3× base</strong> — Shared upside, bounded downside</li>
+        <li><strong>Revert clause</strong> — AURA reverts to GXS at no cost if metrics aren't met</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA Proposal · Global Fintech Hackelerator 2026</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 3: PROBLEM + INSIGHT -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">AURA · CONTINUUM RISK LABS</span>
+    <span class="page-num">03</span>
+  </div>
+
+  <h2><span class="section-num">02</span> The Problem: Silos That Bleed</h2>
+
+  <p class="lead">
+    Banking has two risk functions that never talk — and the gap between them is where hundreds of billions in losses disappear every year.
+  </p>
+
+  <div class="card-grid">
+    <div class="card" style="border-color: #7C3AED;">
+      <span class="tag">CREDIT TEAM</span>
+      <h3>"Can they repay?"</h3>
+      <ul>
+        <li>Static PD models · Quarterly refresh</li>
+        <li>12-month horizon · Income / collateral</li>
+        <li>Population-level statistics</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: #EF4444;">
+      <span class="tag" style="background: #FEE2E2; color: #EF4444;">FRAUD TEAM</span>
+      <h3>"Will they repay?"</h3>
+      <ul>
+        <li>Real-time ML · Millisecond refresh</li>
+        <li>Next-tx horizon · Device / network</li>
+        <li>Behavioral anomaly detection</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <strong>The Blindspot:</strong> The handoff point between these teams is precisely where losses compound. ~$487B in global annual fraud + credit losses exist at these seams — and growing.
+  </div>
+
+  <h2 class="mt-8"><span class="section-num">03</span> The Insight: They Were Never Separate</h2>
+
+  <p class="lead">
+    Credit default and fraud are the <strong>same phenomenon</strong> — the divergence between the customer you underwrote and the customer revealed by their behaviour — observed at different time horizons through different sensors.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Today's Label</th><th>What It Actually Is</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Credit default</strong></td><td>A fraud that took 18 months to reveal itself</td></tr>
+      <tr><td><strong>Bust-out fraud</strong></td><td>A credit default compressed into 30 days</td></tr>
+      <tr><td><strong>Application fraud</strong></td><td>A credit model that was lied to at t=0</td></tr>
+      <tr><td><strong>Transaction fraud</strong></td><td>A creditworthiness event in 30 seconds</td></tr>
+      <tr><td><strong>Strategic default</strong></td><td>A credit customer who became first-party fraud</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info mt-5">
+    <strong>The Reframe:</strong> If you observe the SAME person through TWO time telescopes, you catch the divergence before either team sees it alone. This is AURA's foundation.
+  </div>
+
+  <div class="page-footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA Proposal · Global Fintech Hackelerator 2026</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 4: SOLUTION + ARCHITECTURE -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">AURA · CONTINUUM RISK LABS</span>
+    <span class="page-num">04</span>
+  </div>
+
+  <h2><span class="section-num">04</span> The Solution</h2>
+
+  <p class="lead" style="font-size: 20px; font-weight: 600; color: #0B1C30;">
+    One model. Two time telescopes. A living immune system.
+  </p>
+
+  <p>AURA is the first risk system where the fraud model and the credit model are the same model — observed through different time telescopes — with an adversarial Arena that attacks itself 24/7 so real fraudsters discover the blind spots second.</p>
+
+  <h3>Architecture: Eight Tightly-Coupled Layers</h3>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Layer</th><th>Description</th><th>System</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Unified Risk Embedding</strong></td><td>256-dim global latent space</td><td><span class="pill">SPINE</span></td></tr>
+      <tr><td>2</td><td><strong>Personal Doppelgänger</strong></td><td>Per-customer generative twin · residual streamer</td><td><span class="pill">SPINE</span></td></tr>
+      <tr><td>3</td><td><strong>Twin Strands</strong></td><td>Two decoupled readouts: Capacity × Intent</td><td><span class="pill">SPINE</span></td></tr>
+      <tr><td>4</td><td><strong>Time-Telescope Heads</strong></td><td>spike (sec) / shift (days) / drift (months)</td><td><span class="pill">SPINE</span></td></tr>
+      <tr><td>5</td><td><strong>Counterfactual Replay Loop</strong></td><td>Doubly-robust causal estimation on decisions</td><td><span class="pill">SPINE</span></td></tr>
+      <tr><td>6</td><td><strong>The Arena</strong></td><td>Adversarial agents attack live system in shadow</td><td><span class="pill" style="background: #7C3AED;">IMMUNE</span></td></tr>
+      <tr><td>7</td><td><strong>Risk Field</strong></td><td>Graph contagion across devices, merchants, geographies</td><td><span class="pill" style="background: #7C3AED;">IMMUNE</span></td></tr>
+      <tr><td>8</td><td><strong>Action Layer</strong></td><td>nudge → friction → reprice → interdict</td><td><span class="pill" style="background: #7C3AED;">IMMUNE</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="flex mt-5">
+    <div class="card dark">
+      <span class="tag">BREAKTHROUGH: DOPPELGÄNGER</span>
+      <h3 class="mt-5">Layer 02 — Personal Doppelgänger</h3>
+      <p>A self-supervised generative twin per customer. Continuously predicts their next state and streams the residuals — where reality diverges from expectation.</p>
+      <p class="mt-5"><strong style="color: #10B981;">Training Data:</strong> The 99% of behavioural signal both silos throw away.</p>
+      <p class="mt-5"><strong style="color: #A78BFA;">Why It Wins:</strong> Detects change vs the customer's own past, not the population. Strictly more sensitive for bust-out, where the identity is real but the behaviour has shifted.</p>
+    </div>
+    <div class="card dark">
+      <span class="tag" style="background: #FEE2E2; color: #EF4444;">BREAKTHROUGH: ARENA</span>
+      <h3 class="mt-5">Layer 06 — The Arena</h3>
+      <p>Continuously running adversarial agents — synthetic fraud rings, deepfake applicants, AI-built bust-out personas — attack the live system in a shadow environment. Every exploit becomes instant training signal.</p>
+      <p class="mt-5"><strong style="color: #10B981;">What "Adaptive" Means:</strong> Not quarterly retraining — a live immune response.</p>
+      <p class="mt-5"><strong style="color: #EF4444;">Why Now:</strong> Fraudsters now use generative AI. You cannot fight generative with static — only generative with generative.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA Proposal · Global Fintech Hackelerator 2026</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 5: SEE IT WORK + MARKET -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">AURA · CONTINUUM RISK LABS</span>
+    <span class="page-num">05</span>
+  </div>
+
+  <h2><span class="section-num">05</span> See It Work: Two Scenarios, One Engine</h2>
+
+  <div class="card-grid">
+    <div class="card" style="border-color: #F59E0B;">
+      <span class="tag" style="background: #FFFBEB; color: #F59E0B;">SCENARIO 01</span>
+      <h3 class="mt-5">Mei, 34 — Real Person, Real Documents</h3>
+      <p>Her doppelgänger detects: salary deposits landing later each month, three new digital credit accounts, top-ups to an unfamiliar e-wallet cluster, 2 a.m. sessions from a second device.</p>
+      <p class="mt-5"><strong style="color: #9CA3AF;">Old World:</strong> <em>Fraud model says "legitimate". Credit score hasn't caught up.</em></p>
+      <p class="mt-5"><strong style="color: #10B981;">AURA:</strong> Medium-scale shift + intent manifold = early bust-out transition. Action: consolidation offer + limit adjustment. <strong>Loss prevented, customer saved.</strong></p>
+    </div>
+    <div class="card" style="border-color: #EF4444;">
+      <span class="tag" style="background: #FEE2E2; color: #EF4444;">SCENARIO 02</span>
+      <h3 class="mt-5">Synthetic Identity Ring — 200 Deepfakes</h3>
+      <p>200 applications filed. Individually pristine. Collectively: all 200 doppelgängers share one residual signature — identical application micro-cadence, one device cluster, synchronised behaviour templates.</p>
+      <p class="mt-5"><strong style="color: #EF4444;">Risk Field:</strong> Lights up as a cluster diverging from reality at once.</p>
+      <p class="mt-5"><strong style="color: #10B981;">Outcome:</strong> <strong>Ring killed at application — not at first missed payment.</strong></p>
+    </div>
+  </div>
+
+  <h2 class="mt-8"><span class="section-num">06</span> Why Now: Three Forces Converge</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="num">01</div>
+      <h3>Causal ML Tooling</h3>
+      <p>EconML, DoWhy, doubly-robust estimators make counterfactual training operationalisable at production scale.</p>
+    </div>
+    <div class="card">
+      <div class="num">02</div>
+      <h3>Vector DBs + Sequence Models</h3>
+      <p>256-dim real-time updates and millions of live generative twins are now computationally feasible.</p>
+    </div>
+    <div class="card">
+      <div class="num amber">03</div>
+      <h3>Regulator Openness</h3>
+      <p>MAS, EBA, OCC signal acceptance of continuously-learning models, provided a frozen shadow is maintained for audit.</p>
+    </div>
+    <div class="card dark">
+      <div class="num red">$487B</div>
+      <h3>Annual Fraud Losses</h3>
+      <p>Global Financial Services. Growing 14% YoY. The status quo is not working.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA Proposal · Global Fintech Hackelerator 2026</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 6: IMPACT + BUSINESS MODEL -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">AURA · CONTINUUM RISK LABS</span>
+    <span class="page-num">06</span>
+  </div>
+
+  <h2><span class="section-num">07</span> Projected Impact</h2>
+  <p class="lead">Three-year P&L impact · Mid-sized bank · US$50B portfolio · Treated segments only</p>
+
+  <table>
+    <thead>
+      <tr><th>Metric</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Credit loss reduction</strong></td><td class="highlight">10%</td><td class="highlight">17%</td><td class="highlight">25%</td></tr>
+      <tr><td><strong>Fraud loss reduction</strong></td><td class="highlight">22%</td><td class="highlight">35%</td><td class="highlight">45%</td></tr>
+      <tr><td><strong>False-positive reduction</strong></td><td>6%</td><td>12%</td><td>20%</td></tr>
+      <tr><td><strong>P&L impact (US$M)</strong></td><td class="amber">$20M</td><td class="amber">$45M</td><td class="amber">$65M</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout mt-5">
+    <strong>Year 3 Outcome:</strong> ~US$50–80M annual P&L impact. This is not aspirational — it's the conservative floor based on treated segments only.
+  </div>
+
+  <h2 class="mt-8"><span class="section-num">08</span> Business Model: Aligned Economics</h2>
+
+  <p class="lead">We earn meaningfully only when GXS Bank's losses demonstrably fall. The first 90 days are at zero licence cost.</p>
+
+  <div class="card-grid">
+    <div class="card" style="border-color: #10B981; background: #F0FDF4;">
+      <span class="tag green">RECOMMENDED</span>
+      <h3 class="mt-5">Shadow Pilot</h3>
+      <p style="font-size: 18px; font-weight: 700;">Zero cost · 90 days</p>
+      <ul class="mt-5">
+        <li>Single product line</li>
+        <li>Divergence baseline established</li>
+        <li>No production decisions</li>
+        <li>Proof before commitment</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="mt-5">Base License</h3>
+      <p style="font-size: 18px; font-weight: 700;">Annual · Tiered by volume</p>
+      <ul class="mt-5">
+        <li>Platform access</li>
+        <li>Embedding + horizon heads</li>
+        <li>Regulatory shadow</li>
+        <li>Standard MRM support</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="mt-5">Performance</h3>
+      <p style="font-size: 18px; font-weight: 700;">% of verified loss reduction</p>
+      <ul class="mt-5">
+        <li>Indexed to baseline</li>
+        <li>Audited quarterly</li>
+        <li>Aligns our P&L with yours</li>
+        <li>Capped at 3× base fee</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA Proposal · Global Fintech Hackelerator 2026</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PAGE 7: ROADMAP + TEAM + ASK -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">AURA · CONTINUUM RISK LABS</span>
+    <span class="page-num">07</span>
+  </div>
+
+  <h2><span class="section-num">09</span> Implementation Roadmap</h2>
+  <p class="lead">36 months · 4 phases · 1 gate per phase</p>
+
+  <table>
+    <thead>
+      <tr><th>Phase</th><th>Timeline</th><th>Description</th><th>Exit Criterion</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill">01</span> Shadow</td>
+        <td>0–6 mo</td>
+        <td>Build embedding + doppelgängers on existing features. Run as shadow. Measure divergence.</td>
+        <td class="highlight">Divergence baseline established</td>
+      </tr>
+      <tr>
+        <td><span class="pill">02</span> Time Telescopes</td>
+        <td>6–12 mo</td>
+        <td>Deploy horizon heads. Live decisions on next-tx + 30-day heads in low-risk segments.</td>
+        <td class="highlight">FP reduction ≥ 5%</td>
+      </tr>
+      <tr>
+        <td><span class="pill">03</span> Loop + Arena</td>
+        <td>12–24 mo</td>
+        <td>Counterfactual replay loop + Arena live. Train on interventions and adversarial exploits.</td>
+        <td class="highlight">Credit loss ↓ ≥ 10%</td>
+      </tr>
+      <tr>
+        <td><span class="pill">04</span> Genome + Action</td>
+        <td>24–36 mo</td>
+        <td>Risk Field primary substrate. Action Layer live. Migrate shadow to graph-explainable.</td>
+        <td class="highlight">Full deployment · MRM sign-off</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="mt-8"><span class="section-num">10</span> Team</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="num">MC</div>
+      <h3 class="mt-5">Dr. Maya Chen — CEO</h3>
+      <p>Ex-CRO, DBS Consumer Bank. 18 yrs APAC retail credit. Led DBS model-risk transformation (2019–23).</p>
+    </div>
+    <div class="card">
+      <div class="num">AP</div>
+      <h3 class="mt-5">Arjun Patel — CTO</h3>
+      <p>Built fraud ML at Stripe & Paytm. Architected feature stores at 12M QPS. Stanford CS PhD candidate.</p>
+    </div>
+    <div class="card">
+      <div class="num">LP</div>
+      <h3 class="mt-5">Dr. Lena Petrova — Chief Scientist</h3>
+      <p>Co-author, foundational doubly-robust counterfactual estimation paper (JMLR 2021). Ex-Microsoft Research NYC.</p>
+    </div>
+    <div class="card">
+      <div class="num">MT</div>
+      <h3 class="mt-5">Marcus Tan — Head of Reg Engineering</h3>
+      <p>Ex-MAS regulator (TRM). Authored portions of the MAS model-risk notice. Ensures AURA ships audit-ready.</p>
+    </div>
+  </div>
+
+  <h2 class="mt-8"><span class="section-num">11</span> The Ask</h2>
+
+  <p class="lead" style="font-size: 22px; font-weight: 700;">Ninety days. Zero risk.</p>
+
+  <div class="card-grid">
+    <div class="card" style="border-color: #7C3AED;">
+      <div class="num">01</div>
+      <h3 class="mt-5">90-Day Shadow Deployment</h3>
+      <p>Zero licence · Single product line · Establish divergence baseline</p>
+    </div>
+    <div class="card" style="border-color: #7C3AED;">
+      <div class="num">02</div>
+      <h3 class="mt-5">Executive Sponsor</h3>
+      <p>CRO or CDO level · Convene credit, fraud, model-risk functions</p>
+    </div>
+    <div class="card" style="border-color: #7C3AED;">
+      <div class="num">03</div>
+      <h3 class="mt-5">3 Years of Historical Data</h3>
+      <p>With outcome labels · Counterfactual training begins on day one</p>
+    </div>
+  </div>
+
+  <div class="callout mt-5">
+    <strong>In return, we commit to a measurable reduction in combined credit and fraud losses within twelve months — or AURA reverts to GXS Bank at no cost.</strong>
+  </div>
+
+  <div class="page-footer">
+    <span>Continuum Risk Labs Pte. Ltd. · Confidential</span>
+    <span>AURA Proposal · Global Fintech Hackelerator 2026</span>
+  </div>
+</div>
+
+</body>
+</html>

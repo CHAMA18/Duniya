@@ -31,10 +31,10 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // ── Pulse Purple design tokens ──
-  static const Color _duniyaPurple = Color(0xFF9900FF);
-  static const Color _duniyaPurpleDark = Color(0xFF7C3AED);
-  static const Color _duniyaPurpleDeep = Color(0xFF6D28D9);
-  static const Color _duniyaPurpleLight = Color(0xFFF3F0FF);
+  static const Color _pulsePurple = Color(0xFF9900FF);
+  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
+  static const Color _pulsePurpleDeep = Color(0xFF6D28D9);
+  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
   static const Color _navy900 = Color(0xFF0A192F);
   static const Color _background = Color(0xFFF8F9FF);
   static const Color _surface = Color(0xFFF8F9FF);
@@ -128,7 +128,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   Color _getProductIconBg(ProductMasterRecord product) {
     final cat = (product.category ?? '').toLowerCase();
     if (cat.contains('antibiotic')) {
-      return _duniyaPurple.withValues(alpha: 0.08);
+      return _pulsePurple.withValues(alpha: 0.08);
     }
     if (cat.contains('vitamin') || cat.contains('supplement')) {
       return const Color(0xFF7C3AED).withValues(alpha: 0.08);
@@ -136,7 +136,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     if (cat.contains('analgesic') || cat.contains('antipyretic')) {
       return const Color(0xFFD97706).withValues(alpha: 0.08);
     }
-    return _duniyaPurple.withValues(alpha: 0.06);
+    return _pulsePurple.withValues(alpha: 0.06);
   }
 
   Color _getProductIconFg(ProductMasterRecord product) {
@@ -144,7 +144,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     if (cat.contains('vitamin') || cat.contains('supplement')) {
       return const Color(0xFF7C3AED);
     }
-    return _duniyaPurple;
+    return _pulsePurple;
   }
 
   /// Builds the glass-panel search/filter bar
@@ -237,7 +237,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               fontFamily: kAppFontFamily,
                               fontSize: 14.0,
                               fontWeight: FontWeight.w600,
-                              color: _duniyaPurple,
+                              color: _pulsePurple,
                             ),
                           ),
                         ),
@@ -284,7 +284,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: isSelected ? _duniyaPurple : _surface,
+          color: isSelected ? _pulsePurple : _surface,
           borderRadius: BorderRadius.circular(8.0),
           border: isSelected
               ? null
@@ -292,7 +292,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: _duniyaPurple.withValues(alpha: 0.2),
+                    color: _pulsePurple.withValues(alpha: 0.2),
                     blurRadius: 8.0,
                     offset: const Offset(0, 2),
                   )
@@ -320,7 +320,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     final stockLabel =
         isLowStock ? 'Low: $minStock left' : '$minStock in stock';
     final stockBgColor = isLowStock ? _errorContainer : _surfaceContainerHigh;
-    final stockTextColor = isLowStock ? _errorColor : _duniyaPurple;
+    final stockTextColor = isLowStock ? _errorColor : _pulsePurple;
 
     return Container(
       decoration: BoxDecoration(
@@ -466,7 +466,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             child: Icon(
                               Icons.add,
                               size: 16.0,
-                              color: _duniyaPurple,
+                              color: _pulsePurple,
                             ),
                           ),
                         ),
@@ -498,7 +498,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
     return Title(
         title: 'Product Catalogue',
-        color: _duniyaPurpleDeep,
+        color: _pulsePurpleDeep,
         child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -613,9 +613,9 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                             ),
                                           ),
                                           style: OutlinedButton.styleFrom(
-                                            foregroundColor: _duniyaPurple,
+                                            foregroundColor: _pulsePurple,
                                             side: BorderSide(
-                                                color: _duniyaPurple.withValues(
+                                                color: _pulsePurple.withValues(
                                                     alpha: 0.4),
                                                 width: 1.4),
                                             elevation: 0,
@@ -644,9 +644,9 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                             ),
                                           ),
                                           style: OutlinedButton.styleFrom(
-                                            foregroundColor: _duniyaPurple,
+                                            foregroundColor: _pulsePurple,
                                             side: BorderSide(
-                                                color: _duniyaPurple.withValues(
+                                                color: _pulsePurple.withValues(
                                                     alpha: 0.4),
                                                 width: 1.4),
                                             elevation: 0,
@@ -674,7 +674,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                             ),
                                           ),
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: _duniyaPurple,
+                                            backgroundColor: _pulsePurple,
                                             foregroundColor: Colors.white,
                                             elevation: 0,
                                             padding: const EdgeInsets.symmetric(
@@ -735,7 +735,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                       if (!snapshot.hasData) {
                                         return Center(
                                           child: SpinKitRing(
-                                            color: _duniyaPurple,
+                                            color: _pulsePurple,
                                             size: 40.0,
                                           ),
                                         );
@@ -1334,7 +1334,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             ),
           ],
         ),
-        backgroundColor: success ? _duniyaPurple : _errorColor,
+        backgroundColor: success ? _pulsePurple : _errorColor,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),
         shape: RoundedRectangleBorder(
@@ -1363,7 +1363,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SpinKitRing(
-                    color: _duniyaPurple,
+                    color: _pulsePurple,
                     size: 48.0,
                     lineWidth: 3.0,
                   ),
@@ -1425,12 +1425,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          color: _duniyaPurple.withValues(alpha: 0.1),
+                          color: _pulsePurple.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
                           Icons.table_view_rounded,
-                          color: _duniyaPurple,
+                          color: _pulsePurple,
                           size: 24,
                         ),
                       ),
@@ -1583,10 +1583,10 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: _duniyaPurple,
+                          backgroundColor: _pulsePurple,
                           foregroundColor: Colors.white,
                           elevation: 4,
-                          shadowColor: _duniyaPurple.withValues(alpha: 0.3),
+                          shadowColor: _pulsePurple.withValues(alpha: 0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
@@ -1640,7 +1640,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   borderRadius: BorderRadius.circular(24.0),
                   boxShadow: [
                     BoxShadow(
-                      color: _duniyaPurpleDeep.withValues(alpha: 0.15),
+                      color: _pulsePurpleDeep.withValues(alpha: 0.15),
                       blurRadius: 60.0,
                       offset: const Offset(0, 20),
                     ),
@@ -1846,9 +1846,9 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            _duniyaPurple,
-            _duniyaPurpleDark,
-            _duniyaPurpleDeep,
+            _pulsePurple,
+            _pulsePurpleDark,
+            _pulsePurpleDeep,
           ],
         ),
       ),
@@ -1906,10 +1906,10 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           width: 28.0,
           height: 28.0,
           decoration: BoxDecoration(
-            color: _duniyaPurple.withValues(alpha: 0.08),
+            color: _pulsePurple.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(8.0),
           ),
-          child: Icon(icon, size: 15.0, color: _duniyaPurple),
+          child: Icon(icon, size: 15.0, color: _pulsePurple),
         ),
         const SizedBox(width: 10.0),
         Text(
@@ -1918,7 +1918,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             fontFamily: kAppFontFamily,
             fontSize: 13.0,
             fontWeight: FontWeight.w700,
-            color: _duniyaPurpleDark,
+            color: _pulsePurpleDark,
             letterSpacing: 0.5,
           ),
         ),
@@ -1996,7 +1996,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     padding: const EdgeInsets.only(left: 14.0, right: 10.0),
                     child: Icon(icon,
                         size: 18.0,
-                        color: _duniyaPurple.withValues(alpha: 0.6)),
+                        color: _pulsePurple.withValues(alpha: 0.6)),
                   )
                 : null,
             prefixIconConstraints: icon != null
@@ -2007,7 +2007,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               fontFamily: kAppFontFamily,
               fontSize: 13.0,
               fontWeight: FontWeight.w600,
-              color: _duniyaPurpleDark,
+              color: _pulsePurpleDark,
             ),
             filled: true,
             fillColor: const Color(0xFFFAFAFE),
@@ -2025,7 +2025,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: _duniyaPurple, width: 1.8),
+              borderSide: BorderSide(color: _pulsePurple, width: 1.8),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -2060,7 +2060,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             borderRadius: BorderRadius.circular(12.0),
             border: Border.all(
               color: _model.dialogCategoryValue != null
-                  ? _duniyaPurple.withValues(alpha: 0.4)
+                  ? _pulsePurple.withValues(alpha: 0.4)
                   : _outlineVariant.withValues(alpha: 0.6),
               width: _model.dialogCategoryValue != null ? 1.5 : 1.0,
             ),
@@ -2101,7 +2101,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             margin: EdgeInsets.zero,
             icon: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: _duniyaPurple,
+              color: _pulsePurple,
               size: 20.0,
             ),
           ),
@@ -2301,7 +2301,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               Text('Product added successfully'),
                             ],
                           ),
-                          backgroundColor: _duniyaPurple,
+                          backgroundColor: _pulsePurple,
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
@@ -2320,12 +2320,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: canSave ? _duniyaPurple : _outlineVariant,
+                backgroundColor: canSave ? _pulsePurple : _outlineVariant,
                 foregroundColor: Colors.white,
                 disabledBackgroundColor: _outlineVariant.withValues(alpha: 0.4),
                 disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
                 elevation: canSave ? 4.0 : 0,
-                shadowColor: _duniyaPurple.withValues(alpha: 0.3),
+                shadowColor: _pulsePurple.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),

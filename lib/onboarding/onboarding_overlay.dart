@@ -12,9 +12,9 @@ import 'onboarding_service.dart';
 ///   - replay the tour later from the sidebar.
 ///
 /// The overlay is self-contained — it manages its own PageController and
-/// state. The host page just calls `DuniyaOnboardingOverlay.show(context)`.
-class DuniyaOnboardingOverlay extends StatefulWidget {
-  const DuniyaOnboardingOverlay({super.key, this.startChapterIndex = 0});
+/// state. The host page just calls `PulseOnboardingOverlay.show(context)`.
+class PulseOnboardingOverlay extends StatefulWidget {
+  const PulseOnboardingOverlay({super.key, this.startChapterIndex = 0});
 
   /// Index into [kOnboardingChapters] to start at. Defaults to 0 (the
   /// very first chapter). Use this to deep-link to a specific chapter
@@ -31,7 +31,7 @@ class DuniyaOnboardingOverlay extends StatefulWidget {
         pageBuilder: (context, animation, secondaryAnimation) {
           return FadeTransition(
             opacity: animation,
-            child: DuniyaOnboardingOverlay(
+            child: PulseOnboardingOverlay(
               startChapterIndex: startChapterIndex,
             ),
           );
@@ -41,11 +41,11 @@ class DuniyaOnboardingOverlay extends StatefulWidget {
   }
 
   @override
-  State<DuniyaOnboardingOverlay> createState() =>
-      _DuniyaOnboardingOverlayState();
+  State<PulseOnboardingOverlay> createState() =>
+      _PulseOnboardingOverlayState();
 }
 
-class _DuniyaOnboardingOverlayState extends State<DuniyaOnboardingOverlay> {
+class _PulseOnboardingOverlayState extends State<PulseOnboardingOverlay> {
   late final List<OnboardingPage> _pages;
   late final PageController _pageController;
   late int _currentIndex;

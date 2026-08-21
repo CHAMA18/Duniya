@@ -55,8 +55,8 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
 
   // Use the shared application theme so this page follows light/dark mode,
   // brand color changes, and the same surface hierarchy as the rest of Pulse.
-  Color get _duniyaPurple => FlutterFlowTheme.of(context).primary;
-  Color get _duniyaPurpleLight =>
+  Color get _pulsePurple => FlutterFlowTheme.of(context).primary;
+  Color get _pulsePurpleLight =>
       FlutterFlowTheme.of(context).primary.withValues(alpha: 0.10);
   Color get _bgColor => FlutterFlowTheme.of(context).primaryBackground;
   Color get _surfaceColor => FlutterFlowTheme.of(context).secondaryBackground;
@@ -407,11 +407,11 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                     child: Container(
                       padding: const EdgeInsets.all(6.0),
                       decoration: BoxDecoration(
-                        color: _duniyaPurpleLight,
+                        color: _pulsePurpleLight,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Icon(Icons.visibility_outlined,
-                          size: 16.0, color: _duniyaPurple),
+                          size: 16.0, color: _pulsePurple),
                     ),
                   ),
                   const SizedBox(width: 6.0),
@@ -420,11 +420,11 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                     child: Container(
                       padding: const EdgeInsets.all(6.0),
                       decoration: BoxDecoration(
-                        color: _duniyaPurpleLight,
+                        color: _pulsePurpleLight,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Icon(Icons.edit_outlined,
-                          size: 16.0, color: _duniyaPurple),
+                          size: 16.0, color: _pulsePurple),
                     ),
                   ),
                 ],
@@ -444,7 +444,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SpinKitRing(color: _duniyaPurple, size: 48.0),
+            SpinKitRing(color: _pulsePurple, size: 48.0),
             const SizedBox(height: 16.0),
             Text('Loading claims...',
                 style: TextStyle(
@@ -532,7 +532,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
 
     return Title(
       title: 'Insurance / Claims',
-      color: _duniyaPurple,
+      color: _pulsePurple,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -730,14 +730,14 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   decoration: BoxDecoration(
-                                                    color: _duniyaPurpleLight,
+                                                    color: _pulsePurpleLight,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0),
                                                   ),
                                                   child: Icon(
                                                       Icons.verified_user,
-                                                      color: _duniyaPurple,
+                                                      color: _pulsePurple,
                                                       size: 22.0),
                                                 ),
                                                 const SizedBox(width: 12.0),
@@ -779,12 +779,12 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                                 .circular(12.0),
                                                         borderSide: BorderSide(
                                                             color:
-                                                                _duniyaPurple,
+                                                                _pulsePurple,
                                                             width: 2.0),
                                                       ),
                                                       prefixIcon: Icon(
                                                           Icons.badge,
-                                                          color: _duniyaPurple,
+                                                          color: _pulsePurple,
                                                           size: 20.0),
                                                     ),
                                                   ),
@@ -804,7 +804,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                     backgroundColor:
-                                                        _duniyaPurple,
+                                                        _pulsePurple,
                                                     foregroundColor:
                                                         FlutterFlowTheme.of(
                                                                 context)
@@ -836,12 +836,12 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 padding:
                                                     const EdgeInsets.all(16.0),
                                                 decoration: BoxDecoration(
-                                                  color: _duniyaPurpleLight,
+                                                  color: _pulsePurpleLight,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12.0),
                                                   border: Border.all(
-                                                      color: _duniyaPurple
+                                                      color: _pulsePurple
                                                           .withValues(
                                                               alpha: 0.2),
                                                       width: 1.0),
@@ -914,13 +914,13 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   decoration: BoxDecoration(
-                                                    color: _duniyaPurpleLight,
+                                                    color: _pulsePurpleLight,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0),
                                                   ),
                                                   child: Icon(Icons.add_circle,
-                                                      color: _duniyaPurple,
+                                                      color: _pulsePurple,
                                                       size: 22.0),
                                                 ),
                                                 const SizedBox(width: 12.0),
@@ -964,12 +964,12 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                                 .circular(12.0),
                                                         borderSide: BorderSide(
                                                             color:
-                                                                _duniyaPurple,
+                                                                _pulsePurple,
                                                             width: 2.0),
                                                       ),
                                                       prefixIcon: Icon(
                                                           Icons.receipt_long,
-                                                          color: _duniyaPurple,
+                                                          color: _pulsePurple,
                                                           size: 20.0),
                                                     ),
                                                     items: [
@@ -1018,12 +1018,12 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                                 .circular(12.0),
                                                         borderSide: BorderSide(
                                                             color:
-                                                                _duniyaPurple,
+                                                                _pulsePurple,
                                                             width: 2.0),
                                                       ),
                                                       prefixIcon: Icon(
                                                           Icons.person,
-                                                          color: _duniyaPurple,
+                                                          color: _pulsePurple,
                                                           size: 20.0),
                                                     ),
                                                     items: [
@@ -1079,12 +1079,12 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                                 .circular(12.0),
                                                         borderSide: BorderSide(
                                                             color:
-                                                                _duniyaPurple,
+                                                                _pulsePurple,
                                                             width: 2.0),
                                                       ),
                                                       prefixIcon: Icon(
                                                           Icons.attach_money,
-                                                          color: _duniyaPurple,
+                                                          color: _pulsePurple,
                                                           size: 20.0),
                                                     ),
                                                   ),
@@ -1131,7 +1131,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                 label: Text('Submit Claim'),
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                      _duniyaPurple,
+                                                      _pulsePurple,
                                                   foregroundColor:
                                                       FlutterFlowTheme.of(
                                                               context)
@@ -1208,7 +1208,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                           vertical: 8.0),
                                                       decoration: BoxDecoration(
                                                         color: isActive
-                                                            ? _duniyaPurple
+                                                            ? _pulsePurple
                                                             : Colors
                                                                 .transparent,
                                                         borderRadius:
@@ -1217,7 +1217,7 @@ class _InsuranceWidgetState extends State<InsuranceWidget>
                                                                     9999.0),
                                                         border: Border.all(
                                                           color: isActive
-                                                              ? _duniyaPurple
+                                                              ? _pulsePurple
                                                               : _borderColor,
                                                           width: 1.0,
                                                         ),

@@ -45,9 +45,9 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
       }
       if (!mounted) return;
 
-      if (AccessControl.isDuniyaUser(context)) {
+      if (AccessControl.isPulseUser(context)) {
         context.goNamedAuth(
-          DuniyaPharmaciesWidget.routeName,
+          PulsePharmaciesWidget.routeName,
           context.mounted,
         );
         return;
