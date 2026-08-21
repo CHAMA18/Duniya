@@ -27,6 +27,7 @@ class _PharmacyDashboardData {
   const _PharmacyDashboardData({
     required this.pharmacy,
     required this.stockItems,
+    required this.productMaster,
     required this.sales,
     required this.goodsReceived,
     required this.movements,
@@ -39,6 +40,13 @@ class _PharmacyDashboardData {
 
   final PharmacyRecord? pharmacy;
   final List<StockRecord> stockItems;
+  /// Active products in the Product Catalogue (ProductMaster collection).
+  /// Drives the "active SKUs" count so the dashboard reflects the
+  /// catalogue even before any stock has been received against those
+  /// products. Without this, a freshly-onboarded pharmacy that has
+  /// imported its product catalogue but hasn't yet recorded any goods
+  /// received would see "0 active SKUs" and "ZMK 0" inventory value.
+  final List<ProductMasterRecord> productMaster;
   final List<SalesRecord> sales;
   final List<GoodsReceivedRecord> goodsReceived;
   final List<StockMovementRecord> movements;
@@ -2949,7 +2957,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             final deliveries = data.goodsReceived.length;
                             final movementCount = data.movements.length;
                             final nearExpiry = data.nearExpiryItems;
-                            final activeSkus = data.stockItems.length;
+                            // Active SKUs comes from the Product Catalogue
+                            // (ProductMaster with IsActive=true), not just
+                            // Stock entries — so the count reflects what
+                            // the pharmacy has defined in its catalogue,
+                            // even before any goods are received.
+                            final activeSkus = data.productMaster.isNotEmpty
+                                ? data.productMaster.length
+                                : data.stockItems.length;
 
                             return SingleChildScrollView(
                               padding: EdgeInsets.fromLTRB(
@@ -4338,6 +4353,20 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       );
     } catch (_) {}
 
+    // Active products in the Product Catalogue. Used to drive the
+    // "active SKUs" count and as a fallback for the "Inventory Value"
+    // KPI when no Stock entries have been recorded yet (i.e. the
+    // pharmacy has imported its catalogue but hasn't yet received
+    // any goods against it). Both create paths in product_master_widget
+    // set IsActive=true on insert, so this filter is safe.
+    List<ProductMasterRecord> productMaster = [];
+    try {
+      productMaster = await queryProductMasterRecordOnce(
+        parent: scope,
+        queryBuilder: (query) => query.where('IsActive', isEqualTo: true),
+      );
+    } catch (_) {}
+
     List<SalesRecord> salesRecords = [];
     try {
       salesRecords = await querySalesRecordOnce(
@@ -4375,10 +4404,24 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       );
     } catch (_) {}
 
-    final inventoryValue = stockItems.fold<double>(
+    // Inventory value:
+    //   1. If the pharmacy has any on-hand stock, sum quantity × price
+    //      across all Stock entries — that's the real on-hand value.
+    //   2. If Stock is empty (catalogue imported but no goods received
+    //      yet), fall back to the catalogue's baseline cost value:
+    //      sum of CostPrice for every active ProductMaster record.
+    //      This represents the capital tied up in 1 unit of each
+    //      catalogue item — a meaningful "you have X of inventory
+    //      defined" number, never zero for an active catalogue.
+    final stockValue = stockItems.fold<double>(
       0.0,
       (sum, stock) => sum + (stock.quantity * stock.price),
     );
+    final catalogueValue = productMaster.fold<double>(
+      0.0,
+      (sum, p) => sum + p.costPrice,
+    );
+    final inventoryValue = stockValue > 0 ? stockValue : catalogueValue;
     final totalItemsSold =
         salesRecords.fold<int>(0, (sum, sale) => sum + sale.numberOfItems);
     final nearExpiryItems = stockItems.where((stock) {
@@ -4397,6 +4440,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     return _PharmacyDashboardData(
       pharmacy: pharmacy,
       stockItems: stockItems,
+      productMaster: productMaster,
       sales: salesRecords,
       goodsReceived: goodsReceived,
       movements: movements,
