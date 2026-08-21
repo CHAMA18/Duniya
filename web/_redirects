@@ -1,13 +1,32 @@
 # Render Static Site routing (Netlify-style _redirects).
 #
-# The site is LANDING-FIRST:
-#   - "/"        → index.html  = the marketing landing page (a real file, so it
-#                 wins over the redirect below)
-#   - "/app.html"→ the Flutter web app shell (renamed by build.sh)
-#   - every other path that isn't a real file (e.g. /loginUni, /resetPasswordUni)
-#     → app.html, so the Flutter SPA router handles client-side routes.
+# IMPORTANT: Render's static site _redirects parser ONLY supports SPA
+# fallback (200-status rewrites) when the destination is /index.html.
+# Rewriting to /app.html (or any other path) is silently ignored —
+# which is why deep links like /supplierManagement or /loginUni
+# previously 404'd on reload.
+#
+# This file is structured around that constraint:
+#
+#   - /                → /landing.html    200   (marketing page)
+#   - /app.html        → real file (SPA shell, kept for backwards-compat
+#                       with /app.html?route=... deep links)
+#   - /index.html      → real file (the SPA shell — Render's SPA
+#                       fallback destination)
+#   - /landing.html    → real file (marketing page)
+#   - everything else   → /index.html    200   (SPA fallback so the
+#                       Flutter router handles client-side routes
+#                       like /supplierManagement, /loginUni,
+#                       /registerUni, /resetPasswordUni, etc.)
 #
 # This file MUST live in the published directory (build/web/_redirects).
 # build.sh copies it in after `flutter build web`.
-/    /index.html   200
-/*    /app.html   200
+
+# Root URL serves the marketing landing page (rewrite, not redirect —
+# the browser URL stays at /, so the user sees a clean URL).
+/                /landing.html   200
+
+# Any other non-file path falls through to the SPA shell, which
+# Flutter's router then handles client-side. This is Render's
+# documented SPA fallback pattern.
+/*               /index.html     200

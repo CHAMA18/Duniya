@@ -87,13 +87,25 @@ if [[ -f "web/_redirects" ]]; then
 fi
 
 # ---------------------------------------------------------------------
-# 4b. LANDING-FIRST: serve the marketing landing page at "/" and move
-#     the Flutter SPA shell to /app.html (deep links route via _redirects).
+# 4b. LANDING-FIRST (revised for Render SPA fallback support):
+#   - Keep Flutter's index.html at /index.html  (the SPA shell — Render
+#     ONLY supports SPA fallback to /index.html, NOT to /app.html, so
+#     the SPA shell MUST live at /index.html for deep links like
+#     /supplierManagement or /loginUni to work on reload).
+#   - Copy the SPA shell to /app.html as well, for backwards-compat
+#     with any existing direct links to /app.html?route=...
+#   - Copy the marketing landing page to /landing.html (NOT /index.html).
+#   - _redirects then rewrites / → /landing.html and /* → /index.html,
+#     so the root URL shows the marketing page while every other path
+#     serves the SPA shell (which Flutter's router then handles).
 # ---------------------------------------------------------------------
 if [[ -f "build/web/index.html" && -f "web/landing.html" ]]; then
+  # Preserve the SPA shell as /app.html for backwards-compat direct links.
   cp build/web/index.html build/web/app.html
-  cp web/landing.html build/web/index.html
-  echo "==> Landing-first: / = landing page, Flutter app shell at /app.html"
+  # Marketing landing page lives at /landing.html (NOT /index.html).
+  cp web/landing.html build/web/landing.html
+  # /index.html is LEFT as the Flutter SPA shell (don't overwrite it).
+  echo "==> Landing-first: / = landing.html (via _redirects), SPA shell at /index.html AND /app.html"
 fi
 
 # ---------------------------------------------------------------------
@@ -114,18 +126,21 @@ if [[ -f "build/web/duniya_service_worker.js" ]]; then
 fi
 
 # Replace the DEV placeholder and %%BUILD_VERSION%% in index.html (now the
-# landing page) with the build version.
+# Flutter SPA shell — Render's SPA fallback destination) with the build
+# version. The marketing landing page is at /landing.html and gets its
+# version injected in the next block.
 if [[ -f "build/web/index.html" ]]; then
   sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/index.html
   sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/index.html
-  echo "==> Injected version into index.html (landing page)"
+  echo "==> Injected version into index.html (Flutter SPA shell — Render SPA fallback destination)"
 fi
 
-# Inject the version into the Flutter app shell (renamed to app.html).
+# Inject the version into the Flutter app shell alias at /app.html
+# (backwards-compat for existing direct links to /app.html?route=...).
 if [[ -f "build/web/app.html" ]]; then
   sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/app.html
   sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/app.html
-  echo "==> Injected version into app.html (Flutter app shell)"
+  echo "==> Injected version into app.html (Flutter SPA shell alias)"
 fi
 
 # Replace the placeholder in manifest.json with the build version.
@@ -175,15 +190,13 @@ if [[ -f "build/web/assets/FontManifest.json" ]]; then
 fi
 
 # ---------------------------------------------------------------------
-# 7. Copy the landing page to build output.
-#    The landing page is a standalone HTML file that serves as the
-#    marketing/download page for Pulse. Copy the version-injected copy
-#    (build/web/index.html) so /landing.html matches the root page.
+# 7. (Removed) Previously copied build/web/index.html → build/web/landing.html
+#    so /landing.html mirrored the root URL. With the new landing-first
+#    flow (step 4b), /index.html is the SPA shell and the marketing
+#    landing page lives directly at /landing.html (copied from
+#    web/landing.html in step 4b and version-injected in step 5).
+#    No mirror copy needed.
 # ---------------------------------------------------------------------
-if [[ -f "build/web/index.html" ]]; then
-  cp build/web/index.html build/web/landing.html
-  echo "==> Copied build/web/index.html -> build/web/landing.html"
-fi
 
 # Copy fonts directory for the landing page
 if [[ -d "web/fonts" ]]; then
