@@ -20,6 +20,7 @@ import 'schema/damaged_stock_record.dart';
 import 'schema/outlet_record.dart';
 import 'schema/pharmacy_user_record.dart';
 import 'schema/product_master_record.dart';
+import 'schema/supplier_record.dart';
 import 'schema/stock_balance_record.dart';
 import 'schema/stock_movement_record.dart';
 import 'schema/goods_received_record.dart';
