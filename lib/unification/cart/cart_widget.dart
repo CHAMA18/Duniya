@@ -25,6 +25,17 @@ class CartWidget extends StatefulWidget {
 class _CartWidgetState extends State<CartWidget> {
   late CartModel _model;
 
+  /// Selected payment method for the current checkout session.
+  /// Persists only for the lifetime of this widget instance — the
+  /// user can change it before tapping Pay, and it resets to the
+  /// default ('cash') when the drawer is closed and reopened.
+  _PaymentMethod _selectedPaymentMethod = _PaymentMethod.cash;
+
+  /// When [_selectedPaymentMethod] is [mobileMoney], this stores
+  /// the chosen Zambian mobile-money provider.
+  _MobileMoneyProvider _selectedMobileMoneyProvider =
+      _MobileMoneyProvider.airtel;
+
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -402,6 +413,24 @@ class _CartWidgetState extends State<CartWidget> {
                         ),
                       ],
                     ),
+                    // ── Payment method selector ──────────────────────────
+                    // Three primary cards (Cash / Card / Mobile Money)
+                    // + a sub-picker (Airtel / MTN / Zamtel) that
+                    // expands below when Mobile Money is selected.
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0, 8, 0, 16),
+                      child: _PaymentMethodSelector(
+                        selectedMethod: _selectedPaymentMethod,
+                        selectedProvider: _selectedMobileMoneyProvider,
+                        onMethodChanged: (m) => safeSetState(() {
+                          _selectedPaymentMethod = m;
+                        }),
+                        onProviderChanged: (p) => safeSetState(() {
+                          _selectedMobileMoneyProvider = p;
+                        }),
+                      ),
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -682,9 +711,7 @@ class _CartWidgetState extends State<CartWidget> {
 
                               safeSetState(() {});
                             },
-                            text: FFLocalizations.of(context).getText(
-                              '37thmxt4' /* Pay */,
-                            ),
+                            text: _payButtonLabel(context),
                             options: FFButtonOptions(
                               height: 40.0,
                               padding: EdgeInsetsDirectional.fromSTEB(
@@ -719,6 +746,424 @@ class _CartWidgetState extends State<CartWidget> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  /// Build the Pay button label dynamically based on the selected
+  /// payment method and current cart total. e.g.:
+  ///   "Pay ZMK 2,000 via Cash"
+  ///   "Pay ZMK 2,000 via Airtel Money"
+  ///   "Pay ZMK 2,000 via MTN Money"
+  ///   "Pay ZMK 2,000 via Card"
+  String _payButtonLabel(BuildContext context) {
+    final total = functions.cartTotal(
+      FFAppState().Cart.price.toList(),
+      FFAppState().Cart.quantity.toList(),
+    );
+    final totalStr = total.toStringAsFixed(total.truncateToDouble() == total ? 0 : 2);
+    final methodLabel = switch (_selectedPaymentMethod) {
+      _PaymentMethod.cash => 'Cash',
+      _PaymentMethod.card => 'Card',
+      _PaymentMethod.mobileMoney => switch (_selectedMobileMoneyProvider) {
+            _MobileMoneyProvider.airtel => 'Airtel Money',
+            _MobileMoneyProvider.mtn => 'MTN Money',
+            _MobileMoneyProvider.zamtel => 'Zamtel Money',
+          },
+    };
+    return 'Pay ZMK $totalStr via $methodLabel';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//   Payment method selector
+//
+//   Three primary cards (Cash / Card / Mobile Money) laid out in a
+//   row. Each card is tappable; the selected card has a brand-purple
+//   border + light purple background + checkmark badge.
+//
+//   When Mobile Money is the selected method, a sub-picker expands
+//   below showing the three Zambian mobile-money providers
+//   (Airtel, MTN, Zamtel) as a vertical list with their brand
+//   colors and a radio indicator.
+// ═══════════════════════════════════════════════════════════════
+
+enum _PaymentMethod { cash, card, mobileMoney }
+
+enum _MobileMoneyProvider { airtel, mtn, zamtel }
+
+class _PaymentMethodSelector extends StatelessWidget {
+  final _PaymentMethod selectedMethod;
+  final _MobileMoneyProvider selectedProvider;
+  final ValueChanged<_PaymentMethod> onMethodChanged;
+  final ValueChanged<_MobileMoneyProvider> onProviderChanged;
+
+  const _PaymentMethodSelector({
+    required this.selectedMethod,
+    required this.selectedProvider,
+    required this.onMethodChanged,
+    required this.onProviderChanged,
+  });
+
+  // Brand colors
+  static const _purple = Color(0xFF9900FF);
+  static const _purpleSoft = Color(0xFFF1EAFE);
+  static const _purpleDark = Color(0xFF7C3AED);
+
+  // Mobile money provider brand colors
+  static const _airtelRed = Color(0xFFE2231A);
+  static const _mtnYellow = Color(0xFFFFCC00);
+  static const _mtnDark = Color(0xFF0A0A0A);
+  static const _zamtelGreen = Color(0xFF00A551);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.7),
+        ),
+      ),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Icon(Icons.account_balance_wallet_rounded,
+                  color: _purpleDark, size: 16),
+              const SizedBox(width: 8),
+              Text(
+                'Payment method',
+                style: FlutterFlowTheme.of(context).labelMedium.override(
+                      fontFamily:
+                          FlutterFlowTheme.of(context).labelMediumFamily,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                      color: FlutterFlowTheme.of(context).secondaryText,
+                      useGoogleFonts: !FlutterFlowTheme.of(context)
+                          .labelMediumIsCustom,
+                    ),
+              ),
+            ]),
+            const SizedBox(height: 14),
+
+            // ── Primary method row ──
+            Row(children: [
+              Expanded(
+                child: _methodCard(
+                  context: context,
+                  method: _PaymentMethod.cash,
+                  label: 'Cash',
+                  icon: Icons.payments_rounded,
+                  accent: const Color(0xFF10B981),
+                  tint: const Color(0xFFECFDF5),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _methodCard(
+                  context: context,
+                  method: _PaymentMethod.card,
+                  label: 'Card',
+                  icon: Icons.credit_card_rounded,
+                  accent: const Color(0xFF3B82F6),
+                  tint: const Color(0xFFE0EAFF),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _methodCard(
+                  context: context,
+                  method: _PaymentMethod.mobileMoney,
+                  label: 'Mobile Money',
+                  icon: Icons.phone_iphone_rounded,
+                  accent: _purple,
+                  tint: _purpleSoft,
+                ),
+              ),
+            ]),
+
+            // ── Mobile Money sub-picker ──
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              transitionBuilder: (child, anim) => SizeTransition(
+                sizeFactor: anim,
+                axisAlignment: -1.0,
+                child: FadeTransition(opacity: anim, child: child),
+              ),
+              child: selectedMethod == _PaymentMethod.mobileMoney
+                  ? _mobileMoneyProviderPicker(context)
+                  : const SizedBox.shrink(),
+            ),
+          ]),
+    );
+  }
+
+  Widget _methodCard({
+    required BuildContext context,
+    required _PaymentMethod method,
+    required String label,
+    required IconData icon,
+    required Color accent,
+    required Color tint,
+  }) {
+    final isSelected = selectedMethod == method;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => onMethodChanged(method),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? tint
+                : FlutterFlowTheme.of(context).primaryBackground,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: isSelected
+                  ? accent
+                  : FlutterFlowTheme.of(context)
+                      .alternate
+                      .withValues(alpha: 0.5),
+              width: isSelected ? 1.6 : 1.0,
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: accent.withValues(alpha: 0.20),
+                      blurRadius: 14,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(alignment: Alignment.topRight, children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? accent.withValues(alpha: 0.18)
+                        : tint.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: accent, size: 20),
+                ),
+                if (isSelected)
+                  Positioned(
+                    right: -2,
+                    top: -2,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: accent,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            width: 2),
+                      ),
+                      child: const Icon(Icons.check_rounded,
+                          color: Colors.white, size: 11),
+                    ),
+                  ),
+              ]),
+              const SizedBox(height: 10),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: FlutterFlowTheme.of(context).labelSmall.override(
+                      fontFamily:
+                          FlutterFlowTheme.of(context).labelSmallFamily,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected
+                          ? accent
+                          : FlutterFlowTheme.of(context).primaryText,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).labelSmallIsCustom,
+                    ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _mobileMoneyProviderPicker(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: FlutterFlowTheme.of(context).primaryBackground,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+              color: _purple.withValues(alpha: 0.25), width: 1.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(6, 4, 0, 8),
+              child: Row(children: [
+                Icon(Icons.sim_card_rounded,
+                    color: _purpleDark, size: 14),
+                const SizedBox(width: 6),
+                Text(
+                  'Select provider',
+                  style: FlutterFlowTheme.of(context).labelSmall.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).labelSmallFamily,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.0,
+                        color: _purpleDark,
+                        useGoogleFonts: !FlutterFlowTheme.of(context)
+                            .labelSmallIsCustom,
+                      ),
+                ),
+              ]),
+            ),
+            _providerRow(
+              context: context,
+              provider: _MobileMoneyProvider.airtel,
+              name: 'Airtel Money',
+              short: 'A',
+              brand: _airtelRed,
+            ),
+            const SizedBox(height: 6),
+            _providerRow(
+              context: context,
+              provider: _MobileMoneyProvider.mtn,
+              name: 'MTN Money',
+              short: 'M',
+              brand: _mtnYellow,
+              brandForeground: _mtnDark,
+            ),
+            const SizedBox(height: 6),
+            _providerRow(
+              context: context,
+              provider: _MobileMoneyProvider.zamtel,
+              name: 'Zamtel Money',
+              short: 'Z',
+              brand: _zamtelGreen,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _providerRow({
+    required BuildContext context,
+    required _MobileMoneyProvider provider,
+    required String name,
+    required String short,
+    required Color brand,
+    Color? brandForeground,
+  }) {
+    final isSelected = selectedProvider == provider;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () => onProviderChanged(provider),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? brand.withValues(alpha: 0.10)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? brand.withValues(alpha: 0.55)
+                  : FlutterFlowTheme.of(context)
+                      .alternate
+                      .withValues(alpha: 0.4),
+              width: isSelected ? 1.3 : 1.0,
+            ),
+          ),
+          child: Row(children: [
+            // Radio indicator
+            Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected
+                      ? brand
+                      : FlutterFlowTheme.of(context)
+                          .alternate
+                          .withValues(alpha: 0.7),
+                  width: 2,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: isSelected
+                  ? Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(
+                          color: brand, shape: BoxShape.circle),
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            // Provider brand monogram
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: brand,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                short,
+                style: TextStyle(
+                  color: brandForeground ?? Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Provider name
+            Expanded(
+              child: Text(
+                name,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily:
+                          FlutterFlowTheme.of(context).bodyMediumFamily,
+                      fontSize: 14,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      useGoogleFonts:
+                          !FlutterFlowTheme.of(context).bodyMediumIsCustom,
+                    ),
+              ),
+            ),
+            if (isSelected)
+              Icon(Icons.check_circle_rounded, color: brand, size: 18),
+          ]),
         ),
       ),
     );
