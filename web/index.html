@@ -63,10 +63,166 @@
     * {
       font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
+
+    /* ══════════════════════════════════════════════════════════════
+       Branded loading screen — shown while Flutter boots, then
+       automatically removed by the Flutter framework once the app
+       renders its first frame.
+       ══════════════════════════════════════════════════════════════ */
+    #pulse-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+      background: #07070B;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #pulse-loader.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Spinner ring around the logo */
+    .pulse-loader-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    .pulse-loader-ring::before,
+    .pulse-loader-ring::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .pulse-loader-ring::before {
+      border-top-color: #9900FF;
+      border-right-color: #B44DFF;
+      animation: pulse-spin 1.2s linear infinite;
+    }
+    .pulse-loader-ring::after {
+      border-top-color: rgba(153, 0, 255, 0.25);
+      border-left-color: rgba(180, 77, 255, 0.15);
+      animation: pulse-spin 1.8s linear infinite reverse;
+    }
+    @keyframes pulse-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Inner dotted ring */
+    .pulse-loader-dots {
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      animation: pulse-spin 3s linear infinite;
+    }
+    .pulse-loader-dots::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dotted rgba(153, 0, 255, 0.3);
+    }
+
+    /* Pulse logo SVG in the center of the ring */
+    .pulse-loader-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      filter: drop-shadow(0 0 12px rgba(153, 0, 255, 0.4));
+      animation: pulse-breathe 2s ease-in-out infinite;
+    }
+    @keyframes pulse-breathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%      { transform: translate(-50%, -50%) scale(0.92); }
+    }
+
+    /* "Pulse" wordmark below the ring */
+    .pulse-loader-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+    }
+    .pulse-loader-text em {
+      font-style: normal;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Loading dots animation */
+    .pulse-loader-loading {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+    }
+    .pulse-loader-loading::after {
+      content: '...';
+      display: inline-block;
+      width: 0;
+      overflow: hidden;
+      vertical-align: bottom;
+      animation: pulse-dots 1.5s steps(4, end) infinite;
+    }
+    @keyframes pulse-dots {
+      0%   { width: 0; }
+      100% { width: 1.5em; }
+    }
   </style>
 
 </head>
 <body>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       Branded loading screen — shown while Flutter boots.
+       Flutter removes this element automatically once the app
+       renders its first frame.
+       ═════════════════════════════════════════════════════════════ -->
+  <div id="pulse-loader">
+    <div class="pulse-loader-ring">
+      <div class="pulse-loader-dots"></div>
+      <svg class="pulse-loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="pulseLoaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#B44DFF"/>
+            <stop offset="60%" stop-color="#9900FF"/>
+            <stop offset="100%" stop-color="#5B00E8"/>
+          </linearGradient>
+          <radialGradient id="pulseLoaderCore" cx="35%" cy="30%" r="80%">
+            <stop offset="0%"  stop-color="#FFFFFF"/>
+            <stop offset="55%" stop-color="#E8D5FF"/>
+            <stop offset="100%" stop-color="#B44DFF"/>
+          </radialGradient>
+        </defs>
+        <rect width="100" height="100" rx="26" fill="url(#pulseLoaderGrad)"/>
+        <g opacity="0.85">
+          <polygon points="50,24 76,50 50,76 24,50" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1"/>
+          <circle cx="50" cy="24" r="3.4" fill="#FFFFFF"/>
+          <circle cx="76" cy="50" r="3.4" fill="#FFFFFF"/>
+          <circle cx="50" cy="76" r="3.4" fill="#FFFFFF"/>
+          <circle cx="24" cy="50" r="3.4" fill="#FFFFFF"/>
+          <circle cx="68.31" cy="31.69" r="3.4" fill="#FFFFFF"/>
+          <circle cx="68.31" cy="68.31" r="3.4" fill="#FFFFFF"/>
+          <circle cx="31.69" cy="68.31" r="3.4" fill="#FFFFFF"/>
+          <circle cx="31.69" cy="31.69" r="3.4" fill="#FFFFFF"/>
+        </g>
+        <path d="M28 50 L42 50 L46 38 L50 62 L54 30 L58 50 L72 50"
+              fill="none" stroke="url(#pulseLoaderCore)" stroke-width="3"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="pulse-loader-text">Pulse <em>· Pharmacy Intelligence</em></div>
+    <div class="pulse-loader-loading">Loading</div>
+  </div>
 
   <!-- Keep the marketing experience first when this shell is served directly.
        The production build moves this Flutter shell to /app.html, so this

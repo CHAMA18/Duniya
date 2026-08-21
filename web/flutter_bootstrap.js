@@ -61,5 +61,19 @@ _flutter.loader.load({
     });
     // Run the app
     await appRunner.runApp();
+
+    // Fade out + remove the branded Pulse loader (#pulse-loader in
+    // index.html) once the Flutter app has rendered its first frame.
+    // The 400ms fade-out transition gives a smooth handoff from the
+    // HTML loading screen to the Flutter canvas.
+    var loader = document.getElementById('pulse-loader');
+    if (loader) {
+      loader.classList.add('fade-out');
+      setTimeout(function () {
+        if (loader && loader.parentNode) {
+          loader.parentNode.removeChild(loader);
+        }
+      }, 500);
+    }
   }
 });
