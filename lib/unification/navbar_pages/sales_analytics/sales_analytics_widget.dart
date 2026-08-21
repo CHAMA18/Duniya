@@ -2,10 +2,8 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'sales_analytics_model.dart';
@@ -38,12 +36,8 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
   String _selectedPeriod = '30d';
 
   static const _purple = Color(0xFF9900FF);
-  static const _purpleDark = Color(0xFF7C3AED);
   static const _green = Color(0xFF10B981);
   static const _blue = Color(0xFF3B82F6);
-  static const _amber = Color(0xFFF59E0B);
-  static const _red = Color(0xFFEF4444);
-  static const _cyan = Color(0xFF22D3EE);
 
   int get _days => switch (_selectedPeriod) {
         '7d' => 7,
@@ -98,28 +92,27 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final isWide = constraints.maxWidth >= 1100;
-                  final scope = AccessControl.parentRef(context) ??
-                      currentUserReference;
+                  final scope =
+                      AccessControl.parentRef(context) ?? currentUserReference;
 
                   return StreamBuilder<List<SalesRecord>>(
                     stream: querySalesRecord(
                       parent: scope,
                       queryBuilder: (q) => q
                           .where('Date',
-                              isGreaterThanOrEqualTo:
-                                  DateTime.now().subtract(Duration(days: _days)))
+                              isGreaterThanOrEqualTo: DateTime.now()
+                                  .subtract(Duration(days: _days)))
                           .orderBy('Date', descending: true),
                     ),
                     builder: (context, salesSnap) {
                       final sales = salesSnap.data ?? [];
 
                       // Compute KPIs
-                      final totalRevenue = sales.fold<double>(
-                          0.0, (s, r) => s + r.totalAmount);
+                      final totalRevenue =
+                          sales.fold<double>(0.0, (s, r) => s + r.totalAmount);
                       final totalTxns = sales.length;
-                      final avgTxn = totalTxns > 0
-                          ? totalRevenue / totalTxns
-                          : 0.0;
+                      final avgTxn =
+                          totalTxns > 0 ? totalRevenue / totalTxns : 0.0;
 
                       // Payment method breakdown
                       int cashCount = 0, cardCount = 0, moMoCount = 0;
@@ -143,8 +136,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                       for (final s in sales) {
                         final d = s.date;
                         if (d == null) continue;
-                        final dayKey =
-                            DateTime(d.year, d.month, d.day);
+                        final dayKey = DateTime(d.year, d.month, d.day);
                         dailyRev[dayKey] =
                             (dailyRev[dayKey] ?? 0) + s.totalAmount;
                       }
@@ -160,8 +152,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                             isWide ? 32 : 16, 18, isWide ? 32 : 16, 28),
                         child: Center(
                           child: ConstrainedBox(
-                            constraints:
-                                const BoxConstraints(maxWidth: 1200),
+                            constraints: const BoxConstraints(maxWidth: 1200),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -170,47 +161,49 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                                   const SizedBox(height: 24),
 
                                   // KPI cards
-                              _kpiRow(totalRevenue, totalTxns, avgTxn, isWide),
-                              const SizedBox(height: 24),
+                                  _kpiRow(
+                                      totalRevenue, totalTxns, avgTxn, isWide),
+                                  const SizedBox(height: 24),
 
-                              // Revenue chart + payment breakdown
-                              if (isWide)
-                                Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        flex: 2,
-                                        child: _revenueChart(chartData, theme)),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                        flex: 1,
-                                        child: _paymentBreakdown(
-                                            cashCount,
-                                            cardCount,
-                                            moMoCount,
-                                            cashRev,
-                                            cardRev,
-                                            moMoRev,
-                                            theme)),
+                                  // Revenue chart + payment breakdown
+                                  if (isWide)
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                            flex: 2,
+                                            child: _revenueChart(
+                                                chartData, theme)),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                            flex: 1,
+                                            child: _paymentBreakdown(
+                                                cashCount,
+                                                cardCount,
+                                                moMoCount,
+                                                cashRev,
+                                                cardRev,
+                                                moMoRev,
+                                                theme)),
+                                      ],
+                                    )
+                                  else ...[
+                                    _revenueChart(chartData, theme),
+                                    const SizedBox(height: 16),
+                                    _paymentBreakdown(
+                                        cashCount,
+                                        cardCount,
+                                        moMoCount,
+                                        cashRev,
+                                        cardRev,
+                                        moMoRev,
+                                        theme),
                                   ],
-                                )
-                              else ...[
-                                _revenueChart(chartData, theme),
-                                const SizedBox(height: 16),
-                                _paymentBreakdown(
-                                    cashCount,
-                                    cardCount,
-                                    moMoCount,
-                                    cashRev,
-                                    cardRev,
-                                    moMoRev,
-                                    theme),
-                              ],
-                              const SizedBox(height: 24),
+                                  const SizedBox(height: 24),
 
-                              // Top products
-                              _topProducts(sales, theme, isWide),
+                                  // Top products
+                                  _topProducts(sales, theme, isWide),
                                 ]),
                           ),
                         ),
@@ -255,7 +248,9 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
             color: FlutterFlowTheme.of(context).secondaryBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-                color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.5)),
+                color: FlutterFlowTheme.of(context)
+                    .alternate
+                    .withValues(alpha: 0.5)),
           ),
           child: Row(
             children: [
@@ -296,8 +291,8 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
       children: [
         _kpiCard('Total Revenue', 'ZMK ${_fmtMoney(revenue)}',
             Icons.trending_up_rounded, _green),
-        _kpiCard('Transactions', txns.toString(),
-            Icons.receipt_long_rounded, _blue),
+        _kpiCard(
+            'Transactions', txns.toString(), Icons.receipt_long_rounded, _blue),
         _kpiCard('Avg Transaction', 'ZMK ${_fmtMoney(avg)}',
             Icons.analytics_rounded, _purple),
       ],
@@ -312,7 +307,8 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
         color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-            color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.5)),
+            color:
+                FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,8 +360,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                   color: theme.primaryText)),
           const SizedBox(height: 4),
           Text('Last $_days days',
-              style:
-                  TextStyle(fontSize: 12, color: theme.secondaryText)),
+              style: TextStyle(fontSize: 12, color: theme.secondaryText)),
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
@@ -385,10 +380,8 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
     );
   }
 
-  Widget _paymentBreakdown(
-      int cashN, int cardN, int moMoN,
-      double cashR, double cardR, double moMoR,
-      dynamic theme) {
+  Widget _paymentBreakdown(int cashN, int cardN, int moMoN, double cashR,
+      double cardR, double moMoR, dynamic theme) {
     final total = cashR + cardR + moMoR;
     final methods = [
       ('Cash', cashN, cashR, _green),
@@ -413,8 +406,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                   color: theme.primaryText)),
           const SizedBox(height: 4),
           Text('Revenue by payment type',
-              style:
-                  TextStyle(fontSize: 12, color: theme.secondaryText)),
+              style: TextStyle(fontSize: 12, color: theme.secondaryText)),
           const SizedBox(height: 20),
           // Stacked bar
           ClipRRect(
@@ -436,7 +428,9 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                         flex: (moMoR / total * 100).round().clamp(1, 100),
                         child: Container(color: _purple)),
                   if (total == 0)
-                    Expanded(child: Container(color: theme.alternate.withValues(alpha: 0.3))),
+                    Expanded(
+                        child: Container(
+                            color: theme.alternate.withValues(alpha: 0.3))),
                 ],
               ),
             ),
@@ -450,8 +444,8 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                   Container(
                     width: 10,
                     height: 10,
-                    decoration: BoxDecoration(
-                        color: color, shape: BoxShape.circle),
+                    decoration:
+                        BoxDecoration(color: color, shape: BoxShape.circle),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -478,12 +472,9 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                   SizedBox(
                     width: 40,
                     child: Text(
-                        total > 0
-                            ? '${(rev / total * 100).round()}%'
-                            : '0%',
-                        style: TextStyle(
-                            fontSize: 11,
-                            color: theme.secondaryText),
+                        total > 0 ? '${(rev / total * 100).round()}%' : '0%',
+                        style:
+                            TextStyle(fontSize: 11, color: theme.secondaryText),
                         textAlign: TextAlign.right),
                   ),
                 ],
@@ -526,8 +517,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                   color: theme.primaryText)),
           const SizedBox(height: 4),
           Text('Last $_days days',
-              style:
-                  TextStyle(fontSize: 12, color: theme.secondaryText)),
+              style: TextStyle(fontSize: 12, color: theme.secondaryText)),
           const SizedBox(height: 20),
           if (top.isEmpty)
             Center(
@@ -546,8 +536,8 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
     );
   }
 
-  Widget _productRow(int rank, String name, double revenue, int qty,
-      dynamic theme) {
+  Widget _productRow(
+      int rank, String name, double revenue, int qty, dynamic theme) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -562,9 +552,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
             alignment: Alignment.center,
             child: Text('$rank',
                 style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: _purple)),
+                    fontSize: 12, fontWeight: FontWeight.w700, color: _purple)),
           ),
           const SizedBox(width: 12),
           Expanded(

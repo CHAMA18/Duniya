@@ -368,6 +368,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => HomeWidget(),
         ),
         FFRoute(
+          name: SalesAnalyticsWidget.routeName,
+          path: SalesAnalyticsWidget.routePath,
+          requireAuth: true,
+          builder: (context, params) => SalesAnalyticsWidget(),
+        ),
+        FFRoute(
           name: SalesItemsWidget.routeName,
           path: SalesItemsWidget.routePath,
           builder: (context, params) => SalesItemsWidget(
