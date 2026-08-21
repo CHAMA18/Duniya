@@ -2182,7 +2182,13 @@ Future<int> queryCollectionCount(
     query = query.limit(limit);
   }
 
-  return query.count().get().then((value) => value.count ?? 0);
+  return query.count().get().then(
+    (value) => value.count ?? 0,
+    onError: (Object error, StackTrace stackTrace) {
+      print('Firestore count query failed; returning zero instead:\n$error');
+      return 0;
+    },
+  );
 }
 
 Stream<List<T>> queryCollection<T>(
@@ -2197,18 +2203,32 @@ Stream<List<T>> queryCollection<T>(
   if (limit > 0 || singleRecord) {
     query = query.limit(singleRecord ? 1 : limit);
   }
-  // Let stream consumers receive Firestore errors. Swallowing them leaves
-  // StreamBuilders waiting forever with neither data nor an error state.
-  return query.snapshots().map((s) => s.docs
-      .map(
-        (d) => safeGet(
-          () => recordBuilder(d),
-          (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-        ),
-      )
-      .where((d) => d != null)
-      .map((d) => d!)
-      .toList());
+  // A number of legacy pages only render a spinner while `hasData` is false.
+  // Convert an unexpected Firestore failure to an empty result so every one
+  // of those pages reaches its normal empty state instead of loading forever.
+  // The error is still logged for diagnosis and a later stream event can
+  // replace the empty state with fresh data.
+  return query
+      .snapshots()
+      .map((s) => s.docs
+          .map(
+            (d) => safeGet(
+              () => recordBuilder(d),
+              (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
+            ),
+          )
+          .where((d) => d != null)
+          .map((d) => d!)
+          .toList())
+      .transform(
+    StreamTransformer<List<T>, List<T>>.fromHandlers(
+      handleError: (error, stackTrace, sink) {
+        print(
+            'Firestore query failed; showing an empty state instead:\n$error');
+        sink.add(<T>[]);
+      },
+    ),
+  );
 }
 
 Future<List<T>> queryCollectionOnce<T>(
@@ -2223,16 +2243,23 @@ Future<List<T>> queryCollectionOnce<T>(
   if (limit > 0 || singleRecord) {
     query = query.limit(singleRecord ? 1 : limit);
   }
-  return query.get().then((s) => s.docs
-      .map(
-        (d) => safeGet(
-          () => recordBuilder(d),
-          (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
-        ),
-      )
-      .where((d) => d != null)
-      .map((d) => d!)
-      .toList());
+  return query.get().then(
+    (s) => s.docs
+        .map(
+          (d) => safeGet(
+            () => recordBuilder(d),
+            (e) => print('Error serializing doc ${d.reference.path}:\n$e'),
+          ),
+        )
+        .where((d) => d != null)
+        .map((d) => d!)
+        .toList(),
+    onError: (Object error, StackTrace stackTrace) {
+      print(
+          'Firestore one-time query failed; returning an empty result instead:\n$error');
+      return <T>[];
+    },
+  );
 }
 
 Filter filterIn(String field, List? list) => (list?.isEmpty ?? true)

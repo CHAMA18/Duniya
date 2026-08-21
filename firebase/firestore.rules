@@ -1,10 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Pulse owns the shared catalogue. Catalogue data is visible only to
-    // authenticated Pulse accounts; changes remain restricted to Pulse admins.
+    // All application access requires Firebase Authentication. Keeping this
+    // check central makes it safe to grant the reads needed by the UI while
+    // preventing the previous public access to account and billing records.
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isWorkspaceOwner(ownerId) {
+      return signedIn() && request.auth.uid == ownerId;
+    }
+
     function isPulseAccount() {
-      return request.auth != null
+      return signedIn()
         && exists(/databases/$(database)/documents/User/$(request.auth.uid))
         && get(/databases/$(database)/documents/User/$(request.auth.uid))
             .data.account_type == 'Pulse';
@@ -24,101 +33,85 @@ service cloud.firestore {
         );
     }
 
+    // A pharmacy owns all of its operational data beneath /User/{ownerId}.
+    // Pulse needs read access across these workspaces for its network views,
+    // but writes that cross a workspace boundary must go through a callable
+    // Cloud Function (for example, dispatching goods to a pharmacy).
+    match /User/{userId} {
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow read: if signedIn();
+      allow update, delete: if isWorkspaceOwner(userId);
+    }
+
+    match /User/{ownerId}/{document=**} {
+      allow read: if isWorkspaceOwner(ownerId) || isPulseAccount();
+      allow create, update, delete: if isWorkspaceOwner(ownerId);
+    }
+
+    // Shared catalogue and network reference data. Pharmacy users need to
+    // read these records to render inventory, sales, and receiving screens.
     match /ProductMaster/{document} {
-      allow read: if isPulseAccount();
+      allow read: if signedIn();
       allow create, update, delete: if isPulseAdmin();
     }
 
-    match /User/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if request.auth.uid == document;
-      allow delete: if request.auth.uid == document;
+    match /Supplier/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if isPulseAdmin();
     }
 
-    match /User/{parent}/Pharmacy/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
+    match /Batch/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if isPulseAccount();
     }
 
-    match /User/{parent}/Stock/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
+    match /LowStockAlert/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if isPulseAccount();
     }
 
-    match /User/{parent}/Sales/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
+    match /Replenishment/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if isPulseAccount();
     }
 
-    match /User/{parent}/Saleitem/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
-    }
-
-    match /User/{parent}/PharmacyStaff/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
-    }
-
-    match /User/{parent}/Finance/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
-    }
-
+    // Subscription and staff screens query these root collections directly.
+    // Clients may create a request/payment record; privileged backend code
+    // completes or updates it.
     match /Subscription/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if isPulseAdmin();
     }
 
     match /Usersubscription/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if isPulseAdmin();
     }
 
     match /Subscriptionpayment/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if isPulseAdmin();
     }
 
     match /Staff/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if false;
-      allow delete: if false;
+      allow read, create: if signedIn();
+      allow update, delete: if isPulseAdmin();
     }
 
-    match /User/{parent}/DamagedStock/{document} {
-      allow create: if request.auth.uid == parent;
-      allow read: if true;
-      allow write: if request.auth.uid == parent;
-      allow delete: if request.auth.uid == parent;
+    // Legacy helpers still query this collection in a few inventory screens.
+    match /StockItems/{document} {
+      allow read, create, update, delete: if signedIn();
     }
 
-    // Audit events are append-only. Users may read events from their own
-    // owner scope, while the client can only create events as itself.
+    // Audit events are append-only. Client-side events must identify the
+    // signed-in actor; server-side events use the Admin SDK and bypass rules.
     match /AuditLogs/{document} {
-      allow create: if request.auth != null
+      allow create: if signedIn()
         && request.resource.data.actorId == request.auth.uid;
-      allow read: if request.auth != null;
+      allow read: if signedIn();
       allow update, delete: if false;
     }
   }
