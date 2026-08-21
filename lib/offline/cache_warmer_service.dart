@@ -61,15 +61,19 @@ class CacheWarmerService extends ChangeNotifier {
       return 0;
     }
 
-    // Resolve the owner reference (pharmacies live under the owner).
-    // Uses AccessControl.parentRefFromDoc (context-free variant)
-    // instead of inline role == 'Owner' check.
-    final ownerRef = AccessControl.parentRefFromDoc(userDoc, currentUserReference);
-    if (ownerRef == null) {
+    final isPulse = AppRole.isPulseAccountType(userDoc.accountType);
+
+    // Resolve the owner reference (pharmacies live under the owner). Pulse
+    // users intentionally use collection-group queries so their network views
+    // are ready offline too.
+    final ownerRef =
+        AccessControl.parentRefFromDoc(userDoc, currentUserReference);
+    if (!isPulse && ownerRef == null) {
       _lastError = 'Unable to identify your owner pharmacy';
       notifyListeners();
       return 0;
     }
+    final workspaceParent = isPulse ? null : ownerRef;
 
     _isWarming = true;
     _progress = 0.0;
@@ -80,19 +84,39 @@ class CacheWarmerService extends ChangeNotifier {
     final steps = <_WarmStep>[
       _WarmStep(
         name: 'Pharmacies',
-        query: queryPharmacyRecordOnce(parent: ownerRef),
+        query: queryPharmacyRecordOnce(parent: workspaceParent),
       ),
       _WarmStep(
         name: 'Product Catalogue',
         query: queryProductMasterRecordOnce(),
       ),
       _WarmStep(
+        name: 'Inventory',
+        query: queryStockRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
         name: 'Stock Balances',
-        query: queryStockBalanceRecordOnce(parent: ownerRef),
+        query: queryStockBalanceRecordOnce(parent: workspaceParent),
       ),
       _WarmStep(
         name: 'Stock Counts',
-        query: queryStockCountRecordOnce(parent: ownerRef),
+        query: queryStockCountRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
+        name: 'Sales',
+        query: querySalesRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
+        name: 'Finance',
+        query: queryFinanceRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
+        name: 'Outlets',
+        query: queryOutletRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
+        name: 'Damaged Stock',
+        query: queryDamagedStockRecordOnce(parent: workspaceParent),
       ),
       _WarmStep(
         name: 'Low Stock Alerts',
@@ -100,11 +124,27 @@ class CacheWarmerService extends ChangeNotifier {
       ),
       _WarmStep(
         name: 'Goods Received',
-        query: queryGoodsReceivedRecordOnce(parent: ownerRef),
+        query: queryGoodsReceivedRecordOnce(parent: workspaceParent),
       ),
       _WarmStep(
         name: 'Stock Movements',
-        query: queryStockMovementRecordOnce(parent: ownerRef),
+        query: queryStockMovementRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
+        name: 'Pharmacy Staff',
+        query: queryPharmacyStaffRecordOnce(parent: workspaceParent),
+      ),
+      _WarmStep(
+        name: 'Suppliers',
+        query: querySupplierRecordOnce(),
+      ),
+      _WarmStep(
+        name: 'Batches',
+        query: queryBatchRecordOnce(),
+      ),
+      _WarmStep(
+        name: 'Replenishment',
+        query: queryReplenishmentRecordOnce(),
       ),
     ];
 

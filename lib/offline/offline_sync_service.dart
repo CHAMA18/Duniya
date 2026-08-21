@@ -26,10 +26,9 @@ class OfflineSyncService extends ChangeNotifier {
   static final OfflineSyncService _instance = OfflineSyncService._internal();
   factory OfflineSyncService() => _instance;
 
-  StreamSubscription? _userSub;
-  StreamSubscription? _pharmaciesSub;
-  StreamSubscription? _productsSub;
   StreamSubscription? _onlineSub;
+  final Map<String, StreamSubscription> _collectionSubscriptions = {};
+  final Map<String, int> _pendingWritesByCollection = {};
 
   int _pendingWriteCount = 0;
   bool _isSyncing = false;
@@ -92,27 +91,31 @@ class OfflineSyncService extends ChangeNotifier {
   /// We use [includeMetadataChanges: true] so that snapshot events
   /// fire even when only the metadata (e.g., pending-writes flag)
   /// changes — not just when the data itself changes.
-  void watchCollection(Query<Map<String, dynamic>> query) {
-    final sub = query
-        .snapshots(includeMetadataChanges: true)
-        .listen((snapshot) {
+  void watchCollection(Query<Map<String, dynamic>> query, {String? key}) {
+    final watchKey = key ?? query.toString();
+    if (_collectionSubscriptions.containsKey(watchKey)) return;
+
+    final sub =
+        query.snapshots(includeMetadataChanges: true).listen((snapshot) {
       int pending = 0;
       for (final doc in snapshot.docs) {
         if (doc.metadata.hasPendingWrites) {
           pending++;
         }
       }
-      _pendingWriteCount = pending;
+      _pendingWritesByCollection[watchKey] = pending;
+      _pendingWriteCount = _pendingWritesByCollection.values
+          .fold<int>(0, (total, count) => total + count);
       if (pending == 0 && _isSyncing) {
         _isSyncing = false;
         _lastSyncedAt = DateTime.now();
       }
       _emit();
       notifyListeners();
+    }, onError: (Object error, StackTrace stackTrace) {
+      debugPrint('[OfflineSyncService] $watchKey watcher failed: $error');
     });
-    // Keep the subscription alive (we never cancel it — the service
-    // is a singleton that lives for the app's lifetime).
-    _ = sub;
+    _collectionSubscriptions[watchKey] = sub;
   }
 
   void _emit() {
@@ -138,9 +141,11 @@ class OfflineSyncService extends ChangeNotifier {
 
   @override
   void dispose() {
-    _userSub?.cancel();
-    _pharmaciesSub?.cancel();
-    _productsSub?.cancel();
+    for (final subscription in _collectionSubscriptions.values) {
+      subscription.cancel();
+    }
+    _collectionSubscriptions.clear();
+    _pendingWritesByCollection.clear();
     _onlineSub?.cancel();
     _statusController.close();
     super.dispose();
@@ -171,9 +176,3 @@ class SyncStatus {
   String toString() =>
       'SyncStatus(pending=$pendingWrites, syncing=$isSyncing, lastSynced=$lastSyncedAt)';
 }
-
-/// Dummy assignment to suppress unused-variable warnings for the
-/// "fire-and-forget" subscriptions we keep alive in [watchCollection].
-/// The subscriptions are intentionally never cancelled because the
-/// service is a singleton.
-void set _(StreamSubscription? _) {}

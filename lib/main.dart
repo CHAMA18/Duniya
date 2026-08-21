@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintBaselinesEnabled;
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -22,7 +21,6 @@ import '/offline/offline_connectivity_service.dart';
 import '/offline/offline_indicator_banner.dart';
 import '/offline/offline_sync_service.dart';
 import '/offline/cache_warmer_service.dart';
-import '/offline/offline_status_widget.dart';
 import '/onboarding/onboarding_service.dart';
 import '/rbac/rbac.dart';
 
@@ -117,6 +115,7 @@ class _MyAppState extends State<MyApp> {
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
+  int _offlineSetupRetries = 0;
   String getRoute([RouteMatch? routeMatch]) {
     final RouteMatch lastMatch =
         routeMatch ?? _router.routerDelegate.currentConfiguration.last;
@@ -170,21 +169,57 @@ class _MyAppState extends State<MyApp> {
       final userRef = currentUserReference;
       if (userDoc == null || userRef == null) {
         debugPrint(
-            '[main] _onUserSignedIn: user document not yet loaded, skipping sync setup');
+            '[main] _onUserSignedIn: user document not yet loaded; retrying offline setup');
+        if (_offlineSetupRetries++ < 8) {
+          Future.delayed(const Duration(seconds: 1), () {
+            if (mounted) _onUserSignedIn();
+          });
+        }
         return;
       }
+      _offlineSetupRetries = 0;
       // Watch the user's collections for pending writes.
       // This populates the OfflineStatusChip with real sync data.
       // Uses AccessControl.parentRefFromDoc (context-free variant)
       // instead of inline role == 'Owner' check.
       final ownerRef = AccessControl.parentRefFromDoc(userDoc, userRef);
-      if (ownerRef != null) {
-        OfflineSyncService().watchCollection(
-          FirebaseFirestore.instance
-              .collection('User')
-              .doc(ownerRef.id)
-              .collection('Pharmacy'),
-        );
+      final isPulse = AppRole.isPulseAccountType(userDoc.accountType);
+      final syncService = OfflineSyncService();
+      syncService.watchCollection(
+        FirebaseFirestore.instance.collection('ProductMaster'),
+        key: 'product-master',
+      );
+      if (isPulse) {
+        // Pulse pages aggregate live network data through collection groups.
+        for (final collectionName in const [
+          'Pharmacy',
+          'Stock',
+          'Sales',
+          'GoodsReceived',
+          'StockMovement',
+          'StockCount',
+        ]) {
+          syncService.watchCollection(
+            FirebaseFirestore.instance.collectionGroup(collectionName),
+            key: 'pulse-$collectionName',
+          );
+        }
+      } else if (ownerRef != null) {
+        for (final collectionName in const [
+          'Pharmacy',
+          'Stock',
+          'Sales',
+          'Finance',
+          'GoodsReceived',
+          'StockMovement',
+          'StockCount',
+          'StockBalance',
+        ]) {
+          syncService.watchCollection(
+            ownerRef.collection(collectionName),
+            key: 'workspace-${ownerRef.id}-$collectionName',
+          );
+        }
       }
       // Auto-warm the cache in the background (non-blocking).
       // We delay slightly so the app's first frame isn't delayed.

@@ -2,9 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-/// Initialise Firebase.
-/// Web uses an in-memory Firestore cache so multiple app tabs can coexist
-/// without competing for IndexedDB's exclusive persistence lock.
+/// Initialise Firebase with an on-device Firestore cache.
+///
+/// Web persists Firestore data in IndexedDB so cached reads and pending writes
+/// survive reloads. The installed FlutterFire version uses the SDK's legacy
+/// tab manager; if a second legacy tab cannot acquire the cache, query
+/// fallbacks keep the UI usable instead of leaving it on a loading state.
 Future initFirebase() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
@@ -17,11 +20,10 @@ Future initFirebase() async {
             appId: "1:383121081031:web:aa20a504fbfc44f934b4e2",
             measurementId: "G-WK3493Q779"));
 
-    // The web SDK requires exclusive IndexedDB access for persistent cache.
-    // A user with another Pulse tab open would otherwise get a
-    // failed-precondition warning and an implicit fallback to memory anyway.
+    // Persist queries and writes across browser restarts. This enables cached
+    // reads and Firestore's built-in queued-write synchronization offline.
     FirebaseFirestore.instance.settings = const Settings(
-      persistenceEnabled: false,
+      persistenceEnabled: true,
       cacheSizeBytes: 100 * 1024 * 1024,
     );
   } else {
