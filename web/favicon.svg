@@ -1,30 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
-    <linearGradient id="duniyaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#9900FF"/>
-      <stop offset="100%" stop-color="#7C3AED"/>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#B44DFF"/>
+      <stop offset="60%" stop-color="#9900FF"/>
+      <stop offset="100%" stop-color="#5B00E8"/>
     </linearGradient>
-    <radialGradient id="duniyaGlow" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    <radialGradient id="core" cx="35%" cy="30%" r="80%">
+      <stop offset="0%"  stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#E8D5FF"/>
+      <stop offset="100%" stop-color="#B44DFF"/>
     </radialGradient>
   </defs>
-
-  <!-- Rounded square background (maskable-friendly) -->
-  <rect width="512" height="512" rx="112" ry="112" fill="url(#duniyaGrad)"/>
-
-  <!-- Soft inner glow -->
-  <rect width="512" height="512" rx="112" ry="112" fill="url(#duniyaGlow)"/>
-
-  <!-- Decorative dotted ring (echoes the sidebar logo style) -->
-  <circle cx="256" cy="256" r="180" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
-
-  <!-- Bold 'D' monogram -->
-  <text x="256" y="256"
-        font-family="'Inter','Helvetica Neue',Arial,sans-serif"
-        font-size="300"
-        font-weight="800"
-        text-anchor="middle"
-        dominant-baseline="central"
-        fill="#FFFFFF">D</text>
+  <rect width="100" height="100" rx="26" fill="url(#g)"/>
+  <g opacity="0.85">
+    <polygon points="50,24 76,50 50,76 24,50" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1"/>
+    <circle cx="50" cy="24" r="3.4" fill="#FFFFFF"/>
+    <circle cx="76" cy="50" r="3.4" fill="#FFFFFF"/>
+    <circle cx="50" cy="76" r="3.4" fill="#FFFFFF"/>
+    <circle cx="24" cy="50" r="3.4" fill="#FFFFFF"/>
+    <circle cx="68.31" cy="31.69" r="3.4" fill="#FFFFFF"/>
+    <circle cx="68.31" cy="68.31" r="3.4" fill="#FFFFFF"/>
+    <circle cx="31.69" cy="68.31" r="3.4" fill="#FFFFFF"/>
+    <circle cx="31.69" cy="31.69" r="3.4" fill="#FFFFFF"/>
+  </g>
+  <path d="M28 50 L42 50 L46 38 L50 62 L54 30 L58 50 L72 50"
+        fill="none" stroke="url(#core)" stroke-width="3"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
