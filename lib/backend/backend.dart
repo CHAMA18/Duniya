@@ -1564,48 +1564,50 @@ Future<List<GoodsReceivedItemRecord>> queryGoodsReceivedItemRecordOnce({
       limit: limit,
       singleRecord: singleRecord,
     );
-Future<FFFirestorePage<GoodsReceivedItemRecord>> queryGoodsReceivedItemRecordPage({
+Future<FFFirestorePage<GoodsReceivedItemRecord>>
+    queryGoodsReceivedItemRecordPage({
   DocumentReference? parent,
   Query Function(Query)? queryBuilder,
   DocumentSnapshot? nextPageMarker,
   required int pageSize,
   required bool isStream,
-  required PagingController<DocumentSnapshot?, GoodsReceivedItemRecord> controller,
+  required PagingController<DocumentSnapshot?, GoodsReceivedItemRecord>
+      controller,
   List<StreamSubscription?>? streamSubscriptions,
 }) =>
-    queryCollectionPage(
-      GoodsReceivedItemRecord.collection(parent),
-      GoodsReceivedItemRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      nextPageMarker: nextPageMarker,
-      pageSize: pageSize,
-      isStream: isStream,
-    ).then((page) {
-      controller.appendPage(
-        page.data,
-        page.nextPageMarker,
-      );
-      if (isStream) {
-        final streamSubscription =
-            (page.dataStream)?.listen((List<GoodsReceivedItemRecord> data) {
-          data.forEach((item) {
-            final itemIndexes = controller.itemList!
-                .asMap()
-                .map((k, v) => MapEntry(v.reference.id, k));
-            final index = itemIndexes[item.reference.id];
-            final items = controller.itemList!;
-            if (index != null) {
-              items.replaceRange(index, index + 1, [item]);
-              controller.itemList = {
-                for (var item in items) item.reference: item
-              }.values.toList();
-            }
-          });
+        queryCollectionPage(
+          GoodsReceivedItemRecord.collection(parent),
+          GoodsReceivedItemRecord.fromSnapshot,
+          queryBuilder: queryBuilder,
+          nextPageMarker: nextPageMarker,
+          pageSize: pageSize,
+          isStream: isStream,
+        ).then((page) {
+          controller.appendPage(
+            page.data,
+            page.nextPageMarker,
+          );
+          if (isStream) {
+            final streamSubscription =
+                (page.dataStream)?.listen((List<GoodsReceivedItemRecord> data) {
+              data.forEach((item) {
+                final itemIndexes = controller.itemList!
+                    .asMap()
+                    .map((k, v) => MapEntry(v.reference.id, k));
+                final index = itemIndexes[item.reference.id];
+                final items = controller.itemList!;
+                if (index != null) {
+                  items.replaceRange(index, index + 1, [item]);
+                  controller.itemList = {
+                    for (var item in items) item.reference: item
+                  }.values.toList();
+                }
+              });
+            });
+            streamSubscriptions?.add(streamSubscription);
+          }
+          return page;
         });
-        streamSubscriptions?.add(streamSubscription);
-      }
-      return page;
-    });
 
 /// Functions to query SaleRecordVMI (as a Stream and as a Future).
 Future<int> querySaleRecordVMICount({
@@ -2180,9 +2182,7 @@ Future<int> queryCollectionCount(
     query = query.limit(limit);
   }
 
-  return query.count().get().catchError((err) {
-    print('Error querying $collection: $err');
-  }).then((value) => value.count!);
+  return query.count().get().then((value) => value.count ?? 0);
 }
 
 Stream<List<T>> queryCollection<T>(
@@ -2197,9 +2197,9 @@ Stream<List<T>> queryCollection<T>(
   if (limit > 0 || singleRecord) {
     query = query.limit(singleRecord ? 1 : limit);
   }
-  return query.snapshots().handleError((err) {
-    print('Error querying $collection: $err');
-  }).map((s) => s.docs
+  // Let stream consumers receive Firestore errors. Swallowing them leaves
+  // StreamBuilders waiting forever with neither data nor an error state.
+  return query.snapshots().map((s) => s.docs
       .map(
         (d) => safeGet(
           () => recordBuilder(d),

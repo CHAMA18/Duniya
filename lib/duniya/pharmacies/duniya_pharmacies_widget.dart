@@ -71,15 +71,10 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   }
 
   /// Keeps query errors visible to this page. The shared generated query helper
-  /// logs and absorbs stream errors, which otherwise leaves a StreamBuilder in
-  /// its loading state forever.
+  /// skips malformed legacy records while allowing real Firestore failures to
+  /// reach the retry state below.
   Stream<List<PharmacyRecord>> _createPharmaciesStream() {
-    return PharmacyRecord.collection()
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map(PharmacyRecord.fromSnapshot)
-            .toList(growable: false))
-        .timeout(
+    return queryPharmacyRecord().timeout(
       const Duration(seconds: 20),
       onTimeout: (sink) {
         sink.addError(TimeoutException(
