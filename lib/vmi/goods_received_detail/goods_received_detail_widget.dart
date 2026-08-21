@@ -39,6 +39,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
 
   // Line items state
   List<Map<String, dynamic>> _lineItems = [];
+  String _existingRecordStatus = '';
 
   // Design tokens — Pulse purple design system
   static const Color _pulsePurple = Color(0xFF9900FF);
@@ -123,6 +124,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       final doc = await FirebaseFirestore.instance.doc(widget.docRef!).get();
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
+        _existingRecordStatus = data['Status'] as String? ?? '';
         _model.deliveryNoteTextController?.text =
             data['DeliveryNoteNumber'] as String? ?? '';
         safeSetState(() {
@@ -185,6 +187,11 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
 
   int get _totalReceived => _lineItems.fold<int>(
       0, (sum, i) => sum + (i['quantityReceived'] as int? ?? 0));
+
+  bool get _isPendingPulseDispatch =>
+      !_isPulseUser &&
+      widget.docRef != null &&
+      _existingRecordStatus == 'PENDING';
 
   bool get _hasAnyDiscrepancy => _lineItems.any((item) {
         final delivered = item['quantityDelivered'] as int? ?? 0;
@@ -363,8 +370,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.arrow_back_rounded,
-                      size: 16, color: _pulsePurple),
+                  Icon(Icons.arrow_back_rounded, size: 16, color: _pulsePurple),
                   SizedBox(width: 6),
                   Text(
                     'Back to $_workflowName',
@@ -549,7 +555,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           children: [
             _buildSectionHeader(
               icon: Icons.receipt_long_rounded,
-              title: _isPulseUser ? 'Dispatch Information' : 'Receipt Information',
+              title:
+                  _isPulseUser ? 'Dispatch Information' : 'Receipt Information',
               subtitle: _isPulseUser
                   ? 'Choose an approved pharmacy destination and dispatch details'
                   : 'Capture delivery note details and pharmacy',
@@ -1599,7 +1606,9 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           ),
           SizedBox(width: 10),
           Text(
-            'Ready to confirm — ${_lineItems.length} ${_lineItems.length == 1 ? 'item' : 'items'} verified',
+            _isPulseUser && widget.docRef != null
+                ? 'Awaiting confirmation from the receiving pharmacy'
+                : 'Ready to confirm — ${_lineItems.length} ${_lineItems.length == 1 ? 'item' : 'items'} verified',
             style: TextStyle(
               color: _textPrimary,
               fontSize: 13,
@@ -1663,11 +1672,20 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
         ),
         SizedBox(width: 10),
         _PrimaryButton(
-          label: _isPulseUser ? 'Dispatch to pharmacy' : 'Confirm Receipt',
-          icon: _isPulseUser
-              ? Icons.local_shipping_rounded
-              : Icons.check_rounded,
-          onPressed: _isFormValid ? _confirmReceipt : null,
+          label: _isPulseUser && widget.docRef != null
+              ? 'Awaiting confirmation'
+              : _isPulseUser
+                  ? 'Dispatch to pharmacy'
+                  : _isPendingPulseDispatch
+                      ? 'Confirm delivery'
+                      : 'Confirm Receipt',
+          icon:
+              _isPulseUser ? Icons.local_shipping_rounded : Icons.check_rounded,
+          onPressed: _isPulseUser && widget.docRef != null
+              ? null
+              : _isFormValid
+                  ? _confirmReceipt
+                  : null,
         ),
       ],
     );
@@ -2422,6 +2440,11 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       return;
     }
 
+    if (_isPendingPulseDispatch) {
+      await _confirmPendingPulseDispatch();
+      return;
+    }
+
     final overallDiscrepancy =
         _model.discrepancyTextController?.text.trim() ?? '';
     final hasLineDiscrepancy = _lineItems.any((item) {
@@ -2488,11 +2511,48 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     context.pop();
   }
 
+  Future<void> _confirmPendingPulseDispatch() async {
+    try {
+      final callable =
+          FirebaseFunctions.instance.httpsCallable('confirmPulseDispatch');
+      await callable.call(<String, dynamic>{
+        'receiptPath': widget.docRef,
+        'discrepancies': _model.discrepancyTextController?.text.trim(),
+        'items': _lineItems.map((item) {
+          final itemRef = item['reference'] as DocumentReference?;
+          return <String, dynamic>{
+            'itemPath': itemRef?.path,
+            'quantityReceived': item['quantityReceived'],
+            'discrepancy': item['discrepancy'],
+          };
+        }).toList(),
+      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Delivery confirmed and stock updated.'),
+          backgroundColor: _success,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      context.pop();
+    } on FirebaseFunctionsException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Unable to confirm this delivery.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   Future<void> _dispatchFromPulse(PharmacyRecord pharmacy) async {
     if (pharmacy.networkStatus != 'active') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Only approved active pharmacies can receive a dispatch.'),
+          content:
+              Text('Only approved active pharmacies can receive a dispatch.'),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -2513,8 +2573,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             'quantityDelivered': item['quantityDelivered'],
             'quantityReceived': item['quantityReceived'],
             'batchNumber': item['batchNumber'],
-            'expiryDate': (item['expiryDate'] as DateTime?)
-                ?.millisecondsSinceEpoch,
+            'expiryDate':
+                (item['expiryDate'] as DateTime?)?.millisecondsSinceEpoch,
             'discrepancy': item['discrepancy'],
           };
         }).toList(),

@@ -17,7 +17,7 @@ import 'goods_received_model.dart';
 export 'goods_received_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   PULSE — GOODS RECEIVED (World-Class Redesign)
+///   GOODS DISPATCHED / GOODS RECEIVED (World-Class Redesign)
 ///   Top 1% receiving UX: hero header, KPI cards, smart filters,
 ///   status pills, beautiful card list with status badges and
 ///   inline quick actions, and a stunning empty state.
@@ -494,7 +494,11 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 _HeroActionButton(
                   icon: Icons.download_rounded,
                   label: 'Export',
-                  onTap: () => _showToast('Exporting goods received…'),
+                  onTap: () => _showToast(
+                    _isPulseUser
+                        ? 'Exporting goods dispatched…'
+                        : 'Exporting goods received…',
+                  ),
                   isPrimary: false,
                 ),
                 const SizedBox(width: 8.0),
@@ -571,7 +575,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             SizedBox(
               width: (available - 16.0 * (crossCount - 1)) / crossCount,
               child: _KpiCard(
-                label: 'Total Receipts',
+                label: _isPulseUser ? 'Total Dispatches' : 'Total Receipts',
                 value: '$_lastTotal',
                 icon: Icons.inventory_2_rounded,
                 accentColor: FlutterFlowTheme.of(context).primary,
@@ -1037,7 +1041,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                 Icon(Icons.inventory_rounded, color: theme.primary, size: 18.0),
                 const SizedBox(width: 8.0),
                 Text(
-                  'Showing ${receipts.length} receipt${receipts.length == 1 ? '' : 's'}',
+                  _isPulseUser
+                      ? 'Showing ${receipts.length} dispatch${receipts.length == 1 ? '' : 'es'}'
+                      : 'Showing ${receipts.length} receipt${receipts.length == 1 ? '' : 's'}',
                   style: theme.titleSmall.override(
                     fontFamily: theme.titleSmallFamily,
                     letterSpacing: 0.0,
@@ -1049,7 +1055,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   onPressed: () async {
                     context.pushNamed(GoodsReceivedDetailWidget.routeName);
                   },
-                  text: 'Add Receipt',
+                  text: _isPulseUser ? 'Dispatch Goods' : 'Add Receipt',
                   icon: const Icon(Icons.add_rounded, size: 16.0),
                   options: FFButtonOptions(
                     height: 36.0,
@@ -1097,7 +1103,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                     color: theme.secondaryText, size: 14.0),
                 const SizedBox(width: 6.0),
                 Text(
-                  'Tip: use status pills above to filter · click a receipt to view details',
+                  _isPulseUser
+                      ? 'Tip: use status pills above to filter · click a dispatch to view details'
+                      : 'Tip: use status pills above to filter · click a receipt to view details',
                   style: theme.bodySmall.override(
                     fontFamily: theme.bodySmallFamily,
                     color: theme.secondaryText,
@@ -1179,7 +1187,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                         Flexible(
                           child: Text(
                             receipt.deliveryNoteNumber.isEmpty
-                                ? 'Receipt #${index + 1}'
+                                ? '${_isPulseUser ? 'Dispatch' : 'Receipt'} #${index + 1}'
                                 : receipt.deliveryNoteNumber,
                             style: theme.titleMedium.override(
                               fontFamily: theme.titleMediumFamily,
@@ -1340,7 +1348,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   const SizedBox(width: 6.0),
                   _actionIcon(
                     Icons.print_outlined,
-                    'Print receipt',
+                    _isPulseUser ? 'Print dispatch' : 'Print receipt',
                     theme,
                     onTap: () =>
                         _showToast('Printing ${receipt.deliveryNoteNumber}…'),
@@ -1406,7 +1414,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               const SizedBox(width: 12.0),
               Expanded(
                 child: Text(
-                  'Delete receipt?',
+                  _isPulseUser ? 'Delete dispatch?' : 'Delete receipt?',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: FlutterFlowTheme.of(context).primaryText,
@@ -1418,7 +1426,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
           content: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 400.0),
             child: Text(
-              'This action cannot be undone. The receipt "${receipt.deliveryNoteNumber}" and all its line items will be permanently deleted.',
+              _isPulseUser
+                  ? 'This action cannot be undone. The dispatch "${receipt.deliveryNoteNumber}" and all its line items will be permanently deleted.'
+                  : 'This action cannot be undone. The receipt "${receipt.deliveryNoteNumber}" and all its line items will be permanently deleted.',
               style: FlutterFlowTheme.of(context).bodyMedium,
             ),
           ),
@@ -1435,7 +1445,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               onPressed: () async {
                 await receipt.reference.delete();
                 Navigator.pop(dialogContext);
-                _showToast('Receipt ${receipt.deliveryNoteNumber} deleted');
+                _showToast(
+                  '${_isPulseUser ? 'Dispatch' : 'Receipt'} ${receipt.deliveryNoteNumber} deleted',
+                );
               },
               text: 'Delete',
               icon: Icon(Icons.delete_outline_rounded, size: 16.0),
@@ -1557,7 +1569,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             constraints: const BoxConstraints(maxWidth: 480.0),
             child: Text(
               hasActiveFilters
-                  ? 'Try adjusting your search terms or clearing filters to see more receipts. Check the pharmacy, status, or time period you have selected.'
+                  ? _isPulseUser
+                      ? 'Try adjusting your search terms or clearing filters to see more dispatches. Check the pharmacy, status, or time period you have selected.'
+                      : 'Try adjusting your search terms or clearing filters to see more receipts. Check the pharmacy, status, or time period you have selected.'
                   : _isPulseUser
                       ? 'Dispatch stock only to registered, approved pharmacies. Each dispatch is recorded in the selected pharmacy workspace for an audit-ready handoff.'
                       : 'Goods received records track every delivery into your pharmacy — delivery note numbers, dates, line items, and any discrepancies. Add your first receipt to start building an audit-ready receiving history.',
@@ -1611,7 +1625,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   onPressed: () async {
                     context.pushNamed(GoodsReceivedDetailWidget.routeName);
                   },
-                  text: 'Add Your First Receipt',
+                  text: _isPulseUser
+                      ? 'Dispatch Your First Goods'
+                      : 'Add Your First Receipt',
                   icon: Icon(Icons.add_rounded, size: 18.0),
                   options: FFButtonOptions(
                     height: 48.0,
@@ -1629,7 +1645,11 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   ),
                 ),
                 FFButtonWidget(
-                  onPressed: () => _showToast('Opening receiving guide…'),
+                  onPressed: () => _showToast(
+                    _isPulseUser
+                        ? 'Opening dispatch guide…'
+                        : 'Opening receiving guide…',
+                  ),
                   text: 'Learn How It Works',
                   icon: Icon(Icons.help_outline_rounded, size: 18.0),
                   options: FFButtonOptions(
@@ -1656,7 +1676,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
               icon: Icon(Icons.menu_book_rounded,
                   size: 14.0, color: theme.secondaryText),
               label: Text(
-                'Read the goods received guide',
+                _isPulseUser
+                    ? 'Read the goods dispatched guide'
+                    : 'Read the goods received guide',
                 style: theme.bodySmall.override(
                   fontFamily: theme.bodySmallFamily,
                   color: theme.secondaryText,
@@ -1691,7 +1713,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   _featureHint(
                     Icons.local_shipping_rounded,
                     'Track Deliveries',
-                    'Every receipt logged',
+                    _isPulseUser
+                        ? 'Every dispatch logged'
+                        : 'Every receipt logged',
                     theme,
                   ),
                   _divider(theme),
@@ -1783,7 +1807,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
           ),
           const SizedBox(height: 20.0),
           Text(
-            'Loading goods received…',
+            _isPulseUser
+                ? 'Loading goods dispatched…'
+                : 'Loading goods received…',
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
@@ -1794,7 +1820,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
           ),
           const SizedBox(height: 6.0),
           Text(
-            'Fetching live data from your pharmacies',
+            _isPulseUser
+                ? 'Fetching dispatches across your pharmacy network'
+                : 'Fetching live data from your pharmacies',
             style: theme.bodySmall.override(
               fontFamily: theme.bodySmallFamily,
               color: theme.secondaryText,

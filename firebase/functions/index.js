@@ -1158,10 +1158,11 @@ exports.dispatchGoodsToPharmacy = functions
 
     const normalizedItems = items.map((item) => {
       const quantityDelivered = Number(item.quantityDelivered);
-      const quantityReceived = Number(item.quantityReceived ?? item.quantityDelivered);
       if (!/^ProductMaster\/[^/]+$/.test(String(item.productPath || "")) ||
           !Number.isInteger(quantityDelivered) || quantityDelivered <= 0 ||
-          !Number.isInteger(quantityReceived) || quantityReceived < 0) {
+          (item.quantityReceived != null &&
+            (!Number.isInteger(Number(item.quantityReceived)) ||
+              Number(item.quantityReceived) < 0))) {
         throw new functions.https.HttpsError(
           "invalid-argument",
           "Each dispatched item needs a product and valid quantities."
@@ -1170,7 +1171,6 @@ exports.dispatchGoodsToPharmacy = functions
       return {
         productId: firestore.doc(item.productPath),
         quantityDelivered,
-        quantityReceived,
         batchNumber: String(item.batchNumber || "").trim(),
         discrepancy: String(item.discrepancy || "").trim(),
         expiryDate: item.expiryDate ? admin.firestore.Timestamp.fromMillis(Number(item.expiryDate)) : null,
@@ -1187,10 +1187,12 @@ exports.dispatchGoodsToPharmacy = functions
     batch.set(receiptRef, {
       DeliveryNoteNumber: String(deliveryNoteNumber).trim(),
       OutletId: pharmacyRef,
-      ReceivedById: firestore.collection("User").doc(context.auth.uid),
+      ReceivedById: null,
       DeliveryDate: dispatchDate,
-      ReceivedDate: now,
-      Status: "CONFIRMED",
+      // A Pulse dispatch is visible to the destination immediately, but it is
+      // not received (or added to stock) until that pharmacy confirms it.
+      ReceivedDate: null,
+      Status: "PENDING",
       DispatchSource: "Pulse",
       CreatedAt: now,
       UpdatedAt: now,
@@ -1201,26 +1203,93 @@ exports.dispatchGoodsToPharmacy = functions
       batch.set(itemRef, {
         ProductId: item.productId,
         QuantityDelivered: item.quantityDelivered,
-        QuantityReceived: item.quantityReceived,
+        QuantityReceived: 0,
         BatchNumber: item.batchNumber || null,
         ExpiryDate: item.expiryDate,
         Discrepancy: item.discrepancy || null,
       });
-      const movementRef = destinationOwnerRef.collection("StockMovement").doc();
+    }
+
+    await batch.commit();
+    return { success: true, receiptId: receiptRef.id, pharmacyName: pharmacy.Name || "" };
+  });
+
+// The receiving pharmacy confirms a pending Pulse dispatch. Keeping this
+// server-side prevents clients from crediting stock before a real receipt.
+exports.confirmPulseDispatch = functions
+  .region("us-central1")
+  .https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError("unauthenticated", "Sign in to confirm a dispatch.");
+    }
+
+    const { receiptPath, items, discrepancies } = data || {};
+    const expectedPrefix = `User/${context.auth.uid}/GoodsReceived/`;
+    if (!String(receiptPath || "").startsWith(expectedPrefix) ||
+        String(receiptPath).split("/").length !== 4 || !Array.isArray(items) || !items.length) {
+      throw new functions.https.HttpsError("invalid-argument", "The pending dispatch is invalid.");
+    }
+
+    const firestore = admin.firestore();
+    const receiptRef = firestore.doc(receiptPath);
+    const receiptSnapshot = await receiptRef.get();
+    if (!receiptSnapshot.exists || receiptSnapshot.get("DispatchSource") !== "Pulse") {
+      throw new functions.https.HttpsError("not-found", "The Pulse dispatch was not found.");
+    }
+    if (receiptSnapshot.get("Status") !== "PENDING") {
+      throw new functions.https.HttpsError("failed-precondition", "This dispatch has already been processed.");
+    }
+
+    const receipt = receiptSnapshot.data();
+    const itemSnapshots = await receiptRef.collection("GoodsReceivedItem").get();
+    const itemByPath = new Map(itemSnapshots.docs.map((doc) => [doc.ref.path, doc]));
+    if (items.length !== itemByPath.size) {
+      throw new functions.https.HttpsError("invalid-argument", "Every dispatched item must be confirmed.");
+    }
+
+    const normalizedItems = items.map((item) => {
+      const itemSnapshot = itemByPath.get(String(item.itemPath || ""));
+      const quantityReceived = Number(item.quantityReceived);
+      const discrepancy = String(item.discrepancy || "").trim();
+      if (!itemSnapshot || !Number.isInteger(quantityReceived) || quantityReceived < 0) {
+        throw new functions.https.HttpsError("invalid-argument", "One or more confirmed quantities are invalid.");
+      }
+      return { itemSnapshot, quantityReceived, discrepancy };
+    });
+
+    const overallDiscrepancies = String(discrepancies || "").trim();
+    const hasDiscrepancy = overallDiscrepancies || normalizedItems.some(({ itemSnapshot, quantityReceived, discrepancy }) =>
+      quantityReceived !== Number(itemSnapshot.get("QuantityDelivered")) || discrepancy);
+    const now = admin.firestore.FieldValue.serverTimestamp();
+    const batch = firestore.batch();
+    batch.update(receiptRef, {
+      Status: hasDiscrepancy ? "DISCREPANCY" : "CONFIRMED",
+      ReceivedDate: now,
+      ReceivedById: firestore.collection("User").doc(context.auth.uid),
+      Discrepancies: overallDiscrepancies || null,
+      UpdatedAt: now,
+    });
+
+    for (const { itemSnapshot, quantityReceived, discrepancy } of normalizedItems) {
+      batch.update(itemSnapshot.ref, {
+        QuantityReceived: quantityReceived,
+        Discrepancy: discrepancy || null,
+      });
+      const movementRef = firestore.collection("User").doc(context.auth.uid).collection("StockMovement").doc();
       batch.set(movementRef, {
-        ProductId: item.productId,
-        OutletId: pharmacyRef,
-        Quantity: item.quantityReceived,
+        ProductId: itemSnapshot.get("ProductId"),
+        OutletId: receipt.OutletId,
+        Quantity: quantityReceived,
         MovementType: "RECEIVED",
         Reason: "PULSE_DISPATCH",
-        MovementReference: String(deliveryNoteNumber).trim(),
+        MovementReference: receipt.DeliveryNoteNumber || "",
         RecordedById: firestore.collection("User").doc(context.auth.uid),
         CreatedAt: now,
       });
     }
 
     await batch.commit();
-    return { success: true, receiptId: receiptRef.id, pharmacyName: pharmacy.Name || "" };
+    return { success: true, status: hasDiscrepancy ? "DISCREPANCY" : "CONFIRMED" };
   });
 
 // Imports a verified historical pharmacy reconciliation. This is deliberately
