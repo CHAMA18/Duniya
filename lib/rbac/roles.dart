@@ -212,5 +212,6 @@ enum NavItem {
   insurance,
   coldChain,
   patientRecords,
+  salesAnalytics,
   settings,
 }

@@ -552,6 +552,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
     NavItem.auditLogs,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
@@ -581,6 +582,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
     NavItem.auditLogs,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
@@ -613,6 +615,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.purchaseOrders,
     NavItem.aiAssistant,
     NavItem.bmiCalculator,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
@@ -640,6 +643,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.patientRecords,
     NavItem.purchaseOrders,
     NavItem.bmiCalculator,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
@@ -662,6 +666,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.insurance,
     NavItem.drugInteractions,
     NavItem.bmiCalculator,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
@@ -685,18 +690,23 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.insurance,
     NavItem.drugInteractions,
     NavItem.bmiCalculator,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
   // ═══ Pulse Admin ═══
+  // Full network visibility including cold chain, expiry tracking,
+  // and AI assistant — added in the Week 1 sidebar expansion.
   AppRole.duniyaAdmin: {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
     NavItem.stockMovements,
     NavItem.batchesExpiry,
+    NavItem.expiryTracking,
     NavItem.lowStockAlerts,
     NavItem.replenishment,
+    NavItem.coldChain,
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.duniyaPharmacies,
@@ -706,18 +716,23 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.duniyaSupplierManagement,
     NavItem.auditLogs,
     NavItem.userManagement,
+    NavItem.aiAssistant,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
   // ═══ Pulse Staff ═══
+  // Expanded with cold chain, expiry tracking, and AI assistant.
   AppRole.duniyaStaff: {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
     NavItem.stockMovements,
     NavItem.batchesExpiry,
+    NavItem.expiryTracking,
     NavItem.lowStockAlerts,
     NavItem.replenishment,
+    NavItem.coldChain,
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.duniyaPharmacies,
@@ -725,6 +740,8 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.duniyaOnboardingRequests,
     NavItem.duniyaSupplierManagement,
     NavItem.auditLogs,
+    NavItem.aiAssistant,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
@@ -732,12 +749,14 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   AppRole.subscriber: {
     NavItem.home,
     NavItem.finances,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 
   // ═══ Unknown ═══
   AppRole.unknown: {
     NavItem.home,
+    NavItem.salesAnalytics,
     NavItem.settings,
   },
 };
