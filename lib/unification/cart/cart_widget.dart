@@ -592,37 +592,53 @@ class _CartWidgetState extends State<CartWidget> {
                                     },
                                   ),
                                 });
-                                if (_model.stock!.quantity <=
-                                    (_model.stock?.limitNotice != null
-                                        ? _model.stock!.limitNotice
-                                        : 5)) {
+                                // Compute the post-decrement remaining quantity
+                                // BEFORE the threshold check. The Firestore write
+                                // above decrements Quantity server-side via
+                                // FieldValue.increment(-sold), but the local
+                                // cached _model.stock.quantity still reflects
+                                // the pre-sale value. Using the cached value
+                                // for the threshold check meant the alert:
+                                //   • MISSED the case where pre-sale was above
+                                //     threshold but post-sale is below it
+                                //     (e.g. 6 in stock, sell 4 → 2 left, should
+                                //     fire but the cached 6 > threshold = 5
+                                //     meant no alert)
+                                //   • ALSO missed showing the user what the
+                                //     current state actually is — the alert
+                                //     said "very low stock" without telling
+                                //     the user what was left or what the
+                                //     threshold even was.
+                                final _soldQty =
+                                    FFAppState().Cart.quantity.elementAtOrNull(
+                                            FFAppState().LoopCounter) ??
+                                        0;
+                                final _remaining =
+                                    _model.stock!.quantity - _soldQty;
+                                final _threshold =
+                                    (_model.stock?.hasLimitNotice() == true
+                                            ? _model.stock!.limitNotice
+                                            : 5);
+                                if (_remaining <= _threshold) {
+                                  String? _notifiedEmail;
                                   if (AccessControl.isOwner(context)) {
                                     logFirebaseEvent('Button_backend_call');
                                     _model.ownerCall = await SendEmailCall.call(
                                       toEmail: currentUserEmail,
                                       subject: 'Limited Stock notice',
                                       content:
-                                          ' We would like to notify you that, as of right now, just  ${_model.stock?.quantity.toString()} of ${_model.stock?.name} is left in stock, below the needed amount.  We advise checking your inventory and making any necessary adjustments to future orders in the interim. Please contact our customer support staff at [Customer Support Email/Phone Number] if you have any questions or need assistance. We respect your continued relationship and are grateful for your understanding.',
+                                          ' We would like to notify you that, as of right now, just  ${_remaining.toString()} of ${_model.stock?.name} is left in stock, below the needed amount.  We advise checking your inventory and making any necessary adjustments to future orders in the interim. Please contact our customer support staff at [Customer Support Email/Phone Number] if you have any questions or need assistance. We respect your continued relationship and are grateful for your understanding.',
                                     );
+                                    _notifiedEmail = currentUserEmail;
 
                                     logFirebaseEvent('Button_alert_dialog');
-                                    await showDialog(
+                                    await _showStockLevelNotice(
                                       context: context,
-                                      builder: (alertDialogContext) {
-                                        return WebViewAware(
-                                          child: AlertDialog(
-                                            title: Text('low stock'),
-                                            content: Text('very low stock'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    alertDialogContext),
-                                                child: Text('Ok'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
+                                      productName:
+                                          _model.stock?.name ?? 'this product',
+                                      remainingQty: _remaining,
+                                      threshold: _threshold,
+                                      notifiedEmail: _notifiedEmail,
                                     );
                                   } else {
                                     logFirebaseEvent('Button_backend_call');
@@ -635,8 +651,9 @@ class _CartWidgetState extends State<CartWidget> {
                                       toEmail: _model.owner?.email,
                                       subject: 'Limited Stock notice',
                                       content:
-                                          ' We would like to notify you that, as of right now, just  ${_model.stock?.quantity.toString()} of ${_model.stock?.name} is left in stock, below the needed amount.  We advise checking your inventory and making any necessary adjustments to future orders in the interim. Please contact our customer support staff at [Customer Support Email/Phone Number] if you have any questions or need assistance. We respect your continued relationship and are grateful for your understanding.',
+                                          ' We would like to notify you that, as of right now, just  ${_remaining.toString()} of ${_model.stock?.name} is left in stock, below the needed amount.  We advise checking your inventory and making any necessary adjustments to future orders in the interim. Please contact our customer support staff at [Customer Support Email/Phone Number] if you have any questions or need assistance. We respect your continued relationship and are grateful for your understanding.',
                                     );
+                                    _notifiedEmail = _model.owner?.email;
                                   }
                                 }
                                 logFirebaseEvent('Button_update_app_state');
@@ -706,4 +723,299 @@ class _CartWidgetState extends State<CartWidget> {
       ),
     );
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//   StockLevelNoticeDialog
+//
+//   Contextual replacement for the broken "low stock / very low
+//   stock / Ok" AlertDialog previously shown after a checkout.
+//
+//   Now shows:
+//     • Product name in the header
+//     • Remaining quantity (post-decrement)
+//     • Reorder threshold
+//     • Amber (warning) or red (critical) accent based on remaining
+//       vs threshold — < 40% of threshold = critical
+//     • Notification sent confirmation (if notifiedEmail != null)
+//     • Action buttons: "View inventory" (jumps to POS inventory tab)
+//       and "OK, got it" (acknowledge)
+//
+//   Returns 'inventory' or 'ok' depending on which button was tapped.
+// ═══════════════════════════════════════════════════════════════
+
+Future<String?> _showStockLevelNotice({
+  required BuildContext context,
+  required String productName,
+  required int remainingQty,
+  required int threshold,
+  String? notifiedEmail,
+}) async {
+  final isCritical = threshold > 0 &&
+      remainingQty <= (threshold * 0.4).floor();
+  final accent = isCritical
+      ? const Color(0xFFEF4444)
+      : const Color(0xFFF59E0B);
+
+  return showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => WebViewAware(
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(24),
+        child: Container(
+          width: 480,
+          decoration: BoxDecoration(
+            color: FlutterFlowTheme.of(ctx).secondaryBackground,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ── Header ──
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [accent, accent.withValues(alpha: 0.75)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Row(children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.18),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.30),
+                          width: 2),
+                    ),
+                    child: Icon(
+                        isCritical
+                            ? Icons.error_outline_rounded
+                            : Icons.warning_amber_rounded,
+                        color: Colors.white,
+                        size: 28),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            isCritical
+                                ? 'Critical stock level'
+                                : 'Stock level notice',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            productName,
+                            style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.85),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ]),
+                  ),
+                ]),
+              ),
+              // ── Body ──
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Stat row
+                      Row(children: [
+                        Expanded(
+                          child: _noticeMiniStat(
+                            ctx: ctx,
+                            label: 'Remaining',
+                            value: '$remainingQty units',
+                            accent: accent,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _noticeMiniStat(
+                            ctx: ctx,
+                            label: 'Reorder threshold',
+                            value: '$threshold units',
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(height: 18),
+                      // Explanation
+                      RichText(
+                        text: TextSpan(
+                          style: FlutterFlowTheme.of(ctx).bodyMedium.override(
+                                fontFamily:
+                                    FlutterFlowTheme.of(ctx).bodyMediumFamily,
+                                fontSize: 14,
+                                color:
+                                    FlutterFlowTheme.of(ctx).primaryText,
+                                letterSpacing: 0,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5,
+                                useGoogleFonts: !FlutterFlowTheme.of(ctx)
+                                    .bodyMediumIsCustom,
+                              ),
+                          children: [
+                            const TextSpan(
+                                text: 'After this sale, '),
+                            TextSpan(
+                                text: productName,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700)),
+                            TextSpan(
+                                text: isCritical
+                                    ? ' has dropped to $remainingQty units — below ${((threshold * 0.4).floor())} units, which is 40% of the reorder threshold. Replenish urgently to avoid stockouts.'
+                                    : ' has $remainingQty units remaining — at or below the reorder threshold of $threshold units. Consider reordering soon.'),
+                          ],
+                        ),
+                      ),
+                      // Notification confirmation
+                      if (notifiedEmail != null) ...[
+                        const SizedBox(height: 14),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF10B981).withValues(alpha: 0.10),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                color: const Color(0xFF10B981)
+                                    .withValues(alpha: 0.30)),
+                          ),
+                          child: Row(children: [
+                            const Icon(Icons.mark_email_read_outlined,
+                                color: Color(0xFF10B981), size: 18),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'Replenishment notice sent to $notifiedEmail',
+                                style: FlutterFlowTheme.of(ctx)
+                                    .bodySmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(ctx)
+                                          .bodySmallFamily,
+                                      fontSize: 12,
+                                      color: const Color(0xFF10B981),
+                                      fontWeight: FontWeight.w600,
+                                      useGoogleFonts: !FlutterFlowTheme.of(ctx)
+                                          .bodySmallIsCustom,
+                                    ),
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ]),
+              ),
+              // ── Footer ──
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                        color: FlutterFlowTheme.of(ctx)
+                            .alternate
+                            .withValues(alpha: 0.5)),
+                  ),
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx, 'inventory'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: accent,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Text('View inventory'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(ctx, 'ok'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: accent,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: const Text('OK, got it'),
+                      ),
+                    ]),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _noticeMiniStat({
+  required BuildContext ctx,
+  required String label,
+  required String value,
+  Color? accent,
+}) {
+  return Container(
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: FlutterFlowTheme.of(ctx).primaryBackground,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+          color: accent?.withValues(alpha: 0.25) ??
+              FlutterFlowTheme.of(ctx).alternate.withValues(alpha: 0.5)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          style: FlutterFlowTheme.of(ctx).titleLarge.override(
+                fontFamily: FlutterFlowTheme.of(ctx).titleLargeFamily,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: accent ?? FlutterFlowTheme.of(ctx).primaryText,
+                useGoogleFonts:
+                    !FlutterFlowTheme.of(ctx).titleLargeIsCustom,
+              ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: FlutterFlowTheme.of(ctx).bodySmall.override(
+                fontFamily: FlutterFlowTheme.of(ctx).bodySmallFamily,
+                fontSize: 11,
+                color: FlutterFlowTheme.of(ctx).secondaryText,
+                useGoogleFonts:
+                    !FlutterFlowTheme.of(ctx).bodySmallIsCustom,
+              ),
+        ),
+      ],
+    ),
+  );
 }
