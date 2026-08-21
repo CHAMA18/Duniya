@@ -712,9 +712,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
 
                             logFirebaseEvent('Button_navigate_to');
                             context.goNamedAuth(
-                              _selectedMode == 0
-                                  ? PulsePharmaciesWidget.routeName
-                                  : WelcomeWidget.routeName,
+                              HomeWidget.routeName,
                               context.mounted,
                             );
                             if (_shouldSetState) safeSetState(() {});
