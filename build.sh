@@ -98,7 +98,6 @@ if [[ -f "build/web/index.html" && -f "web/landing.html" ]]; then
   cp build/web/index.html build/web/app.html
   cp web/landing.html build/web/index.html
   echo "==> Landing-first: / = landing page, Flutter app shell at /app.html"
-first: / = landing.html (via _redirects), SPA shell at /index.html AND /app.html"
 fi
 
 # ---------------------------------------------------------------------
