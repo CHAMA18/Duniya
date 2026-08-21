@@ -216,3 +216,16 @@ if [[ -f "web/pulse-pharmacy.mp4" ]]; then
 else
   echo "==> WARN: web/pulse-pharmacy.mp4 not found — landing film section will show skeleton only."
 fi
+
+# ---------------------------------------------------------------------
+# 9. Copy the Windows + macOS launcher ZIPs so the landing page
+#    download buttons can serve them directly from the static site
+#    (no GitHub Releases dependency). Each ZIP contains a launcher
+#    script that opens the Pulse web app in the user's default
+#    browser — stop-gap until native installers can be built.
+# ---------------------------------------------------------------------
+if [[ -d "web/downloads" ]]; then
+  mkdir -p build/web/downloads
+  cp web/downloads/*.zip build/web/downloads/ 2>/dev/null || true
+  echo "==> Copied web/downloads/*.zip -> build/web/downloads/"
+fi
