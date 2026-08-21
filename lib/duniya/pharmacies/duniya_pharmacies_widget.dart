@@ -193,13 +193,91 @@ class _DuniyaPharmaciesWidgetState extends State<DuniyaPharmaciesWidget> {
         return index < row.length ? cellValue(row[index]) : '';
       }
 
-      int integerAt(List<dynamic> row, String key) =>
-          int.tryParse(valueAt(row, key).replaceAll(RegExp(r'[^0-9-]'), '')) ??
-          -1;
-      double decimalAt(List<dynamic> row, String key) =>
-          double.tryParse(
-              valueAt(row, key).replaceAll(RegExp(r'[^0-9.-]'), '')) ??
-          -1;
+      /// Convert Excel column letters (A, B, ..., Z, AA, AB, ...) to
+      /// a 0-based column index. Declared BEFORE the functions that
+      /// use it (Dart requires local functions to be declared before use).
+      int? _excelColToIndex(String letters) {
+        int result = 0;
+        for (final c in letters.toUpperCase().codeUnits) {
+          if (c < 65 || c > 90) return null;
+          result = result * 26 + (c - 64);
+        }
+        return result - 1;
+      }
+
+      /// Resolve simple Excel formulas (=CELL op CELL) by looking up
+      /// the referenced cells in the same row. Handles +, -, *, /.
+      /// Returns null if the formula can't be evaluated.
+      num? _evalFormula(String formula, List<dynamic> row,
+          {required bool isInt}) {
+        final expr = formula.substring(1).trim();
+        // Match: CELLREF op CELLREF (e.g., F2-G2, J2*H2)
+        final m = RegExp(r'^([A-Za-z]+)\d+\s*([+\-*/])\s*([A-Za-z]+)\d+$')
+            .firstMatch(expr);
+        if (m == null) return null;
+        final leftColIdx = _excelColToIndex(m.group(1)!);
+        final rightColIdx = _excelColToIndex(m.group(3)!);
+        final op = m.group(2)!;
+        if (leftColIdx == null || rightColIdx == null) return null;
+        if (leftColIdx >= row.length || rightColIdx >= row.length) return null;
+        final leftStr = cellValue(row[leftColIdx]);
+        final rightStr = cellValue(row[rightColIdx]);
+        final left = isInt
+            ? int.tryParse(leftStr.replaceAll(RegExp(r'[^0-9-]'), ''))
+            : double.tryParse(leftStr.replaceAll(RegExp(r'[^0-9.-]'), ''));
+        final right = isInt
+            ? int.tryParse(rightStr.replaceAll(RegExp(r'[^0-9-]'), ''))
+            : double.tryParse(rightStr.replaceAll(RegExp(r'[^0-9.-]'), ''));
+        if (left == null || right == null) return null;
+        num result;
+        switch (op) {
+          case '+':
+            result = left + right;
+            break;
+          case '-':
+            result = left - right;
+            break;
+          case '*':
+            result = left * right;
+            break;
+          case '/':
+            if (right == 0) return null;
+            result = left / right;
+            break;
+          default:
+            return null;
+        }
+        return isInt ? result.toInt() : result;
+      }
+
+      int integerAt(List<dynamic> row, String key) {
+        final raw = valueAt(row, key);
+        if (raw.isEmpty) return -1;
+        // If the cell contains a formula (e.g., '=F2-G2'), compute it
+        // from the referenced cells in the same row. This handles the
+        // common recon template formulas:
+        //   =F{row}-G{row}  → Total Available - Physical Count
+        //   =E{row}+D{row}  → Stock Supplied + Opening Stock
+        // Without this, the formula string '=F2-G2' would be regex-
+        // stripped to '2-2', int.tryParse fails → returns -1 → fails
+        // the '< 0' check → 'Invalid totals' error.
+        if (raw.startsWith('=')) {
+          final computed = _evalFormula(raw, row, isInt: true);
+          if (computed != null) return computed.toInt();
+        }
+        return int.tryParse(raw.replaceAll(RegExp(r'[^0-9-]'), '')) ?? -1;
+      }
+      double decimalAt(List<dynamic> row, String key) {
+        final raw = valueAt(row, key);
+        if (raw.isEmpty) return -1;
+        if (raw.startsWith('=')) {
+          final computed = _evalFormula(raw, row, isInt: false);
+          if (computed != null) return computed.toDouble();
+        }
+        return double.tryParse(
+                raw.replaceAll(RegExp(r'[^0-9.-]'), '')) ??
+            -1;
+      }
 
       final records = <Map<String, dynamic>>[];
       for (final row in sheet.rows.skip(1)) {
