@@ -1361,8 +1361,13 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                 ),
                                 const SizedBox(height: 18),
                               ],
-                              _buildHeader(context, isWide, activePharmacyName),
-                              const SizedBox(height: 22),
+                              // Header banner removed — frees up ~200px of
+                              // vertical space for the product grid. Checkout
+                              // is still accessible via the cashier sidebar
+                              // button and the search-bar "Checkout: ZMK X"
+                              // button.
+                              // _buildHeader(context, isWide, activePharmacyName),
+                              const SizedBox(height: 18),
                               StreamBuilder<List<PharmacyRecord>>(
                                 stream: queryPharmacyRecord(
                                     parent: pharmaciesParent),
