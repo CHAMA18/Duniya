@@ -33,6 +33,7 @@ const APP_SHELL = [
   `/app.html?v=${CACHE_VERSION}`,
   `/404.html?v=${CACHE_VERSION}`,
   `/landing.html?v=${CACHE_VERSION}`,
+  `/loader-splash.png?v=${CACHE_VERSION}`,
   `/manifest.json?v=${CACHE_VERSION}`,
   `/flutter_bootstrap.js?v=${CACHE_VERSION}`,
   `/favicon.svg`,

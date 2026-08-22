@@ -116,6 +116,17 @@ if [[ -f "web/404.html" ]]; then
 fi
 
 # ---------------------------------------------------------------------
+# 4d. Copy the branded loader splash image so both index.html (app
+#     shell) and 404.html (SPA fallback) can display it while Flutter
+#     boots. The image is a 132KB PNG showing the complete Pulse
+#     loading screen (black bg + purple spinner + logo + wordmark).
+# ---------------------------------------------------------------------
+if [[ -f "web/loader-splash.png" ]]; then
+  cp web/loader-splash.png build/web/loader-splash.png
+  echo "==> Copied web/loader-splash.png -> build/web/loader-splash.png (branded loader splash)"
+fi
+
+# ---------------------------------------------------------------------
 # 5. Cache busting — inject build version into built files.
 # ---------------------------------------------------------------------
 # Generate a version string from the git commit hash (short) + timestamp.

@@ -104,6 +104,9 @@
 /*.png
   Cache-Control: public, max-age=604800
 
+/loader-splash.png
+  Cache-Control: public, max-age=86400
+
 /*.jpg
   Cache-Control: public, max-age=604800
 
