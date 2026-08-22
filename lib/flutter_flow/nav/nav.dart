@@ -632,6 +632,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'pharmacyName',
               ParamType.String,
             ),
+            pharmacyReference: params.getParam(
+              'pharmacyReference',
+              ParamType.DocumentReference,
+              isList: false,
+              collectionNamePath: ['User', 'Pharmacy'],
+            ),
           ),
         ),
         FFRoute(

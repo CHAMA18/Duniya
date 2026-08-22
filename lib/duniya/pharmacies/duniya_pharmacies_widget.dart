@@ -1428,6 +1428,10 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
               PharmacyDetailWidget.routeName,
               queryParameters: {
                 'pharmacyName': serializeParam(pharmacy.name, ParamType.String),
+                'pharmacyReference': serializeParam(
+                  pharmacy.reference,
+                  ParamType.DocumentReference,
+                ),
               }.withoutNulls,
             );
           },
