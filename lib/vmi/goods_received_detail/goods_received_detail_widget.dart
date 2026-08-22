@@ -642,7 +642,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       Expanded(
                           child: _buildInfoChip(
                         icon: Icons.event_available_rounded,
-                        label: 'Date Received',
+                        label: _isPulseUser ? 'Date Sent' : 'Date Received',
                         value: dateTimeFormat(
                           'yyyy-MM-dd HH:mm',
                           DateTime.now(),
@@ -653,7 +653,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       Expanded(
                           child: _buildInfoChip(
                         icon: Icons.person_rounded,
-                        label: 'Received By',
+                        label: _isPulseUser ? 'Sent By' : 'Received By',
                         value: currentUserDisplayName.isNotEmpty
                             ? currentUserDisplayName
                             : currentUserEmail,
@@ -664,7 +664,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                     children: [
                       _buildInfoChip(
                         icon: Icons.event_available_rounded,
-                        label: 'Date Received',
+                        label: _isPulseUser ? 'Date Sent' : 'Date Received',
                         value: dateTimeFormat(
                           'yyyy-MM-dd HH:mm',
                           DateTime.now(),
@@ -674,7 +674,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
                       SizedBox(height: 12),
                       _buildInfoChip(
                         icon: Icons.person_rounded,
-                        label: 'Received By',
+                        label: _isPulseUser ? 'Sent By' : 'Received By',
                         value: currentUserDisplayName.isNotEmpty
                             ? currentUserDisplayName
                             : currentUserEmail,

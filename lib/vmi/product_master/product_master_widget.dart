@@ -3,6 +3,7 @@ import '/custom_code/actions/index.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -29,6 +30,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   late ProductMasterModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool get _canEditCatalogue =>
+      AccessControl.hasPermission(context, Permission.catalogueEdit);
+
+  bool get _canDeleteCatalogue =>
+      AccessControl.hasPermission(context, Permission.catalogueDelete);
 
   // ── Pulse Purple design tokens ──
   static const Color _pulsePurple = Color(0xFF9900FF);
@@ -398,6 +405,55 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         ),
                       ),
                     ),
+                    if (_canEditCatalogue || _canDeleteCatalogue)
+                      Positioned(
+                        top: 2.0,
+                        left: 2.0,
+                        child: Material(
+                          color: Colors.white.withValues(alpha: 0.92),
+                          shape: const CircleBorder(),
+                          child: PopupMenuButton<String>(
+                            tooltip: 'Manage product',
+                            icon: const Icon(Icons.more_horiz_rounded,
+                                size: 20.0),
+                            color: Colors.white,
+                            elevation: 8.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            onSelected: (action) {
+                              if (action == 'edit') {
+                                _showAddProductDialog(context,
+                                    product: product);
+                              } else if (action == 'delete') {
+                                _confirmDeleteProduct(context, product);
+                              }
+                            },
+                            itemBuilder: (menuContext) => [
+                              if (_canEditCatalogue)
+                                const PopupMenuItem<String>(
+                                  value: 'edit',
+                                  child: ListTile(
+                                    leading: Icon(Icons.edit_outlined),
+                                    title: Text('Edit product'),
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                ),
+                              if (_canDeleteCatalogue)
+                                const PopupMenuItem<String>(
+                                  value: 'delete',
+                                  child: ListTile(
+                                    leading: Icon(Icons.delete_outline,
+                                        color: _errorColor),
+                                    title: Text('Delete product',
+                                        style: TextStyle(color: _errorColor)),
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 10.0),
@@ -948,6 +1004,29 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             ],
           ),
           actions: [
+            if (_canDeleteCatalogue)
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  _confirmDeleteProduct(context, product);
+                },
+                icon: const Icon(Icons.delete_outline, size: 18.0),
+                label: const Text('Delete'),
+                style: TextButton.styleFrom(foregroundColor: _errorColor),
+              ),
+            if (_canEditCatalogue)
+              FilledButton.icon(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  _showAddProductDialog(context, product: product);
+                },
+                icon: const Icon(Icons.edit_outlined, size: 18.0),
+                label: const Text('Edit product'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: _pulsePurple,
+                  foregroundColor: Colors.white,
+                ),
+              ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
               child: Text(
@@ -1030,6 +1109,59 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDeleteProduct(
+    BuildContext context,
+    ProductMasterRecord product,
+  ) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        icon: const Icon(Icons.delete_forever_rounded, color: _errorColor),
+        title: const Text('Delete product?'),
+        content: Text(
+          '“${product.name}” will be permanently removed from the shared product catalogue. This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Keep product'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            icon: const Icon(Icons.delete_outline, size: 18.0),
+            label: const Text('Delete'),
+            style: FilledButton.styleFrom(
+              backgroundColor: _errorColor,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete != true || !mounted) return;
+
+    try {
+      await product.reference.delete();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('“${product.name}” was deleted.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Unable to delete this product. Please try again.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   // ──────────────────────────────────────────────────────────────────────
@@ -1620,7 +1752,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   }
 
   // ── World-Class Add Product Dialog ──
-  void _showAddProductDialog(BuildContext context) {
+  void _showAddProductDialog(BuildContext context,
+      {ProductMasterRecord? product}) {
     _model.nameTextController ??= TextEditingController();
     _model.genericNameTextController ??= TextEditingController();
     _model.brandNameTextController ??= TextEditingController();
@@ -1632,6 +1765,26 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     _model.sellingPriceTextController ??= TextEditingController();
     _model.minStockTextController ??= TextEditingController();
     _model.reorderLevelTextController ??= TextEditingController();
+
+    final isEditing = product != null;
+    _model.nameTextController!.text = product?.name ?? '';
+    _model.genericNameTextController!.text = product?.genericName ?? '';
+    _model.brandNameTextController!.text = product?.brandName ?? '';
+    _model.strengthTextController!.text = product?.strength ?? '';
+    _model.dosageFormTextController!.text = product?.dosageForm ?? '';
+    _model.packSizeTextController!.text = product?.packSize ?? '';
+    _model.skuTextController!.text = product?.sku ?? '';
+    _model.costPriceTextController!.text =
+        isEditing ? product.costPrice.toStringAsFixed(2) : '';
+    _model.sellingPriceTextController!.text =
+        isEditing ? product.sellingPrice.toStringAsFixed(2) : '';
+    _model.minStockTextController!.text =
+        isEditing ? product.minimumStockLevel.toString() : '';
+    _model.reorderLevelTextController!.text =
+        isEditing ? product.reorderLevel.toString() : '';
+    _model.dialogCategoryValue = product?.category;
+    _model.dialogCategoryValueController =
+        FormFieldController<String>(product?.category);
 
     final isWide = MediaQuery.sizeOf(context).width > 700;
 
@@ -1670,7 +1823,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // ── Gradient Header ──
-                      _buildDialogGradientHeader(),
+                      _buildDialogGradientHeader(isEditing: isEditing),
 
                       // ── Form Body ──
                       Flexible(
@@ -1838,7 +1991,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                       ),
 
                       // ── Action Bar ──
-                      _buildDialogActionBar(dialogContext),
+                      _buildDialogActionBar(dialogContext, product: product),
                     ],
                   ),
                 ),
@@ -1851,7 +2004,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   }
 
   // ── Gradient header for dialog ──
-  Widget _buildDialogGradientHeader() {
+  Widget _buildDialogGradientHeader({required bool isEditing}) {
     return Container(
       padding: const EdgeInsets.fromLTRB(28.0, 24.0, 28.0, 24.0),
       decoration: BoxDecoration(
@@ -1876,7 +2029,11 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               border: Border.all(
                   color: Colors.white.withValues(alpha: 0.3), width: 1.0),
             ),
-            child: Icon(Icons.add_rounded, color: Colors.white, size: 26.0),
+            child: Icon(
+              isEditing ? Icons.edit_rounded : Icons.add_rounded,
+              color: Colors.white,
+              size: 26.0,
+            ),
           ),
           const SizedBox(width: 16.0),
           Expanded(
@@ -1884,7 +2041,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Add New Product',
+                  isEditing ? 'Edit Product' : 'Add New Product',
                   style: TextStyle(
                     fontFamily: kAppFontFamily,
                     fontSize: 20.0,
@@ -1895,7 +2052,9 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 ),
                 const SizedBox(height: 2.0),
                 Text(
-                  'Fill in the product details to add to your catalogue',
+                  isEditing
+                      ? 'Update the product details and save your changes'
+                      : 'Fill in the product details to add to your catalogue',
                   style: TextStyle(
                     fontFamily: kAppFontFamily,
                     fontSize: 13.0,
@@ -2208,7 +2367,8 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   }
 
   // ── Action bar with premium buttons ──
-  Widget _buildDialogActionBar(BuildContext dialogContext) {
+  Widget _buildDialogActionBar(BuildContext dialogContext,
+      {ProductMasterRecord? product}) {
     final nameEmpty = _model.nameTextController?.text.isEmpty ?? true;
     final skuEmpty = _model.skuTextController?.text.isEmpty ?? true;
     final canSave = !nameEmpty && !skuEmpty;
@@ -2265,66 +2425,81 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             child: ElevatedButton.icon(
               onPressed: canSave
                   ? () async {
-                      await ProductMasterRecord.collection.doc().set(
-                            createProductMasterRecordData(
-                              name: _model.nameTextController?.text,
-                              genericName:
-                                  _model.genericNameTextController?.text,
-                              brandName: _model.brandNameTextController?.text,
-                              strength: _model.strengthTextController?.text,
-                              dosageForm: _model.dosageFormTextController?.text,
-                              packSize: _model.packSizeTextController?.text,
-                              sku: _model.skuTextController?.text,
-                              category: _model.dialogCategoryValue,
-                              costPrice: double.tryParse(
-                                  _model.costPriceTextController?.text ?? '0'),
-                              sellingPrice: double.tryParse(
-                                  _model.sellingPriceTextController?.text ??
-                                      '0'),
-                              minimumStockLevel: int.tryParse(
-                                  _model.minStockTextController?.text ?? '0'),
-                              reorderLevel: int.tryParse(
-                                  _model.reorderLevelTextController?.text ??
-                                      '0'),
-                              isActive: true,
-                              createdAt: getCurrentTimestamp,
-                              updatedAt: getCurrentTimestamp,
+                      try {
+                        final productData = createProductMasterRecordData(
+                          name: _model.nameTextController?.text,
+                          genericName: _model.genericNameTextController?.text,
+                          brandName: _model.brandNameTextController?.text,
+                          strength: _model.strengthTextController?.text,
+                          dosageForm: _model.dosageFormTextController?.text,
+                          packSize: _model.packSizeTextController?.text,
+                          sku: _model.skuTextController?.text,
+                          category: _model.dialogCategoryValue,
+                          costPrice: double.tryParse(
+                              _model.costPriceTextController?.text ?? '0'),
+                          sellingPrice: double.tryParse(
+                              _model.sellingPriceTextController?.text ?? '0'),
+                          minimumStockLevel: int.tryParse(
+                              _model.minStockTextController?.text ?? '0'),
+                          reorderLevel: int.tryParse(
+                              _model.reorderLevelTextController?.text ?? '0'),
+                          isActive: product?.isActive ?? true,
+                          createdAt:
+                              product == null ? getCurrentTimestamp : null,
+                          updatedAt: getCurrentTimestamp,
+                        );
+                        if (product == null) {
+                          await ProductMasterRecord.collection
+                              .doc()
+                              .set(productData);
+                        } else {
+                          await product.reference.update(productData);
+                        }
+                        _model.nameTextController?.clear();
+                        _model.genericNameTextController?.clear();
+                        _model.brandNameTextController?.clear();
+                        _model.strengthTextController?.clear();
+                        _model.dosageFormTextController?.clear();
+                        _model.packSizeTextController?.clear();
+                        _model.skuTextController?.clear();
+                        _model.costPriceTextController?.clear();
+                        _model.sellingPriceTextController?.clear();
+                        _model.minStockTextController?.clear();
+                        _model.reorderLevelTextController?.clear();
+                        Navigator.pop(dialogContext);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle_rounded,
+                                    color: Colors.white, size: 20.0),
+                                const SizedBox(width: 10.0),
+                                Text(product == null
+                                    ? 'Product added successfully'
+                                    : 'Product updated successfully'),
+                              ],
                             ),
-                          );
-                      _model.nameTextController?.clear();
-                      _model.genericNameTextController?.clear();
-                      _model.brandNameTextController?.clear();
-                      _model.strengthTextController?.clear();
-                      _model.dosageFormTextController?.clear();
-                      _model.packSizeTextController?.clear();
-                      _model.skuTextController?.clear();
-                      _model.costPriceTextController?.clear();
-                      _model.sellingPriceTextController?.clear();
-                      _model.minStockTextController?.clear();
-                      _model.reorderLevelTextController?.clear();
-                      Navigator.pop(dialogContext);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              Icon(Icons.check_circle_rounded,
-                                  color: Colors.white, size: 20.0),
-                              const SizedBox(width: 10.0),
-                              Text('Product added successfully'),
-                            ],
+                            backgroundColor: _pulsePurple,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
                           ),
-                          backgroundColor: _pulsePurple,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                        );
+                      } catch (_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Unable to save this product. Please try again.'),
+                            behavior: SnackBarBehavior.floating,
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                   : null,
               icon: const Icon(Icons.check_rounded, size: 18.0),
               label: Text(
-                'Save Product',
+                product == null ? 'Save Product' : 'Save Changes',
                 style: TextStyle(
                   fontFamily: kAppFontFamily,
                   fontSize: 14.0,

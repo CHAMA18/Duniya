@@ -29,6 +29,16 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedPeriod = '24h';
 
+  /// Keep the page comfortably inset on small screens while allowing the
+  /// operational content (metrics, chart and ledger) to use the full desktop
+  /// canvas. A fixed 32px gutter made wide workspaces feel unnecessarily
+  /// constrained.
+  EdgeInsets _contentPadding(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final horizontal = width < 600 ? 16.0 : 20.0;
+    return EdgeInsets.fromLTRB(horizontal, 20.0, horizontal, 32.0);
+  }
+
   /// Format a number with comma separators (e.g. 1248 → '1,248')
   static String _fmtNum(int n) {
     return n
@@ -132,15 +142,17 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
                                 return SingleChildScrollView(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 32.0, vertical: 24.0),
-                                  child: _buildLedgerErrorState(
-                                    context,
-                                    theme,
-                                    primaryColor,
-                                    onSurface,
-                                    onSurfaceVariant,
-                                    cardBg,
+                                  padding: _contentPadding(context),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: _buildLedgerErrorState(
+                                      context,
+                                      theme,
+                                      primaryColor,
+                                      onSurface,
+                                      onSurfaceVariant,
+                                      cardBg,
+                                    ),
                                   ),
                                 );
                               }
@@ -160,8 +172,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                               }
 
                               return SingleChildScrollView(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 32.0, vertical: 24.0),
+                                padding: _contentPadding(context),
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,

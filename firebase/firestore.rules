@@ -15,8 +15,15 @@ service cloud.firestore {
     function isPulseAccount() {
       return signedIn()
         && exists(/databases/$(database)/documents/User/$(request.auth.uid))
-        && get(/databases/$(database)/documents/User/$(request.auth.uid))
-            .data.account_type == 'Pulse';
+        // User documents created by the Flutter app use `accountType`.
+        // Keep `account_type` as a legacy fallback so an authenticated Pulse
+        // user has the same access after the server refreshes a cached query.
+        && (
+          get(/databases/$(database)/documents/User/$(request.auth.uid))
+              .data.accountType == 'Pulse'
+          || get(/databases/$(database)/documents/User/$(request.auth.uid))
+              .data.account_type == 'Pulse'
+        );
     }
 
     function isPulseAdmin() {

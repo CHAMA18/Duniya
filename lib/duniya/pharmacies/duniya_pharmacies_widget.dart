@@ -212,6 +212,190 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
         DateTime.now().year, DateTime.now().month, DateTime.now().day, 12);
   }
 
+  /// Requires an explicit destination before a reconciliation can write any
+  /// inventory data. A filename is not a trustworthy source of pharmacy
+  /// identity, so the selected document reference is sent to the callable
+  /// import instead.
+  Future<PharmacyRecord?> _confirmReconciliationTarget({
+    required int lineCount,
+    required DateTime reconciliationDate,
+    required String sourceFileName,
+  }) async {
+    final pharmacies = (await queryPharmacyRecordOnce())
+        .where((pharmacy) =>
+            !pharmacy.deleted &&
+            pharmacy.networkStatus.toLowerCase() == 'active')
+        .toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+    if (pharmacies.isEmpty) {
+      throw StateError(
+          'No approved pharmacies are available for this reconciliation.');
+    }
+
+    return showDialog<PharmacyRecord>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        PharmacyRecord? selected;
+        return StatefulBuilder(
+          builder: (context, setDialogState) => Dialog(
+            insetPadding:
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 580),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF7C3AED), Color(0xFF9900FF)],
+                      ),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.fact_check_rounded,
+                            color: Colors.white, size: 28),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Confirm reconciliation target',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                'Choose where the inventory count belongs.',
+                                style: TextStyle(
+                                  color: Color(0xFFE9D5FF),
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 22, 24, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF5F3FF),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '$lineCount validated product lines · ${_formatDate(reconciliationDate)}\n$sourceFileName',
+                            style: const TextStyle(
+                              color: Color(0xFF5B21B6),
+                              fontSize: 13,
+                              height: 1.45,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Approved pharmacy',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                          initialValue: selected?.reference.path,
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            hintText:
+                                'Select the pharmacy for this reconciliation',
+                            prefixIcon:
+                                const Icon(Icons.local_pharmacy_rounded),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          items: pharmacies
+                              .map(
+                                (pharmacy) => DropdownMenuItem(
+                                  value: pharmacy.reference.path,
+                                  child: Text(
+                                    pharmacy.address.isEmpty
+                                        ? pharmacy.name
+                                        : '${pharmacy.name} · ${pharmacy.address}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (path) => setDialogState(() {
+                            selected = pharmacies.firstWhere(
+                              (pharmacy) => pharmacy.reference.path == path,
+                            );
+                          }),
+                        ),
+                        if (selected != null) ...[
+                          const SizedBox(height: 12),
+                          Text(
+                            'Inventory, movements, and the audit count will be recorded in ${selected!.name}.',
+                            style: const TextStyle(
+                              color: Color(0xFF475569),
+                              fontSize: 12,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext),
+                          child: const Text('Cancel'),
+                        ),
+                        const SizedBox(width: 8),
+                        FilledButton.icon(
+                          onPressed: selected == null
+                              ? null
+                              : () => Navigator.pop(dialogContext, selected),
+                          icon: const Icon(Icons.upload_rounded, size: 18),
+                          label: const Text('Import reconciliation'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _importSosMpiloReconciliation() async {
     try {
       final selection = await FilePicker.platform.pickFiles(
@@ -398,30 +582,17 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
       if (records.isEmpty)
         throw StateError('No reconciliation records were found.');
 
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          icon: const Icon(Icons.fact_check_rounded, color: Color(0xFF9900FF)),
-          title: const Text('Import SOS Mpilo reconciliation?'),
-          content: Text(
-            '${records.length} product lines will create or update SOS Mpilo Pharmacy, its product catalogue, stock balances, movements, and a dated stock-count record for ${_formatDate(reconciliationDate)}. Re-importing this source updates the same historical records.',
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(dialogContext, false),
-                child: const Text('Cancel')),
-            FilledButton(
-                onPressed: () => Navigator.pop(dialogContext, true),
-                child: const Text('Import reconciliation')),
-          ],
-        ),
+      final pharmacy = await _confirmReconciliationTarget(
+        lineCount: records.length,
+        reconciliationDate: reconciliationDate,
+        sourceFileName: file.name,
       );
-      if (confirmed != true) return;
+      if (pharmacy == null) return;
 
       final response = await FirebaseFunctions.instance
           .httpsCallable('importHistoricalReconciliation')
           .call({
-        'pharmacyName': 'SOS Mpilo Pharmacy',
+        'pharmacyPath': pharmacy.reference.path,
         'reconciliationDate': reconciliationDate.millisecondsSinceEpoch,
         'sourceFileName': file.name,
         'records': records,
@@ -431,7 +602,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                'SOS Mpilo Pharmacy imported with $count reconciliation lines.'),
+                '${pharmacy.name} imported with $count reconciliation lines.'),
             behavior: SnackBarBehavior.floating),
       );
     } on FirebaseFunctionsException catch (error) {
@@ -706,7 +877,8 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
                 phone: false,
                 tablet: false,
               )) ...[
-                _heroAction(Icons.refresh_rounded, 'Refresh', _refreshPharmacies),
+                _heroAction(
+                    Icons.refresh_rounded, 'Refresh', _refreshPharmacies),
               ],
             ],
           ),
@@ -1038,73 +1210,80 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
           ),
         ],
       ),
-      child: Wrap(
-        spacing: 12.0,
-        runSpacing: 12.0,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Container(
-            width: 320.0,
-            decoration: BoxDecoration(
-              color: theme.primaryBackground,
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(color: theme.alternate, width: 1.0),
-            ),
-            child: TextField(
-              controller: _model.searchTextController,
-              focusNode: _model.searchFocusNode,
-              decoration: InputDecoration(
-                hintText: 'Search by name, address, or owner email…',
-                hintStyle: theme.bodySmall.override(
-                  fontFamily: theme.bodySmallFamily,
-                  color: theme.secondaryText,
-                  letterSpacing: 0.0,
-                  useGoogleFonts: !theme.bodySmallIsCustom,
+      child: LayoutBuilder(
+        builder: (context, constraints) => Wrap(
+          spacing: 12.0,
+          runSpacing: 12.0,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            // Search is the primary control on this page. It deliberately
+            // occupies the complete available filter bar width instead of a
+            // fixed desktop-sized field, so long pharmacy names and emails
+            // remain easy to search on wide workspaces.
+            Container(
+              width: constraints.maxWidth,
+              decoration: BoxDecoration(
+                color: theme.primaryBackground,
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(color: theme.alternate, width: 1.0),
+              ),
+              child: TextField(
+                controller: _model.searchTextController,
+                focusNode: _model.searchFocusNode,
+                decoration: InputDecoration(
+                  hintText: 'Search by name, address, or owner email…',
+                  hintStyle: theme.bodySmall.override(
+                    fontFamily: theme.bodySmallFamily,
+                    color: theme.secondaryText,
+                    letterSpacing: 0.0,
+                    useGoogleFonts: !theme.bodySmallIsCustom,
+                  ),
+                  prefixIcon: Icon(Icons.search_rounded,
+                      color: theme.secondaryText, size: 20.0),
+                  suffixIcon:
+                      (_model.searchTextController?.text ?? '').isNotEmpty
+                          ? IconButton(
+                              icon: Icon(Icons.close_rounded,
+                                  color: theme.secondaryText, size: 18.0),
+                              onPressed: () {
+                                _model.searchTextController?.clear();
+                                safeSetState(() {});
+                              },
+                            )
+                          : null,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                      12.0, 12.0, 12.0, 12.0),
                 ),
-                prefixIcon: Icon(Icons.search_rounded,
-                    color: theme.secondaryText, size: 20.0),
-                suffixIcon: (_model.searchTextController?.text ?? '').isNotEmpty
-                    ? IconButton(
-                        icon: Icon(Icons.close_rounded,
-                            color: theme.secondaryText, size: 18.0),
-                        onPressed: () {
-                          _model.searchTextController?.clear();
-                          safeSetState(() {});
-                        },
-                      )
-                    : null,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: const EdgeInsetsDirectional.fromSTEB(
-                    12.0, 12.0, 12.0, 12.0),
-              ),
-              style: theme.bodyMedium.override(
-                fontFamily: theme.bodyMediumFamily,
-                letterSpacing: 0.0,
-                useGoogleFonts: !theme.bodyMediumIsCustom,
-              ),
-              onChanged: (value) => safeSetState(() {}),
-            ),
-          ),
-          if (hasActiveFilters)
-            TextButton.icon(
-              onPressed: () {
-                _model.searchTextController?.clear();
-                setState(() => _statusFilter = 'All');
-              },
-              icon: const Icon(Icons.restart_alt_rounded, size: 16.0),
-              label: Text(
-                'Reset',
-                style: theme.bodySmall.override(
-                  fontFamily: theme.bodySmallFamily,
-                  color: theme.secondaryText,
+                style: theme.bodyMedium.override(
+                  fontFamily: theme.bodyMediumFamily,
                   letterSpacing: 0.0,
-                  useGoogleFonts: !theme.bodySmallIsCustom,
+                  useGoogleFonts: !theme.bodyMediumIsCustom,
+                ),
+                onChanged: (value) => safeSetState(() {}),
+              ),
+            ),
+            if (hasActiveFilters)
+              TextButton.icon(
+                onPressed: () {
+                  _model.searchTextController?.clear();
+                  setState(() => _statusFilter = 'All');
+                },
+                icon: const Icon(Icons.restart_alt_rounded, size: 16.0),
+                label: Text(
+                  'Reset',
+                  style: theme.bodySmall.override(
+                    fontFamily: theme.bodySmallFamily,
+                    color: theme.secondaryText,
+                    letterSpacing: 0.0,
+                    useGoogleFonts: !theme.bodySmallIsCustom,
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

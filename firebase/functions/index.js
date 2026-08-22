@@ -15,6 +15,15 @@ const RESEND_API_URL = "https://api.resend.com";
 const DEFAULT_RESEND_FROM = "Pulse <noreply@thestackone.com>";
 const DEFAULT_PORTAL_URL = "https://thestackone.com/app.html";
 
+// Profile field names evolved from snake_case to camelCase in the Flutter
+// client. Keep callable authorization consistent with Firestore rules and
+// accept both during the migration.
+function getAccountType(user) {
+  return String(user?.accountType || user?.account_type || "")
+    .trim()
+    .toLowerCase();
+}
+
 function getInvitationDeliveryStatus(eventType) {
   const statuses = {
     "email.sent": "sent",
@@ -1133,7 +1142,7 @@ exports.dispatchGoodsToPharmacy = functions
     const firestore = admin.firestore();
     const callerSnapshot = await firestore.collection("User").doc(context.auth.uid).get();
     const caller = callerSnapshot.data() || {};
-    if (String(caller.account_type || "").trim().toLowerCase() !== "pulse") {
+    if (getAccountType(caller) !== "pulse") {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Only Pulse accounts can dispatch goods to pharmacies."
@@ -1293,8 +1302,8 @@ exports.confirmPulseDispatch = functions
   });
 
 // Imports a verified historical pharmacy reconciliation. This is deliberately
-// server-side so only Pulse administrators can create pharmacy workspaces and
-// backdated stock records.
+// server-side so only Pulse administrators can create backdated stock records
+// in an explicitly selected, approved pharmacy workspace.
 exports.importHistoricalReconciliation = functions
   .region("us-central1")
   .https.onCall(async (data, context) => {
@@ -1307,18 +1316,28 @@ exports.importHistoricalReconciliation = functions
     const callerSnapshot = await callerRef.get();
     const caller = callerSnapshot.data() || {};
     const callerRole = String(caller.role || "").trim().toLowerCase();
-    const isPulseAdmin = String(caller.account_type || "").trim().toLowerCase() === "pulse" &&
+    const isPulseAdmin = getAccountType(caller) === "pulse" &&
       ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
     if (!isPulseAdmin) {
       throw new functions.https.HttpsError("permission-denied", "Only Pulse administrators can import reconciliation data.");
     }
 
-    const pharmacyName = String(data?.pharmacyName || "").trim();
+    const pharmacyPath = String(data?.pharmacyPath || "").trim();
     const reconciliationDateMs = Number(data?.reconciliationDate);
     const sourceFileName = String(data?.sourceFileName || "").trim();
     const records = Array.isArray(data?.records) ? data.records : [];
-    if (!pharmacyName || !Number.isFinite(reconciliationDateMs) || records.length === 0 || records.length > 400) {
+    if (!/^User\/[^/]+\/Pharmacy\/[^/]+$/.test(pharmacyPath) || !Number.isFinite(reconciliationDateMs) || records.length === 0 || records.length > 400) {
       throw new functions.https.HttpsError("invalid-argument", "A pharmacy, reconciliation date, and 1-400 reconciliation lines are required.");
+    }
+
+    const pharmacyRef = firestore.doc(pharmacyPath);
+    const pharmacySnapshot = await pharmacyRef.get();
+    const pharmacy = pharmacySnapshot.data() || {};
+    const ownerRef = pharmacy.UserID;
+    const pharmacyName = String(pharmacy.Name || "").trim();
+    if (!pharmacySnapshot.exists || !ownerRef || !pharmacyName || pharmacy.deleted === true ||
+      String(pharmacy.NetworkStatus || "").toLowerCase() !== "active") {
+      throw new functions.https.HttpsError("failed-precondition", "Select an approved active pharmacy for this reconciliation.");
     }
 
     const normalizedRecords = records.map((record, index) => {
@@ -1340,36 +1359,11 @@ exports.importHistoricalReconciliation = functions
     });
 
     const date = admin.firestore.Timestamp.fromMillis(reconciliationDateMs);
-    const pharmacyKey = pharmacyName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    const ownerRef = firestore.collection("User").doc(`imported-pharmacy-${pharmacyKey}`);
-    const pharmacyRef = ownerRef.collection("Pharmacy").doc(pharmacyKey);
     const reconciliationKey = new Date(reconciliationDateMs).toISOString().slice(0, 10);
     const stockCountRef = ownerRef.collection("StockCount").doc(`reconciliation-${reconciliationKey}`);
     const sourceLabel = `Historical reconciliation: ${sourceFileName || pharmacyName}`;
     const writes = [];
 
-    writes.push({ ref: ownerRef, data: {
-      uid: ownerRef.id,
-      display_name: pharmacyName,
-      pharmacy_name: pharmacyName,
-      role: "Owner",
-      account_type: "Pharmacy",
-      approved_by_duniya: true,
-      account_status: "imported",
-      created_time: date,
-      updated_at: admin.firestore.FieldValue.serverTimestamp(),
-      ImportSource: sourceLabel,
-    }});
-    writes.push({ ref: pharmacyRef, data: {
-      Name: pharmacyName,
-      UserID: ownerRef,
-      deleted: false,
-      NetworkStatus: "active",
-      RegisteredAt: date,
-      ImportSource: sourceLabel,
-      ReconciliationDate: date,
-      UpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    }});
     writes.push({ ref: stockCountRef, data: {
       OutletId: pharmacyRef,
       CountedById: callerRef,
@@ -1460,7 +1454,7 @@ exports.managePulseUser = functions
     const callerSnapshot = await firestore.collection("User").doc(context.auth.uid).get();
     const caller = callerSnapshot.data() || {};
     const callerRole = String(caller.role || "").trim().toLowerCase();
-    const isPulseAdmin = String(caller.account_type || "").trim().toLowerCase() === "pulse" &&
+    const isPulseAdmin = getAccountType(caller) === "pulse" &&
       ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
     if (!isPulseAdmin) {
       throw new functions.https.HttpsError("permission-denied", "Only Pulse network administrators can manage Pulse users.");
@@ -1478,7 +1472,7 @@ exports.managePulseUser = functions
     const targetRef = firestore.collection("User").doc(userId);
     const targetSnapshot = await targetRef.get();
     const target = targetSnapshot.data() || {};
-    if (!targetSnapshot.exists || String(target.account_type || "").trim().toLowerCase() !== "pulse") {
+    if (!targetSnapshot.exists || getAccountType(target) !== "pulse") {
       throw new functions.https.HttpsError("not-found", "The selected account is not a Pulse user.");
     }
 
@@ -1521,7 +1515,7 @@ exports.invitePulseUser = functions
     const callerSnapshot = await firestore.collection("User").doc(context.auth.uid).get();
     const caller = callerSnapshot.data() || {};
     const callerRole = String(caller.role || "").trim().toLowerCase();
-    const isPulseAdmin = String(caller.account_type || "").trim().toLowerCase() === "pulse" &&
+    const isPulseAdmin = getAccountType(caller) === "pulse" &&
       ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
     if (!isPulseAdmin) {
       throw new functions.https.HttpsError("permission-denied", "Only Pulse network administrators can invite Pulse users.");
