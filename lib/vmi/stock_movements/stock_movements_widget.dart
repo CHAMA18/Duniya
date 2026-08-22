@@ -130,6 +130,20 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       descending: true),
                             ),
                             builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return SingleChildScrollView(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32.0, vertical: 24.0),
+                                  child: _buildLedgerErrorState(
+                                    context,
+                                    theme,
+                                    primaryColor,
+                                    onSurface,
+                                    onSurfaceVariant,
+                                    cardBg,
+                                  ),
+                                );
+                              }
                               final isLoading = !snapshot.hasData;
                               List<StockMovementRecord> allMovements =
                                   snapshot.data ?? [];
@@ -1520,6 +1534,87 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     );
   }
 
+  /// A Firestore stream error must never be presented as an empty ledger.
+  /// Showing a clear recovery state avoids suggesting that a successfully
+  /// recorded movement disappeared when the real problem is connectivity or
+  /// permissions.
+  Widget _buildLedgerErrorState(
+    BuildContext context,
+    FlutterFlowTheme theme,
+    Color primaryColor,
+    Color onSurface,
+    Color onSurfaceVariant,
+    Color cardBg,
+  ) {
+    return Card(
+      elevation: 2.0,
+      color: cardBg,
+      shadowColor: Colors.black.withValues(alpha: 0.06),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        side: BorderSide(
+          color: theme.error.withValues(alpha: 0.3),
+          width: 0.5,
+        ),
+      ),
+      margin: EdgeInsets.zero,
+      child: SizedBox(
+        height: 300.0,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 64.0,
+                  height: 64.0,
+                  decoration: BoxDecoration(
+                    color: theme.error.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  child: Icon(Icons.cloud_off_rounded,
+                      color: theme.error, size: 30.0),
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  'Unable to load stock movements',
+                  style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                    color: onSurface,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Check your connection and try again. Your saved records remain safe.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 14.0,
+                    color: onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                OutlinedButton.icon(
+                  onPressed: () => safeSetState(() {}),
+                  icon: const Icon(Icons.refresh_rounded, size: 18.0),
+                  label: const Text('Try again'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: primaryColor,
+                    side:
+                        BorderSide(color: primaryColor.withValues(alpha: 0.4)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   // ═══════════════════════════════════════════════════════════
   // LOADING STATE
   // ═══════════════════════════════════════════════════════════
@@ -2026,68 +2121,99 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           FFButtonWidget(
                             onPressed: canSave
                                 ? () async {
-                                    final products =
-                                        await queryProductMasterRecordOnce();
-                                    final product = products.firstWhere(
-                                      (p) =>
-                                          p.name == _model.dialogProductValue,
-                                      orElse: () => products.first,
-                                    );
-                                    final userDoc = currentUserDocument;
-                                    if (userDoc == null) return;
-                                    final ref =
-                                        AccessControl.parentRef(context) ??
-                                            currentUserReference;
-                                    if (ref == null) return;
-                                    final ownerRef = ref;
-                                    await StockMovementRecord.createDoc(
-                                            ownerRef)
-                                        .set(createStockMovementRecordData(
-                                      productId: product.reference,
-                                      quantity: int.tryParse(_model
-                                                  .dialogQtyTextController
-                                                  ?.text ??
-                                              '0') ??
-                                          0,
-                                      movementType:
-                                          _model.dialogMovementTypeValue,
-                                      reason: _model
-                                          .dialogReasonTextController?.text,
-                                      movementReference: _model
-                                          .dialogReferenceTextController?.text,
-                                      recordedById: currentUserReference,
-                                      createdAt: getCurrentTimestamp,
-                                    ));
-                                    _model.dialogQtyTextController?.clear();
-                                    _model.dialogReasonTextController?.clear();
-                                    _model.dialogReferenceTextController
-                                        ?.clear();
-                                    Navigator.pop(dialogContext);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Row(
-                                          children: [
-                                            const Icon(
-                                                Icons.check_circle_rounded,
-                                                color: Colors.white,
-                                                size: 18.0),
-                                            const SizedBox(width: 8.0),
-                                            const Expanded(
-                                              child: Text(
-                                                  'Stock movement recorded successfully'),
-                                            ),
-                                          ],
+                                    try {
+                                      final products =
+                                          await queryProductMasterRecordOnce();
+                                      if (products.isEmpty) {
+                                        throw StateError(
+                                            'No products are available to record.');
+                                      }
+                                      final product = products.firstWhere(
+                                        (p) =>
+                                            p.name == _model.dialogProductValue,
+                                        orElse: () => products.first,
+                                      );
+                                      // The owner reference is the only data
+                                      // needed to record a movement. Do not
+                                      // block the write while the optional
+                                      // currentUserDocument is still loading.
+                                      final ownerRef =
+                                          AccessControl.parentRef(context) ??
+                                              currentUserReference;
+                                      if (ownerRef == null) {
+                                        throw StateError(
+                                            'Your workspace is not ready yet.');
+                                      }
+
+                                      await StockMovementRecord.createDoc(
+                                              ownerRef)
+                                          .set(createStockMovementRecordData(
+                                        productId: product.reference,
+                                        quantity: int.tryParse(_model
+                                                    .dialogQtyTextController
+                                                    ?.text ??
+                                                '0') ??
+                                            0,
+                                        movementType:
+                                            _model.dialogMovementTypeValue,
+                                        reason: _model
+                                            .dialogReasonTextController?.text,
+                                        movementReference: _model
+                                            .dialogReferenceTextController
+                                            ?.text,
+                                        recordedById: currentUserReference,
+                                        createdAt: getCurrentTimestamp,
+                                      ));
+                                      _model.dialogQtyTextController?.clear();
+                                      _model.dialogReasonTextController
+                                          ?.clear();
+                                      _model.dialogReferenceTextController
+                                          ?.clear();
+                                      _model.currentPage = 1;
+                                      if (!mounted) return;
+                                      Navigator.pop(dialogContext);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Row(
+                                            children: [
+                                              const Icon(
+                                                  Icons.check_circle_rounded,
+                                                  color: Colors.white,
+                                                  size: 18.0),
+                                              const SizedBox(width: 8.0),
+                                              const Expanded(
+                                                child: Text(
+                                                    'Stock movement recorded successfully'),
+                                              ),
+                                            ],
+                                          ),
+                                          backgroundColor: theme.primary,
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          margin: const EdgeInsets.all(16.0),
+                                          duration: const Duration(seconds: 2),
                                         ),
-                                        backgroundColor: theme.primary,
-                                        behavior: SnackBarBehavior.floating,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                      );
+                                    } catch (error) {
+                                      debugPrint(
+                                          '[StockMovements] Failed to record movement: $error');
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: const Text(
+                                            'Could not record the movement. Check your connection and try again.',
+                                          ),
+                                          backgroundColor: theme.error,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: const EdgeInsets.all(16.0),
                                         ),
-                                        margin: const EdgeInsets.all(16.0),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
+                                      );
+                                    }
                                   }
                                 : null,
                             text: 'Save Movement',
