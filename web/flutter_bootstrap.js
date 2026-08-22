@@ -50,29 +50,84 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+/// Remove the branded Pulse loader with a smooth fade-out.
+/// Safe to call multiple times — checks if the loader still exists.
+function _removePulseLoader() {
+  var loader = document.getElementById('pulse-loader');
+  if (loader) {
+    loader.classList.add('fade-out');
+    setTimeout(function () {
+      if (loader && loader.parentNode) {
+        loader.parentNode.removeChild(loader);
+      }
+    }, 500);
+  }
+}
+
+/// Show a fallback error message when the Flutter app fails to load
+/// after a reasonable timeout. The user can click "Retry" to reload.
+function _showPulseLoaderFallback() {
+  var loader = document.getElementById('pulse-loader');
+  if (!loader) return;
+  // Check if the Flutter app has already taken over (loader was removed)
+  if (!loader.parentNode) return;
+
+  // Replace the spinner with an error message
+  var ring = loader.querySelector('.pulse-loader-ring');
+  var loadingText = loader.querySelector('.pulse-loader-loading');
+  if (ring) {
+    ring.innerHTML = '<div style="text-align:center;color:#B44DFF;font-size:48px;margin-bottom:8px;">⚠</div>' +
+      '<div style="text-align:center;color:#fff;font-size:16px;font-weight:600;max-width:320px;line-height:1.5;">' +
+      'The app is taking longer than expected to load. This may be due to a slow connection or a temporary server issue.</div>';
+    ring.style.animation = 'none';
+  }
+  if (loadingText) {
+    loadingText.innerHTML = '<a href="javascript:location.reload()" style="color:#9900FF;text-decoration:underline;cursor:pointer;font-weight:600;">Retry</a>';
+    loadingText.style.fontSize = '14px';
+  }
+}
+
+// Timeout: if the app hasn't loaded after 45 seconds, show a fallback
+// message with a Retry button instead of leaving the user staring at
+// an infinite spinner.
+var _pulseLoaderTimeout = setTimeout(_showPulseLoaderFallback, 45000);
+
 _flutter.loader.load({
   onEntrypointLoaded: async function (engineInitializer) {
-    // Initialize the Flutter engine.
-    // Note: HTML renderer was removed in Flutter 3.29+.
-    // The default renderer (CanvasKit/Skwasm) is determined at build time.
-    let appRunner = await engineInitializer.initializeEngine({
-      useColorEmoji: true,
-    });
-    // Run the app
-    await appRunner.runApp();
+    try {
+      // Initialize the Flutter engine.
+      // Note: HTML renderer was removed in Flutter 3.29+.
+      // The default renderer (CanvasKit/Skwasm) is determined at build time.
+      let appRunner = await engineInitializer.initializeEngine({
+        useColorEmoji: true,
+      });
 
-    // Fade out + remove the branded Pulse loader (#pulse-loader in
-    // index.html) once the Flutter app has rendered its first frame.
-    // The 400ms fade-out transition gives a smooth handoff from the
-    // HTML loading screen to the Flutter canvas.
-    var loader = document.getElementById('pulse-loader');
-    if (loader) {
-      loader.classList.add('fade-out');
-      setTimeout(function () {
-        if (loader && loader.parentNode) {
-          loader.parentNode.removeChild(loader);
-        }
-      }, 500);
+      // Run the app — this can throw if the Dart code has a runtime
+      // error during initialization. The try/catch ensures the loader
+      // is removed even in that case.
+      await appRunner.runApp();
+
+      // App loaded successfully — cancel the timeout and remove the
+      // branded loader with a smooth fade-out transition.
+      clearTimeout(_pulseLoaderTimeout);
+      _removePulseLoader();
+    } catch (err) {
+      // The Flutter engine or app threw an error during initialization.
+      // Cancel the timeout, remove the loader, and show an error message
+      // so the user isn't stuck staring at an infinite spinner.
+      clearTimeout(_pulseLoaderTimeout);
+      console.error('[Pulse] Flutter initialization failed:', err);
+      _removePulseLoader();
+
+      // Show a minimal error overlay so the user knows something went wrong.
+      var errorOverlay = document.createElement('div');
+      errorOverlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:#07070B;color:#fff;z-index:9999;font-family:sans-serif;';
+      errorOverlay.innerHTML =
+        '<div style="font-size:48px;">⚠</div>' +
+        '<div style="font-size:18px;font-weight:700;">Pulse failed to start</div>' +
+        '<div style="font-size:14px;color:#888;max-width:400px;text-align:center;line-height:1.5;">The application encountered an error during initialization. Please try refreshing the page.</div>' +
+        '<button onclick="location.reload()" style="background:#9900FF;color:#fff;border:none;padding:12px 24px;border-radius:12;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;">Retry</button>';
+      document.body.appendChild(errorOverlay);
     }
   }
 });
