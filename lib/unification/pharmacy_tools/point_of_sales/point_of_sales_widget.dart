@@ -267,11 +267,11 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
     required Color iconColor,
   }) {
     return Container(
-      constraints: const BoxConstraints(minHeight: 150),
-      padding: const EdgeInsets.all(22),
+      constraints: const BoxConstraints(minHeight: 110),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.7),
         ),
@@ -820,12 +820,12 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.75),
+          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.5),
         ),
       ),
       child: isWide
@@ -959,12 +959,12 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.75),
+          color: FlutterFlowTheme.of(context).alternate.withValues(alpha: 0.5),
         ),
       ),
       child: Column(
@@ -979,11 +979,12 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                   color: FlutterFlowTheme.of(context).primary.withValues(
                         alpha: 0.1,
                       ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   Icons.point_of_sale_rounded,
                   color: FlutterFlowTheme.of(context).primary,
+                  size: 18,
                 ),
               ),
               const SizedBox(width: 14),
@@ -1409,7 +1410,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                         pharmacies,
                                         isWide: isWide,
                                       ),
-                                      const SizedBox(height: 22),
+                                      const SizedBox(height: 14),
                                       StreamBuilder<List<StockRecord>>(
                                         stream: resolvedPharmacyName.isEmpty
                                             ? Stream<List<StockRecord>>.value(
@@ -1514,7 +1515,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                 .primary,
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 18),
+                                                    const SizedBox(width: 12),
                                                     Expanded(
                                                       child: _buildMetricCard(
                                                         context: context,
@@ -1532,7 +1533,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                             0xFF10B981),
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 18),
+                                                    const SizedBox(width: 12),
                                                     Expanded(
                                                       child: _buildMetricCard(
                                                         context: context,
@@ -1551,7 +1552,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                             0xFFEF4444),
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 18),
+                                                    const SizedBox(width: 12),
                                                     Expanded(
                                                       child: _buildMetricCard(
                                                         context: context,
@@ -1644,16 +1645,16 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                           0xFFF59E0B),
                                                     ),
                                                   ],
-                                                ),                                              const SizedBox(height: 22),
+                                                ),                                              const SizedBox(height: 14),
                                               Container(
                                                 width: double.infinity,
-                                                padding: const EdgeInsets.all(22),
+                                                padding: const EdgeInsets.all(14),
                                                 decoration: BoxDecoration(
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .secondaryBackground,
                                                   borderRadius:
-                                                      BorderRadius.circular(24),
+                                                      BorderRadius.circular(14),
                                                   border: Border.all(
                                                     color: FlutterFlowTheme.of(
                                                             context)
@@ -1949,7 +1950,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                     ),
                                                   ],
                                                 ),
-                                              ),              const SizedBox(height: 22),
+                                              ),              const SizedBox(height: 14),
                                       if (isWide)
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1995,7 +1996,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                               },
                                                             ),
                                                     ),
-                                                    const SizedBox(width: 18),
+                                                    const SizedBox(width: 12),
                                                     Expanded(
                                                       flex: 1,
                                                       child:
@@ -2048,7 +2049,7 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
                                                                   stock);
                                                             },
                                                           ),
-                                                    const SizedBox(height: 22),
+                                                    const SizedBox(height: 14),
                                                     _buildCashierSidebar(
                                                       context,
                                                       allStocks,
