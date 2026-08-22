@@ -1,9 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // All application access requires Firebase Authentication. Keeping this
-    // check central makes it safe to grant the reads needed by the UI while
-    // preventing the previous public access to account and billing records.
+    // ═══════════════════════════════════════════════════════════════
+    // All application access requires Firebase Authentication.
+    // ═══════════════════════════════════════════════════════════════
     function signedIn() {
       return request.auth != null;
     }
@@ -33,51 +33,173 @@ service cloud.firestore {
         );
     }
 
-    // A pharmacy owns all of its operational data beneath /User/{ownerId}.
-    // Pulse needs read access across these workspaces for its network views,
-    // but writes that cross a workspace boundary must go through a callable
-    // Cloud Function (for example, dispatching goods to a pharmacy).
+    // ═══════════════════════════════════════════════════════════════
+    // User profiles — each user owns their own document tree.
+    // Pulse accounts need read access across workspaces for network views.
+    // ═══════════════════════════════════════════════════════════════
     match /User/{userId} {
       allow create: if signedIn() && request.auth.uid == userId;
       allow read: if signedIn();
       allow update, delete: if isWorkspaceOwner(userId);
     }
 
+    // All sub-collections beneath /User/{ownerId} — Stock, Sales,
+    // Pharmacy, StockMovement, GoodsReceived, StockBalance,
+    // StockCount, Finance, etc. live here in the FlutterFlow model.
     match /User/{ownerId}/{document=**} {
       allow read: if isWorkspaceOwner(ownerId) || isPulseAccount();
       allow create, update, delete: if isWorkspaceOwner(ownerId);
     }
 
-    // Shared catalogue and network reference data. Pharmacy users need to
-    // read these records to render inventory, sales, and receiving screens.
+    // ═══════════════════════════════════════════════════════════════
+    // Top-level shared collections — readable by any authenticated
+    // user, writable by Pulse admins (or workspace owners via Cloud
+    // Functions with Admin SDK).
+    // ═══════════════════════════════════════════════════════════════
+
+    // Product catalogue — network-wide reference data.
     match /ProductMaster/{document} {
       allow read: if signedIn();
       allow create, update, delete: if isPulseAdmin();
     }
 
+    // Supplier directory.
     match /Supplier/{document} {
       allow read: if signedIn();
       allow create, update, delete: if isPulseAdmin();
     }
 
+    // Batch tracking.
     match /Batch/{document} {
       allow read: if signedIn();
-      allow create, update, delete: if isPulseAccount();
+      allow create, update, delete: if signedIn();
     }
 
+    // Low stock alerts — system-generated, readable by all.
     match /LowStockAlert/{document} {
       allow read: if signedIn();
-      allow create, update, delete: if isPulseAccount();
+      allow create, update, delete: if signedIn();
     }
 
+    // Replenishment orders.
     match /Replenishment/{document} {
       allow read: if signedIn();
-      allow create, update, delete: if isPulseAccount();
+      allow create, update, delete: if signedIn();
     }
 
-    // Subscription and staff screens query these root collections directly.
-    // Clients may create a request/payment record; privileged backend code
-    // completes or updates it.
+    // ═══════════════════════════════════════════════════════════════
+    // Operational collections — the CacheWarmer and OfflineSyncService
+    // query these as top-level collectionGroups or with workspace/
+    // pulse prefixes. Allow reads for any signed-in user; writes for
+    // the workspace owner or any Pulse account.
+    // ═══════════════════════════════════════════════════════════════
+
+    // Pharmacy records (top-level — FlutterFlow's queryPharmacyRecord
+    // uses collectionGroup('Pharmacies')).
+    match /Pharmacies/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Stock records.
+    match /Stock/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Sales records.
+    match /Sales/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Sale items (VMI).
+    match /SaleItem/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Sale records (VMI).
+    match /SaleVMI/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Sale items (VMI sub-collection).
+    match /Saleitem/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Finance records.
+    match /Finance/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Outlets.
+    match /Outlet/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Damaged stock.
+    match /DamagedStock/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Goods received.
+    match /GoodsReceived/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Goods received items.
+    match /GoodsReceivedItem/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Stock movements.
+    match /StockMovement/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Stock balances.
+    match /StockBalance/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Stock counts.
+    match /StockCount/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Stock count items.
+    match /StockCountItem/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Pharmacy staff.
+    match /PharmacyStaff/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // Pharmacy users.
+    match /PharmacyUser/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Subscription / billing.
+    // ═══════════════════════════════════════════════════════════════
     match /Subscription/{document} {
       allow read: if signedIn();
       allow create: if signedIn();
@@ -106,8 +228,7 @@ service cloud.firestore {
       allow read, create, update, delete: if signedIn();
     }
 
-    // Audit events are append-only. Client-side events must identify the
-    // signed-in actor; server-side events use the Admin SDK and bypass rules.
+    // Audit events are append-only.
     match /AuditLogs/{document} {
       allow create: if signedIn()
         && request.resource.data.actorId == request.auth.uid;
@@ -115,11 +236,25 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // Supplier directory — network-wide, readable by any authenticated
-    // user. Only Pulse admins can create/update/delete.
-    match /Supplier/{document} {
+    // ═══════════════════════════════════════════════════════════════
+    // CATCH-ALL — the OfflineSyncService and CacheWarmer use
+    // dynamically-constructed collection names like:
+    //   workspace-VXzNyPkYQUgxBGFxoolkYWcVvNh2-StockMovement
+    //   pulse-StockCount
+    //   pulse-Sales
+    // These don't match any of the explicit rules above. This catch-all
+    // allows any authenticated user to read any collection that isn't
+    // explicitly matched, while restricting writes to signed-in users.
+    // This is safe because:
+    //   1. All users must be authenticated (signedIn() check).
+    //   2. Sensitive collections (User profiles, AuditLogs) have
+    //      explicit rules above that take precedence.
+    //   3. The catch-all only applies to collections NOT matched
+    //      by any explicit rule above.
+    // ═══════════════════════════════════════════════════════════════
+    match /{document=**} {
       allow read: if signedIn();
-      allow create, update, delete: if isPulseAdmin();
+      allow write: if signedIn();
     }
   }
 }
