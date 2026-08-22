@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    Alternatively, build your application passing the --base-href parameter
+    specifying the new root path of your web app.
+
+    Fore more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <!-- Cache-busting: prevent browser/CDN from caching the HTML shell -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <!-- Build version — injected by build.sh at deploy time (cache busting) -->
+  <meta name="build-version" content="DEV">
+  <!-- Cache-busting version — forces browsers/CDNs to fetch fresh manifest -->
+  <meta name="cache-version" content="%%BUILD_VERSION%%">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pulse">
+  <meta name="application-name" content="Pulse">
+  <meta name="theme-color" content="#9900FF">
+  <meta name="description" content="Pulse — pharmacy and inventory management for modern health teams.">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="pulse, pharmacy, inventory, stock, health, management">
+  <meta name="author" content="Pulse">
+  <meta property="og:title" content="Pulse">
+  <meta property="og:description" content="Pulse — pharmacy and inventory management for modern health teams.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="Artboard_1.png">
+
+  <!-- Favicon — Pulse logo (multi-format, multi-size for max compatibility) -->
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="twitter:title" content="Pulse">
+  <meta name="twitter:description" content="Pulse — pharmacy and inventory management for modern health teams.">
+  <meta name="twitter:image" content="Artboard_1.png">
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <title>Pulse</title>
+
+  <link rel="manifest" href="manifest.json?v=%%BUILD_VERSION%%">
+
+  <style>
+    /* Flutter loads the bundled static Satoshi faces through FontManifest.
+       This rule keeps any HTML fallback content aligned with the app. */
+    * {
+      font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       Branded loading screen — shown while Flutter boots, then
+       automatically removed by the Flutter framework once the app
+       renders its first frame.
+       ══════════════════════════════════════════════════════════════ */
+    #pulse-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+      background: #07070B;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #pulse-loader.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Spinner ring around the logo */
+    .pulse-loader-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    .pulse-loader-ring::before,
+    .pulse-loader-ring::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .pulse-loader-ring::before {
+      border-top-color: #9900FF;
+      border-right-color: #B44DFF;
+      animation: pulse-spin 1.2s linear infinite;
+    }
+    .pulse-loader-ring::after {
+      border-top-color: rgba(153, 0, 255, 0.25);
+      border-left-color: rgba(180, 77, 255, 0.15);
+      animation: pulse-spin 1.8s linear infinite reverse;
+    }
+    @keyframes pulse-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Inner dotted ring */
+    .pulse-loader-dots {
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      animation: pulse-spin 3s linear infinite;
+    }
+    .pulse-loader-dots::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dotted rgba(153, 0, 255, 0.3);
+    }
+
+    /* Pulse logo SVG in the center of the ring */
+    .pulse-loader-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      filter: drop-shadow(0 0 12px rgba(153, 0, 255, 0.4));
+      animation: pulse-breathe 2s ease-in-out infinite;
+    }
+    @keyframes pulse-breathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%      { transform: translate(-50%, -50%) scale(0.92); }
+    }
+
+    /* "Pulse" wordmark below the ring */
+    .pulse-loader-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+    }
+    .pulse-loader-text em {
+      font-style: normal;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Loading dots animation */
+    .pulse-loader-loading {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+    }
+    .pulse-loader-loading::after {
+      content: '...';
+      display: inline-block;
+      width: 0;
+      overflow: hidden;
+      vertical-align: bottom;
+      animation: pulse-dots 1.5s steps(4, end) infinite;
+    }
+    @keyframes pulse-dots {
+      0%   { width: 0; }
+      100% { width: 1.5em; }
+    }
+  </style>
+
+</head>
+<body>
+  <!--
+    404.html — SPA fallback for Render static sites.
+    When a user reloads a deep link like /pointOfSale, Render serves
+    this file (HTTP 404 status) instead of its default "Not Found"
+    text. The Flutter app loads and the router handles the route.
+    The landing-page redirect is REMOVED here because 404.html is
+    only served for non-existent paths — the root path / already
+    serves the real index.html (landing page).
+  -->
+
+  <!-- ═════════════════════════════════════════════════════════════
+       Branded loading screen — shown while Flutter boots.
+       Flutter removes this element automatically once the app
+       renders its first frame.
+       ═════════════════════════════════════════════════════════════ -->
+  <div id="pulse-loader">
+    <div class="pulse-loader-ring">
+      <div class="pulse-loader-dots"></div>
+      <svg class="pulse-loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="pulseLoaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#B44DFF"/>
+            <stop offset="60%" stop-color="#9900FF"/>
+            <stop offset="100%" stop-color="#5B00E8"/>
+          </linearGradient>
+          <radialGradient id="pulseLoaderCore" cx="35%" cy="30%" r="80%">
+            <stop offset="0%"  stop-color="#FFFFFF"/>
+            <stop offset="55%" stop-color="#E8D5FF"/>
+            <stop offset="100%" stop-color="#B44DFF"/>
+          </radialGradient>
+        </defs>
+        <rect width="100" height="100" rx="26" fill="url(#pulseLoaderGrad)"/>
+        <g opacity="0.85">
+          <polygon points="50,24 76,50 50,76 24,50" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1"/>
+          <circle cx="50" cy="24" r="3.4" fill="#FFFFFF"/>
+          <circle cx="76" cy="50" r="3.4" fill="#FFFFFF"/>
+          <circle cx="50" cy="76" r="3.4" fill="#FFFFFF"/>
+          <circle cx="24" cy="50" r="3.4" fill="#FFFFFF"/>
+          <circle cx="68.31" cy="31.69" r="3.4" fill="#FFFFFF"/>
+          <circle cx="68.31" cy="68.31" r="3.4" fill="#FFFFFF"/>
+          <circle cx="31.69" cy="68.31" r="3.4" fill="#FFFFFF"/>
+          <circle cx="31.69" cy="31.69" r="3.4" fill="#FFFFFF"/>
+        </g>
+        <path d="M28 50 L42 50 L46 38 L50 62 L54 30 L58 50 L72 50"
+              fill="none" stroke="url(#pulseLoaderCore)" stroke-width="3"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="pulse-loader-text">Pulse <em>· Pharmacy Intelligence</em></div>
+    <div class="pulse-loader-loading">Loading</div>
+  </div>
+
+  </script>
+
+  <!-- Map screens rely on the Google Maps global when they are opened. Keep
+       this asynchronous so it never blocks the Flutter bootstrap. -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-HDfLffnuYVQUL4aR6DDPNqFWr5navE&loading=async" async></script>
+
+  <!-- Cache-bust: force fresh flutter_bootstrap.js on every deploy -->
+  <!-- Build version: %%BUILD_VERSION%% (injected by build.sh) -->
+
+  <!-- Satoshi is bundled in FontManifest. CanvasKit loads it from the asset
+       bundle, not CSS, so the Flutter canvas and HTML fallbacks stay aligned. -->
+  <script>
+    {{flutter_bootstrap_js}}
+  </script>
+</body>
+</html>

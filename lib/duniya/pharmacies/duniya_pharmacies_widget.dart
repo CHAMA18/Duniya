@@ -699,14 +699,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
                 phone: false,
                 tablet: false,
               )) ...[
-                _heroAction(Icons.download_rounded, 'Template',
-                    downloadReconciliationTemplate),
-                const SizedBox(width: 10.0),
-                _heroAction(Icons.upload_file_rounded, 'Import reconciliation',
-                    _importSosMpiloReconciliation),
-                const SizedBox(width: 10.0),
-                _heroAction(
-                    Icons.refresh_rounded, 'Refresh', _refreshPharmacies),
+                _heroAction(Icons.refresh_rounded, 'Refresh', _refreshPharmacies),
               ],
             ],
           ),
@@ -775,7 +768,12 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildKpiRow(allPharmacies),
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 16.0),
+                // Toolbar: Template + Import reconciliation + Refresh
+                // (moved from the header banner into the content area
+                // so it's always visible, not just on wide screens)
+                _buildToolbar(context),
+                const SizedBox(height: 16.0),
                 _buildFilterBar(),
                 const SizedBox(height: 16.0),
                 _buildStatusPills(allPharmacies),
@@ -789,6 +787,86 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
           },
         );
       },
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //   TOOLBAR — Template / Import / Refresh
+  // ═══════════════════════════════════════════════════════════════
+
+  Widget _buildToolbar(BuildContext context) {
+    final theme = FlutterFlowTheme.of(context);
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        _toolbarButton(
+          theme,
+          icon: Icons.download_rounded,
+          label: 'Template',
+          onTap: downloadReconciliationTemplate,
+          accent: const Color(0xFF3B82F6),
+        ),
+        _toolbarButton(
+          theme,
+          icon: Icons.upload_file_rounded,
+          label: 'Import reconciliation',
+          onTap: _importSosMpiloReconciliation,
+          accent: theme.primary,
+        ),
+        _toolbarButton(
+          theme,
+          icon: Icons.refresh_rounded,
+          label: 'Refresh',
+          onTap: _refreshPharmacies,
+          accent: const Color(0xFF10B981),
+        ),
+      ],
+    );
+  }
+
+  Widget _toolbarButton(
+    FlutterFlowTheme theme, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required Color accent,
+  }) {
+    return Material(
+      color: theme.secondaryBackground,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: theme.secondaryBackground,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: accent.withValues(alpha: 0.25)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 16, color: accent),
+              const SizedBox(width: 6),
+              Text(label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: theme.primaryText,
+                  )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

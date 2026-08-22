@@ -37,6 +37,11 @@
   Pragma: no-cache
   Expires: 0
 
+/404.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
 # ─── Per-deploy files: must NEVER be cached ─────────────────────────
 # These files change on every deploy (version injected by build.sh).
 # Without no-cache, the /*.js rule below would cache them for a year.

@@ -101,6 +101,21 @@ if [[ -f "build/web/index.html" && -f "web/landing.html" ]]; then
 fi
 
 # ---------------------------------------------------------------------
+# 4c. SPA FALLBACK via 404.html — Render's _redirects file doesn't
+#     reliably do SPA fallback (/* /app.html 200 is silently ignored).
+#     Instead, we use a custom 404.html that IS the Flutter app shell.
+#     When a user reloads a deep link like /pointOfSale, Render serves
+#     this file (with HTTP 404 status) instead of its default "Not
+#     Found" text. The Flutter app loads and the router handles the
+#     route. The landing-page redirect script is REMOVED from this
+#     file because 404.html is only served for non-existent paths.
+# ---------------------------------------------------------------------
+if [[ -f "web/404.html" ]]; then
+  cp web/404.html build/web/404.html
+  echo "==> Copied web/404.html -> build/web/404.html (SPA fallback for deep-link reloads)"
+fi
+
+# ---------------------------------------------------------------------
 # 5. Cache busting — inject build version into built files.
 # ---------------------------------------------------------------------
 # Generate a version string from the git commit hash (short) + timestamp.
@@ -130,6 +145,13 @@ if [[ -f "build/web/app.html" ]]; then
   sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/app.html
   sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/app.html
   echo "==> Injected version into app.html (Flutter app shell)"
+fi
+
+# Inject version into 404.html (SPA fallback for deep-link reloads).
+if [[ -f "build/web/404.html" ]]; then
+  sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/404.html
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/404.html
+  echo "==> Injected version into 404.html (SPA fallback shell)"
 fi
 
 # Replace the placeholder in manifest.json with the build version.

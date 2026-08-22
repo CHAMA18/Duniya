@@ -31,6 +31,8 @@ const APP_SHELL = [
   `/`,
   `/index.html?v=${CACHE_VERSION}`,
   `/app.html?v=${CACHE_VERSION}`,
+  `/404.html?v=${CACHE_VERSION}`,
+  `/landing.html?v=${CACHE_VERSION}`,
   `/manifest.json?v=${CACHE_VERSION}`,
   `/flutter_bootstrap.js?v=${CACHE_VERSION}`,
   `/favicon.svg`,
@@ -122,13 +124,15 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Navigation requests (page loads) → network-first with cache busting.
-  // Always fetch fresh index.html from the server; only fall back to
-  // cache when offline. This is the primary cache-busting path.
+  // Always fetch fresh HTML from the server; only fall back to
+  // cache when offline. For deep-link paths (e.g. /pointOfSale),
+  // the server returns 404.html (the SPA shell) which loads Flutter
+  // and the router handles the route.
   if (request.mode === 'navigate') {
     event.respondWith(
       (async () => {
         try {
-          // Network first — always get the latest index.html.
+          // Network first — always get the latest HTML.
           // Add a cache-busting query param to defeat intermediate caches.
           const bustUrl = new URL(request.url);
           bustUrl.searchParams.set('_v', CACHE_VERSION);
@@ -137,16 +141,27 @@ self.addEventListener('fetch', (event) => {
             credentials: 'same-origin',
           });
           const cache = await caches.open(RUNTIME_CACHE);
-          cache.put('/index.html', networkResponse.clone()).catch(() => {});
+          // Cache the response keyed by the original URL (not the
+          // cache-busted URL) so it can be served offline.
+          cache.put(request.url, networkResponse.clone()).catch(() => {});
           return networkResponse;
         } catch (e) {
-          // Offline — serve cached index.html (SPA fallback).
+          // Offline — try to serve from cache.
+          const runtimeCache = await caches.open(RUNTIME_CACHE);
+          // Try the exact URL first (deep-link path cached from a
+          // previous online visit).
+          const cachedExact = await runtimeCache.match(request.url);
+          if (cachedExact) return cachedExact;
+          // Fall back to cached index.html (root page).
           const cache = await caches.open(CACHE_NAME);
           const cachedIndex = await cache.match('/index.html');
           if (cachedIndex) return cachedIndex;
-          const runtimeCache = await caches.open(RUNTIME_CACHE);
-          const runtimeIndex = await runtimeCache.match('/index.html');
-          if (runtimeIndex) return runtimeIndex;
+          // Fall back to cached app.html (SPA shell).
+          const cachedApp = await cache.match('/app.html');
+          if (cachedApp) return cachedApp;
+          // Fall back to cached 404.html (SPA fallback shell).
+          const cached404 = await cache.match('/404.html');
+          if (cached404) return cached404;
           throw e;
         }
       })()
