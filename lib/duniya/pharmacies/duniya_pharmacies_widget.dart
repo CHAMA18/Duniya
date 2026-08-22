@@ -70,19 +70,63 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     super.dispose();
   }
 
-  /// Keeps query errors visible to this page. The shared generated query helper
-  /// skips malformed legacy records while allowing real Firestore failures to
-  /// reach the retry state below.
+  /// Keeps query errors visible to this page. Wraps the Firestore stream
+  /// with automatic retry (3 attempts, 2-second delay between retries)
+  /// and a 30-second timeout per attempt. If all retries fail, the
+  /// actual error is propagated to the StreamBuilder so the user can
+  /// see what went wrong (not just a generic "unable to load" message).
   Stream<List<PharmacyRecord>> _createPharmaciesStream() {
-    return queryPharmacyRecord().timeout(
-      const Duration(seconds: 20),
-      onTimeout: (sink) {
-        sink.addError(TimeoutException(
-          'The pharmacy list did not respond in time.',
-        ));
-        sink.close();
+    return _queryWithRetry(queryPharmacyRecord(), maxRetries: 3);
+  }
+
+  /// Wraps a Firestore stream with automatic retry logic. On each error,
+  /// waits 2 seconds and retries (up to maxRetries times). The actual
+  /// error from the final failed attempt is propagated to the caller.
+  Stream<List<PharmacyRecord>> _queryWithRetry(
+    Stream<List<PharmacyRecord>> source, {
+    int maxRetries = 3,
+  }) {
+    int retries = 0;
+    late StreamController<List<PharmacyRecord>> controller;
+    StreamSubscription<List<PharmacyRecord>>? subscription;
+
+    void subscribe() {
+      subscription?.cancel();
+      subscription = source.timeout(
+        const Duration(seconds: 30),
+        onTimeout: (sink) {
+          sink.addError(TimeoutException(
+            'The pharmacy list did not respond in 30 seconds.',
+          ));
+          sink.close();
+        },
+      ).listen(
+        controller.add,
+        onError: (error) {
+          retries++;
+          if (retries >= maxRetries) {
+            // All retries exhausted — propagate the real error.
+            controller.addError(error);
+            controller.close();
+          } else {
+            // Wait 2 seconds, then retry.
+            Future.delayed(const Duration(seconds: 2), subscribe);
+          }
+        },
+        onDone: () {
+          controller.close();
+        },
+      );
+    }
+
+    controller = StreamController<List<PharmacyRecord>>(
+      onListen: subscribe,
+      onCancel: () {
+        subscription?.cancel();
       },
     );
+
+    return controller.stream;
   }
 
   void _refreshPharmacies() {
@@ -713,7 +757,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
       stream: _pharmaciesStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return _buildLoadErrorState();
+          return _buildLoadErrorState(snapshot.error);
         }
         if (!snapshot.hasData) {
           return _buildLoadingState();
@@ -1310,7 +1354,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     );
   }
 
-  Widget _buildLoadErrorState() {
+  Widget _buildLoadErrorState([Object? error]) {
     final theme = FlutterFlowTheme.of(context);
     return Container(
       width: double.infinity,
@@ -1337,7 +1381,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
           ),
           const SizedBox(height: 8.0),
           Text(
-            'Check your connection and try again. If the problem continues, verify that this account can access the Pulse network.',
+            'Check your connection and try again. If the problem continues, verify that this account can access the Pulse network.${error != null ? '\n\nTechnical detail: $error' : ''}',
             style: theme.bodyMedium.override(
               fontFamily: theme.bodyMediumFamily,
               color: theme.secondaryText,
