@@ -28,6 +28,96 @@ class LoadingSpinnerWidget extends StatefulWidget {
   State<LoadingSpinnerWidget> createState() => _LoadingSpinnerWidgetState();
 }
 
+/// The full-page hand-off shown after the web shell has finished booting and
+/// while Pulse resolves the authenticated session. Keeping it visually close
+/// to the HTML shell avoids a jarring flash of an unrelated progress spinner.
+class PulseAppLoadingScreen extends StatelessWidget {
+  const PulseAppLoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final visualSize = (width * 0.25).clamp(96.0, 128.0);
+
+    return Semantics(
+      label: 'Pulse is preparing your secure workspace',
+      child: ColoredBox(
+        color: const Color(0xFF07070B),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ExcludeSemantics(
+                      child: LoadingSpinnerWidget(
+                        size: visualSize,
+                        showLabel: false,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Pulse',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.6,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' · Pharmacy Intelligence',
+                              style: TextStyle(
+                                color: Color(0xFF94949B),
+                                fontSize: 24,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: -0.6,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 26),
+                    const Text(
+                      'Preparing your secure workspace…',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF9C9CA5),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'This will only take a moment.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF65656E),
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _LoadingSpinnerWidgetState extends State<LoadingSpinnerWidget>
     with TickerProviderStateMixin {
   late LoadingSpinnerModel _model;

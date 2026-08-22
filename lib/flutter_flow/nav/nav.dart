@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 
 import '/auth/base_auth_user_provider.dart';
 
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/components/loading_spinner_widget.dart';
 
 import '/index.dart';
 
@@ -892,18 +891,8 @@ class FFRoute {
                   builder: (context, _) => builder(context, ffParams),
                 )
               : builder(context, ffParams);
-          final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 100.0,
-                    height: 100.0,
-                    child: SpinKitRing(
-                      color: FlutterFlowTheme.of(context).primary,
-                      size: 100.0,
-                    ),
-                  ),
-                )
-              : page;
+          final child =
+              appStateNotifier.loading ? const PulseAppLoadingScreen() : page;
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition

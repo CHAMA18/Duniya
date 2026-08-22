@@ -72,18 +72,19 @@ function _showPulseLoaderFallback() {
   // Check if the Flutter app has already taken over (loader was removed)
   if (!loader.parentNode) return;
 
-  // Replace the spinner with an error message
+  // Keep the branded shell visible and replace its live status with a
+  // recoverable message. This works for the boot screen and deep-link shell.
   var ring = loader.querySelector('.pulse-loader-ring');
   var loadingText = loader.querySelector('.pulse-loader-loading');
+  var hint = loader.querySelector('.pulse-loader-hint');
   if (ring) {
-    ring.innerHTML = '<div style="text-align:center;color:#B44DFF;font-size:48px;margin-bottom:8px;">⚠</div>' +
-      '<div style="text-align:center;color:#fff;font-size:16px;font-weight:600;max-width:320px;line-height:1.5;">' +
-      'The app is taking longer than expected to load. This may be due to a slow connection or a temporary server issue.</div>';
-    ring.style.animation = 'none';
+    ring.innerHTML = '<div style="display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:rgba(153,0,255,.12);color:#c47aff;font-size:40px;">!</div>';
   }
   if (loadingText) {
-    loadingText.innerHTML = '<a href="javascript:location.reload()" style="color:#9900FF;text-decoration:underline;cursor:pointer;font-weight:600;">Retry</a>';
-    loadingText.style.fontSize = '14px';
+    loadingText.innerHTML = 'Still connecting';
+  }
+  if (hint) {
+    hint.innerHTML = 'Check your connection, then <button type="button" onclick="location.reload()">try again</button>.';
   }
 }
 
@@ -131,4 +132,3 @@ _flutter.loader.load({
     }
   }
 });
-

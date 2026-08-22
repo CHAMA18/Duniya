@@ -76,14 +76,26 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 24px;
-      background: #07070B;
+      gap: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 43%, rgba(153, 0, 255, 0.16), transparent 26rem),
+        #07070B;
       z-index: 9999;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.32s ease, visibility 0.32s ease;
     }
     #pulse-loader.fade-out {
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
+    }
+
+    .pulse-loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: min(100% - 48px, 420px);
+      transform: translateY(-4vh);
     }
 
     /* Spinner ring around the logo */
@@ -91,6 +103,7 @@
       position: relative;
       width: 120px;
       height: 120px;
+      flex: 0 0 auto;
     }
     .pulse-loader-ring::before,
     .pulse-loader-ring::after {
@@ -147,6 +160,7 @@
 
     /* "Pulse" wordmark below the ring */
     .pulse-loader-text {
+      margin-top: 28px;
       font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.5px;
@@ -160,6 +174,7 @@
 
     /* Loading dots animation */
     .pulse-loader-loading {
+      margin-top: 28px;
       font-size: 13px;
       font-weight: 500;
       color: rgba(255, 255, 255, 0.4);
@@ -176,6 +191,40 @@
     @keyframes pulse-dots {
       0%   { width: 0; }
       100% { width: 1.5em; }
+    }
+
+    .pulse-loader-hint {
+      min-height: 18px;
+      margin: 8px 0 0;
+      color: rgba(255, 255, 255, 0.34);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .pulse-loader-hint button {
+      appearance: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #c47aff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .pulse-loader-content { transform: translateY(-2vh); }
+      .pulse-loader-ring { width: 108px; height: 108px; }
+      .pulse-loader-text { font-size: 18px; margin-top: 24px; }
+      .pulse-loader-loading { margin-top: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-loader-ring::before,
+      .pulse-loader-ring::after,
+      .pulse-loader-dots,
+      .pulse-loader-logo,
+      .pulse-loader-loading::after { animation: none; }
     }
   </style>
 
@@ -196,13 +245,17 @@
        Flutter removes this element automatically once the app
        renders its first frame.
        ═════════════════════════════════════════════════════════════ -->
-  <div id="pulse-loader">
-    <img src="loader-splash.png" alt="Pulse · Pharmacy Intelligence"
-         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-    <div style="position:relative;z-index:1;width:140px;height:140px;border-radius:50%;border:3px solid transparent;border-top-color:#9900FF;border-right-color:#B44DFF;animation:pulse-spin 1.2s linear infinite;"></div>
+  <div id="pulse-loader" role="status" aria-live="polite" aria-label="Pulse is loading">
+    <div class="pulse-loader-content">
+      <div class="pulse-loader-ring" aria-hidden="true">
+        <div class="pulse-loader-dots"></div>
+        <img class="pulse-loader-logo" src="favicon-512x512.png" alt="" />
+      </div>
+      <div class="pulse-loader-text">Pulse <em>· Pharmacy Intelligence</em></div>
+      <div class="pulse-loader-loading">Preparing your workspace</div>
+      <p class="pulse-loader-hint">This will only take a moment.</p>
+    </div>
   </div>
-
-  </script>
 
   <!-- Map screens rely on the Google Maps global when they are opened. Keep
        SECURITY: This API key must be domain-restricted to

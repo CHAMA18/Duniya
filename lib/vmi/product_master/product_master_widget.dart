@@ -593,14 +593,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        // Download a pre-formatted Excel
-                                        // template so users know exactly
-                                        // which columns to include. The
-                                        // template includes an example row
-                                        // and an Instructions sheet.
+                                        // Download the Product Catalogue
+                                        // schema. This is intentionally not
+                                        // the stock inventory template.
                                         OutlinedButton.icon(
                                           onPressed: () =>
-                                              downloadInventoryTemplate(),
+                                              downloadProductCatalogueTemplate(),
                                           icon: const Icon(
                                               Icons.download_rounded,
                                               size: 18.0),
@@ -1189,6 +1187,21 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         if (resolved != null && !colIndex.containsKey(resolved)) {
           colIndex[resolved] = i;
         }
+      }
+
+      const requiredColumns = {'Name', 'SKU'};
+      final missingColumns = requiredColumns
+          .where((column) => !colIndex.containsKey(column))
+          .toList();
+      if (missingColumns.isNotEmpty) {
+        _showImportToast(
+          context,
+          success: false,
+          message:
+              'Missing required column${missingColumns.length == 1 ? '' : 's'}: '
+              '${missingColumns.join(', ')}. Download the Product Catalogue template and try again.',
+        );
+        return;
       }
 
       String? cellVal(List<dynamic> row, String key) {
@@ -1995,8 +2008,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 ? Padding(
                     padding: const EdgeInsets.only(left: 14.0, right: 10.0),
                     child: Icon(icon,
-                        size: 18.0,
-                        color: _pulsePurple.withValues(alpha: 0.6)),
+                        size: 18.0, color: _pulsePurple.withValues(alpha: 0.6)),
                   )
                 : null,
             prefixIconConstraints: icon != null
