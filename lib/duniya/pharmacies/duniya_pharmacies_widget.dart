@@ -227,6 +227,13 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
       if (bytes == null)
         throw StateError('The selected workbook could not be read.');
 
+      // File size guard — prevent browser freeze on very large workbooks.
+      if (bytes.length > 10 * 1024 * 1024) {
+        throw StateError(
+            'The workbook is too large (${(bytes.length / 1024 / 1024).toStringAsFixed(1)}MB). '
+            'Maximum file size is 10MB. Please split the workbook and import in batches.');
+      }
+
       final workbook = Excel.decodeBytes(bytes);
       final sheet = workbook.tables['Recon Final'] ??
           (workbook.tables.isEmpty ? null : workbook.tables.values.first);

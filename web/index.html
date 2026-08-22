@@ -246,7 +246,10 @@
   </script>
 
   <!-- Map screens rely on the Google Maps global when they are opened. Keep
-       this asynchronous so it never blocks the Flutter bootstrap. -->
+       this asynchronous so it never blocks the Flutter bootstrap.
+       SECURITY: This API key must be domain-restricted to
+       duniya-web.onrender.com in the Google Cloud Console
+       (APIs & Services → Credentials → Application restrictions). -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-HDfLffnuYVQUL4aR6DDPNqFWr5navE&loading=async" async></script>
 
   <!-- Cache-bust: force fresh flutter_bootstrap.js on every deploy -->

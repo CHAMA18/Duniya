@@ -1,18 +1,17 @@
 # Render Static Site routing (Netlify-style _redirects).
 #
-# IMPORTANT LIMITATION: Render's static-site _redirects parser does NOT
-# reliably apply SPA-fallback rules like `/* /app.html 200` for paths
-# that don't exist as real files. Deep links like /supplierManagement
-# or /loginUni will return Render's own 404 page on reload.
+# ═══════════════════════════════════════════════════════════════════
+# IMPORTANT: This file is DEPLOYED but NON-FUNCTIONAL on Render.
+# Render's static-site _redirects parser does NOT apply SPA-fallback
+# rules (200-status rewrites) for paths that don't exist as real files.
+# The rules below are here for documentation + future migration to
+# Netlify/Vercel where they WILL work.
 #
-# Workaround for users: deep-link via /app.html?route=/supplierManagement
-# (which works as a direct-file access — the SPA loads with the route
-# as a query param). The landing page's "Start Free Trial" and "Log in"
-# buttons use this format for exactly this reason.
-#
-# This file is still deployed because the first rule below matches the
-# real file /index.html (which exists) — that's the landing page.
-# Future migration to Netlify/Vercel would enable full SPA fallback.
+# The ACTUAL SPA fallback is handled by /404.html — a custom error
+# page that IS the Flutter app shell. When a user reloads a deep link
+# like /pointOfSale, Render serves 404.html (the Flutter shell) and
+# the Flutter router handles the route. See build.sh step 4c.
+# ═══════════════════════════════════════════════════════════════════
 #
 # build.sh copies this file into build/web/_redirects after flutter build.
 /    /index.html   200

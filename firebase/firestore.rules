@@ -114,5 +114,12 @@ service cloud.firestore {
       allow read: if signedIn();
       allow update, delete: if false;
     }
+
+    // Supplier directory — network-wide, readable by any authenticated
+    // user. Only Pulse admins can create/update/delete.
+    match /Supplier/{document} {
+      allow read: if signedIn();
+      allow create, update, delete: if isPulseAdmin();
+    }
   }
 }

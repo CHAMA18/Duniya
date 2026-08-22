@@ -429,7 +429,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                       _kpiRow(theme, users, isWide),
                       const SizedBox(height: 20),
                       // Search + filter bar
-                      _searchBar(theme, isWide),
+                      _searchBar(theme, isWide, users.length),
                       const SizedBox(height: 16),
                       // User table
                       if (loading)
@@ -590,7 +590,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
   }
 
   // ── Search bar + filters ───────────────────────────────────────
-  Widget _searchBar(FlutterFlowTheme theme, bool isWide) {
+  Widget _searchBar(FlutterFlowTheme theme, bool isWide, int userCount) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -631,7 +631,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                 accent: _green),
             const Spacer(),
             if (isWide)
-              Text('${_filteredCount(users_placeholder)} users',
+              Text('$userCount user${userCount == 1 ? '' : 's'}',
                   style: theme.bodySmall.override(
                     fontFamily: theme.bodySmallFamily,
                     color: theme.secondaryText,
@@ -642,9 +642,6 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
       ),
     );
   }
-
-  int _filteredCount(List<UserRecord> users) =>
-      users.where(_matches).length;
 
   Widget _filterChip(FlutterFlowTheme theme, String label, bool selected,
       {Color accent = _purple}) {
@@ -967,9 +964,3 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
   }
 }
 
-// Placeholder for compile — _filteredCount is called on the filtered
-// list in the search bar's user count text. The actual list is
-// computed in the StreamBuilder and passed to _buildContent, but the
-// search bar renders before the list is available. Use 0 as a safe
-// default; the real count is shown when the table renders.
-List<UserRecord> users_placeholder = const [];
