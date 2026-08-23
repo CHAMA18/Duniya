@@ -112,6 +112,23 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: LoginUniWidget.routePath,
           builder: (context, params) => LoginUniWidget(),
         ),
+        // Set-new-password screen — opened by EmailActionHandler when a
+        // user clicks a password-reset email link (oobCode consumed here).
+        FFRoute(
+          name: SetNewPasswordWidget.routeName,
+          path: SetNewPasswordWidget.routePath,
+          builder: (context, params) => SetNewPasswordWidget(
+            oobCode: params.getParam(
+              'oobCode',
+              ParamType.String,
+            ),
+            email: params.getParam(
+              'email',
+              ParamType.String,
+              isList: false,
+            ),
+          ),
+        ),
         FFRoute(
           name: RegisterUniWidget.routeName,
           path: RegisterUniWidget.routePath,

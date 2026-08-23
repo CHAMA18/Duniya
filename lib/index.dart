@@ -3,6 +3,7 @@ export '/registration/create_pharmacy/create_pharmacy_widget.dart'
     show CreatePharmacyWidget;
 export '/unification/authentication/login_uni/login_uni_widget.dart'
     show LoginUniWidget;
+export '/unification/authentication/set_new_password/set_new_password_widget.dart';
 export '/unification/authentication/register_uni/register_uni_widget.dart'
     show RegisterUniWidget;
 export '/unification/store_inventory/store_inventory_widget.dart'

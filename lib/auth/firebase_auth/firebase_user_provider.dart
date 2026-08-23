@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 import '../base_auth_user_provider.dart';
+import '../email_action_urls.dart';
 
 export '../base_auth_user_provider.dart';
 
@@ -39,7 +40,21 @@ class MediTrackerFirebaseUser extends BaseAuthUser {
   }
 
   @override
-  Future? sendEmailVerification() => user?.sendEmailVerification();
+  Future? sendEmailVerification() => user?.sendEmailVerification(
+        // Route the verification link directly into the deployed app
+        // (handleCodeInApp) — this bypasses the legacy custom action URL
+        // (pharmaaid.page.link) in the Firebase email templates, which is
+        // no longer an authorized domain and showed Firebase's
+        // "domain is not authorized" error when clicked.
+        // EmailActionHandler on /loginUni applies the oobCode in-app.
+        ActionCodeSettings(
+          url: emailVerificationUrl(),
+          handleCodeInApp: true,
+          androidPackageName: 'com.mycompany.meditrackerpro',
+          androidInstallApp: true,
+          iOSBundleId: 'com.stackone.pharmaaid',
+        ),
+      );
 
   @override
   bool get emailVerified {

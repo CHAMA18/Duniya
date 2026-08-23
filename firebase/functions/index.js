@@ -13,7 +13,10 @@ admin.initializeApp();
 
 const RESEND_API_URL = "https://api.resend.com";
 const DEFAULT_RESEND_FROM = "Pulse <noreply@thestackone.com>";
-const DEFAULT_PORTAL_URL = "https://thestackone.com/app.html";
+// Live deployment origin — used as the continueUrl for staff
+// invitation password-setup links. (Previously thestackone.com,
+// an unreachable domain; email links must land on the live app.)
+const DEFAULT_PORTAL_URL = "https://pulse.duniyahealthcare.com/app.html";
 
 // Profile field names evolved from snake_case to camelCase in the Flutter
 // client. Keep callable authorization consistent with Firestore rules and

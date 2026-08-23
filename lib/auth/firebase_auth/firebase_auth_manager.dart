@@ -17,13 +17,12 @@ import 'github_auth.dart';
 
 export '../base_auth_user_provider.dart';
 
-/// Continue URL the user is sent to after they complete the password reset
-/// flow on Firebase's hosted reset page. Must be listed under Firebase
-/// Console → Authentication → Settings → Authorized domains.
-/// Points to the login route so the user can immediately sign in with
-/// their new password.
-const _passwordResetContinueUrl =
-    'https://ivm.duniyahealthcare.com/loginUni';
+// Email-action URL helpers live in their own library so both the auth
+// manager and the user provider can share them without circular imports.
+// See email_action_urls.dart for the full background on why email links
+// must open the deployed app directly (pharmaaid.page.link is dead).
+export '../email_action_urls.dart';
+import '../email_action_urls.dart';
 
 class FirebasePhoneAuthManager extends ChangeNotifier {
   bool? _triggerOnCodeSent;
@@ -153,20 +152,16 @@ class FirebaseAuthManager extends AuthManager
       return false;
     }
 
-    // ActionCodeSettings so the reset link is sent correctly and the user
-    // is returned to the deployed app (ivm.duniyahealthcare.com) after
-    // completing the password reset. Without a continueUrl, the reset link
-    // opens Firebase's default firebaseapp.com handler page and the user
-    // is never redirected back to the app.
-    //
-    // We use handleCodeInApp: false (Firebase's hosted reset page) for
-    // maximum reliability — it works on web and mobile without requiring
-    // a dynamic-link domain or in-app OOB-code handling. After the user
-    // resets their password, Firebase redirects them to the continueUrl
-    // (the deployed app's reset route) where the existing widget loads.
+    // ActionCodeSettings so the reset link opens the deployed app directly
+    // (handleCodeInApp: true). This bypasses the legacy custom action URL
+    // (pharmaaid.page.link) configured in the Firebase email templates,
+    // which is no longer authorized — clicking links on that domain showed
+    // Firebase's "domain is not authorized" error. The app consumes the
+    // oobCode on the /setNewPassword route via EmailActionHandler and
+    // SetNewPasswordWidget (confirmPasswordReset).
     final actionCodeSettings = ActionCodeSettings(
-      url: _passwordResetContinueUrl,
-      handleCodeInApp: false,
+      url: passwordResetUrl(),
+      handleCodeInApp: true,
       androidPackageName: 'com.mycompany.meditrackerpro',
       androidInstallApp: true,
       iOSBundleId: 'com.stackone.pharmaaid',

@@ -17,6 +17,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'flutter_flow/revenue_cat_util.dart' as revenue_cat;
 
 import '/backend/firebase_dynamic_links/firebase_dynamic_links.dart';
+import '/auth/email_action_handler.dart';
 import '/offline/offline_connectivity_service.dart';
 import '/offline/offline_indicator_banner.dart';
 import '/offline/offline_sync_service.dart';
@@ -416,8 +417,13 @@ class _MyAppState extends State<MyApp> {
       // on every frame — blank page.
       builder: (_, child) => DynamicLinksHandler(
         router: _router,
-        child: OfflineIndicatorBanner(
-          child: child ?? const SizedBox.shrink(),
+        // EmailActionHandler consumes Firebase email-action links
+        // (verification / password reset) that now point directly at the
+        // deployed app instead of the dead pharmaaid.page.link domain.
+        child: EmailActionHandler(
+          child: OfflineIndicatorBanner(
+            child: child ?? const SizedBox.shrink(),
+          ),
         ),
       ),
     );
