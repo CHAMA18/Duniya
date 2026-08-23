@@ -23,6 +23,13 @@ enum AppRole {
   /// Pharmacy technician — assists with inventory and stock management
   pharmacyTechnician,
 
+  /// Stock controller — owns stock counts, adjustments, transfers and
+  /// movement recording (VMI accountability role)
+  stockController,
+
+  /// Finance / admin viewer — read-only finance and reporting access
+  financeViewer,
+
   /// Cashier — handles POS transactions, sales, and basic inventory views
   cashier,
 
@@ -59,6 +66,22 @@ enum AppRole {
       case 'pharmacytechnician':
       case 'technician':
         return AppRole.pharmacyTechnician;
+      case 'stock_controller':
+      case 'stockcontroller':
+        return AppRole.stockController;
+      case 'finance_viewer':
+      case 'financeviewer':
+      case 'finance_admin_viewer':
+      case 'admin_viewer':
+        return AppRole.financeViewer;
+      case 'stock_controller':
+      case 'stockcontroller':
+        return AppRole.stockController;
+      case 'finance_viewer':
+      case 'financeviewer':
+      case 'finance_admin_viewer':
+      case 'admin_viewer':
+        return AppRole.financeViewer;
       case 'cashier':
         return AppRole.cashier;
       case 'sales_assistant':
@@ -102,6 +125,10 @@ enum AppRole {
         return 'Pharmacist';
       case AppRole.pharmacyTechnician:
         return 'Pharmacy Technician';
+      case AppRole.stockController:
+        return 'Stock Controller';
+      case AppRole.financeViewer:
+        return 'Finance/Admin Viewer';
       case AppRole.cashier:
         return 'Cashier';
       case AppRole.salesAssistant:
@@ -127,6 +154,8 @@ enum AppRole {
       this == AppRole.outletManager ||
       this == AppRole.pharmacist ||
       this == AppRole.pharmacyTechnician ||
+      this == AppRole.stockController ||
+      this == AppRole.financeViewer ||
       this == AppRole.cashier ||
       this == AppRole.salesAssistant;
 
@@ -142,6 +171,10 @@ enum AppRole {
         return 'Pharmacist';
       case AppRole.pharmacyTechnician:
         return 'Pharmacy Technician';
+      case AppRole.stockController:
+        return 'Stock Controller';
+      case AppRole.financeViewer:
+        return 'Finance/Admin Viewer';
       case AppRole.cashier:
         return 'Cashier';
       case AppRole.salesAssistant:

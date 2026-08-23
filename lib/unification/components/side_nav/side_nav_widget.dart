@@ -50,6 +50,10 @@ class _SideNavWidgetState extends State<SideNavWidget> {
         return 'Pharmacist';
       case AppRole.pharmacyTechnician:
         return 'Pharmacy Tech';
+      case AppRole.stockController:
+        return 'Stock Controller';
+      case AppRole.financeViewer:
+        return 'Finance Viewer';
       case AppRole.cashier:
         return 'Cashier';
       case AppRole.salesAssistant:
@@ -361,8 +365,103 @@ class _SideNavWidgetState extends State<SideNavWidget> {
           ),
         ),
 
-        const SizedBox.shrink(),
+        // ── Sub-item: VMI Product Catalogue ──
+        // Pharmacy users see the master product list as a child of
+        // their Inventory section (Pulse users reach it as the parent
+        // item itself), so both portals have catalogue access.
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 220),
+          crossFadeState: isExpanded
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          firstChild: _canSee(NavItem.productCatalogue)
+              ? Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                      28.0, 2.0, 10.0, 6.0),
+                  child: _inventoryChildLink(
+                    label: 'Product Catalogue',
+                    icon: Icons.menu_book_outlined,
+                    selected:
+                        FFAppState().SelectedPage == 'Product Catalogue',
+                    onTap: () {
+                      logFirebaseEvent('SIDE_NAV_PRODUCT_CATALOGUE_ON_TAP');
+                      logFirebaseEvent('SidebarLink_navigate_to');
+                      context.goNamed(
+                        ProductMasterWidget.routeName,
+                        extra: <String, dynamic>{
+                          '__transition_info__': TransitionInfo(
+                            hasTransition: true,
+                            transitionType: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 0),
+                          ),
+                        },
+                      );
+                      FFAppState().SelectedPage = 'Product Catalogue';
+                    },
+                  ),
+                )
+              : const SizedBox.shrink(),
+          secondChild: const SizedBox.shrink(),
+        ),
       ],
+    );
+  }
+
+  /// Compact sub-item row used inside the expandable Inventory section.
+  Widget _inventoryChildLink({
+    required String label,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    final theme = FlutterFlowTheme.of(context);
+    return InkWell(
+      splashColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(9.0),
+      child: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(minHeight: 34.0),
+        decoration: BoxDecoration(
+          color: selected
+              ? theme.primary.withValues(alpha: 0.08)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(9.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(8.0, 5.0, 8.0, 5.0),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 15.0,
+                color: selected
+                    ? theme.primary
+                    : theme.secondaryText.withValues(alpha: 0.85),
+              ),
+              const SizedBox(width: 9.0),
+              Expanded(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: theme.bodyMedium.override(
+                    fontFamily: theme.bodyMediumFamily,
+                    color: selected ? theme.primaryText : theme.secondaryText,
+                    fontSize: 12.5,
+                    letterSpacing: 0.0,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                    useGoogleFonts: !theme.bodyMediumIsCustom,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

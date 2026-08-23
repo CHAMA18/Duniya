@@ -1282,22 +1282,78 @@ exports.confirmPulseDispatch = functions
       UpdatedAt: now,
     });
 
+    // ── Auto-increase pharmacy stock for every confirmed item ──
+    // Requirement: confirming a goods receipt must increase the stock
+    // at the pharmacy. Stock docs live under the receiving owner and
+    // are matched to products by name; missing stock docs are created.
+    const ownerRef = firestore.collection("User").doc(context.auth.uid);
+    const productIds = [
+      ...new Set(
+        normalizedItems
+          .map(({ itemSnapshot }) => (itemSnapshot.get("ProductId") || {}).id)
+          .filter(Boolean)
+      ),
+    ];
+    const productSnapshots = productIds.length
+      ? await firestore.getAll(
+          ...productIds.map((id) => firestore.collection("ProductMaster").doc(id))
+        )
+      : [];
+    const productNameById = new Map(
+      productSnapshots.map((snap) => [snap.id, String((snap.data() || {}).Name || "").trim()])
+    );
+
+    const stockSnapshot = await ownerRef.collection("Stock").get();
+    const stockRefByName = new Map();
+    stockSnapshot.forEach((doc) => {
+      const name = String((doc.data() || {}).Name || "").trim().toLowerCase();
+      if (name && !stockRefByName.has(name)) stockRefByName.set(name, doc.ref);
+    });
+
     for (const { itemSnapshot, quantityReceived, discrepancy } of normalizedItems) {
       batch.update(itemSnapshot.ref, {
         QuantityReceived: quantityReceived,
         Discrepancy: discrepancy || null,
       });
-      const movementRef = firestore.collection("User").doc(context.auth.uid).collection("StockMovement").doc();
+      const productRef = itemSnapshot.get("ProductId");
+      const movementRef = ownerRef.collection("StockMovement").doc();
       batch.set(movementRef, {
-        ProductId: itemSnapshot.get("ProductId"),
+        ProductId: productRef,
         OutletId: receipt.OutletId,
         Quantity: quantityReceived,
         MovementType: "RECEIVED",
         Reason: "PULSE_DISPATCH",
         MovementReference: receipt.DeliveryNoteNumber || "",
-        RecordedById: firestore.collection("User").doc(context.auth.uid),
+        RecordedById: ownerRef,
         CreatedAt: now,
       });
+
+      // Apply the stock increase (existing doc incremented, new doc created).
+      const productName = productNameById.get((productRef || {}).id) || "";
+      if (quantityReceived > 0 && productName) {
+        const key = productName.toLowerCase();
+        const existingStockRef = stockRefByName.get(key);
+        if (existingStockRef) {
+          batch.update(existingStockRef, {
+            Quantity: admin.firestore.FieldValue.increment(quantityReceived),
+            UpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+        } else {
+          const newStockRef = ownerRef.collection("Stock").doc();
+          stockRefByName.set(key, newStockRef);
+          batch.set(newStockRef, {
+            Name: productName,
+            ProductRef: productRef,
+            Quantity: quantityReceived,
+            Price: 0,
+            CostOfGoods: 0,
+            LimitNotice: 0,
+            CreatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            UpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            ImportSource: "PULSE_DISPATCH",
+          });
+        }
+      }
     }
 
     await batch.commit();

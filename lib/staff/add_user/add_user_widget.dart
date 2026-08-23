@@ -54,6 +54,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     'Cashier',
     'Sales Assistant',
     'Pharmacy Technician',
+    'Stock Controller',
+    'Finance/Admin Viewer',
     'Pharmacist',
     'Pharmacy Manager',
     'Owner',
@@ -73,6 +75,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   // Friendly icon per role for the chip picker.
   IconData _roleIcon(String role) {
     switch (role) {
+      case 'Stock Controller':
+        return Icons.inventory_rounded;
+      case 'Finance/Admin Viewer':
+        return Icons.account_balance_outlined;
       case 'Cashier':
         return Icons.point_of_sale_outlined;
       case 'Sales Assistant':

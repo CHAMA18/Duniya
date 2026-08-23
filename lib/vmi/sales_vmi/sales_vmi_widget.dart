@@ -9,6 +9,7 @@ import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import '/index.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'sales_vmi_model.dart';
@@ -1246,7 +1247,24 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                       createdAt: getCurrentTimestamp,
                     ));
 
-                    // Create SaleItemVMI records and StockMovements
+                    // Create SaleItemVMI records, StockMovements, and
+                    // reduce stock automatically (recording a sale must
+                    // lower the pharmacy's stock levels).
+                    final stockByName = <String, DocumentReference>{};
+                    try {
+                      final stocks =
+                          await queryStockRecordOnce(parent: ownerRef);
+                      for (final s in stocks) {
+                        final key = s.name.trim().toLowerCase();
+                        if (key.isNotEmpty &&
+                            !stockByName.containsKey(key)) {
+                          stockByName[key] = s.reference;
+                        }
+                      }
+                    } catch (_) {
+                      // Stock lookup failure should not block the sale.
+                    }
+
                     for (var item in _saleLineItems) {
                       final itemDoc =
                           SaleItemVMIRecord.createDoc(saleDoc);
@@ -1268,6 +1286,21 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                         recordedById: currentUserReference,
                         createdAt: getCurrentTimestamp,
                       ));
+
+                      // Reduce stock for this line (floor at zero).
+                      final productName =
+                          (item['productName'] as String? ?? '').trim();
+                      final soldQty = item['quantity'] as int;
+                      final stockRef = productName.isEmpty
+                          ? null
+                          : stockByName[productName.toLowerCase()];
+                      if (stockRef != null && soldQty > 0) {
+                        await stockRef.update({
+                          'Quantity':
+                              FieldValue.increment(-soldQty),
+                          'UpdatedAt': FieldValue.serverTimestamp(),
+                        });
+                      }
                     }
 
                     _model.dialogPatientRefTextController?.clear();

@@ -9,6 +9,7 @@ import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'stock_movements_model.dart';
@@ -277,6 +278,268 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   // ═══════════════════════════════════════════════════════════
   // PAGE HEADER
   // ═══════════════════════════════════════════════════════════
+
+  Widget _dialogLabel(FlutterFlowTheme theme, String text) => Text(
+        text,
+        style: theme.labelMedium.override(
+          fontFamily: theme.labelMediumFamily,
+          fontWeight: FontWeight.w600,
+          fontSize: 12.5,
+          letterSpacing: 0.3,
+          color: theme.secondaryText,
+          useGoogleFonts: !theme.labelMediumIsCustom,
+        ),
+      );
+
+  // ═══════════════════════════════════════════════════════════════
+  //   RECORD MOVEMENT — manual stock movement entry
+  //   Captures the full VMI movement record: product, quantity,
+  //   pharmacy/outlet, movement type (all 8 types), reason and a
+  //   supporting reference/note. The recorder and timestamp are
+  //   stamped automatically. Positive-quantity types (RETURNED)
+  //   increase stock; all others reduce it.
+  // ═══════════════════════════════════════════════════════════════
+
+  static const _movementTypes = <String, (String, String)>{
+    'RECEIVED': ('Stock received', 'Goods received from Duniya/supplier'),
+    'SOLD': ('Stock sold/dispensed', 'Dispensed to patient or customer'),
+    'RETURNED': ('Stock returned', 'Returned to supplier or by customer'),
+    'TRANSFERRED': ('Stock transferred', 'Moved between outlets/facilities'),
+    'DAMAGED': ('Stock damaged', 'Damaged, spoiled or broken stock'),
+    'EXPIRED': ('Stock expired', 'Removed after passing expiry date'),
+    'ADJUSTMENT': ('Stock adjustment', 'Manual correction of stock level'),
+    'COUNT_CORRECTION': ('Stock count correction',
+        'Correction from a physical stock count'),
+  };
+
+  Future<void> _openRecordMovementDialog() async {
+    final theme = FlutterFlowTheme.of(context);
+
+    // Load real products (stock) for this user's scope.
+    List<StockRecord> stocks = [];
+    try {
+      stocks = await queryStockRecordOnce(
+        parent: AccessControl.isPulseUser(context)
+            ? null
+            : AccessControl.parentRef(context) ?? currentUserReference,
+      );
+    } catch (_) {
+      // Leave empty — dialog shows the empty hint.
+    }
+
+    final qtyController = TextEditingController();
+    final reasonController = TextEditingController();
+    final refController = TextEditingController();
+    String? selectedType;
+    String? selectedProductId;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: theme.primary.withAlpha(24),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(Icons.swap_vert_circle_rounded,
+                  color: theme.primary, size: 21),
+            ),
+            const SizedBox(width: 12),
+            const Text('Record Stock Movement',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+          ]),
+          content: SingleChildScrollView(
+            child: SizedBox(
+              width: 460,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Movement type
+                  _dialogLabel(theme, 'Movement type'),
+                  DropdownButtonFormField<String>(
+                    value: selectedType,
+                    isExpanded: true,
+                    items: _movementTypes.entries
+                        .map((e) => DropdownMenuItem(
+                              value: e.key,
+                              child: Text(e.value.$1),
+                            ))
+                        .toList(),
+                    onChanged: (v) =>
+                        setDialogState(() => selectedType = v),
+                    decoration: _dialogInputDecoration(
+                        theme,
+                        hint: 'Select movement type',
+                        valid: selectedType != null),
+                  ),
+                  if (selectedType != null) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      _movementTypes[selectedType!]!.$2,
+                      style: theme.bodySmall.override(
+                        fontFamily: theme.bodySmallFamily,
+                        color: theme.secondaryText,
+                        fontSize: 11.5,
+                        letterSpacing: 0.0,
+                        useGoogleFonts: !theme.bodySmallIsCustom,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 14),
+
+                  // Product
+                  _dialogLabel(theme, 'Product'),
+                  DropdownButtonFormField<String>(
+                    value: selectedProductId,
+                    isExpanded: true,
+                    menuMaxHeight: 320,
+                    items: stocks
+                        .map((s) => DropdownMenuItem(
+                              value: s.reference.id,
+                              child: Text(
+                                s.name.isEmpty
+                                    ? s.reference.id
+                                    : s.name,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (v) =>
+                        setDialogState(() => selectedProductId = v),
+                    decoration: _dialogInputDecoration(
+                        theme,
+                        hint: stocks.isEmpty
+                            ? 'No stock items found'
+                            : 'Select product',
+                        valid: selectedProductId != null),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Quantity
+                  _dialogLabel(theme, 'Quantity'),
+                  TextFormField(
+                    controller: qtyController,
+                    keyboardType: TextInputType.number,
+                    decoration: _dialogInputDecoration(theme,
+                        hint: 'e.g. 10', valid: true),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Reason
+                  _dialogLabel(theme, 'Reason'),
+                  TextFormField(
+                    controller: reasonController,
+                    decoration: _dialogInputDecoration(
+                        theme,
+                        hint: 'Why is this movement happening?',
+                        valid: true),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Supporting reference / note
+                  _dialogLabel(theme, 'Supporting document / note (optional)'),
+                  TextFormField(
+                    controller: refController,
+                    decoration: _dialogInputDecoration(
+                        theme,
+                        hint: 'e.g. GRN-0042, delivery note, memo',
+                        valid: true),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: theme.primary,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: () async {
+                final qty =
+                    int.tryParse(qtyController.text.trim()) ?? 0;
+                final product = selectedProductId == null
+                    ? null
+                    : stocks.firstWhere(
+                        (s) => s.reference.id == selectedProductId,
+                        orElse: () => stocks.first);
+                if (selectedType == null ||
+                    product == null ||
+                    qty <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text(
+                            'Select a movement type, a product and a quantity above 0.')),
+                  );
+                  return;
+                }
+                try {
+                  // The movement is written under the SAME scope that
+                  // owns the selected stock document, so it appears in
+                  // the right ledger for both pharmacy and Pulse users.
+                  // Convention matches Goods Received: StockMovement docs
+                  // are created via StockMovementRecord.createDoc(scope).
+                  final stockPathSegments =
+                      product.reference.path.split('/');
+                  // e.g. Users/{uid}/Stock/{id} -> Users/{uid}
+                  final scopeRef = stockPathSegments.length >= 2
+                      ? FirebaseFirestore.instance
+                          .doc(stockPathSegments.sublist(0, 2).join('/'))
+                      : currentUserReference;
+                  if (scopeRef == null) {
+                    throw StateError('No scope for the movement.');
+                  }
+                  await StockMovementRecord.createDoc(scopeRef).set(
+                      createStockMovementRecordData(
+                        productId: product.reference,
+                        outletId: null,
+                        quantity: qty,
+                        movementType: selectedType,
+                        reason: reasonController.text.trim(),
+                        movementReference: refController.text.trim(),
+                        recordedById: currentUserReference,
+                        createdAt: DateTime.now(),
+                      ));
+                  if (!dialogContext.mounted) return;
+                  Navigator.pop(dialogContext);
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          'Movement recorded: ${_movementTypes[selectedType]!.$1} — ${product.name}'),
+                      backgroundColor: theme.primary,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } catch (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text(
+                            'Could not record the movement. Please try again.')),
+                  );
+                }
+              },
+              child: const Text('Record',
+                  style: TextStyle(fontWeight: FontWeight.w700)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildPageHeader(
     BuildContext context,
     FlutterFlowTheme theme,
@@ -383,6 +646,25 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       runSpacing: 8.0,
       alignment: WrapAlignment.end,
       children: [
+        // Record Movement — opens the manual movement dialog with the
+        // full capture set (product, quantity, outlet, type, reason,
+        // reference/note, recorded-by, timestamp).
+        ElevatedButton.icon(
+          onPressed: () => _openRecordMovementDialog(),
+          icon: const Icon(Icons.add_circle_outline_rounded, size: 17.0),
+          label: const Text('Record Movement',
+              style:
+                  TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primaryColor,
+            foregroundColor: Colors.white,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            elevation: 0,
+          ),
+        ),
         // Movement Type filter
         Container(
           width: 180.0,
@@ -390,7 +672,17 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           child: FlutterFlowDropDown<String>(
             controller: _model.movementTypeValueController ??=
                 FormFieldController<String>(null),
-            options: ['All', 'RECEIVED', 'SOLD', 'TRANSFERRED', 'ADJUSTMENT'],
+            options: [
+              'All',
+              'RECEIVED',
+              'SOLD',
+              'RETURNED',
+              'TRANSFERRED',
+              'DAMAGED',
+              'EXPIRED',
+              'ADJUSTMENT',
+              'COUNT_CORRECTION',
+            ],
             onChanged: (val) =>
                 safeSetState(() => _model.movementTypeValue = val),
             width: 180.0,
@@ -1385,6 +1677,26 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         icon = Icons.sync_alt;
         color = primaryColor;
         label = 'Transfer';
+        break;
+      case 'RETURNED':
+        icon = Icons.undo_rounded;
+        color = primaryColor;
+        label = 'Returned';
+        break;
+      case 'DAMAGED':
+        icon = Icons.broken_image_rounded;
+        color = const Color(0xFFEF4444);
+        label = 'Damaged';
+        break;
+      case 'EXPIRED':
+        icon = Icons.event_busy_rounded;
+        color = const Color(0xFFEF4444);
+        label = 'Expired';
+        break;
+      case 'COUNT_CORRECTION':
+        icon = Icons.rule_rounded;
+        color = const Color(0xFFF59E0B);
+        label = 'Count Correction';
         break;
       case 'ADJUSTMENT':
         icon = Icons.tune;

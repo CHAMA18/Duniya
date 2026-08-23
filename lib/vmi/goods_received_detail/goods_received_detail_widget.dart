@@ -11,6 +11,7 @@ import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'goods_received_detail_model.dart';
@@ -177,6 +178,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
           final itemData = itemDoc.data();
           _lineItems.add({
             'productId': itemData['ProductId'] as DocumentReference?,
+            'productName': (itemData['ProductName'] as String? ?? ''),
             'quantityDelivered': itemData['QuantityDelivered'] as int? ?? 0,
             'quantityReceived': itemData['QuantityReceived'] as int? ??
                 itemData['QuantityDelivered'] as int? ??
@@ -2256,6 +2258,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     safeSetState(() {
       _lineItems.add({
         'productId': product.reference,
+        'productName': product.name,
         'quantityDelivered': deliveredQty,
         'quantityReceived': receivedQty,
         'batchNumber': _model.lineBatchTextController?.text ?? '',
@@ -2494,7 +2497,18 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       updatedAt: getCurrentTimestamp,
     ));
 
-    // Create line items and stock movements
+    // Create line items, stock movements and apply the stock increase
+    // (confirming a goods receipt automatically raises the pharmacy's
+    // stock — matched by product name, creating missing stock docs).
+    final stockByName = <String, DocumentReference>{};
+    final stocks = await queryStockRecordOnce(parent: ownerRef);
+    for (final s in stocks) {
+      final key = s.name.trim().toLowerCase();
+      if (key.isNotEmpty && !stockByName.containsKey(key)) {
+        stockByName[key] = s.reference;
+      }
+    }
+
     for (var item in _lineItems) {
       final deliveredQty = item['quantityDelivered'] as int? ?? 0;
       final receivedQty = item['quantityReceived'] as int? ?? deliveredQty;
@@ -2521,11 +2535,36 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
         recordedById: currentUserReference,
         createdAt: getCurrentTimestamp,
       ));
+
+      // Apply the stock increase for this item.
+      final productRef = item['productId'] as DocumentReference?;
+      final productName =
+          (item['productName'] as String? ?? '').trim();
+      if (receivedQty > 0 && productName.isNotEmpty) {
+        final key = productName.toLowerCase();
+        final existing = stockByName[key];
+        if (existing != null) {
+          await existing.update({
+            'Quantity': FieldValue.increment(receivedQty),
+            'UpdatedAt': FieldValue.serverTimestamp(),
+          });
+        } else {
+          final newStockRef = StockRecord.createDoc(ownerRef);
+          stockByName[key] = newStockRef;
+          await newStockRef.set(createStockRecordData(
+            name: productName,
+            quantity: receivedQty,
+            price: 0.0,
+            limitNotice: 0,
+            initialQuantity: receivedQty.toDouble(),
+          ));
+        }
+      }
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Goods receipt confirmed successfully'),
+        content: Text('Goods receipt confirmed and stock updated'),
         backgroundColor: _success,
         behavior: SnackBarBehavior.floating,
       ),

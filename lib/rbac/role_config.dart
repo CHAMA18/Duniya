@@ -348,6 +348,81 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   },
 
   // ═══════════════════════════════════════════════════════════════════
+  // STOCK CONTROLLER — stock counts, adjustments, transfers, movements
+  // The VMI accountability role: full stock operations, no finance.
+  // ═══════════════════════════════════════════════════════════════════
+  AppRole.stockController: {
+    // ── Inventory ──
+    Permission.inventoryView,
+    Permission.inventoryCreate,
+    Permission.inventoryEdit,
+
+    // ── Stock (Balances, Movements, Counts — full control) ──
+    Permission.stockBalancesView,
+    Permission.stockMovementsView,
+    Permission.stockCountsView,
+    Permission.stockCountsCreate,
+    Permission.stockCountsEdit,
+    Permission.stockCountsApprove,
+
+    // ── Operations ──
+    Permission.goodsReceivedView,
+    Permission.goodsReceivedCreate,
+    Permission.goodsReceivedEdit,
+
+    // ── Monitoring ──
+    Permission.batchesView,
+    Permission.batchesEdit,
+    Permission.lowStockAlertsView,
+    Permission.lowStockAlertsManage,
+    Permission.replenishmentView,
+    Permission.replenishmentCreate,
+    Permission.coldChainView,
+    Permission.coldChainViewAlerts,
+    Permission.expiryTrackingView,
+
+    // ── Damaged Stock ──
+    Permission.damagedStockView,
+    Permission.damagedStockCreate,
+
+    // ── Procurement ──
+    Permission.purchaseOrdersView,
+    Permission.purchaseOrdersCreate,
+
+    // ── Tools / Admin ──
+    Permission.pharmacyToolsView,
+    Permission.bmiCalculatorUse,
+    Permission.settingsView,
+    Permission.notificationsView,
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // FINANCE/ADMIN VIEWER — read-only finance & reporting oversight
+  // ═══════════════════════════════════════════════════════════════════
+  AppRole.financeViewer: {
+    // ── Finance & reporting (read-only) ──
+    Permission.financesView,
+    Permission.financesViewReports,
+    Permission.dashboardViewFinanceNetwork,
+
+    // ── Stock visibility (read-only oversight) ──
+    Permission.inventoryView,
+    Permission.stockBalancesView,
+    Permission.stockMovementsView,
+    Permission.stockCountsView,
+
+    // ── Monitoring (read-only) ──
+    Permission.batchesView,
+    Permission.lowStockAlertsView,
+    Permission.replenishmentView,
+    Permission.expiryTrackingView,
+
+    // ── Admin ──
+    Permission.settingsView,
+    Permission.notificationsView,
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
   // CASHIER — POS, sales, basic inventory views
   // Main: Home only
   // ═══════════════════════════════════════════════════════════════════
@@ -534,6 +609,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.storeInventory,
+    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -569,6 +645,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.humanResource,
     NavItem.finances,
     NavItem.storeInventory,
+    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -598,6 +675,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   AppRole.pharmacist: {
     NavItem.home,
     NavItem.storeInventory,
+    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -631,6 +709,7 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   AppRole.pharmacyTechnician: {
     NavItem.home,
     NavItem.storeInventory,
+    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -655,6 +734,42 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   // Monitoring: Batches, Low Stock
   // Clinical: Insurance verification, Drug Interactions read-only
   // Tools: BMI Calculator
+  // ═══ Stock Controller ═══
+  AppRole.stockController: {
+    NavItem.home,
+    NavItem.storeInventory,
+    NavItem.productCatalogue,
+    NavItem.stockBalances,
+    NavItem.stockMovements,
+    NavItem.stockCounts,
+    NavItem.goodsReceived,
+    NavItem.batchesExpiry,
+    NavItem.lowStockAlerts,
+    NavItem.replenishment,
+    NavItem.coldChain,
+    NavItem.expiryTracking,
+    NavItem.purchaseOrders,
+    NavItem.salesAnalytics,
+    NavItem.settings,
+  },
+
+  // ═══ Finance/Admin Viewer ═══
+  AppRole.financeViewer: {
+    NavItem.home,
+    NavItem.finances,
+    NavItem.salesAnalytics,
+    NavItem.storeInventory,
+    NavItem.productCatalogue,
+    NavItem.stockBalances,
+    NavItem.stockMovements,
+    NavItem.stockCounts,
+    NavItem.batchesExpiry,
+    NavItem.lowStockAlerts,
+    NavItem.replenishment,
+    NavItem.expiryTracking,
+    NavItem.settings,
+  },
+
   AppRole.cashier: {
     NavItem.home,
     NavItem.storeInventory,
@@ -701,6 +816,9 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
+    NavItem.stockBalances,
+    NavItem.stockCounts,
+    NavItem.salesDispensing,
     NavItem.stockMovements,
     NavItem.batchesExpiry,
     NavItem.expiryTracking,
@@ -727,6 +845,9 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
+    NavItem.stockBalances,
+    NavItem.stockCounts,
+    NavItem.salesDispensing,
     NavItem.stockMovements,
     NavItem.batchesExpiry,
     NavItem.expiryTracking,
