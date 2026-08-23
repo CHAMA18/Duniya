@@ -1,3 +1,5 @@
+import '/backend/backend.dart';
+import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/rbac/rbac.dart';
@@ -52,13 +54,63 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   String? _selectedSupplier;
   List<_PoLineItem> _lineItems = [];
 
+  /// Real dropdown options, loaded from Firestore in [_loadCatalogOptions]
+  /// — replaces the previous hardcoded demo suppliers/products.
+  List<String> _supplierOptions = [];
+  List<String> _productOptions = [];
+
+  /// Loads real supplier names and in-stock product names for the
+  /// Create-PO dropdowns. Falls back silently to empty lists (the
+  /// form still allows manual use) when queries fail.
+  Future<void> _loadCatalogOptions() async {
+    try {
+      final stocks = await queryStockRecordOnce(
+        parent: AccessControl.isPulseUser(context)
+            ? null
+            : AccessControl.parentRef(context) ?? currentUserReference,
+      );
+      final supplierNames = <String>{};
+      try {
+        final suppliers = await querySupplierRecordOnce();
+        for (final s in suppliers) {
+          final n = s.name.trim();
+          if (n.isNotEmpty) supplierNames.add(n);
+        }
+      } catch (_) {
+        // Supplier collection unavailable — product-master suppliers
+        // are still added below.
+      }
+      try {
+        final products = await queryProductMasterRecordOnce();
+        for (final p in products) {
+          final n = (p.supplier ?? '').trim();
+          if (n.isNotEmpty) supplierNames.add(n);
+        }
+      } catch (_) {
+        // Ignore — stock-derived suppliers still populate.
+      }
+      final productNames = <String>{};
+      for (final s in stocks) {
+        final n = s.name.trim();
+        if (n.isNotEmpty) productNames.add(n);
+      }
+      if (!mounted) return;
+      safeSetState(() {
+        _supplierOptions = supplierNames.toList()..sort();
+        _productOptions = productNames.toList()..sort();
+      });
+    } catch (_) {
+      // Options stay empty; the Create-PO form remains usable.
+    }
+  }
+
   // ── KPI CACHE ──
   int _kpiPendingApproval = 0;
   int _kpiInTransit = 0;
   int _kpiDeliveredMonth = 0;
   double _kpiTotalValueMonth = 0.0;
 
-  // ── MOCK DATA ──
+  // ── LOCAL PO LIST (session-scoped; created via the panels below) ──
   late List<_PurchaseOrder> _purchaseOrders;
 
   // ── ANIMATION ──
@@ -79,7 +131,10 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
 
     _purchaseOrders = <_PurchaseOrder>[];
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      safeSetState(() {});
+      _loadCatalogOptions();
+    });
   }
 
   @override
@@ -212,55 +267,82 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   //   AUTO-GENERATE: SCAN REORDER LEVELS
   // ═══════════════════════════════════════════════════════════════
 
+  /// Scans the REAL inventory for items whose current quantity is
+  /// at or below their configured reorder level (LimitNotice) and
+  /// builds reorder suggestions from live Firestore data:
+  ///
+  ///  * Stock scope mirrors the rest of the app — Pulse network
+  ///    users scan every pharmacy, pharmacy users scan their own
+  ///    stock collection.
+  ///  * Only items WITH a configured reorder level are considered;
+  ///    healthy or unconfigured stock never appears in the list.
+  ///  * Preferred supplier and unit cost come from the matching
+  ///    Product Master record (matched by product name); the last
+  ///    known stock price is the fallback.
+  ///  * Suggested quantity uses a min/max replenishment policy:
+  ///    order up to twice the reorder level.
   Future<void> _scanReorderLevels() async {
     safeSetState(() => _isScanning = true);
-    await Future.delayed(const Duration(milliseconds: 1500));
-    _reorderItems = [
-      _ReorderItem(
-        product: 'Paracetamol 500mg',
-        currentStock: 24,
-        reorderLevel: 50,
-        suggestedQty: 200,
-        preferredSupplier: 'Medline Pharmaceuticals',
-        unitCost: 45.00,
-      ),
-      _ReorderItem(
-        product: 'Amoxicillin 250mg',
-        currentStock: 8,
-        reorderLevel: 30,
-        suggestedQty: 100,
-        preferredSupplier: 'Medline Pharmaceuticals',
-        unitCost: 120.00,
-      ),
-      _ReorderItem(
-        product: 'Omeprazole 20mg',
-        currentStock: 12,
-        reorderLevel: 40,
-        suggestedQty: 150,
-        preferredSupplier: 'Beta Healthcare',
-        unitCost: 85.00,
-      ),
-      _ReorderItem(
-        product: 'Metformin 500mg',
-        currentStock: 5,
-        reorderLevel: 60,
-        suggestedQty: 250,
-        preferredSupplier: 'Global Medical Supplies',
-        unitCost: 35.00,
-      ),
-      _ReorderItem(
-        product: 'Ciprofloxacin 500mg',
-        currentStock: 15,
-        reorderLevel: 25,
-        suggestedQty: 80,
-        preferredSupplier: 'Zambian Drug House',
-        unitCost: 95.00,
-      ),
-    ];
-    safeSetState(() {
-      _isScanning = false;
-      _showAutoPanel = true;
-    });
+    final stopwatch = Stopwatch()..start();
+    try {
+      final stocks = await queryStockRecordOnce(
+        parent: AccessControl.isPulseUser(context)
+            ? null
+            : AccessControl.parentRef(context) ?? currentUserReference,
+      );
+      final products = await queryProductMasterRecordOnce();
+      final byName = <String, ProductMasterRecord>{};
+      for (final p in products) {
+        final key = p.name.toLowerCase().trim();
+        if (key.isNotEmpty) byName[key] = p;
+      }
+
+      final items = <_ReorderItem>[];
+      for (final s in stocks) {
+        final reorder = s.limitNotice;
+        if (reorder <= 0) continue; // no reorder point configured
+        if (s.quantity > reorder) continue; // still above the point
+        final name = s.name.trim();
+        if (name.isEmpty) continue;
+        final product = byName[name.toLowerCase()];
+        final supplier = (product?.supplier ?? '').trim();
+        final unitCost = (product != null && product.costPrice > 0)
+            ? product.costPrice
+            : s.price;
+        // Min/max policy: order up to 2x the reorder level.
+        final suggested = (reorder * 2 - s.quantity).clamp(1, 1000000);
+        items.add(_ReorderItem(
+          product: name,
+          currentStock: s.quantity,
+          reorderLevel: reorder,
+          suggestedQty: suggested,
+          preferredSupplier:
+              supplier.isNotEmpty ? supplier : 'No preferred supplier',
+          unitCost: unitCost,
+        ));
+      }
+      // Most critical (lowest stock ratio) first.
+      items.sort((a, b) => (a.currentStock / a.reorderLevel)
+          .compareTo(b.currentStock / b.reorderLevel));
+
+      // Keep the scan animation visible for a beat even when the
+      // queries return quickly, so the flow still reads as a scan.
+      final elapsed = stopwatch.elapsedMilliseconds;
+      if (elapsed < 700) {
+        await Future.delayed(Duration(milliseconds: 700 - elapsed));
+      }
+      if (!mounted) return;
+      safeSetState(() {
+        _reorderItems = items;
+        _isScanning = false;
+        _showAutoPanel = true;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      safeSetState(() => _isScanning = false);
+      _showToast('Could not scan inventory levels. Please try again.',
+          isError: true);
+    }
   }
 
   void _generatePoFromReorder() {
@@ -1298,6 +1380,69 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                 ],
               ),
             ),
+          // Empty scan result — real inventory had nothing below its
+          // reorder levels. (Previously this state was unreachable
+          // because the scan returned hardcoded demo items.)
+          if (_showAutoPanel && _reorderItems.isEmpty)
+            Padding(
+              padding:
+                  const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFECFDF5),
+                  borderRadius: BorderRadius.circular(12.0),
+                  border:
+                      Border.all(color: const Color(0xFFA7F3D0), width: 1.0),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(Icons.verified_rounded,
+                        color: Color(0xFF059669), size: 32.0),
+                    const SizedBox(height: 12.0),
+                    Text(
+                      'All stock is above reorder levels',
+                      style: theme.titleSmall.override(
+                        fontFamily: theme.titleSmallFamily,
+                        color: const Color(0xFF065F46),
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.0,
+                        useGoogleFonts: !theme.titleSmallIsCustom,
+                      ),
+                    ),
+                    const SizedBox(height: 6.0),
+                    Text(
+                      'No products need reordering right now. Only items with a '
+                      'configured reorder level that have fallen to or below it '
+                      'appear here.',
+                      textAlign: TextAlign.center,
+                      style: theme.bodySmall.override(
+                        fontFamily: theme.bodySmallFamily,
+                        color: const Color(0xFF047857),
+                        letterSpacing: 0.0,
+                        useGoogleFonts: !theme.bodySmallIsCustom,
+                      ),
+                    ),
+                    const SizedBox(height: 14.0),
+                    TextButton(
+                      onPressed: () => safeSetState(() {
+                        _showAutoPanel = false;
+                      }),
+                      child: Text(
+                        'Dismiss',
+                        style: theme.bodyMedium.override(
+                          fontFamily: theme.bodyMediumFamily,
+                          color: const Color(0xFF047857),
+                          letterSpacing: 0.0,
+                          useGoogleFonts: !theme.bodyMediumIsCustom,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -1309,24 +1454,11 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
 
   Widget _buildCreatePoPanel() {
     final theme = FlutterFlowTheme.of(context);
-    final suppliers = [
-      'Medline Pharmaceuticals',
-      'Beta Healthcare',
-      'Global Medical Supplies',
-      'Zambian Drug House',
-    ];
-    final products = [
-      'Paracetamol 500mg',
-      'Amoxicillin 250mg',
-      'Omeprazole 20mg',
-      'Metformin 500mg',
-      'Amlodipine 5mg',
-      'Ciprofloxacin 500mg',
-      'Cetirizine 10mg',
-      'Ibuprofen 400mg',
-      'Azithromycin 250mg',
-      'Co-trimoxazole 480mg',
-    ];
+    // Real supplier + product options loaded from Firestore (see
+    // [_loadCatalogOptions]); falls back to a helpful hint when the
+    // workspace has none yet.
+    final suppliers = _supplierOptions;
+    final products = _productOptions;
 
     return Container(
       width: double.infinity,
@@ -1434,7 +1566,9 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                     child: DropdownButton<String>(
                       value: _selectedSupplier,
                       hint: Text(
-                        'Select supplier…',
+                        suppliers.isEmpty
+                            ? 'No suppliers yet — add suppliers first'
+                            : 'Select supplier…',
                         style: theme.bodySmall.override(
                           fontFamily: theme.bodySmallFamily,
                           color: theme.secondaryText,
@@ -1548,7 +1682,9 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                                     ? null
                                     : _lineItems[idx].product,
                                 hint: Text(
-                                  'Product…',
+                                  products.isEmpty
+                                      ? 'No stock items yet'
+                                      : 'Product…',
                                   style: TextStyle(
                                       fontSize: 12, color: theme.secondaryText),
                                 ),
