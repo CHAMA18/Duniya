@@ -9,6 +9,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
+import '/components/list_grid_toggle.dart';
 import '/index.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:excel/excel.dart' hide Border;
@@ -49,6 +50,36 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   /// Pharmacy display mode: 'list' (full-width rows) or 'grid'
   /// (compact cards in a responsive grid).
   String _viewMode = 'list';
+
+  /// Per-pharmacy stock stats for the grid view (at-a-glance triage):
+  /// pharmacy name -> (stock value, SKU count). Loaded lazily once from
+  /// a single all-network Stock query — this page is Pulse-only, so the
+  /// unscoped query is permitted.
+  Map<String, (double, int)> _stockStats = {};
+  bool _stockStatsLoaded = false;
+
+  Future<void> _loadStockStats() async {
+    if (_stockStatsLoaded) return;
+    _stockStatsLoaded = true;
+    try {
+      final stocks = await queryStockRecordOnce();
+      final stats = <String, (double, int)>{};
+      for (final s in stocks) {
+        final key = s.name.trim().toLowerCase();
+        if (key.isEmpty) continue;
+        // Stock rows carry the pharmacy NAME in the Pharmacy field.
+        final pharmacyKey = (s.pharmacy ?? '').trim().toLowerCase();
+        if (pharmacyKey.isEmpty) continue;
+        final value = s.quantity * s.price;
+        final prev = stats[pharmacyKey] ?? (0.0, 0);
+        stats[pharmacyKey] = (prev.$1 + value, prev.$2 + 1);
+      }
+      if (!mounted) return;
+      safeSetState(() => _stockStats = stats);
+    } catch (_) {
+      // Stats are enrichment only — grid works without them.
+    }
+  }
 
   @override
   void initState() {
@@ -1403,87 +1434,23 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   /// Segmented list/grid toggle. Grid shows compact cards in a
   /// responsive grid; list keeps the detailed full-width rows.
   Widget _buildViewToggle() {
-    final theme = FlutterFlowTheme.of(context);
-    Widget segment(String mode, IconData icon, String label, String tooltip) {
-      final selected = _viewMode == mode;
-      return Tooltip(
-        message: tooltip,
-        child: InkWell(
-          onTap: () => safeSetState(() => _viewMode = mode),
-          borderRadius: BorderRadius.circular(8.0),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-            decoration: BoxDecoration(
-              color: selected ? theme.primary : Colors.transparent,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  size: 15.0,
-                  color: selected ? Colors.white : theme.secondaryText,
-                ),
-                const SizedBox(width: 6.0),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: selected ? Colors.white : theme.secondaryText,
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(3.0),
-      decoration: BoxDecoration(
-        color: theme.primaryBackground,
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: theme.alternate, width: 1.0),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          segment('list', Icons.view_list_rounded, 'List', 'List view'),
-          segment('grid', Icons.grid_view_rounded, 'Grid', 'Grid view'),
-        ],
-      ),
+    return ListGridToggle(
+      value: _viewMode,
+      onChanged: (mode) {
+        if (mode == 'grid') _loadStockStats();
+        safeSetState(() => _viewMode = mode);
+      },
     );
   }
 
-  /// Responsive grid of compact pharmacy cards. Column count adapts
-  /// to the available width (min card width 240px).
+  /// Responsive grid of compact pharmacy cards (shared component).
   Widget _buildPharmacyGrid(
       List<PharmacyRecord> pharmacies, Map<String, UserRecord> ownerMap) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const gap = 14.0;
-        const minCardWidth = 240.0;
-        var columns =
-            ((constraints.maxWidth + gap) / (minCardWidth + gap)).floor();
-        if (columns < 1) columns = 1;
-        final cardWidth =
-            (constraints.maxWidth - (columns - 1) * gap) / columns;
-
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: pharmacies
-              .map((p) => SizedBox(
-                    width: cardWidth,
-                    child: _buildPharmacyGridCard(p, ownerMap),
-                  ))
-              .toList(),
-        );
-      },
+    return ResponsiveCardGrid(
+      minCardWidth: 240.0,
+      children: pharmacies
+          .map((p) => _buildPharmacyGridCard(p, ownerMap))
+          .toList(),
     );
   }
 
@@ -1657,12 +1624,83 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
                     ),
                   ],
                 ),
+                // At-a-glance triage stats: stock value + SKU count.
+                if (_stockStats.isNotEmpty) ...[
+                  const SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: theme.primary.withAlpha(20),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.payments_outlined,
+                                size: 12.0, color: theme.primary),
+                            const SizedBox(width: 4.0),
+                            Text(
+                              _formatStockValue(
+                                  _stockStats[pharmacy.name.toLowerCase()]
+                                      ?.$1),
+                              style: TextStyle(
+                                color: theme.primary,
+                                fontSize: 11.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 6.0),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: theme.secondaryText.withAlpha(24),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.inventory_2_outlined,
+                                size: 12.0, color: theme.secondaryText),
+                            const SizedBox(width: 4.0),
+                            Text(
+                              '${_stockStats[pharmacy.name.toLowerCase()]?.$2 ?? 0} SKUs',
+                              style: TextStyle(
+                                color: theme.secondaryText,
+                                fontSize: 11.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// Compact currency for the grid chips: K1.2K / K372 / K12.4M.
+  String _formatStockValue(double? value) {
+    if (value == null) return 'K0';
+    if (value >= 1000000) {
+      return 'K${(value / 1000000).toStringAsFixed(1)}M';
+    }
+    if (value >= 1000) {
+      return 'K${(value / 1000).toStringAsFixed(1)}K';
+    }
+    return 'K${value.round()}';
   }
 
   Widget _buildPharmacyCard(

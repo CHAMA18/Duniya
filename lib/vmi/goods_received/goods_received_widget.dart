@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/components/list_grid_toggle.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -43,6 +44,9 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
 
   // Status filter pills
   String _statusFilter = 'All';
+
+  /// Receipts display mode: 'list' (stacked rows) or 'grid' (cards).
+  String _viewMode = 'list';
 
   // KPI cache
   int _lastTotal = 0;
@@ -1051,6 +1055,14 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
                   ),
                 ),
                 const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: ListGridToggle(
+                    value: _viewMode,
+                    onChanged: (mode) =>
+                        safeSetState(() => _viewMode = mode),
+                  ),
+                ),
                 FFButtonWidget(
                   onPressed: () async {
                     context.pushNamed(GoodsReceivedDetailWidget.routeName);
@@ -1076,12 +1088,23 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
             ),
           ),
 
-          // Cards list
-          ...receipts.asMap().entries.map((entry) {
-            final index = entry.key;
-            final receipt = entry.value;
-            return _buildReceiptCard(receipt, index, receipts.length);
-          }),
+          // Cards list (rows or grid)
+          if (_viewMode == 'list') ...[
+            ...receipts.asMap().entries.map((entry) {
+              final index = entry.key;
+              final receipt = entry.value;
+              return _buildReceiptCard(receipt, index, receipts.length);
+            }),
+          ] else
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ResponsiveCardGrid(
+                minCardWidth: 250.0,
+                children: receipts
+                    .map((r) => _buildReceiptGridCard(r))
+                    .toList(),
+              ),
+            ),
 
           // Footer
           Container(
@@ -1476,6 +1499,213 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
   // ═══════════════════════════════════════════════════════════════
   //   EMPTY STATE
   // ═══════════════════════════════════════════════════════════════
+
+
+  /// Compact grid variant of the receipt card for at-a-glance triage:
+  /// status icon, delivery note, status badge, pharmacy, dates and a
+  /// discrepancy flag — same navigation as the row card.
+  Widget _buildReceiptGridCard(GoodsReceivedRecord receipt) {
+    final theme = FlutterFlowTheme.of(context);
+    final status = receipt.status;
+    final statusColor = _statusColor(status);
+    final statusBg = _statusBgColor(status);
+    final statusIcon = _statusIcon(status);
+
+    final deliveryStr = receipt.hasDeliveryDate()
+        ? dateTimeFormat('yMMMd', receipt.deliveryDate!,
+            locale: FFLocalizations.of(context).languageCode)
+        : 'No delivery date';
+    final receivedStr = receipt.hasReceivedDate()
+        ? dateTimeFormat('yMMMd · jm', receipt.receivedDate!,
+            locale: FFLocalizations.of(context).languageCode)
+        : 'Not yet received';
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () async {
+          context.pushNamed(
+            GoodsReceivedDetailWidget.routeName,
+            pathParameters: {
+              'docRef': receipt.reference.path,
+            },
+          );
+        },
+        borderRadius: BorderRadius.circular(16.0),
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: theme.secondaryBackground,
+            borderRadius: BorderRadius.circular(16.0),
+            border: Border.all(color: theme.alternate, width: 1.0),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF111827).withAlpha(8),
+                blurRadius: 12.0,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Status icon + badge
+              Row(
+                children: [
+                  Container(
+                    width: 42.0,
+                    height: 42.0,
+                    decoration: BoxDecoration(
+                      color: statusBg,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Icon(statusIcon, color: statusColor, size: 21.0),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 4.0),
+                    decoration: BoxDecoration(
+                      color: statusBg,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      status.toUpperCase(),
+                      style: TextStyle(
+                        color: statusColor,
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              // Delivery note number
+              Text(
+                receipt.deliveryNoteNumber.isEmpty
+                    ? 'Receipt'
+                    : receipt.deliveryNoteNumber,
+                style: theme.titleMedium.override(
+                  fontFamily: theme.titleMediumFamily,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                  fontSize: 15.0,
+                  useGoogleFonts: !theme.titleMediumIsCustom,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6.0),
+              // Pharmacy
+              FutureBuilder<PharmacyRecord?>(
+                future: receipt.outletId != null
+                    ? PharmacyRecord.getDocumentOnce(receipt.outletId!)
+                    : Future.value(null),
+                builder: (context, pharmacySnapshot) {
+                  final pharmacyName = (pharmacySnapshot.hasData &&
+                          pharmacySnapshot.data != null &&
+                          pharmacySnapshot.data!.name.isNotEmpty)
+                      ? pharmacySnapshot.data!.name
+                      : null;
+                  return Row(
+                    children: [
+                      Icon(Icons.local_pharmacy_outlined,
+                          size: 13.0, color: theme.secondaryText),
+                      const SizedBox(width: 4.0),
+                      Expanded(
+                        child: Text(
+                          pharmacyName ?? 'Pharmacy not linked',
+                          style: TextStyle(
+                            color: theme.secondaryText,
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 4.0),
+              // Dates
+              Row(
+                children: [
+                  Icon(Icons.local_shipping_outlined,
+                      size: 13.0, color: theme.secondaryText),
+                  const SizedBox(width: 4.0),
+                  Expanded(
+                    child: Text(
+                      deliveryStr,
+                      style: TextStyle(
+                        color: theme.secondaryText,
+                        fontSize: 11.0,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 3.0),
+              Row(
+                children: [
+                  Icon(Icons.task_alt_outlined,
+                      size: 13.0, color: theme.secondaryText),
+                  const SizedBox(width: 4.0),
+                  Expanded(
+                    child: Text(
+                      receivedStr,
+                      style: TextStyle(
+                        color: theme.secondaryText,
+                        fontSize: 11.0,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              // Discrepancy flag
+              if ((receipt.discrepancies ?? '').isNotEmpty) ...[
+                const SizedBox(height: 8.0),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 4.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF59E0B).withAlpha(26),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.warning_amber_rounded,
+                          size: 12.0, color: Color(0xFFF59E0B)),
+                      const SizedBox(width: 4.0),
+                      Flexible(
+                        child: Text(
+                          'Discrepancy',
+                          style: TextStyle(
+                            color: theme.secondaryText,
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildEmptyState() {
     final theme = FlutterFlowTheme.of(context);

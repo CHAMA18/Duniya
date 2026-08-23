@@ -3,6 +3,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
+import '/components/list_grid_toggle.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,9 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
   // Filter + sort state
   String _statusFilter = 'active'; // 'active' | 'inactive' | 'all'
   String _sortBy = 'name'; // 'name' | 'value' | 'lead' | 'created'
+
+  /// Supplier display mode: 'list' (table rows) or 'grid' (triage cards).
+  String _viewMode = 'list';
 
   // Cached list of derived (legacy) suppliers — populated from the
   // Stock collection when the Supplier collection is empty.
@@ -411,12 +415,41 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                                       _searchFilterBar(isWide: isWide),
                                       const SizedBox(height: 18),
 
-                                      // ── Supplier Table ──
+                                      // ── Supplier list (table or grid) ──
                                       if (filtered.isEmpty)
                                         _emptyCard(
                                             'No suppliers found matching your filters.')
-                                      else
-                                        _supplierTable(filtered, isWide),
+                                      else ...[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10.0),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  '${filtered.length} supplier${filtered.length == 1 ? '' : 's'}',
+                                                  style: TextStyle(
+                                                    color: _textSec,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                              ListGridToggle(
+                                                value: _viewMode,
+                                                onChanged: (mode) =>
+                                                    safeSetState(
+                                                        () => _viewMode = mode),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        if (_viewMode == 'list')
+                                          _supplierTable(filtered, isWide)
+                                        else
+                                          _supplierGrid(filtered),
+                                      ],
                                     ]),
                               ),
                             ),
@@ -783,6 +816,195 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                 value: 'created', child: Text('Sort: Recently added')),
           ],
           onChanged: (v) => safeSetState(() => _sortBy = v ?? 'name'),
+        ),
+      ),
+    );
+  }
+
+
+  /// Responsive grid of supplier triage cards: name, status, category,
+  /// contact, linked SKUs and catalogue value — same actions as the
+  /// table rows via the detail drawer.
+  Widget _supplierGrid(List<SupplierDisplay> suppliers) {
+    return ResponsiveCardGrid(
+      minCardWidth: 250.0,
+      children: suppliers.map(_supplierGridCard).toList(),
+    );
+  }
+
+  Widget _supplierGridCard(SupplierDisplay s) {
+    final statusColor = s.status == 'active'
+        ? _green
+        : s.status == 'blacklisted'
+            ? _red
+            : _textSec;
+    final statusBg = s.status == 'active'
+        ? _green.withAlpha(26)
+        : s.status == 'blacklisted'
+            ? _red.withAlpha(26)
+            : _textSec.withAlpha(26);
+
+    return InkWell(
+      onTap: () => _openDetailDrawer(s),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: _surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: _border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Avatar + status
+            Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [_purpleDark, _purple],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.business_rounded,
+                      color: Colors.white, size: 21),
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: statusBg,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: statusColor.withAlpha(60)),
+                  ),
+                  child: Text(
+                    s.status.toUpperCase(),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Name (+ derived tag)
+            Text(
+              s.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.w700, color: _text),
+            ),
+            if (s.isDerived) ...[
+              const SizedBox(height: 4),
+              Text('Derived from stock history',
+                  style: TextStyle(fontSize: 10.5, color: _textSec)),
+            ],
+            if ((s.category ?? '').isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  Icon(Icons.category_rounded, size: 13, color: _textSec),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      s.category!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 11.5, color: _textSec),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if ((s.email ?? '').isNotEmpty || (s.phone ?? '').isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Icon(Icons.alternate_email_rounded, size: 13, color: _textSec),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      (s.email ?? s.phone ?? ''),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 11.5, color: _textSec),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 10),
+            // Triage stats: SKUs + catalogue value
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _purple.withAlpha(20),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.inventory_2_outlined,
+                          size: 12, color: _purple),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${s.linkedProducts.length} SKU${s.linkedProducts.length == 1 ? '' : 's'}',
+                        style: TextStyle(
+                          color: _purple,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _green.withAlpha(20),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.payments_outlined, size: 12, color: _green),
+                      const SizedBox(width: 4),
+                      Text(
+                        'K${formatNumber(s.totalValue, formatType: FormatType.compact)}',
+                        style: TextStyle(
+                          color: _green,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (s.leadTimeDays > 0) ...[
+                  const SizedBox(width: 6),
+                  Text(
+                    '${s.leadTimeDays}d lead',
+                    style: TextStyle(fontSize: 10.5, color: _textSec),
+                  ),
+                ],
+              ],
+            ),
+          ],
         ),
       ),
     );
