@@ -46,6 +46,10 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   /// Active status filter pill. One of: 'All', 'Active', 'Pending', 'Rejected'.
   String _statusFilter = 'All';
 
+  /// Pharmacy display mode: 'list' (full-width rows) or 'grid'
+  /// (compact cards in a responsive grid).
+  String _viewMode = 'list';
+
   @override
   void initState() {
     super.initState();
@@ -1366,22 +1370,298 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Count + view toggle row.
         Padding(
           padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
-          child: Text(
-            '${pharmacies.length} ${pharmacies.length == 1 ? 'pharmacy' : 'pharmacies'}',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).secondaryText,
-              fontSize: 12.0,
-              fontWeight: FontWeight.w600,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${pharmacies.length} ${pharmacies.length == 1 ? 'pharmacy' : 'pharmacies'}',
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).secondaryText,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              _buildViewToggle(),
+            ],
+          ),
+        ),
+        if (_viewMode == 'list')
+          Column(
+            children:
+                pharmacies.map((p) => _buildPharmacyCard(p, ownerMap)).toList(),
+          )
+        else
+          _buildPharmacyGrid(pharmacies, ownerMap),
+      ],
+    );
+  }
+
+  /// Segmented list/grid toggle. Grid shows compact cards in a
+  /// responsive grid; list keeps the detailed full-width rows.
+  Widget _buildViewToggle() {
+    final theme = FlutterFlowTheme.of(context);
+    Widget segment(String mode, IconData icon, String label, String tooltip) {
+      final selected = _viewMode == mode;
+      return Tooltip(
+        message: tooltip,
+        child: InkWell(
+          onTap: () => safeSetState(() => _viewMode = mode),
+          borderRadius: BorderRadius.circular(8.0),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+            decoration: BoxDecoration(
+              color: selected ? theme.primary : Colors.transparent,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 15.0,
+                  color: selected ? Colors.white : theme.secondaryText,
+                ),
+                const SizedBox(width: 6.0),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: selected ? Colors.white : theme.secondaryText,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        Column(
-          children:
-              pharmacies.map((p) => _buildPharmacyCard(p, ownerMap)).toList(),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(3.0),
+      decoration: BoxDecoration(
+        color: theme.primaryBackground,
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(color: theme.alternate, width: 1.0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          segment('list', Icons.view_list_rounded, 'List', 'List view'),
+          segment('grid', Icons.grid_view_rounded, 'Grid', 'Grid view'),
+        ],
+      ),
+    );
+  }
+
+  /// Responsive grid of compact pharmacy cards. Column count adapts
+  /// to the available width (min card width 240px).
+  Widget _buildPharmacyGrid(
+      List<PharmacyRecord> pharmacies, Map<String, UserRecord> ownerMap) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const gap = 14.0;
+        const minCardWidth = 240.0;
+        var columns =
+            ((constraints.maxWidth + gap) / (minCardWidth + gap)).floor();
+        if (columns < 1) columns = 1;
+        final cardWidth =
+            (constraints.maxWidth - (columns - 1) * gap) / columns;
+
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: pharmacies
+              .map((p) => SizedBox(
+                    width: cardWidth,
+                    child: _buildPharmacyGridCard(p, ownerMap),
+                  ))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  /// Compact grid variant of the pharmacy card: larger avatar block on
+  /// top, name, status badge, address and owner — same navigation as
+  /// the list card.
+  Widget _buildPharmacyGridCard(
+      PharmacyRecord pharmacy, Map<String, UserRecord> ownerMap) {
+    final theme = FlutterFlowTheme.of(context);
+    final status = pharmacy.networkStatus;
+    final statusColor = _statusColor(status);
+    final statusBg = _statusBgColor(status);
+    final owner =
+        pharmacy.userID != null ? ownerMap[pharmacy.userID!.path] : null;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.secondaryBackground,
+        borderRadius: BorderRadius.circular(16.0),
+        border: Border.all(color: theme.alternate, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF111827).withAlpha(8),
+            blurRadius: 12.0,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16.0),
+          onTap: () {
+            context.pushNamed(
+              PharmacyDetailWidget.routeName,
+              queryParameters: {
+                'pharmacyName':
+                    serializeParam(pharmacy.name, ParamType.String),
+                'pharmacyReference': serializeParam(
+                  pharmacy.reference,
+                  ParamType.DocumentReference,
+                ),
+              }.withoutNulls,
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Avatar + status badge
+                Row(
+                  children: [
+                    Container(
+                      width: 44.0,
+                      height: 44.0,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [theme.primary, theme.secondary],
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: const Icon(Icons.local_pharmacy_rounded,
+                          color: Colors.white, size: 22.0),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                      decoration: BoxDecoration(
+                        color: statusBg,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(
+                            color: statusColor.withAlpha(60), width: 1.0),
+                      ),
+                      child: Text(
+                        _statusLabel(status).toUpperCase(),
+                        style: TextStyle(
+                          color: statusColor,
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12.0),
+                // Name
+                Text(
+                  pharmacy.name,
+                  style: theme.titleMedium.override(
+                    fontFamily: theme.titleMediumFamily,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
+                    fontSize: 15.0,
+                    useGoogleFonts: !theme.titleMediumIsCustom,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (pharmacy.address.isNotEmpty) ...[
+                  const SizedBox(height: 6.0),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.location_on_outlined,
+                          size: 13.0, color: theme.secondaryText),
+                      const SizedBox(width: 4.0),
+                      Expanded(
+                        child: Text(
+                          pharmacy.address,
+                          style: theme.bodySmall.override(
+                            fontFamily: theme.bodySmallFamily,
+                            color: theme.secondaryText,
+                            fontSize: 11.5,
+                            letterSpacing: 0.0,
+                            useGoogleFonts: !theme.bodySmallIsCustom,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 10.0),
+                // Owner
+                Row(
+                  children: [
+                    Icon(Icons.person_outline_rounded,
+                        size: 13.0, color: theme.secondaryText),
+                    const SizedBox(width: 4.0),
+                    Expanded(
+                      child: Text(
+                        owner == null
+                            ? 'Owner not linked'
+                            : (owner.email.isNotEmpty
+                                ? owner.email
+                                : (owner.displayName.isNotEmpty
+                                    ? owner.displayName
+                                    : 'Unknown owner')),
+                        style: TextStyle(
+                          color: owner == null
+                              ? theme.secondaryText
+                              : theme.primaryText,
+                          fontSize: 11.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6.0),
+                // Registered date
+                Row(
+                  children: [
+                    Icon(Icons.calendar_today_outlined,
+                        size: 13.0, color: theme.secondaryText),
+                    const SizedBox(width: 4.0),
+                    Text(
+                      'Registered ${_formatDate(pharmacy.registeredAt)}',
+                      style: TextStyle(
+                        color: theme.secondaryText,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-      ],
+      ),
     );
   }
 
