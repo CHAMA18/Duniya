@@ -572,15 +572,40 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
                                       const SizedBox(height: 22),
 
                                       // ── Inventory pulse ──
-                                      GridView.count(
-                                        crossAxisCount: isWide ? 4 : 2,
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        mainAxisSpacing: 14,
-                                        crossAxisSpacing: 14,
-                                        childAspectRatio: isWide ? 1.72 : 1.28,
-                                        children: [
+                                      // All four KPI cards on ONE row
+                                      // whenever each can be >= 215px
+                                      // wide; 2x2 only on genuinely
+                                      // narrow screens. Card height is
+                                      // fixed by content (~152px for
+                                      // icon row + value + subtitle) so
+                                      // nothing clips at any width,
+                                      // instead of a fixed aspect ratio.
+                                      Builder(builder: (context) {
+                                        final gridWidth =
+                                            constraints.maxWidth -
+                                                (isWide ? 64.0 : 32.0);
+                                        const kpiGap = 14.0;
+                                        const kpiMinCardWidth = 215.0;
+                                        final kpiCols = gridWidth >=
+                                                4 * kpiMinCardWidth +
+                                                    3 * kpiGap
+                                            ? 4
+                                            : 2;
+                                        final kpiCardWidth =
+                                            (gridWidth -
+                                                    (kpiCols - 1) * kpiGap) /
+                                                kpiCols;
+                                        const kpiCardHeight = 156.0;
+                                        return GridView.count(
+                                          crossAxisCount: kpiCols,
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          mainAxisSpacing: kpiGap,
+                                          crossAxisSpacing: kpiGap,
+                                          childAspectRatio:
+                                              kpiCardWidth / kpiCardHeight,
+                                          children: [
                                           _kpi(
                                               'Total Stock Value',
                                               _formatCurrency(totalValue),
@@ -613,8 +638,9 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
                                               _amber,
                                               const Color(0xFFFFF7ED),
                                               subtitle: 'Within 30 days'),
-                                        ],
-                                      ),
+                                          ],
+                                        );
+                                      }),
                                       const SizedBox(height: 22),
 
                                       if (stocks.isEmpty) ...[
