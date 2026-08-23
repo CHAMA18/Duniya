@@ -1,0 +1,22 @@
+{
+  "name": "pulse-remotion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pulse — cinematic ambient background video (Remotion)",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:mp4": "remotion render src/index.ts PulseField out/pulse-bg.mp4 --codec=h264 --crf=24 --concurrency=2",
+    "render:webm": "remotion render src/index.ts PulseField out/pulse-bg.webm --codec=vp9 --crf=32 --concurrency=2",
+    "still": "remotion still src/index.ts PulseField out/pulse-bg-poster.jpg --frame=0 --jpeg-quality=90"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.220",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.220"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.4"
+  }
+}

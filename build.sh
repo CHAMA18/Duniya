@@ -251,6 +251,25 @@ else
 fi
 
 # ---------------------------------------------------------------------
+# 8b. Copy the hero heartbeat film (Remotion-rendered ambient loop)
+#     used as the background of the landing hero and the login page.
+#     Browser picks WebM (Chromium/Firefox) or MP4 (Safari) via
+#     <source> order; the JPG is the instant-paint poster and the
+#     mobile/data-saver/reduced-motion fallback. Set
+#     PULSE_HERO_FILM_SKIP=1 to skip during local dev.
+# ---------------------------------------------------------------------
+if [[ "${PULSE_HERO_FILM_SKIP:-0}" != "1" ]]; then
+  for filmfile in pulse-hero-bg.webm pulse-hero-bg.mp4 pulse-hero-bg.jpg; do
+    if [[ -f "web/${filmfile}" ]]; then
+      cp "web/${filmfile}" "build/web/${filmfile}"
+      echo "==> Copied web/${filmfile} -> build/web/${filmfile} ($(du -h "web/${filmfile}" | cut -f1))"
+    else
+      echo "==> WARN: web/${filmfile} not found — hero film falls back to CSS aurora."
+    fi
+  done
+fi
+
+# ---------------------------------------------------------------------
 # 9. Copy the Windows + macOS launcher ZIPs so the landing page
 #    download buttons can serve them directly from the static site
 #    (no GitHub Releases dependency). Each ZIP contains a launcher

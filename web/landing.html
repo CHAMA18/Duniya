@@ -220,6 +220,38 @@
       mask-image: radial-gradient(ellipse 72% 62% at 50% 34%, black 18%, transparent 100%);
     }
 
+    /* ── Hero film — cinematic heartbeat background ─────────────── */
+    .hero-film {
+      position: absolute; inset: 0; z-index: 1; overflow: hidden;
+      background: var(--bg-deep); /* poster paints here while video loads */
+    }
+    .hero-film video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transform: scale(1.04);
+      transition: opacity 1.6s var(--ease), transform 2.4s var(--ease);
+      will-change: opacity, transform;
+    }
+    .hero-film video.film-live { opacity: 0.94; transform: scale(1); }
+    /* Melt the film's bottom edge into the page below the hero */
+    .hero-film-fade {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(7,7,11,0.30) 0%, transparent 22%),
+        linear-gradient(0deg, var(--bg-deep) 2%, rgba(7,7,11,0.55) 16%, transparent 44%);
+    }
+    /* Once the film is live, retire the CSS aurora/grid beneath it */
+    .hero.film-live .aurora, .hero.film-live .hero-grid { opacity: 0; transition: opacity 1.2s var(--ease); }
+    /* Save data on small screens: poster only, no video download */
+    @media (max-width: 768px) {
+      .hero-film video { display: none; }
+      .hero-film { background: var(--bg-deep) url('pulse-hero-bg.jpg') center / cover no-repeat; }
+    }
+    /* Respect reduced-motion: static poster, no playback */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-film video { display: none; }
+      .hero-film { background: var(--bg-deep) url('pulse-hero-bg.jpg') center / cover no-repeat; }
+    }
+
     .hero-inner { position: relative; z-index: 2; width: min(960px, 92%); margin-inline: auto; text-align: center; }
 
     .hero-badge {
@@ -720,6 +752,15 @@
     <div class="aurora" aria-hidden="true"></div>
     <div class="hero-grid" aria-hidden="true"></div>
 
+    <!-- Cinematic Pulse film — ambient ECG heartbeat background (Remotion) -->
+    <div class="hero-film" aria-hidden="true">
+      <video id="heroFilm" muted loop playsinline preload="auto" poster="pulse-hero-bg.jpg" disablepictureinpicture disableremoteplayback>
+        <source src="pulse-hero-bg.webm" type="video/webm">
+        <source src="pulse-hero-bg.mp4" type="video/mp4">
+      </video>
+      <div class="hero-film-fade"></div>
+    </div>
+
     <div class="hero-inner">
       <div class="hero-badge reveal">
         <span class="dot"></span> Now serving 500+ pharmacies across Africa
@@ -1168,6 +1209,41 @@
       function onScroll() { navbar.classList.toggle('scrolled', window.scrollY > 24); }
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
+
+      /* ── Hero film — ambient heartbeat background ─────────────── */
+      /* Plays only when: visible + not data-saver + not reduced-motion.
+         Pauses off-screen to hand the CPU back; fades in gracefully
+         and retires the CSS aurora/grid once live. */
+      (function () {
+        var film = document.getElementById('heroFilm');
+        var hero = document.querySelector('.hero');
+        if (!film) return;
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var saver = navigator.connection && navigator.connection.saveData;
+        var small = window.matchMedia('(max-width: 768px)').matches;
+        if (reduced || saver || small) return; /* poster stays via CSS */
+
+        var started = false;
+        function goLive() {
+          if (started) return;
+          started = true;
+          film.classList.add('film-live');
+          hero.classList.add('film-live');
+        }
+        film.addEventListener('loadeddata', goLive, { once: true });
+        var p = film.play();
+        if (p && p.catch) p.catch(function () { /* autoplay blocked — poster remains */ });
+
+        if ('IntersectionObserver' in window) {
+          var fo = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { var rp = film.play(); if (rp && rp.catch) rp.catch(function(){}); }
+              else if (!film.paused) { film.pause(); }
+            });
+          }, { threshold: 0.05 });
+          fo.observe(hero);
+        }
+      })();
 
       /* ── Mobile menu ──────────────────────────────────────────── */
       var burger = document.getElementById('burger');

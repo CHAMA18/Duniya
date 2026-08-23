@@ -9,6 +9,7 @@ import '/index.dart';
 import '/components/pulse_logo_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
 import 'login_uni_model.dart';
 export 'login_uni_model.dart';
@@ -29,10 +30,15 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedMode = 0;
 
+  /// Cinematic heartbeat film (Remotion-rendered) behind the auth card.
+  late VideoPlayerController _videoController;
+  bool _videoInitialized = false;
+
   static const Color _primary = Color(0xFFA100FF);
   static const Color _text = Color(0xFF162033);
   static const Color _muted = Color(0xFF5B6478);
   static const Color _line = Color(0xFFD8DCE2);
+  static const Color _ink = Color(0xFF07070B);
 
   Widget _buildBrandLogo({double size = 44.0}) {
     return PulseLogoWidget(
@@ -131,10 +137,25 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
     _model.passwordFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+
+    // Ambient heartbeat film — muted, looping, resilient to failure.
+    _videoController = VideoPlayerController.asset(
+      'assets/videos/pulse_hero_bg.mp4',
+    )
+      ..setLooping(true)
+      ..setVolume(0.0);
+    _videoController.initialize().then((_) {
+      if (!mounted) return;
+      setState(() => _videoInitialized = true);
+      _videoController.play();
+    }).catchError((_) {
+      // Film unavailable — deep-ink gradient fallback remains.
+    });
   }
 
   @override
   void dispose() {
+    _videoController.dispose();
     _model.dispose();
     super.dispose();
   }
@@ -176,6 +197,49 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
     );
   }
 
+  /// Full-bleed cinematic backdrop: deep-ink gradient, the heartbeat
+  /// film (when ready), and a gentle vignette that frames the card.
+  Widget _buildFilmBackground() {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF0B0B12), Color(0xFF07070B), Color(0xFF050508)],
+            ),
+          ),
+        ),
+        if (_videoInitialized)
+          FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _videoController.value.size.width,
+              height: _videoController.value.size.height,
+              child: VideoPlayer(_videoController),
+            ),
+          ),
+        // Cinematic vignette — melts the film edges into the ink.
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: Alignment.center,
+              radius: 1.25,
+              colors: [
+                Colors.transparent,
+                _ink.withValues(alpha: 0.0),
+                _ink.withValues(alpha: 0.62),
+              ],
+              stops: const [0.0, 0.55, 1.0],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Title(
@@ -188,22 +252,51 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
         },
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            top: true,
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18.0,
-                  vertical: 18.0,
-                ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 420.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 48.0),
-                      _buildBrandLogo(size: 88.0),
+          backgroundColor: _ink,
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Cinematic heartbeat film backdrop.
+              _buildFilmBackground(),
+              // Auth surface.
+              SafeArea(
+                top: true,
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18.0,
+                      vertical: 26.0,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 460.0),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28.0,
+                          vertical: 34.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24.0),
+                          boxShadow: [
+                            // Brand glow — the card breathes purple.
+                            BoxShadow(
+                              color: const Color(0xFF9900FF).withValues(
+                                alpha: 0.20,
+                              ),
+                              blurRadius: 70.0,
+                              offset: const Offset(0, 26.0),
+                            ),
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.45),
+                              blurRadius: 40.0,
+                              offset: const Offset(0, 12.0),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildBrandLogo(size: 88.0),
                       const SizedBox(height: 24.0),
                       Text(
                         'Welcome Back',
@@ -955,12 +1048,15 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 40.0),
-                    ],
+                      const SizedBox(height: 34.0),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
