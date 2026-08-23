@@ -41,17 +41,39 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   static const Color _pulsePurple = Color(0xFF9900FF);
   static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _pulsePurpleDeep = Color(0xFF6D28D9);
-  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
-  static const Color _navy900 = Color(0xFF0A192F);
-  static const Color _background = Color(0xFFF8F9FF);
-  static const Color _surface = Color(0xFFF8F9FF);
-  static const Color _surfaceContainerLow = Color(0xFFF3F0FF);
-  static const Color _surfaceContainerHigh = Color(0xFFE9D5FF);
-  static const Color _surfaceContainerHighest = Color(0xFFDDD6FE);
-  static const Color _onSurface = Color(0xFF0B1C30);
-  static const Color _onSurfaceVariant = Color(0xFF434656);
-  static const Color _outline = Color(0xFF737688);
-  static const Color _outlineVariant = Color(0xFFC3C5D9);
+
+  /// Theme-aware palette — dark values mirror the app-wide Pulse dark
+  /// theme (DarkModeTheme: #111827 bg, #1E1B2E surface, #F9FAFB text).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _pulsePurpleLight =>
+      _isDark ? const Color(0xFF2A2140) : Color(0xFFF3F0FF);
+  Color get _navy900 =>
+      _isDark ? const Color(0xFFF9FAFB) : Color(0xFF0A192F);
+  Color get _background =>
+      _isDark ? const Color(0xFF111827) : Color(0xFFF8F9FF);
+  Color get _surface =>
+      _isDark ? const Color(0xFF1E1B2E) : Color(0xFFF8F9FF);
+  Color get _surfaceContainerLow =>
+      _isDark ? const Color(0xFF241E36) : Color(0xFFF3F0FF);
+  Color get _surfaceContainerHigh =>
+      _isDark ? const Color(0xFF33284A) : Color(0xFFE9D5FF);
+  Color get _surfaceContainerHighest =>
+      _isDark ? const Color(0xFF3D2F58) : Color(0xFFDDD6FE);
+  Color get _onSurface =>
+      _isDark ? const Color(0xFFF9FAFB) : Color(0xFF0B1C30);
+  Color get _onSurfaceVariant =>
+      _isDark ? const Color(0xFF9CA3AF) : Color(0xFF434656);
+  Color get _outline =>
+      _isDark ? const Color(0xFF8B8BA3) : Color(0xFF737688);
+  Color get _outlineVariant =>
+      _isDark ? const Color(0xFF3B3B4F) : Color(0xFFC3C5D9);
   static const Color _errorColor = Color(0xFFBA1A1A);
   static const Color _errorContainer = Color(0xFFFFDAD6);
   static const Color _primaryFixed = Color(0xFFF3E8FF);
@@ -416,7 +438,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                             tooltip: 'Manage product',
                             icon: const Icon(Icons.more_horiz_rounded,
                                 size: 20.0),
-                            color: Colors.white,
+                            color: _surface,
                             elevation: 8.0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
@@ -1010,7 +1032,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                   Navigator.pop(dialogContext);
                   _confirmDeleteProduct(context, product);
                 },
-                icon: const Icon(Icons.delete_outline, size: 18.0),
+                icon: Icon(Icons.delete_outline, size: 18.0),
                 label: const Text('Delete'),
                 style: TextButton.styleFrom(foregroundColor: _errorColor),
               ),
@@ -1131,7 +1153,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
           ),
           FilledButton.icon(
             onPressed: () => Navigator.pop(dialogContext, true),
-            icon: const Icon(Icons.delete_outline, size: 18.0),
+            icon: Icon(Icons.delete_outline, size: 18.0),
             label: const Text('Delete'),
             style: FilledButton.styleFrom(
               backgroundColor: _errorColor,
@@ -1498,7 +1520,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         return PopScope(
           canPop: false,
           child: Dialog(
-            backgroundColor: Colors.white,
+            backgroundColor: _surface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
@@ -1552,7 +1574,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
       barrierDismissible: false,
       builder: (dialogContext) {
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: _surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
@@ -1648,7 +1670,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: _surfaceContainerLow,
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
                                       color: _outlineVariant,
@@ -1802,7 +1824,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: _surface,
                   borderRadius: BorderRadius.circular(24.0),
                   boxShadow: [
                     BoxShadow(
@@ -2376,7 +2398,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     return Container(
       padding: const EdgeInsets.fromLTRB(28.0, 12.0, 28.0, 20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: _surface,
         border: Border(
           top: BorderSide(
               color: _outlineVariant.withValues(alpha: 0.5), width: 1.0),
@@ -2392,7 +2414,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                 fontFamily: kAppFontFamily,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w500,
-                color: canSave ? const Color(0xFF059669) : _onSurfaceVariant,
+                color: canSave ? Color(0xFF059669) : _onSurfaceVariant,
               ),
             ),
           ),

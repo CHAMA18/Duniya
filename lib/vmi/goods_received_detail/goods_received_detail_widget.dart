@@ -44,22 +44,44 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   // Design tokens — Pulse purple design system
   static const Color _pulsePurple = Color(0xFF9900FF);
   static const Color _pulsePurpleDark = Color(0xFF7C3AED);
-  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
-  static const Color _bgColor = Color(0xFFF8F9FF);
-  static const Color _surfaceColor = Colors.white;
-  static const Color _textPrimary = Color(0xFF0B1C30);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _textTertiary = Color(0xFF94A3B8);
-  static const Color _borderColor = Color(0xFFE2E8F0);
-  static const Color _borderHoverColor = Color(0xFFCBD5E1);
+
+  /// Theme-aware palette — dark values mirror the app-wide Pulse dark
+  /// theme (DarkModeTheme: #111827 bg, #1E1B2E surface, #F9FAFB text).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _pulsePurpleLight =>
+      _isDark ? const Color(0xFF2A2140) : Color(0xFFF3F0FF);
+  Color get _bgColor =>
+      _isDark ? const Color(0xFF111827) : Color(0xFFF8F9FF);
+  Color get _surfaceColor =>
+      _isDark ? const Color(0xFF1E1B2E) : Colors.white;
+  Color get _textPrimary =>
+      _isDark ? const Color(0xFFF9FAFB) : Color(0xFF0B1C30);
+  Color get _textSecondary =>
+      _isDark ? const Color(0xFF9CA3AF) : Color(0xFF64748B);
+  Color get _textTertiary =>
+      _isDark ? const Color(0xFF9CA3AF) : Color(0xFF94A3B8);
+  Color get _borderColor =>
+      _isDark ? const Color(0xFF3B3B4F) : Color(0xFFE2E8F0);
+  Color get _borderHoverColor =>
+      _isDark ? const Color(0xFF4B4B60) : Color(0xFFCBD5E1);
 
   // Semantic accents (used as accents only — never full backgrounds)
   static const Color _success = Color(0xFF16A34A);
-  static const Color _successBg = Color(0xFFEFFDF5);
+  Color get _successBg =>
+      _isDark ? const Color(0xFF16A34A).withAlpha(30) : Color(0xFFEFFDF5);
   static const Color _warning = Color(0xFFEA580C);
-  static const Color _warningBg = Color(0xFFFFF7ED);
+  Color get _warningBg =>
+      _isDark ? const Color(0xFFEA580C).withAlpha(30) : Color(0xFFFFF7ED);
   static const Color _danger = Color(0xFFDC2626);
-  static const Color _dangerBg = Color(0xFFFEF2F2);
+  Color get _dangerBg =>
+      _isDark ? const Color(0xFFEF4444).withAlpha(30) : Color(0xFFFEF2F2);
 
   DocumentReference? _receiptScopeParent() {
     return AccessControl.parentRef(context) ?? currentUserReference;
@@ -226,7 +248,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
               desktop: false,
             )
                 ? AppBar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: _surfaceColor,
                     elevation: 0,
                     automaticallyImplyLeading: false,
                     leading: FlutterFlowIconButton(
@@ -864,7 +886,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: _surfaceColor,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: _borderColor),
             ),
@@ -1084,7 +1106,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       padding: EdgeInsets.only(bottom: 10),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: _surfaceColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: hasDiscrepancy
@@ -1546,7 +1568,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   Widget _buildStickyFooter() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: _surfaceColor,
         border: Border(
           top: BorderSide(color: _borderColor),
         ),
@@ -1759,7 +1781,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return Dialog(
-              backgroundColor: Colors.white,
+              backgroundColor: _surfaceColor,
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18),
@@ -2255,7 +2277,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       context: context,
       builder: (dialogContext) {
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: _surfaceColor,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
@@ -2770,12 +2792,14 @@ class _MiniStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Color(0xFFF8F9FF),
+        color: isDark ? Color(0xFF1E1B2E) : Color(0xFFF8F9FF),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Color(0xFFE2E8F0)),
+        border: Border.all(
+            color: isDark ? Color(0xFF3B3B4F) : Color(0xFFE2E8F0)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -2783,7 +2807,7 @@ class _MiniStat extends StatelessWidget {
           Text(
             label.toUpperCase(),
             style: TextStyle(
-              color: Color(0xFF94A3B8),
+              color: isDark ? Color(0xFF9CA3AF) : Color(0xFF94A3B8),
               fontSize: 9.5,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -2821,11 +2845,12 @@ class _StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (hasDiscrepancy) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Color(0xFFFFF7ED),
+          color: isDark ? Color(0xFFEA580C).withAlpha(30) : Color(0xFFFFF7ED),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Color(0xFFEA580C).withValues(alpha: 0.25)),
         ),
@@ -2851,7 +2876,7 @@ class _StatusPill extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Color(0xFFEFFDF5),
+        color: isDark ? Color(0xFF16A34A).withAlpha(30) : Color(0xFFEFFDF5),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Color(0xFF16A34A).withValues(alpha: 0.25)),
       ),

@@ -65,34 +65,61 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
 
   // ── Pulse Purple design tokens ──
   static const Color _pulsePurple = Color(0xFF9900FF);
-  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+
+  /// Theme-aware palette — dark values mirror the app-wide Pulse dark
+  /// theme (DarkModeTheme: #111827 bg, #1E1B2E surface, #F9FAFB text).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _pulsePurpleLight =>
+      _isDark ? const Color(0xFF2A2140) : Color(0xFFF3F0FF);
   static const Color _pulsePurpleDark = Color(0xFF7C3AED);
-  static const Color _bgColor = Color(0xFFF8F9FF);
-  static const Color _surfaceColor = Colors.white;
-  static const Color _textPrimary = Color(0xFF0B1C30);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _borderColor = Color(0xFFE2E8F0);
+  Color get _bgColor =>
+      _isDark ? const Color(0xFF111827) : Color(0xFFF8F9FF);
+  Color get _surfaceColor =>
+      _isDark ? const Color(0xFF1E1B2E) : Colors.white;
+  Color get _textPrimary =>
+      _isDark ? const Color(0xFFF9FAFB) : Color(0xFF0B1C30);
+  Color get _textSecondary =>
+      _isDark ? const Color(0xFF9CA3AF) : Color(0xFF64748B);
+  Color get _borderColor =>
+      _isDark ? const Color(0xFF3B3B4F) : Color(0xFFE2E8F0);
 
   // ── Expiry severity colour system ──
   // EXPIRED
-  static const Color _expiredBg = Color(0xFFFEE2E2);
-  static const Color _expiredText = Color(0xFF991B1B);
+  Color get _expiredBg =>
+      _isDark ? const Color(0xFFDC2626).withAlpha(30) : Color(0xFFFEE2E2);
+  Color get _expiredText =>
+      _isDark ? const Color(0xFFFCA5A5) : Color(0xFF991B1B);
   static const Color _expiredBadge = Color(0xFFDC2626);
   // < 30 days
-  static const Color _under30Bg = Color(0xFFFFEDD5);
-  static const Color _under30Text = Color(0xFF9A3412);
+  Color get _under30Bg =>
+      _isDark ? const Color(0xFFEA580C).withAlpha(30) : Color(0xFFFFEDD5);
+  Color get _under30Text =>
+      _isDark ? const Color(0xFFFDBA74) : Color(0xFF9A3412);
   static const Color _under30Badge = Color(0xFFEA580C);
   // 30-60 days
-  static const Color _d30to60Bg = Color(0xFFFEF9C3);
-  static const Color _d30to60Text = Color(0xFF854D0E);
+  Color get _d30to60Bg =>
+      _isDark ? const Color(0xFFCA8A04).withAlpha(30) : Color(0xFFFEF9C3);
+  Color get _d30to60Text =>
+      _isDark ? const Color(0xFFFDE047) : Color(0xFF854D0E);
   static const Color _d30to60Badge = Color(0xFFCA8A04);
   // 60-90 days
-  static const Color _d60to90Bg = Color(0xFFE0F2FE);
-  static const Color _d60to90Text = Color(0xFF1E40AF);
+  Color get _d60to90Bg =>
+      _isDark ? const Color(0xFF2563EB).withAlpha(30) : Color(0xFFE0F2FE);
+  Color get _d60to90Text =>
+      _isDark ? const Color(0xFF93C5FD) : Color(0xFF1E40AF);
   static const Color _d60to90Badge = Color(0xFF2563EB);
   // 90+ days (safe)
-  static const Color _safeBg = Color(0xFFD1FAE5);
-  static const Color _safeText = Color(0xFF065F46);
+  Color get _safeBg =>
+      _isDark ? const Color(0xFF059669).withAlpha(30) : Color(0xFFD1FAE5);
+  Color get _safeText =>
+      _isDark ? const Color(0xFF6EE7B7) : Color(0xFF065F46);
   static const Color _safeBadge = Color(0xFF059669);
 
   // ── Animation controllers for count-up numbers ──
@@ -1081,7 +1108,7 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
                     icon: const Icon(Icons.picture_as_pdf, size: 18.0),
                     label: const Text('Export Report'),
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: _surfaceColor,
                       side: BorderSide(color: _borderColor, width: 1.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(9999.0),

@@ -32,26 +32,51 @@ class _BatchesWidgetState extends State<BatchesWidget> {
 
   // ── Pulse Purple design tokens ──
   static const Color _pulsePurple = Color(0xFF9900FF);
-  static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
+
+  /// Theme-aware palette — dark values mirror the app-wide Pulse dark
+  /// theme (DarkModeTheme: #111827 bg, #1E1B2E surface, #F9FAFB text).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _pulsePurpleLight =>
+      _isDark ? const Color(0xFF2A2140) : Color(0xFFF3F0FF);
   static const Color _pulsePurpleDark = Color(0xFF7C3AED);
-  static const Color _bgColor = Color(0xFFF8F9FF);
-  static const Color _surfaceColor = Colors.white;
-  static const Color _textPrimary = Color(0xFF0B1C30);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _borderColor = Color(0xFFE2E8F0);
+  Color get _bgColor =>
+      _isDark ? const Color(0xFF111827) : Color(0xFFF8F9FF);
+  Color get _surfaceColor =>
+      _isDark ? const Color(0xFF1E1B2E) : Colors.white;
+  Color get _textPrimary =>
+      _isDark ? const Color(0xFFF9FAFB) : Color(0xFF0B1C30);
+  Color get _textSecondary =>
+      _isDark ? const Color(0xFF9CA3AF) : Color(0xFF64748B);
+  Color get _borderColor =>
+      _isDark ? const Color(0xFF3B3B4F) : Color(0xFFE2E8F0);
 
   // Expiry alert colors
-  static const Color _expiredBg = Color(0xFFFEE2E2);
-  static const Color _expiredText = Color(0xFF991B1B);
+  Color get _expiredBg =>
+      _isDark ? const Color(0xFFDC2626).withAlpha(30) : Color(0xFFFEE2E2);
+  Color get _expiredText =>
+      _isDark ? const Color(0xFFFCA5A5) : Color(0xFF991B1B);
   static const Color _expiredBadge = Color(0xFFDC2626);
-  static const Color _threeMoBg = Color(0xFFFFEDD5);
-  static const Color _threeMoText = Color(0xFF9A3412);
+  Color get _threeMoBg =>
+      _isDark ? const Color(0xFFEA580C).withAlpha(30) : Color(0xFFFFEDD5);
+  Color get _threeMoText =>
+      _isDark ? const Color(0xFFFDBA74) : Color(0xFF9A3412);
   static const Color _threeMoBadge = Color(0xFFEA580C);
-  static const Color _sixMoBg = Color(0xFFFEF9C3);
-  static const Color _sixMoText = Color(0xFF854D0E);
+  Color get _sixMoBg =>
+      _isDark ? const Color(0xFFCA8A04).withAlpha(30) : Color(0xFFFEF9C3);
+  Color get _sixMoText =>
+      _isDark ? const Color(0xFFFDE047) : Color(0xFF854D0E);
   static const Color _sixMoBadge = Color(0xFFCA8A04);
-  static const Color _safeBg = Color(0xFFD1FAE5);
-  static const Color _safeText = Color(0xFF065F46);
+  Color get _safeBg =>
+      _isDark ? const Color(0xFF059669).withAlpha(30) : Color(0xFFD1FAE5);
+  Color get _safeText =>
+      _isDark ? const Color(0xFF6EE7B7) : Color(0xFF065F46);
   static const Color _safeBadge = Color(0xFF16A34A);
 
   @override
@@ -82,7 +107,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
   }
 
   Color _getExpiryRowBg(DateTime? expiryDate) {
-    if (expiryDate == null) return Color(0xFFF3F4F6);
+    if (expiryDate == null) {
+      return _isDark ? const Color(0xFF241E36) : Color(0xFFF3F4F6);
+    }
     final diff = expiryDate.difference(DateTime.now()).inDays;
     if (diff < 0) return _expiredBg;
     if (diff < 90) return _threeMoBg;
@@ -100,7 +127,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
   }
 
   Color _getExpiryBadgeBg(DateTime? expiryDate) {
-    if (expiryDate == null) return Color(0xFFE5E7EB);
+    if (expiryDate == null) {
+      return _isDark ? const Color(0xFF3B3B4F) : Color(0xFFE5E7EB);
+    }
     final diff = expiryDate.difference(DateTime.now()).inDays;
     if (diff < 0) return _expiredBadge;
     if (diff < 90) return _threeMoBadge;
@@ -978,7 +1007,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                     size: 18.0),
                                                 label: Text('Export PDF'),
                                                 style: OutlinedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
+                                                  backgroundColor: _surfaceColor,
                                                   side: BorderSide(
                                                       color: _borderColor,
                                                       width: 1.0),

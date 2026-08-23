@@ -60,11 +60,27 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
 
   static const _purple = Color(0xFF9900FF);
   static const _purpleDark = Color(0xFF7C3AED);
-  static const _bg = Color(0xFFF7F3FF);
-  static const _surface = Colors.white;
-  static const _text = Color(0xFF0B1C30);
-  static const _textSec = Color(0xFF64748B);
-  static const _border = Color(0xFFE2E8F0);
+
+  /// Theme-aware surface palette. Light values are the original design;
+  /// dark values mirror the app-wide Pulse dark theme
+  /// (DarkModeTheme: #111827 bg, #1E1B2E surface, #F9FAFB text).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _bg =>
+      _isDark ? const Color(0xFF111827) : const Color(0xFFF7F3FF);
+  Color get _surface => _isDark ? Color(0xFF1E1B2E) : Colors.white;
+  Color get _text =>
+      _isDark ? const Color(0xFFF9FAFB) : const Color(0xFF0B1C30);
+  Color get _textSec =>
+      _isDark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B);
+  Color get _border =>
+      _isDark ? const Color(0xFF3B3B4F) : const Color(0xFFE2E8F0);
   static const _green = Color(0xFF10B981);
   static const _blue = Color(0xFF3B82F6);
   static const _amber = Color(0xFFF59E0B);
@@ -144,7 +160,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                         color: _purpleDark, size: 28),
                     onPressed: () => context.pop(),
                   ),
-                  title: const Text('Supplier Management',
+                  title: Text('Supplier Management',
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 18,
@@ -585,6 +601,9 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
 
   Widget _kpi(String label, String value, IconData icon, Color accent,
       Color tint) {
+    // Light tints are too bright on dark surfaces — reuse the accent
+    // at low alpha so KPI chips stay subtle in dark mode.
+    final chipTint = _isDark ? accent.withAlpha(26) : tint;
     return Container(
       width: 220,
       padding: const EdgeInsets.all(20),
@@ -600,12 +619,12 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                  color: tint, borderRadius: BorderRadius.circular(12)),
+                  color: chipTint, borderRadius: BorderRadius.circular(12)),
               child: Icon(icon, color: accent, size: 22),
             ),
             const SizedBox(height: 14),
             Text(value,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w800,
                     color: _text)),
@@ -806,7 +825,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
             const SizedBox(width: 96),
           ]),
         ),
-        const Divider(height: 1, color: _border),
+        Divider(height: 1, color: _border),
 
         // Rows
         for (final s in suppliers)
@@ -818,7 +837,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
   Widget _tableHeader(String label, {TextAlign align = TextAlign.left}) {
     return Text(label,
         textAlign: align,
-        style: const TextStyle(
+        style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
             color: _textSec,
@@ -855,7 +874,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                     Row(children: [
                       Flexible(
                         child: Text(s.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 color: _text),
@@ -947,7 +966,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
                 child: Text(
                   'K${formatNumber(s.totalValue, formatType: FormatType.compact)}',
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: _text),
@@ -996,12 +1015,13 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
     required IconData icon,
     required String tooltip,
     required VoidCallback onTap,
-    Color color = _textSec,
+    Color? color,
   }) {
+    final actionColor = color ?? _textSec;
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: color.withAlpha(15),
+        color: actionColor.withAlpha(15),
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
@@ -1010,7 +1030,7 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
             width: 32,
             height: 32,
             alignment: Alignment.center,
-            child: Icon(icon, color: color, size: 18),
+            child: Icon(icon, color: actionColor, size: 18),
           ),
         ),
       ),
@@ -1070,7 +1090,10 @@ class _SupplierManagementWidgetState extends State<SupplierManagementWidget> {
   void _openDetailDrawer(SupplierDisplay s) {
     showDialog(
       context: context,
-      builder: (ctx) => _SupplierDetailDialog(supplier: s),
+      builder: (ctx) => _SupplierDetailDialog(
+        supplier: s,
+        isDark: Theme.of(context).brightness == Brightness.dark,
+      ),
     );
   }
 
@@ -1174,10 +1197,25 @@ class _SupplierFormDialog extends StatefulWidget {
 class _SupplierFormDialogState extends State<_SupplierFormDialog> {
   static const _purple = Color(0xFF9900FF);
   static const _purpleDark = Color(0xFF7C3AED);
-  static const _text = Color(0xFF0B1C30);
-  static const _textSec = Color(0xFF64748B);
-  static const _border = Color(0xFFE2E8F0);
-  static const _bg = Color(0xFFF7F3FF);
+
+  /// Theme-aware palette (mirrors DarkModeTheme in flutter_flow_theme.dart).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _text =>
+      _isDark ? const Color(0xFFF9FAFB) : const Color(0xFF0B1C30);
+  Color get _textSec =>
+      _isDark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B);
+  Color get _border =>
+      _isDark ? const Color(0xFF3B3B4F) : const Color(0xFFE2E8F0);
+  Color get _bg =>
+      _isDark ? const Color(0xFF111827) : const Color(0xFFF7F3FF);
+  Color get _surface => _isDark ? Color(0xFF1E1B2E) : Colors.white;
   static const _red = Color(0xFFEF4444);
 
   static const _categories = <String>[
@@ -1299,7 +1337,7 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
             maxWidth: isWide ? 720 : double.infinity,
             maxHeight: MediaQuery.of(context).size.height * 0.92),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: _surface,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(children: [
@@ -1481,7 +1519,7 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
           // Footer
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
                   top: BorderSide(color: _border, width: 1)),
             ),
@@ -1526,7 +1564,7 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6, left: 2),
       child: Text(label,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: _textSec,
@@ -1548,11 +1586,11 @@ class _SupplierFormDialogState extends State<_SupplierFormDialog> {
         fillColor: _bg,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: _border),
+          borderSide: BorderSide(color: _border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: _border),
+          borderSide: BorderSide(color: _border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -1609,9 +1647,23 @@ class _CsvImportDialog extends StatefulWidget {
 class _CsvImportDialogState extends State<_CsvImportDialog> {
   static const _purple = Color(0xFF9900FF);
   static const _purpleDark = Color(0xFF7C3AED);
-  static const _textSec = Color(0xFF64748B);
-  static const _border = Color(0xFFE2E8F0);
-  static const _bg = Color(0xFFF7F3FF);
+
+  /// Theme-aware palette (mirrors DarkModeTheme in flutter_flow_theme.dart).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _textSec =>
+      _isDark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B);
+  Color get _border =>
+      _isDark ? const Color(0xFF3B3B4F) : const Color(0xFFE2E8F0);
+  Color get _bg =>
+      _isDark ? const Color(0xFF111827) : const Color(0xFFF7F3FF);
+  Color get _surface => _isDark ? Color(0xFF1E1B2E) : Colors.white;
   static const _green = Color(0xFF10B981);
   static const _red = Color(0xFFEF4444);
 
@@ -1745,7 +1797,7 @@ class _CsvImportDialogState extends State<_CsvImportDialog> {
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 720, maxHeight: 640),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: _surface,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(children: [
@@ -1791,7 +1843,7 @@ class _CsvImportDialogState extends State<_CsvImportDialog> {
                     Text(
                         'Paste a CSV with the following header (case-insensitive):\n'
                         'Name,ContactName,Email,Phone,Address,City,Country,Category,PaymentTerms,LeadTimeDays,TaxId,Notes,Website,BankAccount',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 13, color: _textSec, height: 1.5)),
                     const SizedBox(height: 12),
                     TextField(
@@ -1805,7 +1857,7 @@ class _CsvImportDialogState extends State<_CsvImportDialog> {
                         fillColor: _bg,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: _border),
+                          borderSide: BorderSide(color: _border),
                         ),
                         contentPadding: const EdgeInsets.all(14),
                       ),
@@ -1825,7 +1877,7 @@ class _CsvImportDialogState extends State<_CsvImportDialog> {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
                   top: BorderSide(color: _border, width: 1)),
             ),
@@ -1874,14 +1926,24 @@ class _CsvImportDialogState extends State<_CsvImportDialog> {
 class _SupplierDetailDialog extends StatelessWidget {
   final SupplierDisplay supplier;
 
-  const _SupplierDetailDialog({required this.supplier});
+  /// Dark-mode flag passed from the opening page so this stateless
+  /// dialog can render the Pulse dark palette.
+  final bool isDark;
+
+  const _SupplierDetailDialog({required this.supplier, this.isDark = false});
 
   static const _purple = Color(0xFF9900FF);
   static const _purpleDark = Color(0xFF7C3AED);
-  static const _text = Color(0xFF0B1C30);
-  static const _textSec = Color(0xFF64748B);
-  static const _border = Color(0xFFE2E8F0);
-  static const _bg = Color(0xFFF7F3FF);
+
+  Color get _text =>
+      isDark ? const Color(0xFFF9FAFB) : const Color(0xFF0B1C30);
+  Color get _textSec =>
+      isDark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B);
+  Color get _border =>
+      isDark ? const Color(0xFF3B3B4F) : const Color(0xFFE2E8F0);
+  Color get _bg =>
+      isDark ? const Color(0xFF111827) : const Color(0xFFF7F3FF);
+  Color get _surface => isDark ? Color(0xFF1E1B2E) : Colors.white;
   static const _green = Color(0xFF10B981);
   static const _red = Color(0xFFEF4444);
   static const _amber = Color(0xFFF59E0B);
@@ -1905,7 +1967,7 @@ class _SupplierDetailDialog extends StatelessWidget {
             maxWidth: isWide ? 640 : double.infinity,
             maxHeight: MediaQuery.of(context).size.height * 0.92),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: _surface,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(children: [
@@ -2041,7 +2103,7 @@ class _SupplierDetailDialog extends StatelessWidget {
                     // Linked products
                     if (s.linkedProducts.isNotEmpty) ...[
                       Text('Linked products (${s.linkedProducts.length})',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
                               color: _textSec,
@@ -2064,7 +2126,7 @@ class _SupplierDetailDialog extends StatelessWidget {
                                 padding: const EdgeInsets.all(12),
                                 child: Text(
                                     '+ ${s.linkedProducts.length - 10} more…',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 13, color: _textSec)),
                               ),
                           ],
@@ -2075,7 +2137,7 @@ class _SupplierDetailDialog extends StatelessWidget {
 
                     // Notes
                     if ((s.notes ?? '').isNotEmpty) ...[
-                      const Text('Notes',
+                      Text('Notes',
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
@@ -2091,7 +2153,7 @@ class _SupplierDetailDialog extends StatelessWidget {
                           border: Border.all(color: _border),
                         ),
                         child: Text(s.notes!,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 13,
                                 color: _text,
                                 height: 1.5)),
@@ -2103,7 +2165,7 @@ class _SupplierDetailDialog extends StatelessWidget {
           // Footer actions
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
                   top: BorderSide(color: _border, width: 1)),
             ),
@@ -2163,14 +2225,14 @@ class _SupplierDetailDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(value,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: _text)),
               const SizedBox(height: 2),
               Text(label,
                   style:
-                      const TextStyle(fontSize: 11, color: _textSec)),
+                      TextStyle(fontSize: 11, color: _textSec)),
             ]),
       ),
     );
@@ -2182,7 +2244,7 @@ class _SupplierDetailDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: _textSec,
@@ -2199,11 +2261,11 @@ class _SupplierDetailDialog extends StatelessWidget {
         SizedBox(
             width: 130,
             child: Text(label,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 13, color: _textSec))),
         Expanded(
           child: Text(value,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14, color: _text, fontWeight: FontWeight.w500)),
         ),
       ]),
@@ -2227,7 +2289,7 @@ class _SupplierDetailDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(p.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: _text),
@@ -2236,12 +2298,12 @@ class _SupplierDetailDialog extends StatelessWidget {
                 if (p.hasSKU())
                   Text('SKU ${p.sku}',
                       style:
-                          const TextStyle(fontSize: 11, color: _textSec)),
+                          TextStyle(fontSize: 11, color: _textSec)),
               ]),
         ),
         Text(
             'K${formatNumber(p.costPrice, formatType: FormatType.compact)}',
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: _text)),

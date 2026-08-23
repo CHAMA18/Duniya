@@ -35,11 +35,27 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
   // Brand tokens
   static const _purple = Color(0xFF9900FF);
   static const _purpleDark = Color(0xFF7C3AED);
-  static const _bg = Color(0xFFF7F3FF);
-  static const _surface = Colors.white;
-  static const _text = Color(0xFF0B1C30);
-  static const _textSec = Color(0xFF64748B);
-  static const _border = Color(0xFFE2E8F0);
+
+  /// Theme-aware surface palette. Light values are the original design;
+  /// dark values mirror the app-wide Pulse dark theme
+  /// (DarkModeTheme: #111827 bg, #1E1B2E surface, #F9FAFB text).
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isDark = Theme.of(context).brightness == Brightness.dark;
+  }
+
+  Color get _bg =>
+      _isDark ? const Color(0xFF111827) : const Color(0xFFF7F3FF);
+  Color get _surface => _isDark ? Color(0xFF1E1B2E) : Colors.white;
+  Color get _text =>
+      _isDark ? const Color(0xFFF9FAFB) : const Color(0xFF0B1C30);
+  Color get _textSec =>
+      _isDark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B);
+  Color get _border =>
+      _isDark ? const Color(0xFF3B3B4F) : const Color(0xFFE2E8F0);
   static const _green = Color(0xFF10B981);
   static const _amber = Color(0xFFF59E0B);
   static const _red = Color(0xFFEF4444);
@@ -78,6 +94,9 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
   Widget _kpi(
       String label, String value, IconData icon, Color accent, Color accentBg,
       {String? subtitle}) {
+    // Light tints are too bright on dark surfaces — reuse the accent
+    // at low alpha so KPI chips stay subtle in dark mode.
+    final chipTint = _isDark ? accent.withAlpha(26) : accentBg;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -100,13 +119,13 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: accentBg, borderRadius: BorderRadius.circular(12)),
+                    color: chipTint, borderRadius: BorderRadius.circular(12)),
                 child: Icon(icon, color: accent, size: 20),
               ),
               const SizedBox(width: 10),
               Expanded(
                   child: Text(label,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: _textSec),
@@ -115,7 +134,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
             ]),
             const SizedBox(height: 16),
             Text(value,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
                     color: _text,
@@ -139,7 +158,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(children: [
         Text(title,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.w700, color: _text)),
         if (trailing != null) ...[const Spacer(), trailing],
       ]),
@@ -179,7 +198,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
               gr.deliveryNoteNumber.isNotEmpty
                   ? gr.deliveryNoteNumber
                   : 'Delivery',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14, fontWeight: FontWeight.w600, color: _text)),
           const SizedBox(height: 2),
           Text(_formatDate(gr.deliveryDate),
@@ -233,7 +252,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(mv.movementType.isNotEmpty ? mv.movementType : 'Movement',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14, fontWeight: FontWeight.w600, color: _text)),
           const SizedBox(height: 2),
           Text(
@@ -270,7 +289,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
                     color: _textSec.withAlpha(160)))),
         Expanded(
             child: Text(stock.name,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 13, fontWeight: FontWeight.w500, color: _text),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis)),
@@ -298,7 +317,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
             width: 70,
             child: Text(_formatCurrency(stock.price * stock.quantity),
                 textAlign: TextAlign.right,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 12, fontWeight: FontWeight.w600, color: _text))),
       ]),
     );
@@ -337,7 +356,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
                       icon: const Icon(Icons.chevron_left_rounded,
                           color: _purpleDark, size: 28),
                       onPressed: () => context.pop()),
-                  title: const Text('Pharmacy Detail',
+                  title: Text('Pharmacy Detail',
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 18,
@@ -877,7 +896,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAF7FF),
+        color: _isDark ? _purple.withAlpha(20) : const Color(0xFFFAF7FF),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: _purple.withAlpha(45)),
       ),
@@ -897,10 +916,10 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
               'Ready to build ${pharmacyName.isEmpty ? 'this pharmacy’' : '$pharmacyName’s'} inventory',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 15, fontWeight: FontWeight.w700, color: _text)),
           const SizedBox(height: 4),
-          const Text(
+          Text(
               'Import a reconciliation or receive the first delivery to unlock stock value, movement history, and expiry monitoring.',
               style: TextStyle(fontSize: 12.5, height: 1.4, color: _textSec)),
         ])),
@@ -929,7 +948,7 @@ class _PharmacyDetailWidgetState extends State<PharmacyDetailWidget> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(title,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14, fontWeight: FontWeight.w700, color: _text)),
           const SizedBox(height: 3),
           Text(detail,
