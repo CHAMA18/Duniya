@@ -16,6 +16,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'duniya_pharmacies_model.dart';
+import 'smart_reconciliation_parser.dart';
 export 'duniya_pharmacies_model.dart';
 
 /// ═══════════════════════════════════════════════════════════════
@@ -216,10 +217,17 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
   /// inventory data. A filename is not a trustworthy source of pharmacy
   /// identity, so the selected document reference is sent to the callable
   /// import instead.
+  ///
+  /// The dialog also surfaces the Smart Import summary: how many rows
+  /// validated, how many were auto-skipped (with the top reasons), and
+  /// whether unit prices were defaulted.
   Future<PharmacyRecord?> _confirmReconciliationTarget({
     required int lineCount,
     required DateTime reconciliationDate,
     required String sourceFileName,
+    List<SmartSkippedRow> skipped = const [],
+    int priceDefaultedCount = 0,
+    String? detectedSheetName,
   }) async {
     final pharmacies = (await queryPharmacyRecordOnce())
         .where((pharmacy) =>
@@ -313,6 +321,87 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
                             ),
                           ),
                         ),
+                        // ── Smart Import summary ──
+                        if (skipped.isNotEmpty ||
+                            priceDefaultedCount > 0 ||
+                            (detectedSheetName?.isNotEmpty ?? false)) ...[
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFFBEB),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: const Color(0xFFFDE68A), width: 1),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(children: [
+                                  const Icon(Icons.auto_awesome_rounded,
+                                      size: 15, color: Color(0xFFB45309)),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Smart Import',
+                                    style: const TextStyle(
+                                      color: Color(0xFF92400E),
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ]),
+                                const SizedBox(height: 6),
+                                if (detectedSheetName?.isNotEmpty ?? false)
+                                  Text(
+                                    'Detected data on sheet “$detectedSheetName” — unrelated rows and columns were ignored.',
+                                    style: const TextStyle(
+                                      color: Color(0xFF92400E),
+                                      fontSize: 12,
+                                      height: 1.45,
+                                    ),
+                                  ),
+                                if (skipped.isNotEmpty) ...[
+                                  Text(
+                                    '${skipped.length} row${skipped.length == 1 ? '' : 's'} skipped:',
+                                    style: const TextStyle(
+                                      color: Color(0xFF92400E),
+                                      fontSize: 12,
+                                      height: 1.45,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  ...skipped
+                                      .take(3)
+                                      .map((s) => Text(
+                                            '• ${s.describe()}',
+                                            style: const TextStyle(
+                                              color: Color(0xFF92400E),
+                                              fontSize: 11.5,
+                                              height: 1.5,
+                                            ),
+                                          )),
+                                  if (skipped.length > 3)
+                                    Text(
+                                      '• +${skipped.length - 3} more',
+                                      style: const TextStyle(
+                                        color: Color(0xFF92400E),
+                                        fontSize: 11.5,
+                                      ),
+                                    ),
+                                ],
+                                if (priceDefaultedCount > 0)
+                                  Text(
+                                    '• Unit price defaulted to 0 on $priceDefaultedCount row${priceDefaultedCount == 1 ? '' : 's'} (no readable price found).',
+                                    style: const TextStyle(
+                                      color: Color(0xFF92400E),
+                                      fontSize: 11.5,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 20),
                         const Text(
                           'Approved pharmacy',
@@ -396,11 +485,18 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     );
   }
 
+  /// Smart Import: picks an .xlsx or .csv reconciliation export and
+  /// imports every row that matches the expected format — the sheet,
+  /// the header row and the columns are auto-detected (with common
+  /// header-name variants), irrelevant rows (blank lines, section
+  /// headings, notes, grand totals) and broken rows are skipped with
+  /// visible reasons instead of failing the whole import, and missing
+  /// linear totals are derived where possible.
   Future<void> _importSosMpiloReconciliation() async {
     try {
       final selection = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: const ['xlsx'],
+        allowedExtensions: const ['xlsx', 'csv'],
         withData: true,
       );
       if (selection == null || selection.files.isEmpty) return;
@@ -409,183 +505,73 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
       final reconciliationDate = _reconciliationDateFromFileName(file.name);
       final bytes = file.bytes;
       if (bytes == null)
-        throw StateError('The selected workbook could not be read.');
+        throw StateError('The selected file could not be read.');
 
       // File size guard — prevent browser freeze on very large workbooks.
       if (bytes.length > 10 * 1024 * 1024) {
         throw StateError(
-            'The workbook is too large (${(bytes.length / 1024 / 1024).toStringAsFixed(1)}MB). '
-            'Maximum file size is 10MB. Please split the workbook and import in batches.');
+            'The file is too large (${(bytes.length / 1024 / 1024).toStringAsFixed(1)}MB). '
+                'Maximum file size is 10MB. Please split it and import in batches.');
       }
 
-      final workbook = Excel.decodeBytes(bytes);
-      final sheet = workbook.tables['Recon Final'] ??
-          (workbook.tables.isEmpty ? null : workbook.tables.values.first);
-      if (sheet == null || sheet.rows.isEmpty) {
-        throw StateError('The reconciliation worksheet is empty.');
+      // ── Read every sheet into plain string rows ──────────────────
+      // CSV files become a single pseudo-sheet; XLSX workbooks expose
+      // every worksheet so the detector can pick the data sheet itself.
+      final Map<String, List<List<String>>> sheets;
+      final isCsv = file.name.toLowerCase().endsWith('.csv');
+      if (isCsv) {
+        sheets = {
+          'CSV import': SmartReconciliationParser.parseCsv(
+              String.fromCharCodes(bytes)),
+        };
+      } else {
+        final workbook = Excel.decodeBytes(bytes);
+        sheets = {
+          for (final entry in workbook.tables.entries)
+            entry.key: [
+              for (final row in entry.value.rows)
+                [
+                  for (var i = 0; i < row.length; i++)
+                    row[i]?.value?.toString().trim() ?? ''
+                ],
+            ],
+        };
+      }
+      if (sheets.isEmpty || sheets.values.every((rows) => rows.isEmpty)) {
+        throw StateError('The file does not contain any readable rows.');
       }
 
-      String cellValue(dynamic cell) => cell?.value?.toString().trim() ?? '';
-      String headerKey(dynamic cell) =>
-          cellValue(cell).toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
-      final header = sheet.rows.first;
-      final columns = <String, int>{};
-      for (var index = 0; index < header.length; index++) {
-        final key = headerKey(header[index]);
-        if (key.isNotEmpty) columns[key] = index;
-      }
-      const required = [
-        'product name',
-        'description',
-        'opening stock',
-        'stock supplied',
-        'total available',
-        'physical count',
-        'units dispensed',
-        'transfer unit price',
-      ];
-      if (required.any((key) => !columns.containsKey(key))) {
+      // ── Smart detection: best sheet + header row + columns ───────
+      final match =
+          SmartReconciliationParser.detectBestSheet(sheets);
+      if (match == null) {
         throw StateError(
-            'Use the Recon Final sheet with the approved reconciliation columns.');
+            'No reconciliation table was found. Smart Import looks for columns '
+            'like Product Name, Opening Stock, Stock Supplied, Total Available, '
+            'Physical Count, Units Dispensed and Unit Price — common variants '
+            '(Product, Opening Balance, Received Qty, Counted, Dispensed…) are '
+            'recognised automatically. Check the sheet and try again.');
       }
+      final parse = match.parse;
 
-      String valueAt(List<dynamic> row, String key) {
-        final index = columns[key];
-        if (index == null) return '';
-        return index < row.length ? cellValue(row[index]) : '';
+      if (parse.records.isEmpty) {
+        final top = parse.skipped.isNotEmpty
+            ? ' ${parse.skipped.length} rows were read but skipped — for example: '
+                '${parse.skipped.first.describe()}.'
+            : '';
+        throw StateError(
+            'No importable product rows were found under the detected header '
+            '(sheet “${parse.sheetName}”, row ${parse.headerRowNumber}).'
+            '$top');
       }
-
-      /// Convert Excel column letters (A, B, ..., Z, AA, AB, ...) to
-      /// a 0-based column index. Declared BEFORE the functions that
-      /// use it (Dart requires local functions to be declared before use).
-      int? _excelColToIndex(String letters) {
-        int result = 0;
-        for (final c in letters.toUpperCase().codeUnits) {
-          if (c < 65 || c > 90) return null;
-          result = result * 26 + (c - 64);
-        }
-        return result - 1;
-      }
-
-      /// Resolve simple Excel formulas (=CELL op CELL) by looking up
-      /// the referenced cells in the same row. Handles +, -, *, /.
-      /// Returns null if the formula can't be evaluated.
-      num? _evalFormula(String formula, List<dynamic> row,
-          {required bool isInt}) {
-        final expr = formula.substring(1).trim();
-        // Match: CELLREF op CELLREF (e.g., F2-G2, J2*H2)
-        final m = RegExp(r'^([A-Za-z]+)\d+\s*([+\-*/])\s*([A-Za-z]+)\d+$')
-            .firstMatch(expr);
-        if (m == null) return null;
-        final leftColumn = m.group(1);
-        final rightColumn = m.group(3);
-        final op = m.group(2);
-        if (leftColumn == null || rightColumn == null || op == null) {
-          return null;
-        }
-        final leftColIdx = _excelColToIndex(leftColumn);
-        final rightColIdx = _excelColToIndex(rightColumn);
-        if (leftColIdx == null || rightColIdx == null) return null;
-        if (leftColIdx >= row.length || rightColIdx >= row.length) return null;
-        final leftStr = cellValue(row[leftColIdx]);
-        final rightStr = cellValue(row[rightColIdx]);
-        final left = isInt
-            ? int.tryParse(leftStr.replaceAll(RegExp(r'[^0-9-]'), ''))
-            : double.tryParse(leftStr.replaceAll(RegExp(r'[^0-9.-]'), ''));
-        final right = isInt
-            ? int.tryParse(rightStr.replaceAll(RegExp(r'[^0-9-]'), ''))
-            : double.tryParse(rightStr.replaceAll(RegExp(r'[^0-9.-]'), ''));
-        if (left == null || right == null) return null;
-        num result;
-        switch (op) {
-          case '+':
-            result = left + right;
-            break;
-          case '-':
-            result = left - right;
-            break;
-          case '*':
-            result = left * right;
-            break;
-          case '/':
-            if (right == 0) return null;
-            result = left / right;
-            break;
-          default:
-            return null;
-        }
-        return isInt ? result.toInt() : result;
-      }
-
-      int integerAt(List<dynamic> row, String key) {
-        final raw = valueAt(row, key);
-        if (raw.isEmpty) return -1;
-        // If the cell contains a formula (e.g., '=F2-G2'), compute it
-        // from the referenced cells in the same row. This handles the
-        // common recon template formulas:
-        //   =F{row}-G{row}  → Total Available - Physical Count
-        //   =E{row}+D{row}  → Stock Supplied + Opening Stock
-        // Without this, the formula string '=F2-G2' would be regex-
-        // stripped to '2-2', int.tryParse fails → returns -1 → fails
-        // the '< 0' check → 'Invalid totals' error.
-        if (raw.startsWith('=')) {
-          final computed = _evalFormula(raw, row, isInt: true);
-          if (computed != null) return computed.toInt();
-        }
-        return int.tryParse(raw.replaceAll(RegExp(r'[^0-9-]'), '')) ?? -1;
-      }
-
-      double decimalAt(List<dynamic> row, String key) {
-        final raw = valueAt(row, key);
-        if (raw.isEmpty) return -1;
-        if (raw.startsWith('=')) {
-          final computed = _evalFormula(raw, row, isInt: false);
-          if (computed != null) return computed.toDouble();
-        }
-        return double.tryParse(raw.replaceAll(RegExp(r'[^0-9.-]'), '')) ?? -1;
-      }
-
-      final records = <Map<String, dynamic>>[];
-      for (final row in sheet.rows.skip(1)) {
-        final name = valueAt(row, 'product name');
-        if (name.isEmpty) continue;
-        final openingStock = integerAt(row, 'opening stock');
-        final stockSupplied = integerAt(row, 'stock supplied');
-        final totalAvailable = integerAt(row, 'total available');
-        final physicalCount = integerAt(row, 'physical count');
-        final unitsDispensed = integerAt(row, 'units dispensed');
-        final unitCost = decimalAt(row, 'transfer unit price');
-        if ([
-              openingStock,
-              stockSupplied,
-              totalAvailable,
-              physicalCount,
-              unitsDispensed
-            ].any((value) => value < 0) ||
-            unitCost < 0 ||
-            totalAvailable != openingStock + stockSupplied ||
-            unitsDispensed != totalAvailable - physicalCount) {
-          throw StateError(
-              'Invalid totals in product "$name". Fix the workbook before import.');
-        }
-        records.add({
-          'name': name,
-          'description': valueAt(row, 'description'),
-          'openingStock': openingStock,
-          'stockSupplied': stockSupplied,
-          'totalAvailable': totalAvailable,
-          'physicalCount': physicalCount,
-          'unitsDispensed': unitsDispensed,
-          'unitCost': unitCost,
-        });
-      }
-      if (records.isEmpty)
-        throw StateError('No reconciliation records were found.');
 
       final pharmacy = await _confirmReconciliationTarget(
-        lineCount: records.length,
+        lineCount: parse.records.length,
         reconciliationDate: reconciliationDate,
         sourceFileName: file.name,
+        skipped: parse.skipped,
+        priceDefaultedCount: parse.priceDefaultedCount,
+        detectedSheetName: isCsv ? null : match.sheetName,
       );
       if (pharmacy == null) return;
 
@@ -595,14 +581,17 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
         'pharmacyPath': pharmacy.reference.path,
         'reconciliationDate': reconciliationDate.millisecondsSinceEpoch,
         'sourceFileName': file.name,
-        'records': records,
+        'records': parse.records,
       });
-      final count = (response.data as Map?)?['productLines'] ?? records.length;
+      final count = (response.data as Map?)?['productLines'] ?? parse.records.length;
       if (!mounted) return;
+      final skippedNote = parse.skipped.isNotEmpty
+          ? ' (${parse.skipped.length} unrelated rows were skipped)'
+          : '';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                '${pharmacy.name} imported with $count reconciliation lines.'),
+                '${pharmacy.name} imported with $count reconciliation lines$skippedNote.'),
             behavior: SnackBarBehavior.floating),
       );
     } on FirebaseFunctionsException catch (error) {
