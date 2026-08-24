@@ -10,6 +10,7 @@ import '/import_wizard.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
+import '/unification/components/switch_pharm_stock/switch_pharm_stock_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import '/index.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
+import 'stock_action_sheets.dart';
 import 'stock_balances_model.dart';
 export 'stock_balances_model.dart';
 
@@ -1590,24 +1592,21 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                               Icons.history_rounded,
                               'View history',
                               theme,
-                              onTap: () => _showToast(
-                                  'History for ${row.product.name}'),
+                              onTap: () => _openHistorySheet(row),
                             ),
                             const SizedBox(width: 4.0),
                             _actionIcon(
                               Icons.swap_horiz_rounded,
                               'Transfer',
                               theme,
-                              onTap: () => _showToast(
-                                  'Transfer ${row.product.name}'),
+                              onTap: () => _openTransferSheet(row),
                             ),
                             const SizedBox(width: 4.0),
                             _actionIcon(
                               Icons.tune_rounded,
                               'Adjust',
                               theme,
-                              onTap: () => _showToast(
-                                  'Adjust ${row.product.name}'),
+                              onTap: () => _openAdjustSheet(row),
                             ),
                           ],
                         ),
@@ -1741,6 +1740,63 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
       ),
     );
   }
+
+  // ─── Per-row action sheet openers ────────────────────────────────
+  // Each opens a modal Dialog matching the FlutterFlow pattern:
+  //   Dialog > WebViewAware > GestureDetector > child widget.
+  // The GestureDetector calls FocusScope.unfocus() on tap-out so the
+  // soft keyboard collapses before the dialog closes.
+
+  Future<void> _openHistorySheet(_StockBalanceRow row) => _openSheet(
+        builder: (ctx) => StockMovementHistorySheet(
+          balance: row.balance,
+          product: row.product,
+        ),
+        barrierLabel: 'Stock Movement History',
+      );
+
+  Future<void> _openTransferSheet(_StockBalanceRow row) => _openSheet(
+        builder: (ctx) => SwitchPharmStockWidget(
+          stockId: row.balance.reference,
+        ),
+        barrierLabel: 'Transfer Stock',
+      );
+
+  Future<void> _openAdjustSheet(_StockBalanceRow row) => _openSheet(
+        builder: (ctx) => StockAdjustSheet(
+          balance: row.balance,
+          product: row.product,
+        ),
+        barrierLabel: 'Adjust Stock',
+      );
+
+  Future<void> _openSheet({
+      required WidgetBuilder builder, required String barrierLabel}) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: const Color(0xFF000000).withAlpha(120),
+      barrierLabel: barrierLabel,
+      builder: (dialogContext) => Dialog(
+        elevation: 0,
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        alignment:
+            const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+        child: WebViewAware(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              FocusScope.of(dialogContext).unfocus();
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: builder(dialogContext),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   // ═══════════════════════════════════════════════════════════════
   //   EMPTY STATE
