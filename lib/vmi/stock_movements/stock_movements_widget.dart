@@ -725,6 +725,14 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           label: 'Import',
           icon: Icons.upload_file_rounded,
         ),
+        const SizedBox(width: 8.0),
+        // Owner-only Template button — downloads a pre-formatted .xlsx or
+        // .csv template with the correct column headers for movements.
+        // Hidden for non-owners, consistent with ImportButton.
+        TemplateButton(
+          config: StockMovementImportConfig(),
+          label: 'Template',
+        ),
         // Movement Type filter
         Container(
           width: 180.0,

@@ -960,6 +960,14 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                   label: 'Import',
                   icon: Icons.upload_file_rounded,
                 ),
+                const SizedBox(width: 8.0),
+                // Owner-only Template button — downloads a pre-formatted
+                // .xlsx or .csv template with the correct column headers
+                // for stock counts. Hidden for non-owners.
+                TemplateButton(
+                  config: StockCountImportConfig(),
+                  label: 'Template',
+                ),
               ],
             ),
           ),

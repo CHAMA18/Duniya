@@ -22,4 +22,5 @@ export 'import_wizard/section_configs/stock_balance_import.dart';
 export 'import_wizard/section_configs/stock_count_import.dart';
 export 'import_wizard/section_configs/stock_movement_import.dart';
 export 'import_wizard/sign_off_dialog.dart';
+export 'import_wizard/template_downloader.dart';
 export 'import_wizard/virtual_signature.dart';

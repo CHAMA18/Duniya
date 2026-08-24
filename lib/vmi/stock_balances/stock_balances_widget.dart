@@ -634,6 +634,14 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                   icon: Icons.upload_file_rounded,
                 ),
                 const SizedBox(width: 8.0),
+                // Owner-only Template button — downloads a pre-formatted
+                // .xlsx or .csv template with the correct column headers.
+                // Hidden for non-owners, consistent with ImportButton.
+                TemplateButton(
+                  config: StockBalanceImportConfig(),
+                  label: 'Template',
+                ),
+                const SizedBox(width: 8.0),
                 _HeroActionButton(
                   icon: Icons.add_rounded,
                   label: 'Add Balance',
@@ -1904,6 +1912,13 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                   config: StockBalanceImportConfig(),
                   label: 'Import from Spreadsheet',
                   icon: Icons.upload_file_rounded,
+                ),
+                const SizedBox(width: 8.0),
+                // Empty-state Template download — same as the header
+                // Template button, gives the user a starting point.
+                TemplateButton(
+                  config: StockBalanceImportConfig(),
+                  label: 'Download Template',
                 ),
               ],
             ),
