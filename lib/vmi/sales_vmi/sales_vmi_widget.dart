@@ -1,9 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
@@ -15,11 +12,16 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'sales_vmi_model.dart';
 export 'sales_vmi_model.dart';
 
+/// ═══════════════════════════════════════════════════════════════
+///   POINT OF SALE — transactional sales & dispensing screen
+///
+///   Replaces the old dashboard + dialog approach with a direct POS:
+///   left panel = product browser (search + tap-to-add grid),
+///   right panel = cart with live total + one-tap checkout,
+///   below = compact recent-sales strip.
+/// ═══════════════════════════════════════════════════════════════
 class SalesVMIWidget extends StatefulWidget {
-  const SalesVMIWidget({
-    super.key,
-    this.pharmacy,
-  });
+  const SalesVMIWidget({super.key, this.pharmacy});
 
   final String? pharmacy;
 
@@ -33,406 +35,240 @@ class SalesVMIWidget extends StatefulWidget {
 class _SalesVMIWidgetState extends State<SalesVMIWidget> {
   late SalesVMIModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  List<Map<String, dynamic>> _saleLineItems = [];
 
-  // ── Purple Design Tokens ──
   static const Color _primary = Color(0xFFA100FF);
   static const Color _deep = Color(0xFF6A00D9);
-  static const Color _accent = Color(0xFF7C3AED);
   static const Color _light = Color(0xFFE8D5FF);
   static const Color _bg = Color(0xFFF8F5FF);
   static const Color _surface = Colors.white;
   static const Color _textDark = Color(0xFF1A0533);
   static const Color _textMuted = Color(0xFF7C6E93);
+  static const Color _border = Color(0xFFE2E8F0);
+  static const Color _green = Color(0xFF10B981);
+  static const Color _red = Color(0xFFEF4444);
+  static const Color _amber = Color(0xFFF59E0B);
+
+  final _searchController = TextEditingController();
+  final _patientController = TextEditingController();
+  String _searchQuery = '';
+  List<StockRecord> _stockItems = [];
+  bool _stockLoaded = false;
+  bool _completing = false;
+
+  /// Cart: same shape as the old _saleLineItems so the save logic
+  /// (SaleRecordVMI, SaleItemVMI, StockMovement, stock decrement) is
+  /// reused unchanged.
+  final List<Map<String, dynamic>> _cart = [];
+
+  double get _cartTotal =>
+      _cart.fold(0.0, (sum, item) => sum + (item['total'] as double));
+  int get _cartItems => _cart.fold(0, (sum, item) => sum + (item['quantity'] as int));
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => SalesVMIModel());
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'SalesVMI'});
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'SalesVMI'});
+    _searchController.addListener(() {
+      if (_searchController.text != _searchQuery) {
+        _searchQuery = _searchController.text;
+        safeSetState(() {});
+      }
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      safeSetState(() {});
+      _loadStock();
+    });
+  }
+
+  Future<void> _loadStock() async {
+    try {
+      final ownerRef = AccessControl.isPulseUser(context)
+          ? null
+          : AccessControl.parentRef(context) ?? currentUserReference;
+      final stocks = await queryStockRecordOnce(parent: ownerRef);
+      stocks.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      if (!mounted) return;
+      safeSetState(() {
+        _stockItems = stocks;
+        _stockLoaded = true;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      safeSetState(() => _stockLoaded = true);
+    }
   }
 
   @override
   void dispose() {
+    _searchController.dispose();
+    _patientController.dispose();
     _model.dispose();
     super.dispose();
   }
 
-  // ── KPI Card Builder ──
-  Widget _buildKpiCard({
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-    required Color bgColor,
-  }) {
-    return Container(
-      constraints: const BoxConstraints(minHeight: 100),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _light.withValues(alpha: 0.6)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 20),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              color: _textDark,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: _textMuted,
-            ),
-          ),
-        ],
+  // ── Cart actions ────────────────────────────────────────────
+
+  void _addToCart(StockRecord stock) {
+    final name = stock.name.trim();
+    if (name.isEmpty) return;
+    final existing = _cart.indexWhere((item) =>
+        (item['productName'] as String).toLowerCase() == name.toLowerCase());
+    if (existing >= 0) {
+      final item = _cart[existing];
+      final qty = (item['quantity'] as int) + 1;
+      final price = item['sellingPrice'] as double;
+      _cart[existing] = {
+        ...item,
+        'quantity': qty,
+        'total': qty * price,
+      };
+    } else {
+      _cart.add({
+        'productId': stock.reference,
+        'productName': name,
+        'quantity': 1,
+        'sellingPrice': stock.price > 0 ? stock.price : 0.0,
+        'total': stock.price > 0 ? stock.price : 0.0,
+      });
+    }
+    safeSetState(() {});
+  }
+
+  void _changeQty(int index, int delta) {
+    if (index < 0 || index >= _cart.length) return;
+    final item = _cart[index];
+    var qty = (item['quantity'] as int) + delta;
+    if (qty < 1) {
+      _cart.removeAt(index);
+    } else {
+      final price = item['sellingPrice'] as double;
+      _cart[index] = {
+        ...item,
+        'quantity': qty,
+        'total': qty * price,
+      };
+    }
+    safeSetState(() {});
+  }
+
+  void _removeFromCart(int index) {
+    _cart.removeAt(index);
+    safeSetState(() {});
+  }
+
+  // ── Complete sale ──────────────────────────────────────────
+
+  Future<void> _completeSale() async {
+    if (_cart.isEmpty || _completing) return;
+    safeSetState(() => _completing = true);
+
+    try {
+      DocumentReference? ownerRef;
+      if (AccessControl.isPulseUser(context)) {
+        ownerRef = currentUserReference;
+      } else {
+        ownerRef = AccessControl.parentRef(context) ?? currentUserReference;
+      }
+      if (ownerRef == null) {
+        _toast('Unable to identify your account.', isError: true);
+        safeSetState(() => _completing = false);
+        return;
+      }
+
+      final totalAmount = _cartTotal;
+
+      // Create SaleVMI record
+      final saleDoc = SaleRecordVMI.createDoc(ownerRef);
+      await saleDoc.set(createSaleRecordVMIData(
+        soldById: currentUserReference,
+        saleDate: DateTime.now(),
+        patientRef: _patientController.text.trim().isEmpty
+            ? null
+            : _patientController.text.trim(),
+        totalAmount: totalAmount,
+        createdAt: DateTime.now(),
+      ));
+
+      // Build stock lookup (name → ref) for auto-decrement
+      final stockByName = <String, DocumentReference>{};
+      for (final s in _stockItems) {
+        final key = s.name.trim().toLowerCase();
+        if (key.isNotEmpty && !stockByName.containsKey(key)) {
+          stockByName[key] = s.reference;
+        }
+      }
+
+      for (final item in _cart) {
+        final itemDoc = SaleItemVMIRecord.createDoc(saleDoc);
+        await itemDoc.set(createSaleItemVMIRecordData(
+          productId: item['productId'] as DocumentReference?,
+          quantity: item['quantity'] as int,
+          sellingPrice: item['sellingPrice'] as double,
+          total: item['total'] as double,
+        ));
+
+        final movementDoc = StockMovementRecord.createDoc(ownerRef);
+        await movementDoc.set(createStockMovementRecordData(
+          productId: item['productId'] as DocumentReference?,
+          quantity: item['quantity'] as int,
+          movementType: 'SOLD',
+          recordedById: currentUserReference,
+          createdAt: DateTime.now(),
+        ));
+
+        // Reduce stock
+        final productName = (item['productName'] as String).trim();
+        final soldQty = item['quantity'] as int;
+        final stockRef = stockByName[productName.toLowerCase()];
+        if (stockRef != null && soldQty > 0) {
+          await stockRef.update({
+            'Quantity': FieldValue.increment(-soldQty),
+            'UpdatedAt': FieldValue.serverTimestamp(),
+          });
+        }
+      }
+
+      // Clear cart + reload stock
+      _cart.clear();
+      _patientController.clear();
+      await _loadStock();
+      if (!mounted) return;
+      safeSetState(() => _completing = false);
+      _toast('Sale completed — stock updated');
+    } catch (_) {
+      if (!mounted) return;
+      safeSetState(() => _completing = false);
+      _toast('Could not complete the sale. Please try again.', isError: true);
+    }
+  }
+
+  void _toast(String msg, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(children: [
+          Icon(isError ? Icons.error_rounded : Icons.check_circle_rounded,
+              color: Colors.white, size: 18),
+          const SizedBox(width: 10),
+          Expanded(child: Text(msg)),
+        ]),
+        backgroundColor: isError ? _red : _primary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.all(16),
       ),
     );
   }
 
-  // ── Sale Card Builder ──
-  //
-  // Each card is tappable and navigates to the SalesItems detail page,
-  // which shows the full list of products dispensed, quantities, and
-  // prices for that sale. The card also shows a live line-item count
-  // and the first few product names so users can identify a sale at a
-  // glance without having to open it.
-  Widget _buildSaleCard(SaleRecordVMI sale, int index, bool isPhone) {
-    final hasPatient = sale.hasPatientRef();
-    final dateStr = sale.hasSaleDate()
-        ? dateTimeFormat('yMMMd', sale.saleDate!,
-            locale: FFLocalizations.of(context).languageCode)
-        : '-';
-    final timeStr = sale.hasSaleDate()
-        ? dateTimeFormat('jm', sale.saleDate!,
-            locale: FFLocalizations.of(context).languageCode)
-        : '';
+  String _fmtCurrency(double v) =>
+      'K${v.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}';
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _light.withValues(alpha: 0.5)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          logFirebaseEvent('SALES_VMI_SALE_CARD_ON_TAP');
-          context.pushNamed(
-            SalesItemsWidget.routeName,
-            queryParameters: {
-              'sale': serializeParam(
-                sale.reference,
-                ParamType.DocumentReference,
-              ),
-            }.withoutNulls,
-          );
-        },
-        child: Row(
-          children: [
-            // Order number badge
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [_deep, _primary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Center(
-                child: Text(
-                  '#${index + 1}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Details + line-item summary
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    hasPatient
-                        ? 'Patient: ${sale.patientRef!}'
-                        : 'Sale #${index + 1}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: _textDark,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today_outlined,
-                          size: 12, color: _textMuted),
-                      const SizedBox(width: 4),
-                      Text(
-                        dateStr,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: _textMuted,
-                        ),
-                      ),
-                      if (timeStr.isNotEmpty) ...[
-                        const SizedBox(width: 8),
-                        Icon(Icons.access_time, size: 12, color: _textMuted),
-                        const SizedBox(width: 4),
-                        Text(
-                          timeStr,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: _textMuted,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  // Live line-item summary — shows the number of products
-                  // dispensed and the first few names so the user can
-                  // identify the sale without opening it.
-                  StreamBuilder<List<SaleItemVMIRecord>>(
-                    stream: querySaleItemVMIRecord(
-                      parent: sale.reference,
-                    ),
-                    builder: (context, itemSnapshot) {
-                      if (!itemSnapshot.hasData) {
-                        return const SizedBox(
-                          height: 16,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2),
-                            child: SpinKitRing(
-                                color: _primary, size: 12, lineWidth: 1.5),
-                          ),
-                        );
-                      }
-                      final items = itemSnapshot.data!;
-                      if (items.isEmpty) {
-                        return Row(
-                          children: [
-                            Icon(Icons.shopping_cart_outlined,
-                                size: 12, color: _textMuted),
-                            const SizedBox(width: 4),
-                            Text(
-                              'No items recorded',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: _textMuted,
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                      final itemSummary = items
-                          .map((i) =>
-                              'x${i.quantity}')
-                          .join(', ');
-                      final totalUnits = items.fold<int>(
-                          0, (sum, i) => sum + i.quantity);
-                      return Row(
-                        children: [
-                          Icon(Icons.medication_outlined,
-                              size: 13, color: _primary),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              '${items.length} item${items.length == 1 ? '' : 's'} · $totalUnits unit${totalUnits == 1 ? '' : 's'} total ($itemSummary)',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: _textMuted,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            // Amount + view-details chevron
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1FAE5),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'ZMK ${formatNumber(
-                      sale.totalAmount,
-                      formatType: FormatType.compact,
-                    )}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF059669),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'View Details',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: _primary,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      size: 16,
-                      color: _primary,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ── Empty State ──
-  Widget _buildEmptyState(bool isPhone) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 60),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [_light, Color(0xFFF3E8FF)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(28),
-              ),
-              child: const Icon(
-                Icons.point_of_sale_rounded,
-                color: _primary,
-                size: 48,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'No Sales Recorded Yet',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: _textDark,
-                letterSpacing: -0.3,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Start by recording your first sale.\nTap "New Sale" to begin dispensing.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: _textMuted,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 24),
-            FFButtonWidget(
-              onPressed: () => _showAddSaleDialog(context),
-              text: 'Record Your First Sale',
-              icon: const Icon(Icons.add_shopping_cart_rounded, size: 18),
-              options: FFButtonOptions(
-                height: 48,
-                padding:
-                    const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                color: _primary,
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                ),
-                elevation: 0,
-                borderRadius: BorderRadius.circular(14.0),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // ── Build ──────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    final isPhone = responsiveVisibility(
-      context: context,
-      tablet: false,
-      tabletLandscape: false,
-      desktop: false,
-    );
-
     return Title(
-      title: 'Sales / Dispensing',
+      title: 'Point of Sale',
       color: _primary,
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -443,408 +279,36 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
             child: wrapWithModel(
               model: _model.sideNavModel,
               updateCallback: () => safeSetState(() {}),
-              child: SideNavWidget(),
+              child: const SideNavWidget(),
             ),
           ),
           body: SafeArea(
             top: true,
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               children: [
-                // Sidebar (desktop)
                 if (responsiveVisibility(
-                  context: context,
-                  phone: false,
-                  tablet: false,
-                ))
+                    context: context, phone: false, tablet: false))
                   wrapWithModel(
                     model: _model.sideNavModel,
                     updateCallback: () => safeSetState(() {}),
-                    child: SideNavWidget(),
+                    child: const SideNavWidget(),
                   ),
-                // Main content
                 Expanded(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Top Nav
                       if (responsiveVisibility(
-                        context: context,
-                        phone: false,
-                        tablet: false,
-                        tabletLandscape: false,
-                      ))
+                          context: context,
+                          tablet: false,
+                          tabletLandscape: false,
+                          desktop: false))
                         wrapWithModel(
                           model: _model.topNavModel,
                           updateCallback: () => safeSetState(() {}),
-                          child: TopNavWidget(
-                            openDrawer: () async {
-                              scaffoldKey.currentState?.openDrawer();
-                            },
+                          child: const TopNavWidget(
+                            openDrawer: null,
                           ),
                         ),
-                      // Page Body
-                      Expanded(
-                        child: AuthUserStreamWidget(
-                          builder: (context) {
-                            final parentRef = AccessControl.parentRef(context) ?? currentUserReference;
-
-                            return StreamBuilder<List<SaleRecordVMI>>(
-                              stream: querySaleRecordVMI(
-                                parent: parentRef,
-                                queryBuilder: (q) => q.orderBy('CreatedAt',
-                                    descending: true),
-                              ),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return Center(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(Icons.error_outline,
-                                            color: Colors.red, size: 48),
-                                        const SizedBox(height: 12),
-                                        const Text('Something went wrong',
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 16)),
-                                      ],
-                                    ),
-                                  );
-                                }
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SpinKitRing(
-                                        color: _primary, size: 48),
-                                  );
-                                }
-
-                                final sales = snapshot.data!;
-
-                                // Compute KPIs
-                                final totalSales = sales.length;
-                                double totalRevenue = sales.fold(
-                                    0.0,
-                                    (sum, s) =>
-                                        sum + s.totalAmount);
-                                final today = DateTime.now();
-                                final todaySales = sales.where((s) {
-                                  if (s.saleDate == null) return false;
-                                  return s.saleDate!.year == today.year &&
-                                      s.saleDate!.month == today.month &&
-                                      s.saleDate!.day == today.day;
-                                }).length;
-                                double todayRevenue = sales
-                                    .where((s) {
-                                      if (s.saleDate == null) return false;
-                                      return s.saleDate!.year ==
-                                              today.year &&
-                                          s.saleDate!.month == today.month &&
-                                          s.saleDate!.day == today.day;
-                                    })
-                                    .fold(0.0,
-                                        (sum, s) => sum + s.totalAmount);
-                                double avgSale = totalSales > 0
-                                    ? totalRevenue / totalSales
-                                    : 0.0;
-
-                                return SingleChildScrollView(
-                                  padding: EdgeInsets.fromLTRB(
-                                    isPhone ? 16 : 28,
-                                    24,
-                                    isPhone ? 16 : 28,
-                                    32,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // ── Gradient Header ──
-                                      Container(
-                                        padding: EdgeInsets.all(
-                                            isPhone ? 20 : 28),
-                                        decoration: BoxDecoration(
-                                          gradient: const LinearGradient(
-                                            colors: [
-                                              _deep,
-                                              _primary,
-                                              _accent
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(24),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  _primary.withValues(alpha: 0.3),
-                                              blurRadius: 24,
-                                              offset: const Offset(0, 8),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text(
-                                                    'Sales & Dispensing',
-                                                    style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      color: Colors.white,
-                                                      letterSpacing: -0.5,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Text(
-                                                    'Track pharmacy sales, dispensing records, and revenue at a glance.',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.white
-                                                          .withValues(alpha: 0.85),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 16),
-                                            FFButtonWidget(
-                                              onPressed: () =>
-                                                  _showAddSaleDialog(context),
-                                              text: 'New Sale',
-                                              icon: const Icon(
-                                                  Icons.add_rounded,
-                                                  size: 18),
-                                              options: FFButtonOptions(
-                                                height: 44,
-                                                padding:
-                                                    const EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                        20, 0, 20, 0),
-                                                color: Colors.white,
-                                                textStyle: const TextStyle(
-                                                  color: _primary,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 14,
-                                                ),
-                                                elevation: 0,
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 20),
-
-                                      // ── KPI Cards ──
-                                      LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          int cols = 5;
-                                          if (constraints.maxWidth < 900) {
-                                            cols = 3;
-                                          }
-                                          if (constraints.maxWidth < 800) {
-                                            cols = 2;
-                                          }
-                                          if (constraints.maxWidth < 520) {
-                                            cols = 1;
-                                          }
-                                          final cards = [
-                                            _buildKpiCard(
-                                              title: 'Total Revenue',
-                                              value:
-                                                  'ZMK ${formatNumber(totalRevenue, formatType: FormatType.compact)}',
-                                              icon: Icons
-                                                  .account_balance_wallet_rounded,
-                                              color: const Color(0xFF059669),
-                                              bgColor:
-                                                  const Color(0xFFD1FAE5),
-                                            ),
-                                            _buildKpiCard(
-                                              title: 'Total Sales',
-                                              value: '$totalSales',
-                                              icon: Icons
-                                                  .receipt_long_rounded,
-                                              color: _primary,
-                                              bgColor: _light.withValues(alpha: 0.5),
-                                            ),
-                                            _buildKpiCard(
-                                              title: 'Today\'s Sales',
-                                              value: '$todaySales',
-                                              icon: Icons
-                                                  .today_outlined,
-                                              color: const Color(0xFF10B981),
-                                              bgColor:
-                                                  const Color(0xFFD1FAE5),
-                                            ),
-                                            _buildKpiCard(
-                                              title: 'Today\'s Revenue',
-                                              value:
-                                                  'ZMK ${formatNumber(todayRevenue, formatType: FormatType.compact)}',
-                                              icon: Icons.today_rounded,
-                                              color: const Color(0xFF2563EB),
-                                              bgColor:
-                                                  const Color(0xFFDBEAFE),
-                                            ),
-                                            _buildKpiCard(
-                                              title: 'Average Sale',
-                                              value:
-                                                  'ZMK ${formatNumber(avgSale, formatType: FormatType.compact)}',
-                                              icon: Icons
-                                                  .trending_up_rounded,
-                                              color: const Color(0xFFD97706),
-                                              bgColor:
-                                                  const Color(0xFFFEF3C7),
-                                            ),
-                                          ];
-
-                                          return SizedBox(
-                                            width: double.infinity,
-                                            child: GridView.count(
-                                              crossAxisCount: cols,
-                                              crossAxisSpacing: 14,
-                                              mainAxisSpacing: 14,
-                                              childAspectRatio:
-                                                  cols == 1 ? 2.4 : 1.18,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              children: cards,
-                                            ),
-                                          );
-                                        },
-                                      ),
-
-                                      const SizedBox(height: 24),
-
-                                      // ── Sales List Section ──
-                                      Container(
-                                        padding: const EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                          color: _surface,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(
-                                              color: _light.withValues(alpha: 0.5)),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black
-                                                  .withValues(alpha: 0.03),
-                                              blurRadius: 14,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 36,
-                                                      height: 36,
-                                                      decoration: BoxDecoration(
-                                                        color: _light
-                                                            .withValues(alpha: 0.4),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons
-                                                            .receipt_long_outlined,
-                                                        color: _primary,
-                                                        size: 18,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 12),
-                                                    const Text(
-                                                      'Recent Sales',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: _textDark,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                if (!isPhone)
-                                                  FFButtonWidget(
-                                                    onPressed: () =>
-                                                        _showAddSaleDialog(
-                                                            context),
-                                                    text: 'New Sale',
-                                                    icon: const Icon(
-                                                        Icons.add_rounded,
-                                                        size: 16),
-                                                    options: FFButtonOptions(
-                                                      height: 38,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(16, 0,
-                                                              16, 0),
-                                                      color: _primary,
-                                                      textStyle:
-                                                          const TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 13,
-                                                      ),
-                                                      elevation: 0,
-                                                      borderRadius:
-                                                          BorderRadius
-                                                              .circular(12),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 18),
-                                            if (sales.isEmpty)
-                                              _buildEmptyState(isPhone)
-                                            else
-                                              ...sales
-                                                  .asMap()
-                                                  .entries
-                                                  .map((e) =>
-                                                      _buildSaleCard(
-                                                          e.value,
-                                                          e.key,
-                                                          isPhone)),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                      // Mobile bottom nav
-                      if (isPhone)
-                        wrapWithModel(
-                          model: _model.mobileNavbarModel,
-                          updateCallback: () => safeSetState(() {}),
-                          child: MobileNavbarWidget(),
-                        ),
+                      Expanded(child: _buildPosBody()),
                     ],
                   ),
                 ),
@@ -856,476 +320,642 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
     );
   }
 
-  void _showAddSaleDialog(BuildContext context) {
-    _saleLineItems = [];
-    _model.dialogPatientRefTextController ??= TextEditingController();
-    _model.lineQtyTextController ??= TextEditingController();
-    _model.linePriceTextController ??= TextEditingController();
+  // ── POS body ────────────────────────────────────────────────
 
-    showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              title: Row(
+  Widget _buildPosBody() {
+    final isWide = MediaQuery.sizeOf(context).width >= 1000;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 16),
+          if (isWide)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 3, child: _buildProductBrowser()),
+                const SizedBox(width: 16),
+                Expanded(flex: 2, child: _buildCart()),
+              ],
+            )
+          else
+            Column(
+              children: [
+                _buildProductBrowser(),
+                const SizedBox(height: 16),
+                _buildCart(),
+              ],
+            ),
+          const SizedBox(height: 20),
+          _buildRecentSales(),
+        ],
+      ),
+    );
+  }
+
+  // ── Header + KPI strip ─────────────────────────────────────
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [_deep, _primary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48, height: 48,
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(40),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Icon(Icons.point_of_sale_rounded,
+                color: Colors.white, size: 26),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Point of Sale',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.5)),
+                const SizedBox(height: 2),
+                Text('Record sales and dispense medicines instantly.',
+                    style: TextStyle(
+                        color: Colors.white.withAlpha(200),
+                        fontSize: 12.5)),
+              ],
+            ),
+          ),
+          // Cart badge
+          if (_cart.isNotEmpty)
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          colors: [_deep, _primary]),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.add_shopping_cart_rounded,
-                        color: Colors.white, size: 20),
-                  ),
-                  const SizedBox(width: 12),
-                  const Text('Record New Sale',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: _textDark)),
+                  const Icon(Icons.shopping_cart_rounded,
+                      color: _deep, size: 16),
+                  const SizedBox(width: 6),
+                  Text('$_cartItems item${_cartItems == 1 ? '' : 's'}',
+                      style: const TextStyle(
+                          color: _deep,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700)),
+                  const SizedBox(width: 8),
+                  Text(_fmtCurrency(_cartTotal),
+                      style: const TextStyle(
+                          color: _deep,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800)),
                 ],
               ),
-              content: Container(
-                width:
-                    MediaQuery.sizeOf(context).width > 600
-                        ? 600
-                        : double.infinity,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AuthUserStreamWidget(
-                        builder: (context) =>
-                            FutureBuilder<List<PharmacyRecord>>(
-                          future: queryPharmacyRecordOnce(
-                            parent: AccessControl.parentRef(context) ?? currentUserReference,
-                          ),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return SpinKitRing(
-                                  color: _primary, size: 20.0);
-                            }
-                            return FlutterFlowDropDown<String>(
-                              controller:
-                                  _model.dialogPharmacyValueController ??=
-                                      FormFieldController<String>(null),
-                              options: snapshot.data!
-                                  .map((p) => p.name)
-                                  .toList(),
-                              onChanged: (val) => setDialogState(
-                                  () => _model.dialogPharmacyValue = val),
-                              width: double.infinity,
-                              height: 48.0,
-                              textStyle: const TextStyle(
-                                  fontSize: 14, color: _textDark),
-                              hintText: 'Select Pharmacy',
-                              fillColor: _bg,
-                              borderColor: _light,
-                              borderRadius: 12.0,
-                              elevation: 2,
-                              borderWidth: 1.0,
-                              margin: EdgeInsets.zero,
-                            );
-                          },
-                        ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // ── Product browser ─────────────────────────────────────────
+
+  Widget _buildProductBrowser() {
+    final filtered = _searchQuery.isEmpty
+        ? _stockItems
+        : _stockItems
+            .where((s) => s.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+            .toList();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: _surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search products to add to cart…',
+                hintStyle: TextStyle(color: _textMuted, fontSize: 13),
+                prefixIcon: Icon(Icons.search_rounded, color: _textMuted, size: 20),
+                filled: true,
+                fillColor: _bg,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: _border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: _border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: _primary, width: 1.5),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              ),
+            ),
+          ),
+          // Product grid
+          if (!_stockLoaded)
+            const Padding(
+              padding: EdgeInsets.all(40),
+              child: Center(child: SpinKitRing(color: _primary, size: 32)),
+            )
+          else if (filtered.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(40),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(Icons.inventory_2_outlined,
+                        size: 40, color: _textMuted),
+                    const SizedBox(height: 12),
+                    Text(
+                      _stockItems.isEmpty
+                          ? 'No stock items found'
+                          : 'No products match your search',
+                      style: TextStyle(color: _textMuted, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  const gap = 10.0;
+                  const minW = 160.0;
+                  var cols = ((constraints.maxWidth + gap) / (minW + gap)).floor();
+                  if (cols < 1) cols = 1;
+                  final w = (constraints.maxWidth - (cols - 1) * gap) / cols;
+                  return Wrap(
+                    spacing: gap,
+                    runSpacing: gap,
+                    children: filtered
+                        .map((s) => SizedBox(
+                              width: w,
+                              child: _productChip(s),
+                            ))
+                        .toList(),
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _productChip(StockRecord s) {
+    final inCart = _cart.any((item) =>
+        (item['productName'] as String).toLowerCase() ==
+        s.name.toLowerCase());
+    final outOfStock = s.quantity <= 0;
+    final price = s.price > 0 ? s.price : 0.0;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: outOfStock ? null : () => _addToCart(s),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: outOfStock ? _bg : _surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: inCart ? _primary : _border,
+              width: inCart ? 1.5 : 1.0,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 30, height: 30,
+                    decoration: BoxDecoration(
+                      color: outOfStock ? Colors.grey.shade200 : _light,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.medication_rounded,
+                      size: 16,
+                      color: outOfStock ? Colors.grey : _deep,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (outOfStock)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: _red.withAlpha(20),
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _model.dialogPatientRefTextController,
-                        decoration: InputDecoration(
-                          labelText: 'Patient Reference',
-                          prefixIcon: const Icon(Icons.person_outline,
-                              color: _primary),
-                          filled: true,
-                          fillColor: _bg,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: _light),
-                          ),
-                        ),
-                        style: const TextStyle(
-                            fontSize: 14, color: _textDark),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text('Line Items',
+                      child: const Text('OUT',
                           style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: _textDark,
-                              fontSize: 15)),
-                      const SizedBox(height: 8),
-                      // Add line item row.
-                      //
-                      // Each field has a visible label above it so users
-                      // can tell what to enter. The selling price is
-                      // auto-populated from ProductMaster when a product
-                      // is selected — the user only needs to enter the
-                      // quantity dispensed.
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          // Product selector
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 4),
-                                  child: Text('Product',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: _textMuted)),
-                                ),
-                                StreamBuilder<List<ProductMasterRecord>>(
-                                  stream: queryProductMasterRecord(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return const SpinKitRing(
-                                          color: _primary, size: 16.0);
-                                    }
-                                    final products = snapshot.data!;
-                                    return FlutterFlowDropDown<String>(
-                                      controller:
-                                          _model.lineProductValueController ??=
-                                              FormFieldController<String>(null),
-                                      options: products
-                                          .map((p) => p.name)
-                                          .toList(),
-                                      onChanged: (val) async {
-                                        setDialogState(() =>
-                                            _model.lineProductValue = val);
-                                        // Auto-populate the selling price from
-                                        // the selected product's master record
-                                        // so the user only has to enter qty.
-                                        if (val == null || val.isEmpty) {
-                                          _model.linePriceTextController
-                                              ?.clear();
-                                          return;
-                                        }
-                                        final match = products.firstWhere(
-                                          (p) => p.name == val,
-                                          orElse: () => products.first,
-                                        );
-                                        final sp = match.sellingPrice;
-                                        setDialogState(() {
-                                          _model.linePriceTextController
-                                                  ?.text =
-                                              sp > 0
-                                                  ? sp.toStringAsFixed(2)
-                                                  : '';
-                                        });
-                                      },
-                                      width: double.infinity,
-                                      height: 40.0,
-                                      textStyle: const TextStyle(
-                                          fontSize: 12, color: _textDark),
-                                      hintText: 'Select product…',
-                                      fillColor: _bg,
-                                      borderColor: _light,
-                                      borderRadius: 10.0,
-                                      elevation: 2,
-                                      borderWidth: 1.0,
-                                      margin: EdgeInsets.zero,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          // Quantity dispensed
-                          SizedBox(
-                            width: 110.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 4),
-                                  child: Text('Quantity Dispensed',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: _textMuted)),
-                                ),
-                                TextFormField(
-                                  controller: _model.lineQtyTextController,
-                                  decoration: InputDecoration(
-                                    hintText: 'e.g. 10',
-                                    filled: true,
-                                    fillColor: _bg,
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(color: _light),
-                                    ),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(
-                                      fontSize: 12, color: _textDark),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          // Sale amount (auto-filled from product master)
-                          SizedBox(
-                            width: 130.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 4),
-                                  child: Text('Sale Amount (ZMK)',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: _textMuted)),
-                                ),
-                                TextFormField(
-                                  controller: _model.linePriceTextController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Auto-filled',
-                                    filled: true,
-                                    fillColor: _bg,
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(color: _light),
-                                    ),
-                                  ),
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
-                                  style: const TextStyle(
-                                      fontSize: 12, color: _textDark),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          // Add button aligned to bottom of the row
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 2),
-                            child: IconButton(
-                              icon: const Icon(Icons.add_circle,
-                                  color: _primary, size: 28),
-                              tooltip: 'Add line item',
-                              onPressed: () async {
-                                if (_model.lineProductValue == null) return;
-                                final products =
-                                    await queryProductMasterRecordOnce();
-                                final product = products.firstWhere(
-                                  (p) =>
-                                      p.name == _model.lineProductValue,
-                                  orElse: () => products.first,
-                                );
-                                int qty = int.tryParse(
-                                        _model.lineQtyTextController?.text ??
-                                            '0') ??
-                                    0;
-                                double price = double.tryParse(
-                                        _model.linePriceTextController?.text ??
-                                            '0') ??
-                                    0.0;
-                                setDialogState(() {
-                                  _saleLineItems.add({
-                                    'productId': product.reference,
-                                    'productName': product.name,
-                                    'quantity': qty,
-                                    'sellingPrice': price,
-                                    'total': qty * price,
-                                  });
-                                });
-                                _model.lineQtyTextController?.clear();
-                                _model.linePriceTextController?.clear();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // List of added items
-                      ..._saleLineItems
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        int idx = entry.key;
-                        var item = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: _bg,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: _light.withValues(alpha: 0.5)),
-                            ),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(item['productName'],
-                                      style: const TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: _textDark),
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                                Text(
-                                    'x${item['quantity']} @ ZMK ${item['sellingPrice'].toStringAsFixed(2)} = ZMK ${item['total'].toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                        fontSize: 12, color: _textMuted)),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.remove_circle_outline,
-                                      size: 16.0,
-                                      color: Color(0xFFE53E3E)),
-                                  onPressed: () {
-                                    setDialogState(() {
-                                      _saleLineItems.removeAt(idx);
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
+                              color: _red, fontSize: 8, fontWeight: FontWeight.w700)),
+                    )
+                  else
+                    Text('${s.quantity}',
+                        style: TextStyle(
+                            color: _textMuted, fontSize: 11, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                s.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                    color: outOfStock ? _textMuted : _textDark),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                price > 0 ? _fmtCurrency(price) : 'No price',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: outOfStock ? _textMuted : _primary),
+              ),
+              if (inCart)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle_rounded,
+                          size: 14, color: _primary),
+                      const SizedBox(width: 4),
+                      Text('In cart',
+                          style: TextStyle(
+                              color: _primary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600)),
                     ],
                   ),
                 ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Cart panel ──────────────────────────────────────────────
+
+  Widget _buildCart() {
+    return Container(
+      decoration: BoxDecoration(
+        color: _surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Cart header
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+            decoration: BoxDecoration(
+              color: _primary.withAlpha(8),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel',
-                      style: TextStyle(color: _textMuted)),
-                ),
-                FFButtonWidget(
-                  onPressed: () async {
-                    if (_saleLineItems.isEmpty) return;
-                    // Null-safe owner ref resolution — prevents crash
-                    // when currentUserDocument or ownerRef is null.
-                    final userDoc = currentUserDocument;
-                    final DocumentReference ownerRef;
-                    final resolvedRef = AccessControl.parentRef(context);
-                    if (resolvedRef == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'Unable to identify your account or owner pharmacy. Please contact your administrator.')),
-                      );
-                      return;
-                    }
-                    ownerRef = resolvedRef;
-
-                    double totalAmount = _saleLineItems.fold(
-                        0.0, (sum, item) => sum + (item['total'] as double));
-
-                    // Create SaleVMI record
-                    final saleDoc = SaleRecordVMI.createDoc(ownerRef);
-                    await saleDoc.set(createSaleRecordVMIData(
-                      soldById: currentUserReference,
-                      saleDate: getCurrentTimestamp,
-                      patientRef:
-                          _model.dialogPatientRefTextController?.text,
-                      totalAmount: totalAmount,
-                      createdAt: getCurrentTimestamp,
-                    ));
-
-                    // Create SaleItemVMI records, StockMovements, and
-                    // reduce stock automatically (recording a sale must
-                    // lower the pharmacy's stock levels).
-                    final stockByName = <String, DocumentReference>{};
-                    try {
-                      final stocks =
-                          await queryStockRecordOnce(parent: ownerRef);
-                      for (final s in stocks) {
-                        final key = s.name.trim().toLowerCase();
-                        if (key.isNotEmpty &&
-                            !stockByName.containsKey(key)) {
-                          stockByName[key] = s.reference;
-                        }
-                      }
-                    } catch (_) {
-                      // Stock lookup failure should not block the sale.
-                    }
-
-                    for (var item in _saleLineItems) {
-                      final itemDoc =
-                          SaleItemVMIRecord.createDoc(saleDoc);
-                      await itemDoc.set(createSaleItemVMIRecordData(
-                        productId: item['productId'] as DocumentReference?,
-                        quantity: item['quantity'] as int,
-                        sellingPrice: item['sellingPrice'] as double,
-                        total: item['total'] as double,
-                      ));
-
-                      // Create StockMovement (SOLD type)
-                      final movementDoc =
-                          StockMovementRecord.createDoc(ownerRef);
-                      await movementDoc.set(createStockMovementRecordData(
-                        productId:
-                            item['productId'] as DocumentReference?,
-                        quantity: item['quantity'] as int,
-                        movementType: 'SOLD',
-                        recordedById: currentUserReference,
-                        createdAt: getCurrentTimestamp,
-                      ));
-
-                      // Reduce stock for this line (floor at zero).
-                      final productName =
-                          (item['productName'] as String? ?? '').trim();
-                      final soldQty = item['quantity'] as int;
-                      final stockRef = productName.isEmpty
-                          ? null
-                          : stockByName[productName.toLowerCase()];
-                      if (stockRef != null && soldQty > 0) {
-                        await stockRef.update({
-                          'Quantity':
-                              FieldValue.increment(-soldQty),
-                          'UpdatedAt': FieldValue.serverTimestamp(),
-                        });
-                      }
-                    }
-
-                    _model.dialogPatientRefTextController?.clear();
-                    Navigator.pop(dialogContext);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Sale recorded successfully')),
-                    );
-                  },
-                  text: 'Record Sale',
-                  options: FFButtonOptions(
-                    height: 44.0,
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        20.0, 0.0, 20.0, 0.0),
-                    color: _primary,
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.0,
-                    ),
-                    elevation: 0.0,
-                    borderRadius: BorderRadius.circular(14.0),
-                  ),
-                ),
+              border: Border(bottom: BorderSide(color: _border)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.shopping_cart_rounded,
+                    color: _primary, size: 18),
+                const SizedBox(width: 8),
+                const Text('Cart',
+                    style: TextStyle(
+                        color: _textDark,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700)),
+                const Spacer(),
+                if (_cart.isNotEmpty)
+                  Text('${_cartItems} item${_cartItems == 1 ? '' : 's'}',
+                      style: TextStyle(color: _textMuted, fontSize: 12)),
               ],
+            ),
+          ),
+          // Line items
+          if (_cart.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(Icons.add_shopping_cart_rounded,
+                        size: 36, color: _textMuted),
+                    const SizedBox(height: 12),
+                    Text('Tap a product to add it to the cart.',
+                        style: TextStyle(color: _textMuted, fontSize: 13)),
+                  ],
+                ),
+              ),
+            )
+          else
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.sizeOf(context).height * 0.42),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: _cart.length,
+                separatorBuilder: (_, __) =>
+                    Divider(height: 1, color: _border),
+                itemBuilder: (context, i) {
+                  final item = _cart[i];
+                  final qty = item['quantity'] as int;
+                  final price = item['sellingPrice'] as double;
+                  final total = item['total'] as double;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item['productName'] as String,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        // Qty controls
+                        Container(
+                          decoration: BoxDecoration(
+                            color: _bg,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: _border),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _qtyBtn(Icons.remove_rounded,
+                                  () => _changeQty(i, -1)),
+                              Text('$qty',
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700)),
+                              _qtyBtn(Icons.add_rounded,
+                                  () => _changeQty(i, 1)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 70,
+                          child: Text(
+                            _fmtCurrency(total),
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                                color: _primary),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _removeFromCart(i),
+                          icon: Icon(Icons.close_rounded,
+                              size: 16, color: _textMuted),
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                              minWidth: 28, minHeight: 28),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          // Patient ref + total + checkout
+          if (_cart.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+              child: TextField(
+                controller: _patientController,
+                decoration: InputDecoration(
+                  hintText: 'Patient / customer ref (optional)',
+                  hintStyle: TextStyle(color: _textMuted, fontSize: 12),
+                  prefixIcon: Icon(Icons.person_outline_rounded,
+                      size: 18, color: _textMuted),
+                  filled: true,
+                  fillColor: _bg,
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: _border),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: _border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: _primary, width: 1.5),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: _border)),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text('Total',
+                          style: TextStyle(
+                              color: _textMuted,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600)),
+                      const Spacer(),
+                      Text(_fmtCurrency(_cartTotal),
+                          style: const TextStyle(
+                              color: _textDark,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: FilledButton.icon(
+                      onPressed: _completing ? null : _completeSale,
+                      icon: _completing
+                          ? const SizedBox(
+                              width: 16, height: 16,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Colors.white))
+                          : const Icon(Icons.check_circle_rounded, size: 20),
+                      label: Text(
+                          _completing ? 'Completing…' : 'Complete Sale',
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w700)),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: _primary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _qtyBtn(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Icon(icon, size: 14, color: _primary),
+      ),
+    );
+  }
+
+  // ── Recent sales strip ──────────────────────────────────────
+
+  Widget _buildRecentSales() {
+    return AuthUserStreamWidget(
+      builder: (context) {
+        final ownerRef = AccessControl.isPulseUser(context)
+            ? null
+            : AccessControl.parentRef(context) ?? currentUserReference;
+        return StreamBuilder<List<SaleRecordVMI>>(
+          stream: querySaleRecordVMI(
+            parent: ownerRef,
+            queryBuilder: (q) => q.orderBy('CreatedAt', descending: true),
+          ),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox.shrink();
+            }
+            final sales = snapshot.data!.take(5).toList();
+            if (sales.isEmpty) return const SizedBox.shrink();
+
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: _surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: _border),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.receipt_long_rounded,
+                          color: _primary, size: 18),
+                      const SizedBox(width: 8),
+                      const Text('Recent Sales',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: _textDark)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  ...sales.map((s) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32, height: 32,
+                              decoration: BoxDecoration(
+                                color: _green.withAlpha(20),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.check_rounded,
+                                  color: _green, size: 16),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    s.patientRef?.isNotEmpty == true
+                                        ? 'Patient: ${s.patientRef}'
+                                        : 'Walk-in sale',
+                                    style: TextStyle(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: _textDark),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    s.hasCreatedAt()
+                                        ? dateTimeFormat('MMM dd, HH:mm',
+                                            s.createdAt!,
+                                            locale: FFLocalizations.of(context)
+                                                .languageCode)
+                                        : '',
+                                    style: TextStyle(
+                                        fontSize: 11, color: _textMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              _fmtCurrency(s.totalAmount),
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: _primary),
+                            ),
+                          ],
+                        ),
+                      )),
+                ],
+              ),
             );
           },
         );
