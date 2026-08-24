@@ -43,7 +43,6 @@ workflows:
     environment:
       flutter: 3.38.2
       xcode: latest
-      cocoa_pods: default
 
     cache:
       cache_paths:
