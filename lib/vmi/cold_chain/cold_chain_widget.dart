@@ -1,14 +1,10 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'cold_chain_model.dart';
 export 'cold_chain_model.dart';
@@ -167,6 +163,7 @@ class _ColdChainWidgetState extends State<ColdChainWidget>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    _loadMockData();
   }
 
   @override

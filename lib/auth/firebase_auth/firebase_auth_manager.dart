@@ -7,6 +7,7 @@ import '../auth_manager.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 
 import '/backend/backend.dart';
+import '/app_state.dart';
 import 'anonymous_auth.dart';
 import 'apple_auth.dart';
 import 'email_auth.dart';
@@ -65,6 +66,16 @@ class FirebaseAuthManager extends AuthManager
   @override
   Future signOut() {
     logFirebaseEvent("SIGN_OUT");
+    // Clear any cached app state (cart, search filters, selected pharmacy,
+    // BMI/gender, etc.) so it doesn't leak across users on a shared terminal.
+    // The FFAppState singleton persists for the app's lifetime — without
+    // this reset, the next user to sign in would inherit the previous user's
+    // cart and selections.
+    try {
+      FFAppState.reset();
+    } catch (_) {
+      // FFAppState may not be initialized in some test contexts — ignore.
+    }
     return FirebaseAuth.instance.signOut();
   }
 

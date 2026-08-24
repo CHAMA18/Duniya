@@ -52,7 +52,7 @@ class _SaleItemDetailsWidgetState extends State<SaleItemDetailsWidget> {
   Widget build(BuildContext context) {
     return MouseRegion(
       opaque: true,
-      cursor: SystemMouseCursors.click ?? MouseCursor.defer,
+      cursor: SystemMouseCursors.click,
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(10.0, 16.0, 10.0, 16.0),
         child: Row(

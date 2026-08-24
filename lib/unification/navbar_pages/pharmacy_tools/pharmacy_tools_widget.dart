@@ -170,6 +170,41 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                             singleRecord: true,
                                           ).then((s) => s.firstOrNull);
                                           _shouldSetState = true;
+
+                                          // Guard against no Staff record or
+                                          // Staff record without a linked
+                                          // pharmacy — staff without a
+                                          // pharmacy link can't use the POS.
+                                          if (_model.staff == null ||
+                                              _model.staff!.pharmId == null) {
+                                            if (_shouldSetState)
+                                              safeSetState(() {});
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Your account is not linked to a pharmacy. Contact your owner to be added to a pharmacy team.',
+                                                  style:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily,
+                                                            useGoogleFonts:
+                                                                false,
+                                                          ),
+                                                ),
+                                                backgroundColor:
+                                                    const Color(0xFFB91C1C),
+                                                duration: const Duration(
+                                                    seconds: 4),
+                                              ),
+                                            );
+                                            return;
+                                          }
                                           logFirebaseEvent(
                                               'Container_backend_call');
                                           _model.pharm = await PharmacyRecord

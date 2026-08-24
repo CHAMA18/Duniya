@@ -101,7 +101,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         parameters: {'screen_name': 'PatientRecords'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
-    _patients = <PatientRecord>[];
+    _patients = _buildMockPatients();
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 

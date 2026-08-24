@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_google_map.dart';
@@ -444,9 +443,8 @@ class _RequestWidgetState extends State<RequestWidget>
                                                         ),
                                                         MouseRegion(
                                                           opaque: false,
-                                                          cursor: MouseCursor
-                                                                  .defer ??
-                                                              MouseCursor.defer,
+                                                          cursor:
+                                                              SystemMouseCursors.click,
                                                           child:
                                                               AnimatedContainer(
                                                             duration: Duration(
@@ -529,9 +527,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                           opaque: false,
                                                           cursor:
                                                               SystemMouseCursors
-                                                                      .basic ??
-                                                                  MouseCursor
-                                                                      .defer,
+                                                                      .basic,
                                                           child:
                                                               AnimatedContainer(
                                                             duration: Duration(
@@ -568,9 +564,7 @@ class _RequestWidgetState extends State<RequestWidget>
                                                           opaque: false,
                                                           cursor:
                                                               SystemMouseCursors
-                                                                      .click ??
-                                                                  MouseCursor
-                                                                      .defer,
+                                                                      .click,
                                                           child:
                                                               AnimatedContainer(
                                                             duration: Duration(
@@ -743,55 +737,48 @@ class _RequestWidgetState extends State<RequestWidget>
                                                                   () async {
                                                                 logFirebaseEvent(
                                                                     'REQUEST_PAGE_CONFIRM_DELIVERY_BTN_ON_TAP');
-                                                                logFirebaseEvent(
-                                                                    'Button_backend_call');
 
-                                                                await currentUserReference!
-                                                                    .update(
-                                                                        createUserRecordData(
-                                                                  displayName:
-                                                                      currentUserDisplayName,
-                                                                ));
-                                                                logFirebaseEvent(
-                                                                    'Button_navigate_back');
-                                                                context.pop();
-                                                                logFirebaseEvent(
-                                                                    'Button_show_snack_bar');
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  SnackBar(
-                                                                    content:
-                                                                        Text(
-                                                                      'You successfully updated your profile information!',
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .override(
-                                                                            font:
-                                                                                TextStyle(fontFamily: kAppFontFamily, 
+                                                                // NOTE: This page does not carry a purchase-order or
+                                                                // goods-received DocumentReference, so there's nothing
+                                                                // in Firestore to flip to "Delivered". The previous
+                                                                // implementation was a leftover profile-update call
+                                                                // that did nothing useful and lied to the user with a
+                                                                // success toast. For now we surface the limitation
+                                                                // honestly so the user knows to file the delivery in
+                                                                // the Goods Received page instead.
+                                                                if (context.mounted) {
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      content: Text(
+                                                                        'Delivery confirmation is handled on the Goods Received page. Open the relevant purchase order there to mark it received.',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              font: TextStyle(fontFamily: kAppFontFamily,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                              color: FlutterFlowTheme.of(context).primaryText,
+                                                                              fontSize: 14.0,
+                                                                              letterSpacing: 0.0,
                                                                               fontWeight: FontWeight.w500,
                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                             ),
-                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                            fontSize:
-                                                                                14.0,
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                          ),
+                                                                      ),
+                                                                      duration: Duration(
+                                                                          milliseconds:
+                                                                              4000),
+                                                                      backgroundColor:
+                                                                          const Color(
+                                                                              0xFF9900FF),
                                                                     ),
-                                                                    duration: Duration(
-                                                                        milliseconds:
-                                                                            4000),
-                                                                    backgroundColor:
-                                                                        Color(
-                                                                            0xFF39D2C0),
-                                                                  ),
-                                                                );
+                                                                  );
+                                                                  logFirebaseEvent(
+                                                                      'Button_navigate_back');
+                                                                  context.pop();
+                                                                }
                                                               },
                                                               text: FFLocalizations
                                                                       .of(context)

@@ -3,7 +3,6 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/index.dart';
@@ -1739,21 +1738,21 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
     });
 
     try {
-      // 1. Create the pharmacy document
-      final pharmacyRef = await PharmacyRecord.createDoc(
-        currentUserReference!,
-      ).set(createPharmacyRecordData(
+      // 1. Create the pharmacy document — capture the doc reference once so
+      //    PharmacyUser + Staff records below link to the SAME doc, not a phantom.
+      final pharmacyDocRef = PharmacyRecord.createDoc(currentUserReference!);
+      await pharmacyDocRef.set(createPharmacyRecordData(
         name: name,
         address: address,
         userID: currentUserReference,
         deleted: false,
       ));
 
-      final pharmacyDocRef = PharmacyRecord.createDoc(currentUserReference!);
-
       // 2. Create outlets under the pharmacy
       for (final outlet in _model.outletDrafts) {
-        await OutletRecord.createDoc(currentUserReference!).set(
+        final outletRef =
+            OutletRecord.createDoc(currentUserReference!);
+        await outletRef.set(
           createOutletRecordData(
             name: outlet.name,
             code: outlet.code,
@@ -1763,6 +1762,10 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
             updatedAt: getCurrentTimestamp,
           ),
         );
+        // Back-reference the outlet to its parent pharmacy — the Outlet
+        // schema doesn't have a `pharmacyId` field in the codegen, so we
+        // write the raw field name here.
+        await outletRef.update({'PharmacyId': pharmacyDocRef});
       }
 
       // 3. Create PharmacyUser records for each team member with RBAC
@@ -1792,8 +1795,9 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
         });
       }
 
-      // 4. Send email notifications
-      _sendPharmacyCreatedEmail(
+      // 4. Send email notifications (await so lifecycle stays inside
+      //    the try-catch and any error surfaces to the user)
+      await _sendPharmacyCreatedEmail(
         pharmacyName: name,
         pharmacyAddress: address,
         outletCount: _model.outletDrafts.length,
@@ -1803,7 +1807,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
       // 5. Send team invitation emails
       for (final member in _model.memberDrafts) {
         if (member.email.isNotEmpty) {
-          _sendTeamInviteEmail(
+          await _sendTeamInviteEmail(
             recipientName: member.name,
             recipientEmail: member.email,
             pharmacyName: name,
@@ -1843,7 +1847,12 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
 
   // ─── EMAIL NOTIFICATION METHODS ────────────────────────────────────────────
 
-  static const String _emailServiceUrl = 'http://localhost:3001/api/email';
+  // Email service URL. Override at build time with
+  //   --dart-define=EMAIL_SERVICE_URL=https://api.example.com/email
+  // If not provided, email notifications are silently skipped (no crash,
+  // no misleading localhost call from a deployed browser).
+  static const String _emailServiceUrl =
+      String.fromEnvironment('EMAIL_SERVICE_URL', defaultValue: '');
 
   Future<void> _sendPharmacyCreatedEmail({
     required String pharmacyName,
@@ -1851,9 +1860,18 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
     required int outletCount,
     required int memberCount,
   }) async {
+    if (_emailServiceUrl.isEmpty) {
+      // No email backend configured — silently skip rather than firing
+      // an unreachable localhost request from a deployed browser.
+      return;
+    }
     try {
-      final userEmail = currentUserEmail ?? '';
-      final userName = currentUserDisplayName ?? 'Pharmacy Owner';
+      final userEmail = currentUserEmail;
+      // currentUserDisplayName is non-nullable (returns '' if unset) —
+      // prefer email as the visible identifier when display name is blank.
+      final userName = currentUserDisplayName.isNotEmpty
+          ? currentUserDisplayName
+          : (userEmail.isNotEmpty ? userEmail : 'Pharmacy Owner');
 
       await http.post(
         Uri.parse('$_emailServiceUrl/pharmacy-created'),
@@ -1879,8 +1897,13 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
     required String role,
     String? outletName,
   }) async {
+    if (_emailServiceUrl.isEmpty) {
+      return;
+    }
     try {
-      final invitedBy = currentUserDisplayName ?? 'Pharmacy Admin';
+      final invitedBy = currentUserDisplayName.isNotEmpty
+          ? currentUserDisplayName
+          : (currentUserEmail.isNotEmpty ? currentUserEmail : 'Pharmacy Admin');
 
       await http.post(
         Uri.parse('$_emailServiceUrl/team-invite'),
@@ -2041,7 +2064,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                   ),
                                 ),
                               const Spacer(),
-                              if (_tabController.index < 2)
+                              if (_tabController.index < 1)
                                 FilledButton.icon(
                                   onPressed: () {
                                     _tabController
@@ -2059,7 +2082,7 @@ class _AddstoresWidgetState extends State<AddstoresWidget>
                                         horizontal: 24, vertical: 14),
                                   ),
                                 ),
-                              if (_tabController.index == 2)
+                              if (_tabController.index == 1)
                                 FilledButton.icon(
                                   onPressed:
                                       _model.isSaving ? null : _savePharmacy,

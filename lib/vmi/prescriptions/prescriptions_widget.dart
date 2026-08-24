@@ -134,7 +134,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
 
-    _prescriptions = <Prescription>[];
+    _prescriptions = _mockPrescriptions;
     _formMedLines = [
       MedicationLine(drug: '', dose: '', frequency: '', duration: '')
     ];

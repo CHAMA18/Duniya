@@ -717,8 +717,10 @@ class _CartWidgetState extends State<CartWidget> {
                               }
                               logFirebaseEvent(
                                   'Button_close_dialog_drawer_etc');
+                              if (!mounted) return;
                               Navigator.pop(context);
                               logFirebaseEvent('Button_show_snack_bar');
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(

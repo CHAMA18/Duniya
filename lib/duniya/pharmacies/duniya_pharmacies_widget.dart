@@ -68,7 +68,8 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
         final key = s.name.trim().toLowerCase();
         if (key.isEmpty) continue;
         // Stock rows carry the pharmacy NAME in the Pharmacy field.
-        final pharmacyKey = (s.pharmacy ?? '').trim().toLowerCase();
+        // s.pharmacy is a non-nullable String (defaults to '' when unset).
+        final pharmacyKey = s.pharmacy.trim().toLowerCase();
         if (pharmacyKey.isEmpty) continue;
         final value = s.quantity * s.price;
         final prev = stats[pharmacyKey] ?? (0.0, 0);
@@ -125,6 +126,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     int retries = 0;
     late StreamController<List<PharmacyRecord>> controller;
     StreamSubscription<List<PharmacyRecord>>? subscription;
+    Timer? retryTimer;
 
     void subscribe() {
       subscription?.cancel();
@@ -145,8 +147,11 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
             controller.addError(error);
             controller.close();
           } else {
-            // Wait 2 seconds, then retry.
-            Future.delayed(const Duration(seconds: 2), subscribe);
+            // Wait 2 seconds, then retry. Hold the Timer so we can cancel
+            // it if the controller is cancelled mid-wait (otherwise the
+            // retry fires on a closed controller → StateError).
+            retryTimer?.cancel();
+            retryTimer = Timer(const Duration(seconds: 2), subscribe);
           }
         },
         onDone: () {
@@ -158,6 +163,7 @@ class _PulsePharmaciesWidgetState extends State<PulsePharmaciesWidget> {
     controller = StreamController<List<PharmacyRecord>>(
       onListen: subscribe,
       onCancel: () {
+        retryTimer?.cancel();
         subscription?.cancel();
       },
     );

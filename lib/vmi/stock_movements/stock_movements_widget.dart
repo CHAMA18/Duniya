@@ -1666,15 +1666,27 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     ),
                     buildCell(
                       flex: columnFlexes[3],
-                      child: Text(
-                        '${mType == 'RECEIVED' ? '+' : '-'}${movement.quantity}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: _cellStyle(
-                          mType == 'RECEIVED' ? primaryColor : onSurface,
-                          weight: FontWeight.w500,
-                        ),
-                      ),
+                      child: Builder(builder: (context) {
+                        // Use the signed quantity to determine direction.
+                        // ADJUSTMENT can be + (found stock) or − (loss);
+                        // SALE_RETURN / RECEIVED / TRANSFER-IN are positive;
+                        // everything else (DISPENSE / SOLD / TRANSFER-OUT / LOSS) is negative.
+                        final qty = movement.quantity;
+                        final isPositive =
+                            mType == 'RECEIVED' ||
+                                mType == 'SALE_RETURN' ||
+                                (mType == 'ADJUSTMENT' && qty > 0);
+                        final displayQty = isPositive ? qty : -qty;
+                        return Text(
+                          '${isPositive ? '+' : '-'}${displayQty.abs()}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: _cellStyle(
+                            isPositive ? primaryColor : onSurface,
+                            weight: FontWeight.w500,
+                          ),
+                        );
+                      }),
                     ),
                     buildCell(
                       flex: columnFlexes[4],

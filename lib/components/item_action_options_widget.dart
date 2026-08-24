@@ -90,7 +90,7 @@ class _ItemActionOptionsWidgetState extends State<ItemActionOptionsWidget> {
               children: [
                 MouseRegion(
                   opaque: false,
-                  cursor: MouseCursor.defer ?? MouseCursor.defer,
+                  cursor: SystemMouseCursors.click,
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,
@@ -187,7 +187,7 @@ class _ItemActionOptionsWidgetState extends State<ItemActionOptionsWidget> {
                 ),
                 MouseRegion(
                   opaque: false,
-                  cursor: MouseCursor.defer ?? MouseCursor.defer,
+                  cursor: SystemMouseCursors.click,
                   child: InkWell(
                     splashColor: Colors.transparent,
                     focusColor: Colors.transparent,

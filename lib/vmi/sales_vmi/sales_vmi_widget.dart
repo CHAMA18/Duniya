@@ -4,8 +4,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
-import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -119,14 +117,26 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
         (item['productName'] as String).toLowerCase() == name.toLowerCase());
     if (existing >= 0) {
       final item = _cart[existing];
-      final qty = (item['quantity'] as int) + 1;
+      final currentQty = (item['quantity'] as int);
+      final newQty = currentQty + 1;
+      // Clamp to available stock so users can't add more than what is on hand
+      if (newQty > stock.quantity) {
+        _toast(
+            'Only ${stock.quantity} of "${name}" is available in stock.',
+            isError: true);
+        return;
+      }
       final price = item['sellingPrice'] as double;
       _cart[existing] = {
         ...item,
-        'quantity': qty,
-        'total': qty * price,
+        'quantity': newQty,
+        'total': newQty * price,
       };
     } else {
+      if (stock.quantity < 1) {
+        _toast('"$name" is out of stock.', isError: true);
+        return;
+      }
       _cart.add({
         'productId': stock.reference,
         'productName': name,
@@ -145,6 +155,22 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
     if (qty < 1) {
       _cart.removeAt(index);
     } else {
+      // Lookup the live stock record for this cart item — if the requested
+      // qty exceeds what's on hand, clamp + warn (prevents stock going negative)
+      final productName = (item['productName'] as String).toLowerCase();
+      StockRecord? stockMatch;
+      for (final s in _stockItems) {
+        if (s.name.trim().toLowerCase() == productName) {
+          stockMatch = s;
+          break;
+        }
+      }
+      if (stockMatch != null && qty > stockMatch.quantity) {
+        _toast(
+            'Only ${stockMatch.quantity} of "${item['productName']}" is available.',
+            isError: true);
+        return;
+      }
       final price = item['sellingPrice'] as double;
       _cart[index] = {
         ...item,
@@ -179,6 +205,36 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
         return;
       }
 
+      // Pre-flight: re-validate stock availability for every cart item.
+      // Refuse to commit the sale if any item's requested qty exceeds the
+      // live stock on hand — prevents silent negative-stock writes.
+      final stockByName = <String, StockRecord>{};
+      for (final s in _stockItems) {
+        final key = s.name.trim().toLowerCase();
+        if (key.isNotEmpty && !stockByName.containsKey(key)) {
+          stockByName[key] = s;
+        }
+      }
+      for (final item in _cart) {
+        final productName = (item['productName'] as String).trim();
+        final soldQty = item['quantity'] as int;
+        final stock = stockByName[productName.toLowerCase()];
+        if (stock == null) {
+          _toast(
+              'No stock record found for "$productName". Sale aborted.',
+              isError: true);
+          safeSetState(() => _completing = false);
+          return;
+        }
+        if (soldQty > stock.quantity) {
+          _toast(
+              'Only ${stock.quantity} of "$productName" is available. Sale aborted.',
+              isError: true);
+          safeSetState(() => _completing = false);
+          return;
+        }
+      }
+
       final totalAmount = _cartTotal;
 
       // Create SaleVMI record
@@ -192,15 +248,6 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
         totalAmount: totalAmount,
         createdAt: DateTime.now(),
       ));
-
-      // Build stock lookup (name → ref) for auto-decrement
-      final stockByName = <String, DocumentReference>{};
-      for (final s in _stockItems) {
-        final key = s.name.trim().toLowerCase();
-        if (key.isNotEmpty && !stockByName.containsKey(key)) {
-          stockByName[key] = s.reference;
-        }
-      }
 
       for (final item in _cart) {
         final itemDoc = SaleItemVMIRecord.createDoc(saleDoc);
@@ -221,16 +268,14 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
           createdAt: DateTime.now(),
         ));
 
-        // Reduce stock
+        // Reduce stock — guaranteed non-null by pre-flight check above
         final productName = (item['productName'] as String).trim();
         final soldQty = item['quantity'] as int;
-        final stockRef = stockByName[productName.toLowerCase()];
-        if (stockRef != null && soldQty > 0) {
-          await stockRef.update({
-            'Quantity': FieldValue.increment(-soldQty),
-            'UpdatedAt': FieldValue.serverTimestamp(),
-          });
-        }
+        final stockRef = stockByName[productName.toLowerCase()]!.reference;
+        await stockRef.update({
+          'Quantity': FieldValue.increment(-soldQty),
+          'UpdatedAt': FieldValue.serverTimestamp(),
+        });
       }
 
       // Clear cart + reload stock

@@ -1454,9 +1454,13 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
     // Filter items by search
     List<Map<String, dynamic>> visibleItems = _countItems;
     if (search.isNotEmpty) {
-      // Note: product name lookup is async, so we show all when searching
-      // and let the FutureBuilder handle it. For simplicity, show all.
-      visibleItems = _countItems;
+      // Filter by product name (already populated on _countItems during
+      // _loadProducts) — case-insensitive substring match.
+      visibleItems = _countItems.where((item) {
+        final name = (item['productName'] as String? ?? '').toLowerCase();
+        final sku = (item['productSku'] as String? ?? '').toLowerCase();
+        return name.contains(search) || sku.contains(search);
+      }).toList();
     }
 
     return Container(
@@ -1773,20 +1777,26 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                   onChanged: (value) {
                     int? parsed = int.tryParse(value);
                     safeSetState(() {
-                      // Mark as audited the moment the user types
-                      // anything — including an empty string. This is
-                      // the explicit "I have counted this product"
-                      // signal that gates Submit Count inclusion.
-                      _countItems[idx]['isAudited'] = true;
                       if (parsed != null) {
+                        // Valid integer — record as audited with this count.
+                        _countItems[idx]['isAudited'] = true;
                         _countItems[idx]['countedQuantity'] = parsed;
                         _countItems[idx]['variance'] =
                             hasSystem ? parsed - systemQty : 0;
                       } else if (value.isEmpty) {
+                        // Cleared mid-typing — leave isAudited unchanged.
+                        // Reset countedQuantity and variance to 0 so the
+                        // UI doesn't show stale values from the previous
+                        // audit. The user can either re-type to re-audit
+                        // or leave the row alone if they intended to
+                        // un-audit it.
                         _countItems[idx]['countedQuantity'] = 0;
-                        _countItems[idx]['variance'] =
-                            hasSystem ? -systemQty : 0;
+                        _countItems[idx]['variance'] = 0;
                       }
+                      // If parsed == null AND value is non-empty (e.g. "1.5"
+                      // or "abc"), do nothing — leave the previous audited
+                      // state and countedQuantity unchanged. The user must
+                      // type a valid integer for the row to be re-audited.
                     });
                   },
                 ),

@@ -56,6 +56,48 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    // Guard against deep-link navigation without a `sale` query param.
+    if (widget.sale == null) {
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        appBar: AppBar(
+          title: const Text('Sale items'),
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          foregroundColor: Colors.white,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.receipt_long_outlined,
+                  size: 56,
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No sale selected',
+                  style: FlutterFlowTheme.of(context).titleMedium.override(
+                        fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                        useGoogleFonts: false,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Open a sale from the Sales list to view its line items.',
+                  textAlign: TextAlign.center,
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return StreamBuilder<SalesRecord>(
       stream: SalesRecord.getDocument(widget.sale!),
       builder: (context, snapshot) {
@@ -903,13 +945,17 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
                                                                                 true;
                                                                             logFirebaseEvent('Button_backend_call');
 
-                                                                            await _model.fineeCopy!.reference.update({
-                                                                              ...mapToFirestore(
-                                                                                {
-                                                                                  'Revenue': FieldValue.increment(-(listViewSaleitemRecord.totalPrice)),
-                                                                                },
-                                                                              ),
-                                                                            });
+                                                                            // Guard against no Finance record — new
+                                                                            // accounts may have never made a sale.
+                                                                            if (_model.fineeCopy != null) {
+                                                                              await _model.fineeCopy!.reference.update({
+                                                                                ...mapToFirestore(
+                                                                                  {
+                                                                                    'Revenue': FieldValue.increment(-(listViewSaleitemRecord.totalPrice)),
+                                                                                  },
+                                                                                ),
+                                                                              });
+                                                                            }
                                                                             logFirebaseEvent('Button_backend_call');
 
                                                                             await salesItemsSalesRecord.reference.update({
@@ -922,13 +968,34 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
                                                                             });
                                                                             logFirebaseEvent('Button_backend_call');
 
-                                                                            await listViewSaleitemRecord.stockID!.update({
-                                                                              ...mapToFirestore(
-                                                                                {
-                                                                                  'Quantity': FieldValue.increment(listViewSaleitemRecord.quantity),
-                                                                                },
-                                                                              ),
-                                                                            });
+                                                                            // Stock link may be null for manually-created
+                                                                            // sale items — guard before re-incrementing.
+                                                                            if (listViewSaleitemRecord.stockID != null) {
+                                                                              await listViewSaleitemRecord.stockID!.update({
+                                                                                ...mapToFirestore(
+                                                                                  {
+                                                                                    'Quantity': FieldValue.increment(listViewSaleitemRecord.quantity),
+                                                                                  },
+                                                                                ),
+                                                                              });
+                                                                              logFirebaseEvent('Button_backend_call');
+
+                                                                              // Write an audit-trail StockMovement so the
+                                                                              // stock-movements ledger can trace the reversal.
+                                                                              final ownerRef = currentUserReference;
+                                                                              if (ownerRef != null) {
+                                                                                await StockMovementRecord.createDoc(ownerRef).set(createStockMovementRecordData(
+                                                                                  productId: listViewSaleitemRecord.stockID,
+                                                                                  productName: null,
+                                                                                  quantity: listViewSaleitemRecord.quantity,
+                                                                                  movementType: 'SALE_RETURN',
+                                                                                  reason: 'Reversal of sale ${salesItemsSalesRecord.reference.id}',
+                                                                                  movementReference: salesItemsSalesRecord.reference.id,
+                                                                                  recordedById: currentUserReference,
+                                                                                  createdAt: DateTime.now(),
+                                                                                ));
+                                                                              }
+                                                                            }
                                                                             logFirebaseEvent('Button_backend_call');
                                                                             await listViewSaleitemRecord.reference.delete();
                                                                             logFirebaseEvent('Button_backend_call');

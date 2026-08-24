@@ -575,12 +575,12 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // UNKNOWN — Minimal permissions (safety net)
+  // UNKNOWN — No permissions granted. This is the role used during the
+  // loading window before `currentUserDocument` resolves; granting any
+  // permission here creates a default-allow window where a freshly-
+  // signed-in user can briefly see / do things they shouldn't.
   // ═══════════════════════════════════════════════════════════════════
-  AppRole.unknown: {
-    Permission.settingsView,
-    Permission.notificationsView,
-  },
+  AppRole.unknown: {}, // explicitly empty — deny by default
 };
 
 /// ─────────────────────────────────────────────────────────────────────

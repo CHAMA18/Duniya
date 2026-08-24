@@ -46,7 +46,7 @@ class _ToolButtonWidgetState extends State<ToolButtonWidget> {
   Widget build(BuildContext context) {
     return MouseRegion(
       opaque: false,
-      cursor: SystemMouseCursors.click ?? MouseCursor.defer,
+      cursor: SystemMouseCursors.click,
       child: Container(
         width: 150.0,
         height: 150.0,

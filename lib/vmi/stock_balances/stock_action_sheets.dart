@@ -674,7 +674,7 @@ class _StockAdjustSheetState extends State<StockAdjustSheet> {
               widget.product.hasName() ? widget.product.name : null,
           outletId: widget.balance.outletId,
           quantity: d,
-          movementType: 'Adjustment',
+          movementType: 'ADJUSTMENT',
           reason: reason,
           movementReference: null,
           recordedById: user,

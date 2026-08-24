@@ -56,6 +56,49 @@ class _EditstoresWidgetState extends State<EditstoresWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // Guard against deep-link navigation without a `pharmId` query param.
+    if (widget.pharmId == null) {
+      return Scaffold(
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        appBar: AppBar(
+          title: const Text('Edit pharmacy'),
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          foregroundColor: Colors.white,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.storefront_outlined,
+                  size: 56,
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No pharmacy selected',
+                  style: FlutterFlowTheme.of(context).titleMedium.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).titleMediumFamily,
+                        useGoogleFonts: false,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Open a pharmacy from the list to edit its details.',
+                  textAlign: TextAlign.center,
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return StreamBuilder<PharmacyRecord>(
       stream: PharmacyRecord.getDocument(widget.pharmId!),
       builder: (context, snapshot) {

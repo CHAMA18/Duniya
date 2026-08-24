@@ -74,14 +74,6 @@ enum AppRole {
       case 'finance_admin_viewer':
       case 'admin_viewer':
         return AppRole.financeViewer;
-      case 'stock_controller':
-      case 'stockcontroller':
-        return AppRole.stockController;
-      case 'finance_viewer':
-      case 'financeviewer':
-      case 'finance_admin_viewer':
-      case 'admin_viewer':
-        return AppRole.financeViewer;
       case 'cashier':
         return AppRole.cashier;
       case 'sales_assistant':

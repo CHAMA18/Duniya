@@ -1,18 +1,12 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'drug_interactions_model.dart';
 export 'drug_interactions_model.dart';
@@ -158,7 +152,6 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   // ═══════════════════════════════════════════════════════════════════
 
   List<DrugInteraction> get _mockAlerts {
-    return <DrugInteraction>[];
     final now = DateTime.now();
     return [
       DrugInteraction(
@@ -334,7 +327,6 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   }
 
   List<InteractionRule> get _mockRules {
-    return <InteractionRule>[];
     return [
       InteractionRule(
           id: 'R-001',

@@ -76,12 +76,20 @@ class FFAlgoliaManager {
     }
 
     AlgoliaQuerySnapshot? snapshot;
-    snapshot = await query
-        .getObjects()
-        .then((value) => snapshot = value)
-        .catchError((error, stackTrace) {
+    Object? caughtError;
+    try {
+      snapshot = await query.getObjects();
+    } catch (error, stackTrace) {
+      caughtError = error;
       print('Algolia error: $error\nStack trace: $stackTrace');
-    });
-    return _algoliaCache[params] = snapshot?.hits ?? [];
+    }
+    if (snapshot == null) {
+      // Don't cache the failure — that would make every subsequent query
+      // for the same params return the (empty) cached result forever,
+      // even after the network has recovered. Throw so callers can decide
+      // how to handle it (retry, show empty state, etc.).
+      throw Exception('Algolia query failed: $caughtError');
+    }
+    return _algoliaCache[params] = snapshot.hits;
   }
 }
