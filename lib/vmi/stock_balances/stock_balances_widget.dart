@@ -75,7 +75,20 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
     _productMasterFuture = queryProductMasterRecordOnce();
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    // Pharmacy-side page: Pulse network users are redirected to their
+    // network-wide equivalent ("Stock Balance Visibility"). This mirrors
+    // the inverse guard on the Pulse page (which sends pharmacy users
+    // home) and keeps the two account sides cleanly separated. It also
+    // covers deep links / stale history now that the sidebar hides this
+    // page for Pulse roles.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (AccessControl.isPulseUser(context)) {
+        context.goNamed('PulseStockBalances');
+        return;
+      }
+      safeSetState(() {});
+    });
   }
 
   @override

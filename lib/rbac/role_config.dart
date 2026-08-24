@@ -812,11 +812,13 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   // ═══ Pulse Admin ═══
   // Full network visibility including cold chain, expiry tracking,
   // and AI assistant — added in the Week 1 sidebar expansion.
+  // NOTE: the pharmacy-side VMI "Stock Balances" page is intentionally
+  // NOT in the Pulse nav — Pulse users see the network-wide
+  // "Stock Balance Visibility" page (pulseStockBalances) instead.
   AppRole.pulseAdmin: {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
-    NavItem.stockBalances,
     NavItem.stockCounts,
     NavItem.salesDispensing,
     NavItem.stockMovements,
@@ -841,11 +843,12 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
 
   // ═══ Pulse Staff ═══
   // Expanded with cold chain, expiry tracking, and AI assistant.
+  // NOTE: pharmacy-side VMI "Stock Balances" page is hidden for Pulse
+  // staff too — network stock data lives in "Stock Balance Visibility".
   AppRole.pulseStaff: {
     NavItem.home,
     NavItem.productCatalogue,
     NavItem.goodsReceived,
-    NavItem.stockBalances,
     NavItem.stockCounts,
     NavItem.salesDispensing,
     NavItem.stockMovements,
