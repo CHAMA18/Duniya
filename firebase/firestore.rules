@@ -243,6 +243,36 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // Import Audit log — every owner-signed import writes one doc here.
+    // Owner-only write (any authenticated user can read for transparency).
+    // Verified by checking the User's role == 'Owner' on the requesting
+    // account (top-level User collection).
+    // ─────────────────────────────────────────────────────────────────
+    function isPharmacyOwner() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/User/$(request.auth.uid))
+        && (
+          get(/databases/$(database)/documents/User/$(request.auth.uid))
+              .data.role == 'Owner'
+          || get(/databases/$(database)/documents/User/$(request.auth.uid))
+              .data.role == 'owner'
+        );
+    }
+
+    match /ImportAudit/{document} {
+      allow read: if signedIn();
+      allow create: if isPharmacyOwner()
+        // Basic integrity: signature_hash field is present and prefixed
+        // with the expected hash scheme marker. Deeper verification (re-hash
+        // the inputs and compare) is performed by a Cloud Function — out
+        // of scope for this rules pass.
+        && request.resource.data.signature_hash is String
+        && request.resource.data.signature_hash.matches('^sha256:.*')
+        && request.resource.data.signed_off_by_uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
     // ═══════════════════════════════════════════════════════════════
     // CATCH-ALL — the OfflineSyncService and CacheWarmer use
     // dynamically-constructed collection names like:

@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/import_wizard.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
@@ -949,6 +950,15 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
+                ),
+                const SizedBox(width: 8.0),
+                // Owner-only Import button — opens the Import Wizard
+                // (smart-detect → reconcile → owner sign-off → write).
+                // Hidden for non-owners via ImportButton's role check.
+                ImportButton(
+                  config: StockCountImportConfig(),
+                  label: 'Import',
+                  icon: Icons.upload_file_rounded,
                 ),
               ],
             ),

@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/import_wizard.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/shimmer_loading_card/shimmer_loading_card_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
@@ -622,6 +623,15 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                   label: 'Refresh',
                   onTap: () => safeSetState(() {}),
                   isPrimary: false,
+                ),
+                const SizedBox(width: 8.0),
+                // Owner-only Import button — opens the Import Wizard
+                // (smart-detect → reconcile → owner sign-off → write).
+                // Hidden for non-owners via ImportButton's role check.
+                ImportButton(
+                  config: StockBalanceImportConfig(),
+                  label: 'Import',
+                  icon: Icons.upload_file_rounded,
                 ),
                 const SizedBox(width: 8.0),
                 _HeroActionButton(
@@ -1887,24 +1897,13 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
-                FFButtonWidget(
-                  onPressed: () => _importFromSpreadsheet(),
-                  text: 'Import from Spreadsheet',
-                  icon: Icon(Icons.upload_file_rounded, size: 18.0),
-                  options: FFButtonOptions(
-                    height: 48.0,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 0.0),
-                    color: theme.secondaryBackground,
-                    textStyle: TextStyle(
-                      color: theme.primaryText,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    elevation: 0.0,
-                    borderSide: BorderSide(color: theme.alternate, width: 1.0),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
+                // Empty-state Import — opens the new Import Wizard
+                // (owner-only, smart-detect + reconcile + sign-off).
+                // Hidden for non-owners via the role check inside ImportButton.
+                ImportButton(
+                  config: StockBalanceImportConfig(),
+                  label: 'Import from Spreadsheet',
+                  icon: Icons.upload_file_rounded,
                 ),
               ],
             ),
