@@ -589,9 +589,9 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
             logFirebaseEvent('STORE_INVENTORY_POS_HERO_ON_TAP');
             logFirebaseEvent('StoreInventory_navigate_to');
             context.goNamed(
-              PointOfSalesWidget.routeName,
+              SalesVMIWidget.routeName,
               queryParameters: {
-                'pharm': serializeParam(
+                'pharmacy': serializeParam(
                   FFAppState().Pharm,
                   ParamType.String,
                 ),

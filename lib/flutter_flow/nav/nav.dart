@@ -240,8 +240,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: PointOfSalesWidget.routeName,
           path: PointOfSalesWidget.routePath,
           requireAuth: true,
-          builder: (context, params) => PointOfSalesWidget(
-            pharm: params.getParam(
+          // The POS page has been replaced by the Sales/Dispensing page
+          // (SalesVMIWidget) across the UI. The route is kept registered
+          // so old bookmarks / direct URLs still resolve — they now
+          // render SalesVMIWidget with the same pharmacy scope param,
+          // mapped from the legacy `pharm` query key to SalesVMI's
+          // expected `pharmacy` key.
+          builder: (context, params) => SalesVMIWidget(
+            pharmacy: params.getParam(
               'pharm',
               ParamType.String,
             ),

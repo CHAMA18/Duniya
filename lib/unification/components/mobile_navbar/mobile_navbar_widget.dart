@@ -134,9 +134,9 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                         logFirebaseEvent('IconButton_navigate_to');
 
                         context.goNamed(
-                          PointOfSalesWidget.routeName,
+                          SalesVMIWidget.routeName,
                           queryParameters: {
-                            'pharm': serializeParam(
+                            'pharmacy': serializeParam(
                               FFAppState().Pharm,
                               ParamType.String,
                             ),

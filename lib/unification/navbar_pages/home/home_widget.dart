@@ -1820,9 +1820,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                               logFirebaseEvent(
                                                   'Home_navigate_to');
                                               context.goNamed(
-                                                PointOfSalesWidget.routeName,
+                                                SalesVMIWidget.routeName,
                                                 queryParameters: {
-                                                  'pharm': serializeParam(
+                                                  'pharmacy': serializeParam(
                                                     FFAppState().Pharm,
                                                     ParamType.String,
                                                   ),

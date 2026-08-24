@@ -152,7 +152,7 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                               'Container_navigate_to');
 
                                           context.pushNamed(
-                                              PointOfSalesWidget.routeName);
+                                              SalesVMIWidget.routeName);
 
                                           if (_shouldSetState)
                                             safeSetState(() {});
@@ -182,9 +182,9 @@ class _PharmacyToolsWidgetState extends State<PharmacyToolsWidget> {
                                             'Container_navigate_to');
 
                                         context.pushNamed(
-                                          PointOfSalesWidget.routeName,
+                                          SalesVMIWidget.routeName,
                                           queryParameters: {
-                                            'pharm': serializeParam(
+                                            'pharmacy': serializeParam(
                                               _model.pharm?.name,
                                               ParamType.String,
                                             ),
