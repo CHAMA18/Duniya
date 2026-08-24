@@ -46,7 +46,7 @@ class _MyPharmaciesWidgetState extends State<MyPharmaciesWidget> {
   }
 
   DocumentReference? _pharmacyParent() {
-    return AccessControl.parentRef(context) ?? currentUserReference;
+    return AccessControl.networkWideQueryParent(context);
   }
 
   Widget _buildFilterChip({

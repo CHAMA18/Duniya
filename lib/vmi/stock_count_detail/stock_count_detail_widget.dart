@@ -853,8 +853,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                   child: AuthUserStreamWidget(
                     builder: (context) => FutureBuilder<List<PharmacyRecord>>(
                       future: queryPharmacyRecordOnce(
-                        parent: AccessControl.parentRef(context) ??
-                            currentUserReference,
+                        parent: AccessControl.networkWideQueryParent(context),
                       ),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {

@@ -93,7 +93,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                 builder: (context, constraints) {
                   final isWide = constraints.maxWidth >= 1100;
                   final scope =
-                      AccessControl.parentRef(context) ?? currentUserReference;
+                      AccessControl.networkWideQueryParent(context);
 
                   return StreamBuilder<List<SalesRecord>>(
                     stream: querySalesRecord(

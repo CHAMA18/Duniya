@@ -85,7 +85,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       _isDark ? const Color(0xFFEF4444).withAlpha(30) : Color(0xFFFEF2F2);
 
   DocumentReference? _receiptScopeParent() {
-    return AccessControl.parentRef(context) ?? currentUserReference;
+    return AccessControl.networkWideQueryParent(context);
   }
 
   bool get _isPulseUser => AccessControl.isPulseUser(context);

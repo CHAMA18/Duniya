@@ -75,7 +75,7 @@ class _GoodsReceivedWidgetState extends State<GoodsReceivedWidget> {
     // Pulse is a network workspace: a null parent selects the collection group
     // so dispatch records can be viewed and filtered across approved pharmacies.
     if (_isPulseUser) return null;
-    return AccessControl.parentRef(context) ?? currentUserReference;
+    return AccessControl.networkWideQueryParent(context);
   }
 
   bool get _isPulseUser => AccessControl.isPulseUser(context);

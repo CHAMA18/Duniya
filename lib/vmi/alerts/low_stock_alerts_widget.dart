@@ -643,7 +643,7 @@ class _LowStockAlertsWidgetState extends State<LowStockAlertsWidget> {
             builder: (context) =>
                 FutureBuilder<List<PharmacyRecord>>(
               future: queryPharmacyRecordOnce(
-                parent: AccessControl.parentRef(context) ?? currentUserReference,
+                parent: AccessControl.networkWideQueryParent(context),
               ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

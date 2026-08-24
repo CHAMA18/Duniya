@@ -183,8 +183,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                 builder: (context) =>
                                     StreamBuilder<List<PharmacyRecord>>(
                                   stream: queryPharmacyRecord(
-                                    parent: AccessControl.parentRef(context) ??
-                                        currentUserReference,
+                                    parent: AccessControl.networkWideQueryParent(context),
                                     queryBuilder: (pharmacyRecord) =>
                                         pharmacyRecord.where(
                                       'Name',
@@ -1378,8 +1377,7 @@ class _PharmacyInventoryWidgetState extends State<PharmacyInventoryWidget> {
                                                     child: StreamBuilder<
                                                         List<StockRecord>>(
                                                       stream: queryStockRecord(
-                                                        parent: AccessControl.parentRef(context) ??
-                                                            currentUserReference,
+                                                        parent: AccessControl.networkWideQueryParent(context),
                                                         queryBuilder:
                                                             (stockRecord) =>
                                                                 stockRecord

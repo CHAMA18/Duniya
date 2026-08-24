@@ -77,7 +77,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
   }
 
   DocumentReference? _pharmacyParent() {
-    return AccessControl.parentRef(context) ?? currentUserReference;
+    return AccessControl.networkWideQueryParent(context);
   }
 
   Future<void> _loadAllData() async {

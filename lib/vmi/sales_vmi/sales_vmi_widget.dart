@@ -83,9 +83,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
 
   Future<void> _loadStock() async {
     try {
-      final ownerRef = AccessControl.isPulseUser(context)
-          ? null
-          : AccessControl.parentRef(context) ?? currentUserReference;
+      final ownerRef = AccessControl.networkWideQueryParent(context);
       final stocks = await queryStockRecordOnce(parent: ownerRef);
       stocks.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       if (!mounted) return;
@@ -168,7 +166,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
       if (AccessControl.isPulseUser(context)) {
         ownerRef = currentUserReference;
       } else {
-        ownerRef = AccessControl.parentRef(context) ?? currentUserReference;
+        ownerRef = AccessControl.networkWideQueryParent(context);
       }
       if (ownerRef == null) {
         _toast('Unable to identify your account.', isError: true);
@@ -864,9 +862,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
   Widget _buildRecentSales() {
     return AuthUserStreamWidget(
       builder: (context) {
-        final ownerRef = AccessControl.isPulseUser(context)
-            ? null
-            : AccessControl.parentRef(context) ?? currentUserReference;
+        final ownerRef = AccessControl.networkWideQueryParent(context);
         return StreamBuilder<List<SaleRecordVMI>>(
           stream: querySaleRecordVMI(
             parent: ownerRef,

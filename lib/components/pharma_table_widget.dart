@@ -157,8 +157,7 @@ class _PharmaTableWidgetState extends State<PharmaTableWidget> {
                 builder: (context) => StreamBuilder<List<PharmacyRecord>>(
                   stream: queryPharmacyRecord(
                     parent:
-                        AccessControl.parentRef(context) ??
-                            currentUserReference,
+                        AccessControl.networkWideQueryParent(context),
                     queryBuilder: (pharmacyRecord) => pharmacyRecord.where(
                       'deleted',
                       isEqualTo: false,

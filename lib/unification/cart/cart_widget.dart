@@ -63,7 +63,7 @@ class _CartWidgetState extends State<CartWidget> {
     required bool allowSinglePharmacyFallback,
   }) async {
     final candidates = await queryStockRecordOnce(
-      parent: AccessControl.parentRef(context) ?? currentUserReference,
+      parent: AccessControl.networkWideQueryParent(context),
       queryBuilder: (stockRecord) => stockRecord.where(
         'Name',
         isEqualTo: productName,

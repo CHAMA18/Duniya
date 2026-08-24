@@ -909,10 +909,7 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                   // batches, while pharmacy users only see
                                   // batches belonging to their own owner scope.
                                   final parentRef =
-                                      AccessControl.isPulseUser(context)
-                                          ? null
-                                          : AccessControl.parentRef(context) ??
-                                              currentUserReference;
+                                      AccessControl.networkWideQueryParent(context);
 
                                   return StreamBuilder<List<BatchRecord>>(
                                     stream: queryBatchRecord(

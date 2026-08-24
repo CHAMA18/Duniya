@@ -562,7 +562,7 @@ class _OutletsWidgetState extends State<OutletsWidget> {
                 if (_model.codeTextController?.text.isEmpty ?? true) return;
 
                 final ownerRef =
-                    AccessControl.parentRef(context) ?? currentUserReference!;
+                    AccessControl.networkWideQueryParent(context)!;
 
                 await OutletRecord.createDoc(ownerRef).set(
                   createOutletRecordData(

@@ -132,10 +132,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                             stream: queryStockMovementRecord(
                               // Network staff review movement activity across
                               // pharmacies; pharmacy users remain owner-scoped.
-                              parent: AccessControl.isPulseUser(context)
-                                  ? null
-                                  : AccessControl.parentRef(context) ??
-                                      currentUserReference,
+                              parent: AccessControl.networkWideQueryParent(context),
                               queryBuilder: (stockMovementRecord) =>
                                   stockMovementRecord.orderBy('CreatedAt',
                                       descending: true),
@@ -353,9 +350,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     List<StockRecord> stocks = [];
     try {
       stocks = await queryStockRecordOnce(
-        parent: AccessControl.isPulseUser(context)
-            ? null
-            : AccessControl.parentRef(context) ?? currentUserReference,
+        parent: AccessControl.networkWideQueryParent(context),
       );
     } catch (_) {
       // Leave empty — dialog shows the empty hint.
@@ -735,9 +730,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         AuthUserStreamWidget(
           builder: (context) => FutureBuilder<List<PharmacyRecord>>(
             future: queryPharmacyRecordOnce(
-              parent: AccessControl.isPulseUser(context)
-                  ? null
-                  : AccessControl.parentRef(context) ?? currentUserReference,
+              parent: AccessControl.networkWideQueryParent(context),
             ),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {

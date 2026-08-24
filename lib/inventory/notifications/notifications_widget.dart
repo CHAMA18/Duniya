@@ -599,7 +599,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                       Expanded(
                         child: AuthUserStreamWidget(
                           builder: (context) {
-                            final parentRef = AccessControl.parentRef(context) ?? currentUserReference;
+                            final parentRef = AccessControl.networkWideQueryParent(context);
 
                             return StreamBuilder<List<StockRecord>>(
                               stream: queryStockRecord(

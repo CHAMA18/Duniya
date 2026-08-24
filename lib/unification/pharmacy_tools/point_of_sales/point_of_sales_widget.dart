@@ -75,11 +75,11 @@ class _PointOfSalesWidgetState extends State<PointOfSalesWidget> {
   }
 
   DocumentReference? _pharmacyScopeParent() {
-    return AccessControl.parentRef(context) ?? currentUserReference;
+    return AccessControl.networkWideQueryParent(context);
   }
 
   DocumentReference? _stockScopeParent() {
-    return AccessControl.parentRef(context) ?? currentUserReference;
+    return AccessControl.networkWideQueryParent(context);
   }
 
   String _effectivePharmacyName([List<PharmacyRecord>? pharmacies]) {

@@ -176,7 +176,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                         // Total Pharmacies Card
                                         FutureBuilder<int>(
                                           future: queryPharmacyRecordCount(
-                                            parent: AccessControl.parentRef(context),
+                                            parent: AccessControl.networkWideQueryParent(context),
                                           ),
                                           builder: (context, snapshot) {
                                             if (!snapshot.hasData) {
@@ -243,7 +243,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                 List<GoodsReceivedRecord>>(
                                             stream:
                                                 queryGoodsReceivedRecord(
-                                              parent: AccessControl.parentRef(context),
+                                              parent: AccessControl.networkWideQueryParent(context),
                                               queryBuilder:
                                                   (goodsReceivedRecord) =>
                                                       goodsReceivedRecord.where(
@@ -325,7 +325,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                                   PharmacyRecord>>(
                                                           stream:
                                                               queryPharmacyRecord(
-                                                            parent: AccessControl.parentRef(context),
+                                                            parent: AccessControl.networkWideQueryParent(context),
                                                           ),
                                                           builder:
                                                               (context,
@@ -723,7 +723,7 @@ class _VMIDashboardWidgetState extends State<VMIDashboardWidget> {
                                                             StockMovementRecord>>(
                                                     stream:
                                                         queryStockMovementRecord(
-                                                      parent: AccessControl.parentRef(context),
+                                                      parent: AccessControl.networkWideQueryParent(context),
                                                       queryBuilder:
                                                           (stockMovementRecord) =>
                                                               stockMovementRecord

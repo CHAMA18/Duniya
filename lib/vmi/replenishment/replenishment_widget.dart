@@ -49,7 +49,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
   /// Recalculate replenishment recommendations
   Future<void> _recalculate() async {
     final products = await queryProductMasterRecordOnce();
-    final ownerRef = AccessControl.parentRef(context) ?? currentUserReference!;
+    final ownerRef = AccessControl.networkWideQueryParent(context);
     final pharmacies = await queryPharmacyRecordOnce(parent: ownerRef);
 
     for (var pharmacy in pharmacies) {
@@ -113,9 +113,7 @@ class _ReplenishmentWidgetState extends State<ReplenishmentWidget> {
     String? selectedPharmacy;
     String? validationMessage;
 
-    final pharmacyParent = AccessControl.isPulseUser(context)
-        ? null
-        : AccessControl.parentRef(context) ?? currentUserReference;
+    final pharmacyParent = AccessControl.networkWideQueryParent(context);
     final pharmacies = await queryPharmacyRecordOnce(parent: pharmacyParent);
     if (!mounted) return;
     if (!AccessControl.isPulseUser(context) && pharmacies.isNotEmpty) {

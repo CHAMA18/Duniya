@@ -580,7 +580,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
   Widget _buildTopOverviewSection({required bool isPhone}) {
     final stockParent =
-        AccessControl.parentRef(context) ?? currentUserReference;
+        AccessControl.networkWideQueryParent(context);
 
     return AuthUserStreamWidget(
       builder: (context) => FutureBuilder<List<StockRecord>>(
@@ -718,7 +718,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
   Widget _buildAnalyticsOverviewSection({required bool isPhone}) {
     final stockParent =
-        AccessControl.parentRef(context) ?? currentUserReference;
+        AccessControl.networkWideQueryParent(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4509,7 +4509,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               FutureBuilder<List<SalesRecord>>(
                 future: querySalesRecordOnce(
                   parent:
-                      AccessControl.parentRef(context) ?? currentUserReference,
+                      AccessControl.networkWideQueryParent(context),
                   queryBuilder: (salesRecord) =>
                       salesRecord.orderBy('Date', descending: false).limit(12),
                 ),
@@ -4602,7 +4602,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               FutureBuilder<List<StockRecord>>(
                 future: queryStockRecordOnce(
                   parent:
-                      AccessControl.parentRef(context) ?? currentUserReference,
+                      AccessControl.networkWideQueryParent(context),
                   queryBuilder: (stockRecord) =>
                       stockRecord.where('Quantity', isGreaterThan: 0),
                 ),

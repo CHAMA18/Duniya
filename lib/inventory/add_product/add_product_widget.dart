@@ -632,7 +632,7 @@ class _AddProductWidgetState extends State<AddProductWidget> {
                                                                         PharmacyRecord>>(
                                                               stream:
                                                                   queryPharmacyRecord(
-                                                                parent: AccessControl.parentRef(context),
+                                                                parent: AccessControl.networkWideQueryParent(context),
                                                               ),
                                                               builder: (context,
                                                                   snapshot) {

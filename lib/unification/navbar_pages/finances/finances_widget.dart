@@ -443,7 +443,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
     return AuthUserStreamWidget(
       builder: (context) => StreamBuilder<List<FinanceRecord>>(
         stream: queryFinanceRecord(
-          parent: AccessControl.parentRef(context) ?? currentUserReference,
+          parent: AccessControl.networkWideQueryParent(context),
           singleRecord: true,
         ),
         builder: (context, snapshot) {
@@ -842,7 +842,7 @@ class _FinancesWidgetState extends State<FinancesWidget> {
 
   /// Builds the Recent Transactions / Sales table
   Widget _buildSalesTable() {
-    final parentRef = AccessControl.parentRef(context) ?? currentUserReference;
+    final parentRef = AccessControl.networkWideQueryParent(context);
 
     return StreamBuilder<List<SalesRecord>>(
       stream: querySalesRecord(

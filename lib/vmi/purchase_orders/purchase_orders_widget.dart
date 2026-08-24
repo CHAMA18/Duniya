@@ -65,9 +65,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   Future<void> _loadCatalogOptions() async {
     try {
       final stocks = await queryStockRecordOnce(
-        parent: AccessControl.isPulseUser(context)
-            ? null
-            : AccessControl.parentRef(context) ?? currentUserReference,
+        parent: AccessControl.networkWideQueryParent(context),
       );
       final supplierNames = <String>{};
       try {
@@ -286,9 +284,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     final stopwatch = Stopwatch()..start();
     try {
       final stocks = await queryStockRecordOnce(
-        parent: AccessControl.isPulseUser(context)
-            ? null
-            : AccessControl.parentRef(context) ?? currentUserReference,
+        parent: AccessControl.networkWideQueryParent(context),
       );
       final products = await queryProductMasterRecordOnce();
       final byName = <String, ProductMasterRecord>{};

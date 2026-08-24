@@ -294,8 +294,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                           builder: (context) => StreamBuilder<
                                               List<PharmacyRecord>>(
                                             stream: queryPharmacyRecord(
-                                              parent: AccessControl.parentRef(context) ??
-                                                  currentUserReference,
+                                              parent: AccessControl.networkWideQueryParent(context),
                                             ),
                                             builder: (context, snapshot) {
                                               // Customize what your widget looks like when it's loading.
@@ -402,8 +401,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                         builder: (context) =>
                                             StreamBuilder<List<StockRecord>>(
                                           stream: queryStockRecord(
-                                            parent: AccessControl.parentRef(context) ??
-                                                currentUserReference,
+                                            parent: AccessControl.networkWideQueryParent(context),
                                             queryBuilder: (stockRecord) =>
                                                 stockRecord
                                                     .where(
@@ -453,8 +451,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                     'DropDown_firestore_query');
                                                 _model.drug =
                                                     await queryStockRecordOnce(
-                                                  parent: AccessControl.parentRef(context) ??
-                                                      currentUserReference,
+                                                  parent: AccessControl.networkWideQueryParent(context),
                                                   queryBuilder: (stockRecord) =>
                                                       stockRecord.where(
                                                     'Name',
@@ -797,8 +794,7 @@ class _InventoryCategoryWidgetState extends State<InventoryCategoryWidget> {
                                                   StreamBuilder<
                                                       List<StockRecord>>(
                                                 stream: queryStockRecord(
-                                                  parent: AccessControl.parentRef(context) ??
-                                                      currentUserReference,
+                                                  parent: AccessControl.networkWideQueryParent(context),
                                                   queryBuilder: (stockRecord) =>
                                                       stockRecord
                                                           .where(

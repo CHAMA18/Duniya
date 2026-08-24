@@ -185,6 +185,29 @@ class AccessControl {
     return userDoc.ownerRef;
   }
 
+  /// Returns the appropriate parent reference for queries that should
+  /// be NETWORK-WIDE for Pulse users but scoped to the user's owner-or-
+  /// self for pharmacy users. Examples: pharmacy dropdowns, supplier
+  /// lists, network-wide reports.
+  ///
+  /// For Pulse users: returns null — Firestore's collectionGroup
+  /// fallback in PharmacyRecord.collection(null) returns all pharmacies
+  /// across all owners (network-wide view).
+  /// For pharmacy users: returns parentRef(context) ?? currentUserReference
+  /// (the existing scoped behavior).
+  ///
+  /// This fixes the empty Pharmacy dropdown bug where Pulse users
+  /// (network admin/staff) had no pharmacies listed because their
+  /// ownerRef is null and the previous fallback to currentUserReference
+  /// queried pharmacies under the Pulse user's own user doc (which is
+  /// always empty — Pulse users don't own pharmacies).
+  static DocumentReference? networkWideQueryParent(BuildContext context) {
+    if (isPulseUser(context)) {
+      return null;
+    }
+    return parentRef(context) ?? currentUserReference;
+  }
+
   /// Context-free variant of [parentRef] for use in places where
   /// BuildContext is not available (e.g., top-level functions,
   /// background services, main.dart init).
