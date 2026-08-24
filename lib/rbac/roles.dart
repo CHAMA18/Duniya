@@ -134,9 +134,9 @@ enum AppRole {
       case AppRole.salesAssistant:
         return 'Sales Assistant';
       case AppRole.pulseAdmin:
-        return 'Pulse Admin';
+        return 'Owner';
       case AppRole.pulseStaff:
-        return 'Pulse Staff';
+        return 'Staff';
       case AppRole.subscriber:
         return 'Subscriber';
       case AppRole.unknown:

@@ -59,9 +59,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
       case AppRole.salesAssistant:
         return 'Sales Assistant';
       case AppRole.pulseAdmin:
-        return 'Network Admin';
+        return 'Owner';
       case AppRole.pulseStaff:
-        return 'Network Staff';
+        return 'Staff';
       case AppRole.subscriber:
         return 'Subscriber';
       case AppRole.unknown:

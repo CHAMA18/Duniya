@@ -801,7 +801,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  isAdmin ? 'Admin' : 'Staff',
+                  isAdmin ? 'Owner' : 'Staff',
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
