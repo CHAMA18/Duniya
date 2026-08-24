@@ -5,7 +5,6 @@ import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'prescriptions_model.dart';
 export 'prescriptions_model.dart';
@@ -119,11 +118,9 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
   int _selectedTab = 0; // 0=All, 1=Pending, 2=Verified, 3=Fulfilled, 4=Expired
   List<Prescription> _prescriptions = [];
   List<MedicationLine> _formMedLines = [];
-  bool _showForm = false;
 
   // ── Animation controllers ──
   late AnimationController _countUpController;
-  late Animation<double> _countUpAnimation;
 
   @override
   void initState() {
@@ -134,7 +131,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
 
-    _prescriptions = _mockPrescriptions;
+    _prescriptions = [];
     _formMedLines = [
       MedicationLine(drug: '', dose: '', frequency: '', duration: '')
     ];
@@ -142,10 +139,6 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
     _countUpController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
-    );
-    _countUpAnimation = CurvedAnimation(
-      parent: _countUpController,
-      curve: Curves.easeOutCubic,
     );
     _countUpController.forward();
   }
@@ -158,236 +151,12 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // MOCK DATA — 12+ realistic prescriptions
+  // PRESCRIPTIONS DATA
+  // The page intentionally starts empty — prescriptions are created
+  // through the "New Prescription" form. The previous build shipped
+  // 13 hardcoded demo rows (John Mwanza, Grace Banda, …) that looked
+  // like real patient records; they have been removed.
   // ═══════════════════════════════════════════════════════════════════
-
-  List<Prescription> get _mockPrescriptions {
-    final now = DateTime.now();
-    return [
-      Prescription(
-        rxNumber: 'RX-2024-0156',
-        patientName: 'John Mwanza',
-        prescriber: 'Dr. Chanda',
-        medications: [
-          MedicationLine(
-              drug: 'Amoxicillin',
-              dose: '500mg',
-              frequency: '3x daily',
-              duration: '7 days')
-        ],
-        status: RxStatus.pending,
-        date: now.subtract(const Duration(hours: 2)),
-        notes: 'Outpatient — upper respiratory infection',
-        value: 45.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0157',
-        patientName: 'Grace Banda',
-        prescriber: 'Dr. Phiri',
-        medications: [
-          MedicationLine(
-              drug: 'Metformin',
-              dose: '850mg',
-              frequency: '2x daily',
-              duration: '30 days')
-        ],
-        status: RxStatus.verified,
-        date: now.subtract(const Duration(hours: 5)),
-        notes: 'Diabetes management — chronic',
-        value: 120.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0158',
-        patientName: 'Peter Tembo',
-        prescriber: 'Dr. Chanda',
-        medications: [
-          MedicationLine(
-              drug: 'Lisinopril',
-              dose: '10mg',
-              frequency: '1x daily',
-              duration: '30 days'),
-          MedicationLine(
-              drug: 'Amlodipine',
-              dose: '5mg',
-              frequency: '1x daily',
-              duration: '30 days'),
-        ],
-        status: RxStatus.fulfilled,
-        date: now.subtract(const Duration(days: 1)),
-        notes: 'Hypertension — dual therapy',
-        value: 85.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0159',
-        patientName: 'Mary Sakala',
-        prescriber: 'Dr. Moyo',
-        medications: [
-          MedicationLine(
-              drug: 'Ciprofloxacin',
-              dose: '500mg',
-              frequency: '2x daily',
-              duration: '5 days')
-        ],
-        status: RxStatus.pending,
-        date: now.subtract(const Duration(hours: 1)),
-        notes: 'UTI — acute treatment',
-        value: 38.50,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0160',
-        patientName: 'Joseph Phiri',
-        prescriber: 'Dr. Nkosi',
-        medications: [
-          MedicationLine(
-              drug: 'Omeprazole',
-              dose: '20mg',
-              frequency: '1x daily',
-              duration: '14 days')
-        ],
-        status: RxStatus.expired,
-        date: now.subtract(const Duration(days: 30)),
-        notes: 'GERD — prescription not collected within 7 days',
-        value: 32.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0161',
-        patientName: 'Esther Zulu',
-        prescriber: 'Dr. Phiri',
-        medications: [
-          MedicationLine(
-              drug: 'Artemether/Lumefantrine',
-              dose: '20/120mg',
-              frequency: '2x daily',
-              duration: '3 days'),
-        ],
-        status: RxStatus.verified,
-        date: now.subtract(const Duration(hours: 8)),
-        notes: 'Uncomplicated malaria — ACT',
-        value: 56.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0162',
-        patientName: 'David Kamanga',
-        prescriber: 'Dr. Moyo',
-        medications: [
-          MedicationLine(
-              drug: 'Ibuprofen',
-              dose: '400mg',
-              frequency: '3x daily',
-              duration: '5 days')
-        ],
-        status: RxStatus.fulfilled,
-        date: now.subtract(const Duration(days: 2)),
-        notes: 'Post-operative pain management',
-        value: 18.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0163',
-        patientName: 'Agnes Chiluba',
-        prescriber: 'Dr. Chanda',
-        medications: [
-          MedicationLine(
-              drug: 'Azithromycin',
-              dose: '500mg',
-              frequency: '1x daily',
-              duration: '3 days')
-        ],
-        status: RxStatus.pending,
-        date: now.subtract(const Duration(minutes: 30)),
-        value: 62.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0164',
-        patientName: 'Robert Sichone',
-        prescriber: 'Dr. Nkosi',
-        medications: [
-          MedicationLine(
-              drug: 'Warfarin',
-              dose: '5mg',
-              frequency: '1x daily',
-              duration: '30 days'),
-          MedicationLine(
-              drug: 'Aspirin',
-              dose: '75mg',
-              frequency: '1x daily',
-              duration: '30 days'),
-        ],
-        status: RxStatus.pending,
-        date: now.subtract(const Duration(hours: 3)),
-        notes: '⚠ Drug interaction alert — Warfarin + Aspirin',
-        value: 95.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0165',
-        patientName: 'Florence Mwale',
-        prescriber: 'Dr. Phiri',
-        medications: [
-          MedicationLine(
-              drug: 'Cetirizine',
-              dose: '10mg',
-              frequency: '1x daily',
-              duration: '14 days')
-        ],
-        status: RxStatus.fulfilled,
-        date: now.subtract(const Duration(days: 3)),
-        notes: 'Allergic rhinitis',
-        value: 22.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0166',
-        patientName: 'Harrison Bwalya',
-        prescriber: 'Dr. Moyo',
-        medications: [
-          MedicationLine(
-              drug: 'Paracetamol',
-              dose: '1g',
-              frequency: '4x daily',
-              duration: '3 days')
-        ],
-        status: RxStatus.verified,
-        date: now.subtract(const Duration(hours: 12)),
-        notes: 'Pyrexia of unknown origin — symptomatic',
-        value: 12.50,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0167',
-        patientName: 'Chimwemwe Ngoma',
-        prescriber: 'Dr. Nkosi',
-        medications: [
-          MedicationLine(
-              drug: 'Co-trimoxazole',
-              dose: '960mg',
-              frequency: '2x daily',
-              duration: '7 days'),
-          MedicationLine(
-              drug: 'Multivitamin',
-              dose: '1 tab',
-              frequency: '1x daily',
-              duration: '30 days'),
-        ],
-        status: RxStatus.expired,
-        date: now.subtract(const Duration(days: 14)),
-        notes: 'HIV prophylaxis — expired, requires renewal',
-        value: 78.00,
-      ),
-      Prescription(
-        rxNumber: 'RX-2024-0168',
-        patientName: 'Bwana Mutale',
-        prescriber: 'Dr. Chanda',
-        medications: [
-          MedicationLine(
-              drug: 'Salbutamol Inhaler',
-              dose: '100mcg',
-              frequency: 'PRN',
-              duration: '90 days')
-        ],
-        status: RxStatus.pending,
-        date: now.subtract(const Duration(minutes: 45)),
-        notes: 'Bronchial asthma — rescue inhaler',
-        value: 55.00,
-      ),
-    ];
-  }
 
   // ── Status colour helpers ──
   Color _statusBg(RxStatus s) {
@@ -1253,7 +1022,7 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
 
                             final newRx = Prescription(
                               rxNumber:
-                                  'RX-2024-${(156 + _prescriptions.length + 1).toString().padLeft(4, '0')}',
+                                  'RX-${DateTime.now().year}-${(_prescriptions.length + 1).toString().padLeft(4, '0')}',
                               patientName: patient,
                               prescriber: prescriber,
                               medications: validMeds,
@@ -1330,27 +1099,6 @@ class _PrescriptionsWidgetState extends State<PrescriptionsWidget>
       ),
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-    );
-  }
-
-  // ── Loading state widget ──
-  Widget _buildLoadingState() {
-    return Container(
-      padding: const EdgeInsets.all(40.0),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SpinKitRing(color: _pulsePurple, size: 48.0),
-            const SizedBox(height: 16.0),
-            Text('Loading prescriptions...',
-                style: TextStyle(
-                    fontFamily: kAppFontFamily,
-                    fontSize: 14.0,
-                    color: _textSecondary)),
-          ],
-        ),
-      ),
     );
   }
 

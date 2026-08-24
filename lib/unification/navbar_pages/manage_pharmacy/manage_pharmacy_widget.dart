@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/loading_spinner_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -103,6 +102,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         queryReplenishmentRecordOnce(),
         // Low Stock Alerts - top-level collection
         queryLowStockAlertRecordOnce(),
+        // Outlets - under the workspace parent
+        queryOutletRecordOnce(parent: parent),
       ]);
 
       safeSetState(() {
@@ -112,6 +113,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
         _batches = results[3] as List<BatchRecord>;
         _replenishments = results[4] as List<ReplenishmentRecord>;
         _lowStockAlerts = results[5] as List<LowStockAlertRecord>;
+        _outlets = results[6] as List<OutletRecord>;
         _isLoading = false;
       });
     } catch (e) {
@@ -502,6 +504,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
       _TabData(
           label: 'Low Stock Alerts',
           icon: Icons.notification_important_rounded),
+      _TabData(label: 'Outlets', icon: Icons.store_rounded),
     ];
 
     return Column(
@@ -575,6 +578,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
               _buildBatchExpiryTab(theme),
               _buildReplenishmentTab(theme),
               _buildLowStockAlertsTab(theme),
+              _buildOutletsTab(theme),
             ],
           ),
         ),
@@ -812,6 +816,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 theme,
                 ['Product', 'Category', 'Qty', 'Price', 'Batch', 'Status'],
                 [200, 120, 80, 100, 120, 100],
+                stretch: true,
               ),
               ..._inventory.asMap().entries.map((entry) {
                 final idx = entry.key;
@@ -822,6 +827,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   theme,
                   isLast: idx == _inventory.length - 1,
                   accentColor: isLow ? const Color(0xFFDC2626) : null,
+                  stretch: true,
+                  flexes: const [200, 120, 80, 100, 120, 100],
                   [
                     // Product name
                     SizedBox(
@@ -1095,6 +1102,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 theme,
                 ['Date', 'Type', 'Quantity', 'Reference', 'Reason', 'Status'],
                 [110, 120, 90, 140, 180, 100],
+                stretch: true,
               ),
               ..._stockMovements.asMap().entries.map((entry) {
                 final idx = entry.key;
@@ -1102,6 +1110,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 return _buildTableRow(
                   theme,
                   isLast: idx == _stockMovements.length - 1,
+                  stretch: true,
+                  flexes: const [110, 120, 90, 140, 180, 100],
                   [
                     SizedBox(
                       width: 110,
@@ -1208,8 +1218,6 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
     }
 
     final now = DateTime.now();
-    final thirtyDays = now.add(const Duration(days: 30));
-    final ninetyDays = now.add(const Duration(days: 90));
 
     // Sort batches by expiry date (soonest first)
     final sortedBatches = List<BatchRecord>.from(_batches)
@@ -1245,6 +1253,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   'Status'
                 ],
                 [130, 90, 120, 100, 150, 110],
+                stretch: true,
               ),
               ...sortedBatches.asMap().entries.map((entry) {
                 final idx = entry.key;
@@ -1282,6 +1291,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 return _buildTableRow(
                   theme,
                   isLast: idx == sortedBatches.length - 1,
+                  stretch: true,
+                  flexes: const [130, 90, 120, 100, 150, 110],
                   [
                     SizedBox(
                       width: 130,
@@ -1410,11 +1421,11 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   'Urgency'
                 ],
                 [200, 130, 120, 120, 120, 110],
+                stretch: true,
               ),
               ...sorted.asMap().entries.map((entry) {
                 final idx = entry.key;
                 final rep = entry.value;
-                final deficit = rep.targetStockLevel - rep.currentStock;
                 final urgencyRatio = rep.currentStock > 0
                     ? rep.currentStock / rep.targetStockLevel
                     : 0.0;
@@ -1439,6 +1450,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 return _buildTableRow(
                   theme,
                   isLast: idx == sorted.length - 1,
+                  stretch: true,
+                  flexes: const [200, 130, 120, 120, 120, 110],
                   [
                     SizedBox(
                       width: 200,
@@ -1589,6 +1602,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   'Alert Level'
                 ],
                 [200, 120, 120, 100, 120, 110],
+                stretch: true,
               ),
               ...sorted.asMap().entries.map((entry) {
                 final idx = entry.key;
@@ -1618,6 +1632,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                 return _buildTableRow(
                   theme,
                   isLast: idx == sorted.length - 1,
+                  stretch: true,
+                  flexes: const [200, 120, 120, 100, 120, 110],
                   [
                     SizedBox(
                       width: 200,
@@ -1779,6 +1795,7 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                     'Actions'
                   ],
                   [200, 120, 200, 110, 120, 100],
+                  stretch: true,
                 ),
                 ..._outlets.asMap().entries.map((entry) {
                   final idx = entry.key;
@@ -1786,6 +1803,8 @@ class _ManagePharmacyWidgetState extends State<ManagePharmacyWidget>
                   return _buildTableRow(
                     theme,
                     isLast: idx == _outlets.length - 1,
+                    stretch: true,
+                    flexes: const [200, 120, 200, 110, 120, 100],
                     [
                       // Name
                       SizedBox(

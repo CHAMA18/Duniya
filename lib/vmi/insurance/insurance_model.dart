@@ -1,5 +1,4 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
@@ -28,11 +27,10 @@ class InsuranceModel extends FlutterFlowModel<InsuranceWidget> {
 
   // State field(s) for Claim form – sale/invoice dropdown.
   String? claimSaleValue;
-  FormFieldController<String>? claimSaleValueController;
 
-  // State field(s) for Claim form – member dropdown.
-  String? claimMemberValue;
-  FormFieldController<String>? claimMemberValueController;
+  // State field(s) for Claim form – member name input.
+  FocusNode? claimMemberFocusNode;
+  TextEditingController? claimMemberTextController;
 
   // State field(s) for Claim form – amount input.
   FocusNode? claimAmountFocusNode;
@@ -47,8 +45,6 @@ class InsuranceModel extends FlutterFlowModel<InsuranceWidget> {
     sideNavModel2 = createModel(context, () => SideNavModel());
     topNavModel = createModel(context, () => TopNavModel());
     mobileNavbarModel = createModel(context, () => MobileNavbarModel());
-    claimSaleValueController = FormFieldController<String>(null);
-    claimMemberValueController = FormFieldController<String>(null);
   }
 
   @override
@@ -59,6 +55,8 @@ class InsuranceModel extends FlutterFlowModel<InsuranceWidget> {
     mobileNavbarModel.dispose();
     memberIdFocusNode?.dispose();
     memberIdTextController?.dispose();
+    claimMemberFocusNode?.dispose();
+    claimMemberTextController?.dispose();
     claimAmountFocusNode?.dispose();
     claimAmountTextController?.dispose();
   }
