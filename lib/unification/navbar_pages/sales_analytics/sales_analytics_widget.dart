@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -38,6 +37,16 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
   static const _purple = Color(0xFF9900FF);
   static const _green = Color(0xFF10B981);
   static const _blue = Color(0xFF3B82F6);
+
+  // ── Top-products aggregation state ──
+  // Product names live on the Stock documents referenced by each
+  // Saleitem row (Saleitem.stockID → Stock.name), so the aggregation
+  // is async: fetch each sale's items, resolve stock names (cached by
+  // ref path), then roll up revenue + quantity per product.
+  Map<String, double> _productRevenue = {};
+  Map<String, int> _productQty = {};
+  bool _topProductsLoading = false;
+  String _topProductsKey = '';
 
   int get _days => switch (_selectedPeriod) {
         '7d' => 7,
@@ -106,6 +115,11 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                     ),
                     builder: (context, salesSnap) {
                       final sales = salesSnap.data ?? [];
+
+                      // Kick off (or skip) the async top-products
+                      // aggregation for this set of sales. Self-dedupes
+                      // via the sale-ID key so rebuilds don't refetch.
+                      _loadTopProducts(sales);
 
                       // Compute KPIs
                       final totalRevenue =
@@ -203,7 +217,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
                                   const SizedBox(height: 24),
 
                                   // Top products
-                                  _topProducts(sales, theme, isWide),
+                                  _topProducts(theme, isWide),
                                 ]),
                           ),
                         ),
@@ -485,18 +499,74 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
     );
   }
 
-  Widget _topProducts(List<SalesRecord> sales, dynamic theme, bool isWide) {
-    // Aggregate by product name from sale items
-    final productTotals = <String, double>{};
-    final productQty = <String, int>{};
-    for (final s in sales) {
-      // SalesRecord doesn't have item-level data directly;
-      // use numberOfItems as a proxy
-      final name = 'Sale ${s.reference.id.substring(0, 8)}';
-      productTotals[name] = (productTotals[name] ?? 0) + s.totalAmount;
-      productQty[name] = (productQty[name] ?? 0) + s.numberOfItems;
+  /// Async top-products aggregation. Product names are NOT on the Sales
+  /// document — each sale's `Saleitem` rows reference Stock documents
+  /// (`stockID`), and the Stock doc carries the product name. This
+  /// fetches each sale's items, resolves stock names (cached by ref
+  /// path), and rolls up revenue + quantity per product name.
+  ///
+  /// Guarded by a key of the sale IDs so repeated StreamBuilder rebuilds
+  /// don't refetch. Capped at the 200 most recent sales in the period to
+  /// bound the number of Firestore reads.
+  Future<void> _loadTopProducts(List<SalesRecord> sales) async {
+    final key = sales.map((s) => s.reference.id).join('|');
+    if (key == _topProductsKey) return;
+    _topProductsKey = key;
+
+    safeSetState(() => _topProductsLoading = true);
+
+    final totals = <String, double>{};
+    final quantities = <String, int>{};
+    final stockNameCache = <String, String>{};
+
+    try {
+      final salesToProcess = sales.take(200).toList();
+      for (final sale in salesToProcess) {
+        // Items for this sale — a failed fetch (e.g. rules change) skips
+        // the sale rather than breaking the whole aggregation.
+        List<SaleitemRecord> items;
+        try {
+          items = await querySaleitemRecordOnce(parent: sale.reference);
+        } catch (_) {
+          continue;
+        }
+        for (final item in items) {
+          final stockRef = item.stockID;
+          if (stockRef == null) continue;
+
+          var name = stockNameCache[stockRef.path];
+          if (name == null) {
+            try {
+              final stock = await StockRecord.getDocumentOnce(stockRef);
+              name = stock.name.trim();
+            } catch (_) {
+              name = '';
+            }
+            if (name.isEmpty) name = 'Unknown product';
+            stockNameCache[stockRef.path] = name;
+          }
+
+          final lineTotal = item.totalPrice > 0
+              ? item.totalPrice
+              : item.unitPrice * item.quantity;
+          totals[name] = (totals[name] ?? 0) + lineTotal;
+          quantities[name] = (quantities[name] ?? 0) + item.quantity;
+        }
+      }
+    } catch (_) {
+      // Aggregation is best-effort — keep whatever was collected.
     }
-    final sorted = productTotals.entries.toList()
+
+    if (!mounted) return;
+    safeSetState(() {
+      _productRevenue = totals;
+      _productQty = quantities;
+      _topProductsLoading = false;
+    });
+  }
+
+  Widget _topProducts(dynamic theme, bool isWide) {
+    final sorted = _productRevenue.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final top = sorted.take(10).toList();
 
@@ -519,7 +589,19 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
           Text('Last $_days days',
               style: TextStyle(fontSize: 12, color: theme.secondaryText)),
           const SizedBox(height: 20),
-          if (top.isEmpty)
+          if (_topProductsLoading)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2.4, color: _purple),
+                ),
+              ),
+            )
+          else if (top.isEmpty)
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
@@ -530,7 +612,7 @@ class _SalesAnalyticsWidgetState extends State<SalesAnalyticsWidget> {
           else
             for (var i = 0; i < top.length; i++)
               _productRow(i + 1, top[i].key, top[i].value,
-                  productQty[top[i].key] ?? 0, theme),
+                  _productQty[top[i].key] ?? 0, theme),
         ],
       ),
     );
