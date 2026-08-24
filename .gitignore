@@ -60,3 +60,4 @@ firebase_options.dart
 node_modules/
 functions/lib/*.dart.bak
 *.py
+web/.favicon_backup/
