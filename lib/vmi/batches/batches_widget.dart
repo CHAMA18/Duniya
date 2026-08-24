@@ -1082,9 +1082,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                               'expired'] ??
                                                           0,
                                                       icon: Icons.dangerous,
-                                                      bgColor: _expiredBg,
-                                                      iconColor: _expiredBadge,
-                                                      textColor: _expiredText,
+                                                      bgColor: _pulsePurpleLight,
+                                                      iconColor: _pulsePurple,
+                                                      textColor: _pulsePurpleDark,
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -1101,9 +1101,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                           0,
                                                       icon: Icons
                                                           .warning_amber_rounded,
-                                                      bgColor: _threeMoBg,
-                                                      iconColor: _threeMoBadge,
-                                                      textColor: _threeMoText,
+                                                      bgColor: _pulsePurpleLight,
+                                                      iconColor: _pulsePurple,
+                                                      textColor: _pulsePurpleDark,
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -1119,9 +1119,9 @@ class _BatchesWidgetState extends State<BatchesWidget> {
                                                               'sixMo'] ??
                                                           0,
                                                       icon: Icons.schedule,
-                                                      bgColor: _sixMoBg,
-                                                      iconColor: _sixMoBadge,
-                                                      textColor: _sixMoText,
+                                                      bgColor: _pulsePurpleLight,
+                                                      iconColor: _pulsePurple,
+                                                      textColor: _pulsePurpleDark,
                                                     ),
                                                   ),
                                                   SizedBox(
