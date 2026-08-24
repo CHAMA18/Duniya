@@ -9,6 +9,8 @@ class PulseTourTargets {
   static final inventory = GlobalKey(debugLabel: 'tour-inventory');
   static final humanResources = GlobalKey(debugLabel: 'tour-human-resources');
   static final quickAccess = GlobalKey(debugLabel: 'tour-quick-access');
+  static final stockBalances = GlobalKey(debugLabel: 'tour-stock-balances');
+  static final userManagement = GlobalKey(debugLabel: 'tour-user-management');
 }
 
 class PulseSpotlightTour {
@@ -29,10 +31,29 @@ class PulseSpotlightTour {
             'Use Inventory to find products, review stock levels, and record stock movements.',
       ),
       (
+        key: PulseTourTargets.stockBalances,
+        title: 'Stock balances & monthly templates',
+        body:
+            'Stock Balances tracks opening, received, dispensed, transferred, '
+            'and closing quantities. Use the Template dropdown to instantly '
+            'review balances posted in any of the last 18 months — '
+            'January, February, March, and more.',
+      ),
+      (
         key: PulseTourTargets.humanResources,
         title: 'Manage your team',
         body:
-            'Human Resources is where you add staff and track their invitation status.',
+            'Human Resources / User Management is where you add staff and track '
+            'their invitation status. Pulse Owners can invite new users with '
+            'a branded email — invitees set their own passwords.',
+      ),
+      (
+        key: PulseTourTargets.userManagement,
+        title: 'User Management',
+        body:
+            'Open User Management to invite Pulse users, view role badges, and '
+            'manage account status. Only Owner and Staff roles exist on the '
+            'Pulse side.',
       ),
       (
         key: PulseTourTargets.quickAccess,
@@ -47,7 +68,7 @@ class PulseSpotlightTour {
     final targets = <TargetFocus>[
       for (var index = 0; index < steps.length; index++)
         TargetFocus(
-          identify: 'duniya-tour-$index',
+          identify: 'pulse-tour-$index',
           keyTarget: steps[index].key,
           shape: ShapeLightFocus.RRect,
           radius: 14,
@@ -70,7 +91,7 @@ class PulseSpotlightTour {
     TutorialCoachMark(
       targets: targets,
       colorShadow: const Color(0xFF0B1020),
-      opacityShadow: 0.76,
+      opacityShadow: 0.78,
       paddingFocus: 8,
       textSkip: 'Skip tour',
       textStyleSkip: const TextStyle(

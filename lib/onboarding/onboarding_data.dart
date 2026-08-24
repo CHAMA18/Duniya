@@ -108,11 +108,13 @@ final List<OnboardingChapter> kOnboardingChapters = [
             'in the top bar to switch scope. Every page — sales, inventory, '
             'goods received — respects the selected pharmacy. The period '
             'filter on the dashboard lets you compare today against the last '
-            'week or month without leaving the page.',
+            'week or month without leaving the page. Pulse network users '
+            '(Owner / Staff) can see all pharmacies across the network — '
+            'just pick one from the dropdown.',
         bullets: [
           'Pharmacy selector remembers your last choice for the session',
+          'Pulse Owner and Staff roles see all pharmacies; pharmacy Owner and Staff see only their assigned pharmacy',
           'Period filter applies to dashboard KPIs only — list pages always show everything',
-          'Owner accounts see all their pharmacies; staff see only their assigned pharmacy',
         ],
         icon: Icons.swap_horiz_rounded,
       ),
@@ -307,13 +309,34 @@ final List<OnboardingChapter> kOnboardingChapters = [
             'recorded. The Stock Movements page is your complete audit log. '
             'Use Stock Counts to perform periodic cycle counts: the system '
             'shows the expected quantity, you enter the counted quantity, '
-            'and any variance is recorded as an adjustment.',
+            'and any variance is recorded as an adjustment. Use the '
+            '"Record Movement" button at the top of the page to log a '
+            'manual adjustment, return, transfer, or write-off.',
         bullets: [
+          'The Record Movement button opens a polished dialog with movement type, product, quantity, and reason',
           'Stock Movements filters by date range, product, and movement type',
           'Stock Counts supports partial counts — count one category at a time',
           'Variances are logged with the staff member who performed the count',
         ],
         icon: Icons.swap_vert_rounded,
+      ),
+      OnboardingStep(
+        headline: 'Stock balances by month',
+        body:
+            'The Stock Balances page tracks opening, received, dispensed, '
+            'transferred, and closing quantities for every product across '
+            'every pharmacy. Use the new "Template" dropdown in the filter '
+            'bar to instantly recall all balances posted in a specific '
+            'month — January, February, March, and any of the last 18 '
+            'months including previous years. Perfect for month-end review '
+            'and audit without typing a custom date range.',
+        bullets: [
+          'Template dropdown lists the last 18 months by name (e.g. "January 2025")',
+          'Selecting a template instantly filters balances to that month',
+          'Template and Period filters are mutually exclusive — pick one or the other',
+          'Clear any filter with the Reset button to see all balances again',
+        ],
+        icon: Icons.event_available_rounded,
       ),
     ],
   ),
@@ -337,6 +360,23 @@ final List<OnboardingChapter> kOnboardingChapters = [
           'Tap Skip to exit at any time — your progress is saved',
         ],
         icon: Icons.replay_rounded,
+      ),
+      OnboardingStep(
+        headline: 'Manage your team',
+        body:
+            'Pulse network Owners can invite new users from the User '
+            'Management page. Tap "Invite User" to open the invite dialog — '
+            'enter the new user\'s full name and work email, choose their '
+            'access level (Staff or Administrator), and Pulse sends a '
+            'branded email with a secure link for them to set their own '
+            'password. No temporary credentials are exchanged.',
+        bullets: [
+          'The invite modal has a polished light header with a brand-purple icon chip',
+          'Staff and Administrator are the only two access levels on the Pulse side',
+          'Cancel is a ghost button (outlined) so you can dismiss without a false click',
+          'The invitee receives a branded email and sets their own password — secure by design',
+        ],
+        icon: Icons.person_add_alt_1_rounded,
       ),
       OnboardingStep(
         headline: 'What to do next',
