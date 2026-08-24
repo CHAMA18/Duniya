@@ -1,0 +1,195 @@
+# =====================================================================
+# Pulse — Codemagic CI/CD configuration
+# =====================================================================
+# Builds the Pulse desktop applications:
+#   - pulse-macos-release   → Pulse.app + DMG      (mac mini M2)
+#   - pulse-windows-release → pulse.exe + installer + portable ZIP
+#                                                     (Windows x2)
+#
+# The token provided by the account owner is used to trigger builds
+# through the Codemagic REST API:
+#
+#   curl -X POST https://api.codemagic.io/builds \
+#     -H "x-auth-token: $CM_API_TOKEN" \
+#     -H "Content-Type: application/json" \
+#     -d '{"appId": "6a8c61b7a952f25924e8ab35",
+#          "workflowId": "pulse-macos-release",
+#          "branch": "main"}'
+#
+# (substitute workflowId "pulse-windows-release" for the Windows build)
+#
+# Notes:
+#   - Flutter is pinned to 3.38.2 to match build.sh / the web deploy
+#     (pubspec deps need Dart >= 3.9).
+#   - The macOS app is ad-hoc signed (CODE_SIGN_IDENTITY "-"), so no
+#     Apple Developer certificate is needed. First launch on a user
+#     Mac requires right-click → Open (Gatekeeper).
+#   - The macOS plugins use Swift Package Manager integration — no
+#     `pod install` step (mirrors .github/workflows/build-desktop.yml).
+#   - Windows scripts run in PowerShell (Codemagic default on Windows).
+#   - Version is read from pubspec.yaml (currently 1.8.0) so artifact
+#     names stay in sync with the app version automatically.
+# =====================================================================
+
+workflows:
+  # ───────────────────────────────────────────────────────────────
+  # macOS — .app bundle, DMG, and ZIP artifacts
+  # ───────────────────────────────────────────────────────────────
+  pulse-macos-release:
+    name: Pulse macOS (DMG)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    environment:
+      flutter: 3.38.2
+      xcode: latest
+      cocoa_pods: default
+
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+
+    scripts:
+      - name: Get dependencies
+        script: flutter pub get
+
+      - name: Enable Swift Package Manager (macOS plugin resolution)
+        script: flutter config --enable-swift-package-manager
+
+      - name: Build macOS app (ad-hoc signed, Release)
+        script: |
+          set -e
+          APP_VERSION="$(grep '^version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1)"
+          echo "==> Building Pulse v${APP_VERSION} for macOS"
+          flutter config --enable-macos-desktop
+          flutter build macos --release \
+            --build-name="${APP_VERSION}" \
+            --build-number="$CM_BUILD_NUMBER"
+
+      - name: Package DMG + ZIP with install notes
+        script: |
+          set -e
+          APP_VERSION="$(grep '^version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1)"
+          APP="build/macos/Build/Products/Release/Pulse.app"
+
+          mkdir -p release
+          cp -R "$APP" release/
+
+          # Install notes — ad-hoc signed apps trip Gatekeeper on
+          # first launch; tell users how to open the app.
+          cat > release/Install-Pulse-macOS.txt <<'NOTES'
+          PULSE FOR MACOS — INSTALLATION
+          ==============================
+
+          1. Open the Pulse DMG and drag Pulse into Applications.
+          2. The FIRST time you open Pulse, macOS Gatekeeper will show
+             "Pulse cannot be opened because it is from an unidentified
+             developer". This is expected for apps signed for internal
+             distribution.
+          3. Right-click Pulse in Applications and choose "Open",
+             then click "Open" in the confirmation dialog. After the
+             first launch, Pulse opens normally with a double-click.
+
+          Requirements: macOS 11 (Big Sur) or newer.
+          NOTES
+
+          # ZIP of the raw .app (some users prefer it over the DMG)
+          cd release
+          zip -qry "Pulse-macOS-${APP_VERSION}.zip" Pulse.app
+          cd ..
+
+          # DMG disk image
+          hdiutil create \
+            -volname "Pulse" \
+            -srcfolder "release/Pulse.app" \
+            -ov -format UDZO \
+            "release/Pulse-macOS-${APP_VERSION}.dmg"
+
+          echo "==> macOS artifacts:"
+          ls -la release/
+
+    artifacts:
+      - release/*.dmg
+      - release/*.zip
+      - release/*.txt
+
+    publishing:
+      email:
+        recipients:
+          - chungu424@gmail.com
+
+  # ───────────────────────────────────────────────────────────────
+  # Windows — portable ZIP + Inno Setup installer
+  # ───────────────────────────────────────────────────────────────
+  pulse-windows-release:
+    name: Pulse Windows (installer + ZIP)
+    instance_type: windows_x2
+    max_build_duration: 60
+
+    environment:
+      flutter: 3.38.2
+
+    scripts:
+      - name: Get dependencies
+        script: flutter pub get
+
+      - name: Build Windows app (Release)
+        script: |
+          $version = (Get-Content pubspec.yaml |
+                      Select-String -Pattern '^version:\s*(.+)$' |
+                      Select-Object -First 1).Matches.Groups[1].Value.Trim().Split('+')[0]
+          Write-Host "==> Building Pulse v$version for Windows"
+          flutter config --enable-windows-desktop
+          flutter build windows --release `
+            --build-name="$version" `
+            --build-number="$env:CM_BUILD_NUMBER"
+
+      - name: Create portable ZIP with install notes
+        script: |
+          $version = (Get-Content pubspec.yaml |
+                      Select-String -Pattern '^version:\s*(.+)$' |
+                      Select-Object -First 1).Matches.Groups[1].Value.Trim().Split('+')[0]
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+
+          # Install notes for the portable build
+          @"
+          PULSE FOR WINDOWS - PORTABLE BUILD
+          ==================================
+
+          1. Unzip Pulse-Windows-portable-$version.zip to any folder.
+          2. Run pulse.exe - no installation required.
+
+          If Windows Defender SmartScreen warns on first run, click
+          "More info" then "Run anyway" (the app is signed for
+          internal distribution, not the Microsoft Store).
+
+          Requirements: Windows 10 (64-bit) or newer.
+          "@ | Out-File -Encoding utf8 release\Install-Pulse-Windows.txt
+
+          # Zip the entire Release directory (exe + DLLs + data)
+          Compress-Archive `
+            -Path build\windows\x64\runner\Release\* `
+            -DestinationPath "release\Pulse-Windows-portable-$version.zip" `
+            -Force
+
+          Write-Host "==> Portable ZIP created:"
+          Get-ChildItem release\
+
+      - name: Create installer with Inno Setup
+        script: |
+          # Install Inno Setup 6 (same approach as the GitHub Actions
+          # desktop workflow) and compile installer/pulse_setup.iss.
+          choco install innosetup -y --no-progress
+          iscc installer/pulse_setup.iss
+          Write-Host "==> Installer created:"
+          Get-ChildItem installer\Output\
+
+    artifacts:
+      - installer/Output/*.exe
+      - release/*.zip
+      - release/*.txt
+
+    publishing:
+      email:
+        recipients:
+          - chungu424@gmail.com

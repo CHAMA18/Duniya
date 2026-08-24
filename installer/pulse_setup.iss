@@ -10,7 +10,10 @@
 #define MyAppVersion "1.8.0"
 #define MyAppPublisher "Pulse Healthcare"
 #define MyAppURL "https://ivm.duniyahealthcare.com"
-#define MyAppExeName "duniya.exe"
+; FIX: the Windows CMake target is BINARY_NAME "pulse" (see
+; windows/CMakeLists.txt), so the built executable is pulse.exe —
+; not duniya.exe. The previous value created broken shortcuts.
+#define MyAppExeName "pulse.exe"
 
 [Setup]
 AppId={{7D2C1A3E-5B4A-4C9F-9E6A-D8B1F2C4E6A8}
@@ -25,7 +28,10 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir={#SourcePath}Output
 OutputBaseFilename={#MyAppName}-Setup
-SetupIconFile=..\assets\images\app_launcher_icon.png
+; FIX: SetupIconFile must be a real .ico — a .png fails iscc with
+; "Error on line ...: SetupIconFile ... is not a valid icon file".
+; The runner icon is the same image the exe itself uses.
+SetupIconFile=..\windows\runner\resources\app_icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2/ultra64
 SolidCompression=yes
