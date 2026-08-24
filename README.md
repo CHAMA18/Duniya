@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+**Author:** CHAMA18 ([github.com/CHAMA18](https://github.com/CHAMA18)) · Repo: [github.com/CHAMA18/Duniya](https://github.com/CHAMA18/Duniya)
+
 ## Getting Started
 
 FlutterFlow projects are built to run on the Flutter _stable_ release.

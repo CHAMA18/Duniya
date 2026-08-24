@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # =====================================================================
 # Pulse — Render static site build script
+# Author: CHAMA18 (https://github.com/CHAMA18)
+# Repo:  https://github.com/CHAMA18/Duniya
 # =====================================================================
 # Called by Render on every deploy (see render.yaml `buildCommand`).
 # Also runnable locally to reproduce the production build:

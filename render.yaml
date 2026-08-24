@@ -1,5 +1,7 @@
 # =====================================================================
 # Duniya — Render deployment config
+# Author: CHAMA18 (https://github.com/CHAMA18)
+# Repo:   https://github.com/CHAMA18/Duniya
 # =====================================================================
 #
 # This is now a STATIC SITE, not a Docker web service.
