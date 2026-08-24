@@ -80,8 +80,16 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
           _countItems.add({
             'productId': itemData['ProductId'] as DocumentReference?,
             'systemQuantity': itemData['SystemQuantity'] as int? ?? 0,
+            // We trust the persisted SystemQuantity — it was captured
+            // from a real StockBalance at audit time, so the SYSTEM
+            // cell renders as a number, not as "—".
+            'hasSystem': true,
             'countedQuantity': itemData['CountedQuantity'] as int? ?? 0,
             'variance': itemData['Variance'] as int? ?? 0,
+            // Items loaded from an existing count were already audited
+            // in the previous session — flag them so the user sees the
+            // audited indicator and Submit Count includes them.
+            'isAudited': true,
             'reference': itemDoc.reference,
           });
         }
@@ -112,9 +120,22 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             .map((p) => {
                   'productId': p.reference,
                   'productName': p.name,
+                  // System quantity starts unknown — will be filled
+                  // from StockBalance docs if a matching balance exists
+                  // for the current scope. Until then we render the
+                  // SYSTEM cell as "—" so the user can distinguish
+                  // "no system data yet" from "system genuinely holds 0".
                   'systemQuantity': 0,
+                  'hasSystem': false,
                   'countedQuantity': 0,
                   'variance': 0,
+                  // An item is "audited" once the user types anything
+                  // into the COUNTED input — including an explicit 0.
+                  // This is what determines whether the row is included
+                  // in the Submit Count report. (countedQuantity > 0
+                  // is NOT a reliable audit signal because a legitimate
+                  // physical count can be 0.)
+                  'isAudited': false,
                 })
             .toList();
       });
@@ -122,18 +143,37 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
       final ownerRef = AccessControl.parentRef(context);
       if (ownerRef != null) {
         final balances = await queryStockBalanceRecordOnce(parent: ownerRef);
-        for (var balance in balances) {
+        // Aggregate balances by productId path — a single product may
+        // have multiple balance docs (e.g. one per outlet or batch);
+        // we sum the closingStock across them so the SYSTEM value
+        // reflects the total owned quantity for the product.
+        final Map<String, int> qtyByProductPath = {};
+        for (final b in balances) {
+          final path = b.productId?.path;
+          if (path == null) continue;
+          qtyByProductPath[path] =
+              (qtyByProductPath[path] ?? 0) + b.closingStock;
+        }
+        safeSetState(() {
           for (var item in _countItems) {
-            if (item['productId']?.path == balance.productId?.path) {
-              item['systemQuantity'] = balance.closingStock;
+            final path = (item['productId'] as DocumentReference?)?.path;
+            if (path != null && qtyByProductPath.containsKey(path)) {
+              final sys = qtyByProductPath[path]!;
+              item['systemQuantity'] = sys;
+              item['hasSystem'] = true;
               item['variance'] =
-                  (item['countedQuantity'] as int) - balance.closingStock;
+                  (item['countedQuantity'] as int) - sys;
             }
           }
-        }
+        });
       }
       safeSetState(() => _isLoadingProducts = false);
-      _showToast('Loaded ${_countItems.length} products for counting');
+      final matched =
+          _countItems.where((i) => i['hasSystem'] == true).length;
+      _showToast(
+        'Loaded ${_countItems.length} products '
+        '($matched with current stock on hand)',
+      );
     } catch (e) {
       safeSetState(() => _isLoadingProducts = false);
       _showToast('Error loading products. Please try again.');
@@ -153,6 +193,21 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
       return;
     }
     ownerRef = resolvedRef;
+
+    // Only items the user has actually audited are submitted. This is
+    // the user's explicit ask: "When the 'Submit Count' is pressed, it
+    // should submit a report for the records that are audited up to
+    // that point". Unaudited rows (rows the user never touched) are
+    // silently excluded so the submitted report reflects only the
+    // audited subset. Items with an explicit countedQuantity of 0 are
+    // still included — 0 is a legitimate physical count.
+    final auditedItems =
+        _countItems.where((i) => i['isAudited'] == true).toList();
+    if (auditedItems.isEmpty) {
+      _showToast(
+          'No items audited yet. Count at least one product before submitting.');
+      return;
+    }
 
     DocumentReference countDoc;
     if (_existingDocRef != null) {
@@ -179,8 +234,8 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
       }
     }
 
-    // Save items
-    for (var item in _countItems) {
+    // Save only the audited items
+    for (var item in auditedItems) {
       final itemDoc = StockCountItemRecord.createDoc(countDoc);
       await itemDoc.set(createStockCountItemRecordData(
         productId: item['productId'] as DocumentReference?,
@@ -192,7 +247,10 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
     }
 
     safeSetState(() => _currentStatus = 'SUBMITTED');
-    _showToast('Stock count submitted for review');
+    _showToast(
+      'Stock count submitted — ${auditedItems.length} of ${_countItems.length} '
+      'items audited so far.',
+    );
   }
 
   Future<void> _approveCount() async {
@@ -204,7 +262,10 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
 
     final ownerRef = AccessControl.parentRef(context);
     if (ownerRef != null) {
-      for (var item in _countItems) {
+      // Only audited items carry a real variance — unaudited rows
+      // would otherwise generate false "variance = 0 - systemQty"
+      // adjustment movements for every product the user never touched.
+      for (var item in _countItems.where((i) => i['isAudited'] == true)) {
         int variance =
             (item['countedQuantity'] as int) - (item['systemQuantity'] as int);
         if (variance != 0) {
@@ -309,10 +370,13 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
 
   // Computed count metrics
   int get _totalCount => _countItems.length;
+  // Use the `isAudited` flag — not `countedQuantity > 0` — because a
+  // legitimate physical count can be 0 and should still count as audited.
   int get _countedCount =>
-      _countItems.where((i) => (i['countedQuantity'] as int) > 0).length;
+      _countItems.where((i) => i['isAudited'] == true).length;
   int get _remainingCount => _totalCount - _countedCount;
   int get _varianceCount => _countItems.where((i) {
+        if (i['isAudited'] != true) return false;
         final v = (i['countedQuantity'] as int) - (i['systemQuantity'] as int);
         return v != 0;
       }).length;
@@ -1251,7 +1315,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             SizedBox(
               width: (available - 16.0 * (crossCount - 1)) / crossCount,
               child: _KpiCard(
-                label: 'Counted',
+                label: 'Audited',
                 value: '$_countedCount',
                 icon: Icons.check_circle_rounded,
                 accentColor: const Color(0xFF10B981),
@@ -1268,7 +1332,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                 icon: Icons.hourglass_top_rounded,
                 accentColor: const Color(0xFFF59E0B),
                 accentBg: const Color(0xFFFEF3C7),
-                delta: _remainingCount == 0 ? 'All counted!' : 'Keep going',
+                delta: _remainingCount == 0 ? 'All audited!' : 'Keep going',
                 deltaPositive: _remainingCount == 0,
               ),
             ),
@@ -1525,15 +1589,24 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
     final theme = FlutterFlowTheme.of(context);
     final isLast = idx == totalCount - 1;
     final systemQty = item['systemQuantity'] as int;
+    final hasSystem = item['hasSystem'] == true;
     final countedQty = item['countedQuantity'] as int;
-    final variance = countedQty - systemQty;
-    final isCounted = countedQty > 0;
-    final hasVariance = variance != 0;
+    final isAudited = item['isAudited'] == true;
+    // Variance is only meaningful when we have a real SYSTEM value to
+    // compare against. Otherwise the user is just entering a count with
+    // no baseline — there is no variance to display.
+    final variance = hasSystem ? countedQty - systemQty : 0;
+    final hasVariance = hasSystem && variance != 0;
 
     Color varianceColor;
     Color varianceBg;
     IconData varianceIcon;
-    if (variance == 0) {
+    if (!hasSystem) {
+      // No baseline — render as neutral "—" placeholder.
+      varianceColor = const Color(0xFF9CA3AF);
+      varianceBg = const Color(0xFFF3F4F6);
+      varianceIcon = Icons.remove_rounded;
+    } else if (variance == 0) {
       varianceColor = const Color(0xFF6B7280);
       varianceBg = const Color(0xFFF3F4F6);
       varianceIcon = Icons.remove_rounded;
@@ -1558,17 +1631,17 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
       ),
       child: Row(
         children: [
-          // Product name (with icon + counted indicator)
+          // Product name (with icon + audited indicator)
           Expanded(
             flex: 4,
             child: Row(
               children: [
-                // Status dot
+                // Status dot — purple when audited, grey when not.
                 Container(
                   width: 8.0,
                   height: 8.0,
                   decoration: BoxDecoration(
-                    color: isCounted
+                    color: isAudited
                         ? (hasVariance
                             ? const Color(0xFFEF4444)
                             : const Color(0xFF10B981))
@@ -1631,23 +1704,28 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
               ],
             ),
           ),
-          // System qty
+          // System qty — render the actual balance number when we
+          // matched a StockBalance doc. Otherwise show "—" so the user
+          // immediately sees that no system baseline exists for this
+          // product (instead of a misleading "0").
           Expanded(
             flex: 2,
             child: Center(
               child: Text(
-                '$systemQty',
+                hasSystem ? '$systemQty' : '—',
                 style: theme.bodyMedium.override(
                   fontFamily: theme.bodyMediumFamily,
                   fontWeight: FontWeight.w600,
-                  color: theme.secondaryText,
+                  color: hasSystem ? theme.primaryText : theme.secondaryText,
                   letterSpacing: 0.0,
                   useGoogleFonts: !theme.bodyMediumIsCustom,
                 ),
               ),
             ),
           ),
-          // Counted qty input
+          // Counted qty input — styled to reflect the audited state.
+          // The fill + border turn purple once the user touches the
+          // input, regardless of whether the typed value is 0 or >0.
           Expanded(
             flex: 2,
             child: Center(
@@ -1667,21 +1745,21 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 8.0),
                     filled: true,
-                    fillColor: isCounted
+                    fillColor: isAudited
                         ? theme.primary.withAlpha(15)
                         : theme.primaryBackground,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
-                        color: isCounted ? theme.primary : theme.alternate,
-                        width: isCounted ? 1.5 : 1.0,
+                        color: isAudited ? theme.primary : theme.alternate,
+                        width: isAudited ? 1.5 : 1.0,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
-                        color: isCounted ? theme.primary : theme.alternate,
-                        width: isCounted ? 1.5 : 1.0,
+                        color: isAudited ? theme.primary : theme.alternate,
+                        width: isAudited ? 1.5 : 1.0,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -1694,23 +1772,30 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                   ),
                   onChanged: (value) {
                     int? parsed = int.tryParse(value);
-                    if (parsed != null) {
-                      safeSetState(() {
+                    safeSetState(() {
+                      // Mark as audited the moment the user types
+                      // anything — including an empty string. This is
+                      // the explicit "I have counted this product"
+                      // signal that gates Submit Count inclusion.
+                      _countItems[idx]['isAudited'] = true;
+                      if (parsed != null) {
                         _countItems[idx]['countedQuantity'] = parsed;
-                        _countItems[idx]['variance'] = parsed - systemQty;
-                      });
-                    } else if (value.isEmpty) {
-                      safeSetState(() {
+                        _countItems[idx]['variance'] =
+                            hasSystem ? parsed - systemQty : 0;
+                      } else if (value.isEmpty) {
                         _countItems[idx]['countedQuantity'] = 0;
-                        _countItems[idx]['variance'] = -systemQty;
-                      });
-                    }
+                        _countItems[idx]['variance'] =
+                            hasSystem ? -systemQty : 0;
+                      }
+                    });
                   },
                 ),
               ),
             ),
           ),
-          // Variance badge
+          // Variance badge — suppressed (shows "—") when no system
+          // baseline exists, since variance is meaningless without a
+          // baseline to compare against.
           Expanded(
             flex: 2,
             child: Center(
@@ -1727,7 +1812,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     Icon(varianceIcon, color: varianceColor, size: 12.0),
                     const SizedBox(width: 4.0),
                     Text(
-                      variance == 0
+                      !hasSystem || variance == 0
                           ? '—'
                           : (variance > 0 ? '+' : '') + variance.toString(),
                       style: TextStyle(
@@ -1883,7 +1968,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
                     color: theme.primary, size: 18.0),
                 const SizedBox(width: 8.0),
                 Text(
-                  '$_countedCount / $_totalCount counted',
+                  '$_countedCount / $_totalCount audited',
                   style: theme.bodyMedium.override(
                     fontFamily: theme.bodyMediumFamily,
                     fontWeight: FontWeight.w600,
@@ -1915,10 +2000,14 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
           // Action buttons
           if (_currentStatus == 'DRAFT')
             FFButtonWidget(
-              onPressed: () async {
-                await _submitCount();
-              },
-              text: 'Submit Count',
+              onPressed: _countedCount == 0
+                  ? null
+                  : () async {
+                      await _submitCount();
+                    },
+              text: _countedCount == 0
+                  ? 'Submit Count (audit items first)'
+                  : 'Submit Count ($_countedCount)',
               icon: const Icon(Icons.send_rounded, size: 16.0),
               options: FFButtonOptions(
                 height: 44.0,
