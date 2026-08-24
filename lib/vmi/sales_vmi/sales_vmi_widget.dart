@@ -53,6 +53,13 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
   bool _stockLoaded = false;
   bool _completing = false;
 
+  // ── Payment method selection ──
+  // 'Cash' | 'Card' | 'Mobile Money'; for Mobile Money the provider
+  // is one of 'Zamtel Money' | 'Airtel Money' | 'MTN Money'. Persisted
+  // on the SaleRecordVMI (paymentMethod + mobileMoneyProvider).
+  String _paymentMethod = 'Cash';
+  String? _mobileMoneyProvider;
+
   /// Cart: same shape as the old _saleLineItems so the save logic
   /// (SaleRecordVMI, SaleItemVMI, StockMovement, stock decrement) is
   /// reused unchanged.
@@ -190,6 +197,14 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
 
   Future<void> _completeSale() async {
     if (_cart.isEmpty || _completing) return;
+
+    // Payment validation — a Mobile Money sale must name its provider
+    // before the transaction is committed.
+    if (_paymentMethod == 'Mobile Money' && _mobileMoneyProvider == null) {
+      _toast('Select the mobile money provider (Zamtel, Airtel or MTN).',
+          isError: true);
+      return;
+    }
     safeSetState(() => _completing = true);
 
     try {
@@ -246,6 +261,11 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
             ? null
             : _patientController.text.trim(),
         totalAmount: totalAmount,
+        // Payment capture — method is always set (defaults to Cash);
+        // provider is only recorded for Mobile Money transactions.
+        paymentMethod: _paymentMethod,
+        mobileMoneyProvider:
+            _paymentMethod == 'Mobile Money' ? _mobileMoneyProvider : null,
         createdAt: DateTime.now(),
       ));
 
@@ -842,6 +862,11 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
                 ),
               ),
             ),
+            // ── Payment method selector ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+              child: _buildPaymentSelector(),
+            ),
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
               decoration: BoxDecoration(
@@ -892,6 +917,179 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  // ── Payment method selector ────────────────────────────────
+  // Cash | Card | Mobile Money chips; choosing Mobile Money reveals
+  // a provider row with the Zamtel / Airtel / MTN brand logos.
+
+  static const _paymentMethods = ['Cash', 'Card', 'Mobile Money'];
+  static const _mobileProviders = [
+    ('Zamtel Money', 'assets/images/payment/zamtel_money.png'),
+    ('Airtel Money', 'assets/images/payment/airtel_money.png'),
+    ('MTN Money', 'assets/images/payment/mtn_money.png'),
+  ];
+
+  Widget _buildPaymentSelector() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: _bg,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: _border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.payments_outlined, size: 15, color: _primary),
+              const SizedBox(width: 6),
+              Text('Payment method',
+                  style: TextStyle(
+                      color: _textMuted,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.3)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              for (final method in _paymentMethods) ...[
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => safeSetState(() {
+                      _paymentMethod = method;
+                      if (method != 'Mobile Money') {
+                        _mobileMoneyProvider = null;
+                      } else {
+                        _mobileMoneyProvider ??= _mobileProviders.first.$1;
+                      }
+                    }),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      padding: const EdgeInsets.symmetric(vertical: 9),
+                      decoration: BoxDecoration(
+                        color: _paymentMethod == method
+                            ? _primary
+                            : _surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: _paymentMethod == method
+                              ? _primary
+                              : _border,
+                          width: _paymentMethod == method ? 1.5 : 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            method == 'Cash'
+                                ? Icons.payments_rounded
+                                : method == 'Card'
+                                    ? Icons.credit_card_rounded
+                                    : Icons.phone_android_rounded,
+                            size: 14,
+                            color: _paymentMethod == method
+                                ? Colors.white
+                                : _textMuted,
+                          ),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              method,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w700,
+                                color: _paymentMethod == method
+                                    ? Colors.white
+                                    : _textMuted,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if (method != _paymentMethods.last) const SizedBox(width: 6),
+              ],
+            ],
+          ),
+          // Mobile money provider row — only when Mobile Money selected
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 180),
+            crossFadeState: _paymentMethod == 'Mobile Money'
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            secondChild: const SizedBox(width: double.infinity, height: 0),
+            firstChild: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                children: [
+                  for (final (provider, logo) in _mobileProviders) ...[
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => safeSetState(
+                            () => _mobileMoneyProvider = provider),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          padding: const EdgeInsets.symmetric(vertical: 7),
+                          decoration: BoxDecoration(
+                            color: _surface,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: _mobileMoneyProvider == provider
+                                  ? _primary
+                                  : _border,
+                              width:
+                                  _mobileMoneyProvider == provider ? 1.5 : 1,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Image.asset(
+                                  logo,
+                                  height: 22,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) => Icon(
+                                      Icons.phone_android_rounded,
+                                      size: 20,
+                                      color: _textMuted),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                provider,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 9.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: _mobileMoneyProvider == provider
+                                      ? _primary
+                                      : _textMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (provider != _mobileProviders.last.$1)
+                      const SizedBox(width: 6),
+                  ],
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
