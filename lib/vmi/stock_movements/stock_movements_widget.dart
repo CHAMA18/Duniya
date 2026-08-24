@@ -675,23 +675,30 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
       runSpacing: 8.0,
       alignment: WrapAlignment.end,
       children: [
-        // Record Movement — opens the manual movement dialog with the
-        // full capture set (product, quantity, outlet, type, reason,
-        // reference/note, recorded-by, timestamp).
-        ElevatedButton.icon(
-          onPressed: () => _openRecordMovementDialog(),
-          icon: const Icon(Icons.add_circle_outline_rounded, size: 17.0),
-          label: const Text('Record Movement',
-              style:
-                  TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
-            foregroundColor: Colors.white,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            elevation: 0,
+        // Primary CTA — Record Movement (opens the polished movement
+        // dialog with hero gradient header, type selector, audit fields).
+        // Previously this screen had TWO competing primary buttons —
+        // 'Record Movement' (basic AlertDialog) AND 'Add Movement'
+        // (polished FFButtonWidget dialog) — both with the same
+        // semantic meaning. Consolidated to a single CTA pointing at
+        // the polished dialog flow.
+        FFButtonWidget(
+          onPressed: () => _showAddMovementDialog(context),
+          text: 'Record Movement',
+          icon: Icon(Icons.add_circle_outline_rounded, size: 17.0),
+          options: FFButtonOptions(
+            height: 44.0,
+            padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+            color: primaryColor,
+            textStyle: theme.titleSmall.override(
+              fontFamily: theme.titleSmallFamily,
+              color: Colors.white,
+              letterSpacing: 0.0,
+              fontWeight: FontWeight.w600,
+              useGoogleFonts: !theme.titleSmallIsCustom,
+            ),
+            elevation: 0.0,
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         // Movement Type filter
@@ -768,25 +775,6 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                 ),
               );
             },
-          ),
-        ),
-        // Add Movement button
-        FFButtonWidget(
-          onPressed: () => _showAddMovementDialog(context),
-          text: 'Add Movement',
-          icon: Icon(Icons.add, size: 16.0),
-          options: FFButtonOptions(
-            height: 44.0,
-            padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-            color: primaryColor,
-            textStyle: theme.titleSmall.override(
-              fontFamily: theme.titleSmallFamily,
-              color: Colors.white,
-              letterSpacing: 0.0,
-              useGoogleFonts: !theme.titleSmallIsCustom,
-            ),
-            elevation: 0.0,
-            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
       ],
@@ -1894,7 +1882,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                       Icon(Icons.add, size: 18.0, color: Colors.white),
                       SizedBox(width: 6.0),
                       Text(
-                        'Add Movement',
+                        'Record Movement',
                         style: TextStyle(
                           fontFamily: kAppFontFamily,
                           fontSize: 14.0,
@@ -2135,7 +2123,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Add Stock Movement',
+                                  'Record Stock Movement',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 19,
