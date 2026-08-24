@@ -27,6 +27,8 @@ import '/rbac/rbac.dart';
 
 // kAppFontFamily is defined in flutter_flow_util.dart (imported above).
 // It resolves to the renderer-safe static Satoshi family on every platform.
+// Cross-platform page reload helper (web→window.location.reload, mobile→no-op).
+import '/flutter_flow/platform_reload.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,6 +87,118 @@ void main() async {
       originalOnError?.call(details);
     };
   }
+
+  // ── Global ErrorWidget.builder override ──────────────────────────
+  // When ANY widget's build() method throws an uncaught exception,
+  // Flutter replaces that widget with an ErrorWidget. The default
+  // ErrorWidget in --release renders as a bare grey screen — opaque
+  // to the user (they can't tell what crashed or why). This override
+  // replaces that grey screen with a friendly, branded error card that
+  // shows the exception message and a Reload button. Users can recover
+  // by reloading; developers can see the exception inline without
+  // having to open DevTools.
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Material(
+      color: const Color(0xFF0B1C30),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 72.0,
+                    height: 72.0,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9900FF).withAlpha(40),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.error_outline_rounded,
+                        color: Color(0xFF9900FF), size: 36.0),
+                  ),
+                  const SizedBox(height: 20.0),
+                  const Text(
+                    'Something went wrong',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.01,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  const Text(
+                    'The page hit an unexpected error. Reload to try again — '
+                    'if the problem persists, the details below will help '
+                    'support track it down.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF94A3B8),
+                      fontSize: 13.0,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  // Exception details — show in a scrollable monospace box
+                  // so a long stack trace doesn't overflow the viewport.
+                  Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(maxHeight: 220.0),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E1B2E),
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                        color: const Color(0xFF3B3B4F),
+                        width: 1.0,
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: SelectableText(
+                        details.exception.toString(),
+                        style: const TextStyle(
+                          color: Color(0xFFFCA5A5),
+                          fontSize: 12.0,
+                          fontFamily: 'monospace',
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  // Reload button — calls window.location.reload() on web
+                  // via the cross-platform platform_reload helper. On
+                  // mobile/desktop this is a no-op (the developer can
+                  // hot-restart instead).
+                  Builder(builder: (context) {
+                    return FilledButton.icon(
+                      onPressed: () => reloadPage(),
+                      icon: const Icon(Icons.refresh_rounded, size: 18.0),
+                      label: const Text('Reload page'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFF9900FF),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 14.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  };
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,

@@ -28,7 +28,13 @@ class ExpiryTrackingModel extends FlutterFlowModel<ExpiryTrackingWidget> {
   FormFieldController<String>? expiryBucketValueController;
 
   // Sort column for the table.
-  String sortColumn = 'daysLeft';
+  // NOTE: lowercase form is mandatory — the header cell generator does
+  // `text.toLowerCase().replaceAll(' ', '')`, so 'Days Left' becomes
+  // 'daysleft' (NOT 'daysLeft'). The switch case in the widget's sort
+  // method must use the same lowercase form, otherwise the sort falls
+  // through to the default branch and the active-sort highlight is
+  // never shown for the Days Left column.
+  String sortColumn = 'daysleft';
   // Sort direction: true = ascending (most urgent first).
   bool sortAscending = true;
 

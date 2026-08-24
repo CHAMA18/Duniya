@@ -158,7 +158,6 @@ class _ExpiryTrackingWidgetState extends State<ExpiryTrackingWidget>
   // MOCK DATA — realistic pharmacy batch data
   // ═══════════════════════════════════════════════════════════════════
   List<ExpiryBatch> get _mockBatches {
-    return <ExpiryBatch>[];
     final now = DateTime.now();
     return [
       ExpiryBatch(
