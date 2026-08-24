@@ -209,6 +209,7 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
         final movementDoc = StockMovementRecord.createDoc(ownerRef);
         await movementDoc.set(createStockMovementRecordData(
           productId: item['productId'] as DocumentReference?,
+          productName: (item['productName'] as String?)?.trim(),
           quantity: item['quantity'] as int,
           movementType: 'SOLD',
           recordedById: currentUserReference,

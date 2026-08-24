@@ -111,6 +111,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
             .where((p) => p.isActive)
             .map((p) => {
                   'productId': p.reference,
+                  'productName': p.name,
                   'systemQuantity': 0,
                   'countedQuantity': 0,
                   'variance': 0,
@@ -210,6 +211,7 @@ class _StockCountDetailWidgetState extends State<StockCountDetailWidget> {
           final movementDoc = StockMovementRecord.createDoc(ownerRef);
           await movementDoc.set(createStockMovementRecordData(
             productId: item['productId'] as DocumentReference?,
+            productName: (item['productName'] as String?)?.trim(),
             quantity: variance.abs(),
             movementType: 'ADJUSTMENT',
             reason: 'Stock count adjustment',

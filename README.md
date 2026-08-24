@@ -1,4 +1,4 @@
-# MediTracker
+# Pulse
 
 A new Flutter project.
 

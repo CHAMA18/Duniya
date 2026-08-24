@@ -20,6 +20,17 @@ class StockMovementRecord extends FirestoreRecord {
   DocumentReference? get productId => _productId;
   bool hasProductId() => _productId != null;
 
+  // "ProductName" field — denormalized snapshot of the product / stock
+  // name captured at write time. Makes the movement self-contained so
+  // the Stock Movements ledger can render a stable label even if the
+  // referenced StockRecord or ProductMasterRecord is later deleted,
+  // renamed, or deactivated. Backwards-compatible: legacy documents
+  // without this field simply return an empty string and the display
+  // path falls back to the live-document lookup.
+  String? _productName;
+  String get productName => _productName ?? '';
+  bool hasProductName() => _productName != null && _productName!.isNotEmpty;
+
   // "OutletId" field.
   DocumentReference? _outletId;
   DocumentReference? get outletId => _outletId;
@@ -59,6 +70,7 @@ class StockMovementRecord extends FirestoreRecord {
 
   void _initializeFields() {
     _productId = snapshotData['ProductId'] as DocumentReference?;
+    _productName = snapshotData['ProductName'] as String?;
     _outletId = snapshotData['OutletId'] as DocumentReference?;
     _quantity = castToType<int>(snapshotData['Quantity']);
     _movementType = snapshotData['MovementType'] as String?;
@@ -109,6 +121,7 @@ class StockMovementRecord extends FirestoreRecord {
 
 Map<String, dynamic> createStockMovementRecordData({
   DocumentReference? productId,
+  String? productName,
   DocumentReference? outletId,
   int? quantity,
   String? movementType,
@@ -120,6 +133,7 @@ Map<String, dynamic> createStockMovementRecordData({
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'ProductId': productId,
+      'ProductName': productName,
       'OutletId': outletId,
       'Quantity': quantity,
       'MovementType': movementType,
@@ -140,6 +154,7 @@ class StockMovementRecordDocumentEquality
   @override
   bool equals(StockMovementRecord? e1, StockMovementRecord? e2) {
     return e1?.productId == e2?.productId &&
+        e1?.productName == e2?.productName &&
         e1?.outletId == e2?.outletId &&
         e1?.quantity == e2?.quantity &&
         e1?.movementType == e2?.movementType &&
@@ -152,6 +167,7 @@ class StockMovementRecordDocumentEquality
   @override
   int hash(StockMovementRecord? e) => const ListEquality().hash([
         e?.productId,
+        e?.productName,
         e?.outletId,
         e?.quantity,
         e?.movementType,

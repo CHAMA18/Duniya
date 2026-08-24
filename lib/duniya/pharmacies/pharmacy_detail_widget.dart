@@ -6,7 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 /// ═══════════════════════════════════════════════════════════════
-///   PULSE — PHARMACY DETAIL (Network Admin Drill-Down)
+///   PULSE — PHARMACY DETAIL (Pulse Owner Drill-Down)
 ///
 ///   Shows a world-class overview of a single pharmacy: KPI cards,
 ///   recent goods received, stock movements, and stock summary.

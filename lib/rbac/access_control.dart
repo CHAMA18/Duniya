@@ -197,7 +197,7 @@ class AccessControl {
   /// (the existing scoped behavior).
   ///
   /// This fixes the empty Pharmacy dropdown bug where Pulse users
-  /// (network admin/staff) had no pharmacies listed because their
+  /// (Pulse Owner/staff) had no pharmacies listed because their
   /// ownerRef is null and the previous fallback to currentUserReference
   /// queried pharmacies under the Pulse user's own user doc (which is
   /// always empty — Pulse users don't own pharmacies).

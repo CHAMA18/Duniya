@@ -2528,6 +2528,7 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
       final movementDoc = StockMovementRecord.createDoc(ownerRef);
       await movementDoc.set(createStockMovementRecordData(
         productId: item['productId'] as DocumentReference?,
+        productName: (item['productName'] as String?)?.trim(),
         outletId: selectedPharmacy.reference,
         quantity: receivedQty,
         movementType: 'RECEIVED',

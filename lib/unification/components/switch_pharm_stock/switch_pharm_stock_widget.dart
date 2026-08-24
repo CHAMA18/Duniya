@@ -131,8 +131,7 @@ class _SwitchPharmStockWidgetState extends State<SwitchPharmStockWidget> {
                       builder: (context) => StreamBuilder<List<PharmacyRecord>>(
                         stream: queryPharmacyRecord(
                           parent:
-                              AccessControl.parentRef(context) ??
-                                  currentUserReference,
+                              AccessControl.networkWideQueryParent(context),
                         ),
                         builder: (context, snapshot) {
                           // Customize what your widget looks like when it's loading.

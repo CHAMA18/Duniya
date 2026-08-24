@@ -25,7 +25,7 @@ export 'duniya_pharmacies_model.dart';
 ///
 ///   Lists every pharmacy on the Pulse network (active, pending
 ///   approval, and rejected) with their owner email, registered
-///   date, and network status. Network admins can search and filter
+///   date, and network status. Pulse Owners can search and filter
 ///   by status, and click into a pharmacy to view its details.
 /// ═══════════════════════════════════════════════════════════════
 

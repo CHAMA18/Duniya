@@ -142,7 +142,7 @@ class _MyAppState extends State<MyApp> {
 
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
-    userStream = mediTrackerFirebaseUserStream()
+    userStream = pulseFirebaseUserStream()
       ..listen((user) {
         _appStateNotifier.update(user);
         // Auto-warm and sync tracking — re-enabled after fixing

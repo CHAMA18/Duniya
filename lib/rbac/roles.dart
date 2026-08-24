@@ -36,7 +36,7 @@ enum AppRole {
   /// Sales assistant — handles POS and basic sales operations
   salesAssistant,
 
-  /// Pulse network admin — oversees the entire Pulse network
+  /// Pulse network Owner — oversees the entire Pulse network
   pulseAdmin,
 
   /// Pulse staff — operational staff within the Pulse network
@@ -108,7 +108,7 @@ enum AppRole {
   /// Convert a Firestore `accountType` string to determine if
   /// the user is a Pulse network user or a pharmacy user.
   /// Defaults to pharmacy (false) when null/empty for security —
-  /// missing accountType should not grant network admin access.
+  /// missing accountType should not grant Pulse Owner access.
   static bool isPulseAccountType(String? accountType) {
     if (accountType == null || accountType.isEmpty) return false;
     return accountType.trim().toLowerCase() == 'pulse';

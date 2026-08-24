@@ -271,8 +271,9 @@ class _LoadingSpinnerWidgetState extends State<LoadingSpinnerWidget>
     if (widget.fullScreen) {
       // Brand-aware full-screen loader: always render the "Pulse · Pharmacy
       // Intelligence" wordmark below the spinner so the brand identity is
-      // unambiguous (previously the bare spinner on white caused users to
-      // misread the dotted-ring pattern as "Duniya" — pareidolia).
+      // unambiguous (previously the bare spinner on white caused the
+      // dotted-ring pattern to read as a generic spinner, not the Pulse
+      // brand).
       final isDark = Theme.of(context).brightness == Brightness.dark;
       return Container(
         color: (isDark ? Colors.black : Colors.white)

@@ -227,7 +227,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         }
         logFirebaseEvent('Button_firestore_query');
         _model.pharm = await queryPharmacyRecordOnce(
-          parent: currentUserReference,
+          parent: AccessControl.networkWideQueryParent(context),
           queryBuilder: (pharmacyRecord) =>
               pharmacyRecord.where('Name', isEqualTo: _model.pharmValue),
           singleRecord: true,
@@ -1375,7 +1375,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 : null,
           ),
           child: StreamBuilder<List<PharmacyRecord>>(
-            stream: queryPharmacyRecord(parent: currentUserReference),
+            stream: queryPharmacyRecord(parent: AccessControl.networkWideQueryParent(context)),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
@@ -1409,7 +1409,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   logFirebaseEvent('ADD_USER_pharm_ON_FORM_WIDGET_SELECTED');
                   logFirebaseEvent('pharm_firestore_query');
                   _model.pharma = await queryPharmacyRecordOnce(
-                    parent: currentUserReference,
+                    parent: AccessControl.networkWideQueryParent(context),
                     queryBuilder: (pharmacyRecord) => pharmacyRecord.where(
                       'Name',
                       isEqualTo: _model.pharmValue,

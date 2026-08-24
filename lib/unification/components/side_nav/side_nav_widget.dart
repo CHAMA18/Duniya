@@ -21,7 +21,7 @@ class SideNavWidget extends StatefulWidget {
 class _SideNavWidgetState extends State<SideNavWidget> {
   late SideNavModel _model;
 
-  /// Returns true if the current user is a Pulse network admin.
+  /// Returns true if the current user is a Pulse network Owner or Staff.
   /// Now powered by the centralized RBAC system (AccessControl).
   bool get _isPulseUser => AccessControl.isPulseUser(context);
 

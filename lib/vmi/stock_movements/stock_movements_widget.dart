@@ -130,7 +130,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           builder: (context) =>
                               StreamBuilder<List<StockMovementRecord>>(
                             stream: queryStockMovementRecord(
-                              // Network staff review movement activity across
+                              // Pulse staff review movement activity across
                               // pharmacies; pharmacy users remain owner-scoped.
                               parent: AccessControl.networkWideQueryParent(context),
                               queryBuilder: (stockMovementRecord) =>
@@ -533,6 +533,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                   await StockMovementRecord.createDoc(scopeRef).set(
                       createStockMovementRecordData(
                         productId: product.reference,
+                        productName: product.hasName() ? product.name : null,
                         outletId: null,
                         quantity: qty,
                         movementType: selectedType,
@@ -1580,7 +1581,10 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                 //    StockRecord.name as the display name.
                 final product = productMap[movement.productId?.path];
                 final stock = stockMap[movement.productId?.path];
-                final productName = product?.name ?? stock?.name ?? 'Unknown';
+                final productName =
+                    movement.hasProductName()
+                        ? movement.productName
+                        : (product?.name ?? stock?.name ?? 'Unknown');
                 final mType = movement.movementType;
                 return Row(
                   children: [
@@ -2516,6 +2520,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                               ownerRef)
                                           .set(createStockMovementRecordData(
                                         productId: product.reference,
+                                        productName: product.hasName() ? product.name : null,
                                         quantity: int.tryParse(_model
                                                     .dialogQtyTextController
                                                     ?.text ??

@@ -1361,7 +1361,7 @@ exports.confirmPulseDispatch = functions
   });
 
 // Imports a verified historical pharmacy reconciliation. This is deliberately
-// server-side so only Pulse administrators can create backdated stock records
+// server-side so only Pulse Owners can create backdated stock records
 // in an explicitly selected, approved pharmacy workspace.
 exports.importHistoricalReconciliation = functions
   .region("us-central1")
@@ -1378,7 +1378,7 @@ exports.importHistoricalReconciliation = functions
     const isPulseAdmin = getAccountType(caller) === "pulse" &&
       ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
     if (!isPulseAdmin) {
-      throw new functions.https.HttpsError("permission-denied", "Only Pulse administrators can import reconciliation data.");
+      throw new functions.https.HttpsError("permission-denied", "Only Pulse Owners can import reconciliation data.");
     }
 
     const pharmacyPath = String(data?.pharmacyPath || "").trim();
@@ -1499,7 +1499,7 @@ exports.importHistoricalReconciliation = functions
     return { success: true, pharmacyPath: pharmacyRef.path, productLines: normalizedRecords.length, stockCountPath: stockCountRef.path };
   });
 
-// Pulse network administrators can manage only other Pulse accounts. The
+// Pulse network Owners can manage only other Pulse accounts. The
 // callable boundary prevents browser clients from changing roles or suspending
 // accounts by writing directly to Firestore.
 exports.managePulseUser = functions
@@ -1516,7 +1516,7 @@ exports.managePulseUser = functions
     const isPulseAdmin = getAccountType(caller) === "pulse" &&
       ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
     if (!isPulseAdmin) {
-      throw new functions.https.HttpsError("permission-denied", "Only Pulse network administrators can manage Pulse users.");
+      throw new functions.https.HttpsError("permission-denied", "Only Pulse Owners can manage Pulse users.");
     }
 
     const userId = String(data?.userId || "").trim();
@@ -1577,7 +1577,7 @@ exports.invitePulseUser = functions
     const isPulseAdmin = getAccountType(caller) === "pulse" &&
       ["admin", "owner", "duniya_admin", "duniyaadmin"].includes(callerRole);
     if (!isPulseAdmin) {
-      throw new functions.https.HttpsError("permission-denied", "Only Pulse network administrators can invite Pulse users.");
+      throw new functions.https.HttpsError("permission-denied", "Only Pulse Owners can invite Pulse users.");
     }
 
     const displayName = String(data?.displayName || "").trim().replace(/\s+/g, " ");
@@ -1639,8 +1639,8 @@ exports.invitePulseUser = functions
         from: getConfiguredResendFrom(),
         to: [email],
         subject: "You're invited to Pulse",
-        html: `<!doctype html><html><body style="margin:0;background:#f7f4ff;font-family:Arial,sans-serif;color:#15182b"><div style="max-width:560px;margin:32px auto;background:#fff;border-radius:20px;overflow:hidden;border:1px solid #e8ddff"><div style="padding:32px;background:linear-gradient(135deg,#9900ff,#2563eb);color:#fff"><div style="font-size:28px;font-weight:800">Welcome to Pulse</div><div style="margin-top:8px;font-size:16px;opacity:.9">Your network workspace is ready.</div></div><div style="padding:32px"><p style="font-size:16px;line-height:1.6">Hi ${safeName},</p><p style="font-size:16px;line-height:1.6">You've been invited to Pulse as a <strong>${role === "admin" ? "Network Administrator" : "Network Staff member"}</strong>. Set a secure password to activate your account.</p><p style="margin:28px 0"><a href="${setupLink}" style="display:inline-block;padding:14px 22px;background:#9900ff;border-radius:10px;color:#fff;font-weight:700;text-decoration:none">Set up your account</a></p><p style="font-size:13px;line-height:1.5;color:#667085">If you were not expecting this invitation, you can safely ignore this email.</p></div></div></body></html>`,
-        text: `Hi ${displayName},\n\nYou've been invited to Pulse as ${role === "admin" ? "a Network Administrator" : "a Network Staff member"}. Set up your account: ${setupLink}`,
+        html: `<!doctype html><html><body style="margin:0;background:#f7f4ff;font-family:Arial,sans-serif;color:#15182b"><div style="max-width:560px;margin:32px auto;background:#fff;border-radius:20px;overflow:hidden;border:1px solid #e8ddff"><div style="padding:32px;background:linear-gradient(135deg,#9900ff,#2563eb);color:#fff"><div style="font-size:28px;font-weight:800">Welcome to Pulse</div><div style="margin-top:8px;font-size:16px;opacity:.9">Your network workspace is ready.</div></div><div style="padding:32px"><p style="font-size:16px;line-height:1.6">Hi ${safeName},</p><p style="font-size:16px;line-height:1.6">You've been invited to Pulse as a <strong>${role === "admin" ? "Owner" : "Staff member"}</strong>. Set a secure password to activate your account.</p><p style="margin:28px 0"><a href="${setupLink}" style="display:inline-block;padding:14px 22px;background:#9900ff;border-radius:10px;color:#fff;font-weight:700;text-decoration:none">Set up your account</a></p><p style="font-size:13px;line-height:1.5;color:#667085">If you were not expecting this invitation, you can safely ignore this email.</p></div></div></body></html>`,
+        text: `Hi ${displayName},\n\nYou've been invited to Pulse as ${role === "admin" ? "an Owner" : "a Staff member"}. Set up your account: ${setupLink}`,
       }, {
         headers: { Authorization: `Bearer ${functions.config().resend.key}`, "Content-Type": "application/json" },
       });

@@ -7,7 +7,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import '/components/pulse_logo_widget.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
@@ -559,175 +558,110 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                           onPressed: () async {
                             logFirebaseEvent(
                                 'LOGIN_UNI_PAGE_SIGN_IN_BTN_ON_TAP');
-                            var _shouldSetState = false;
 
-                            // Staff records are a legacy Pharmacy-only login
-                            // path. Pulse users authenticate through Firebase
-                            // directly and must not be queried before auth.
-                            if (_selectedMode == 1) {
-                              logFirebaseEvent('Button_firestore_query');
-                              _model.tuk = await queryStaffRecordOnce(
-                                queryBuilder: (staffRecord) =>
-                                    staffRecord.where(
-                                  'Email',
-                                  isEqualTo:
-                                      _model.emailAddressTextController.text,
-                                ),
-                                singleRecord: true,
-                              ).then((s) => s.firstOrNull);
-                              _shouldSetState = true;
-                              logFirebaseEvent('Button_firestore_query');
-                              _model.staff = await queryStaffRecordCount(
-                                queryBuilder: (staffRecord) =>
-                                    staffRecord.where(
-                                  'Email',
-                                  isEqualTo:
-                                      _model.emailAddressTextController.text,
-                                ),
-                              );
-                              _shouldSetState = true;
-                              if (_model.staff == 0) {
-                                logFirebaseEvent('Button_firestore_query');
-                                _model.usercheak = await queryUserRecordCount(
-                                  queryBuilder: (userRecord) => userRecord
-                                      .where(
-                                        'email',
-                                        isEqualTo: _model
-                                            .emailAddressTextController.text,
-                                      )
-                                      .where(
-                                        'role',
-                                        isEqualTo: AppRole.owner.firestoreValue,
-                                      ),
-                                );
-                                _shouldSetState = true;
-                                if (_model.usercheak.toString() == '0') {
-                                  logFirebaseEvent('Button_alert_dialog');
-                                  await showDialog(
-                                    context: context,
-                                    builder: (alertDialogContext) {
-                                      return WebViewAware(
-                                        child: AlertDialog(
-                                          title: Text('Error '),
-                                          content: Text('Try Again'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  alertDialogContext),
-                                              child: Text('Ok'),
-                                            ),
-                                          ],
+                            // ───────────────────────────────────────────────
+                            //  unified email/password sign-in
+                            //
+                            // Both the Pulse and Pharmacy tabs now flow
+                            // through the SAME Firebase Auth path. The
+                            // account-type validation block further down
+                            // ensures a Pulse user can't log in via the
+                            // Pharmacy tab (and vice-versa) by signing them
+                            // out and surfacing a clear message.
+                            //
+                            // NOTE: the previous implementation queried the
+                            // `Staff` and `User` Firestore collections
+                            // BEFORE authentication. The Firestore rules
+                            // (`firebase/firestore.rules` lines 47-51 and
+                            // 228-231) require `signedIn()` for both — so
+                            // unauthenticated queries returned 0/false and
+                            // the Pharmacy path silently aborted with a
+                            // generic "Error / Try Again" dialog before
+                            // ever reaching Firebase Auth. That is why
+                            // users could not sign in on the Pharmacy tab.
+                            // ───────────────────────────────────────────────
+
+                            // Basic empty-field guard — Firebase Auth will
+                            // surface its own error message if the credentials
+                            // are wrong, so we don't replicate that here.
+                            final emailInput = _model
+                                .emailAddressTextController.text
+                                .trim();
+                            final passwordInput =
+                                _model.passwordTextController.text;
+                            if (emailInput.isEmpty ||
+                                passwordInput.isEmpty) {
+                              await showDialog(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return WebViewAware(
+                                    child: AlertDialog(
+                                      title: const Text('Missing details'),
+                                      content: const Text(
+                                          'Please enter both your email and password to continue.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(dialogContext),
+                                          child: Text(
+                                            'OK',
+                                            style: TextStyle(
+                                                color: _primary),
+                                          ),
                                         ),
-                                      );
-                                    },
+                                      ],
+                                    ),
                                   );
-                                  if (_shouldSetState) safeSetState(() {});
-                                  return;
-                                }
-                              } else {
-                                logFirebaseEvent('Button_firestore_query');
-                                _model.user = await queryUserRecordCount(
-                                  queryBuilder: (userRecord) =>
-                                      userRecord.where(
-                                    'email',
-                                    isEqualTo:
-                                        _model.emailAddressTextController.text,
-                                  ),
-                                );
-                                _shouldSetState = true;
-                                logFirebaseEvent('Button_firestore_query');
-                                _model.pcheck = await queryStaffRecordOnce(
-                                  queryBuilder: (staffRecord) =>
-                                      staffRecord.where(
-                                    'Email',
-                                    isEqualTo:
-                                        _model.emailAddressTextController.text,
-                                  ),
-                                  singleRecord: true,
-                                ).then((s) => s.firstOrNull);
-                                _shouldSetState = true;
-                                if (_model.user == 0) {
-                                  if (_model.passwordTextController.text ==
-                                      _model.pcheck?.password) {
-                                    logFirebaseEvent('Button_navigate_to');
-                                    context.pushNamedAuth(
-                                      StaffRegisterWidget.routeName,
-                                      context.mounted,
-                                      queryParameters: {
-                                        'staffId': serializeParam(
-                                          _model.tuk?.reference,
-                                          ParamType.DocumentReference,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  } else {
-                                    logFirebaseEvent('Button_alert_dialog');
-                                    await showDialog(
-                                      context: context,
-                                      builder: (alertDialogContext) {
-                                        return WebViewAware(
-                                          child: AlertDialog(
-                                            title: Text('Wrong Password'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    alertDialogContext),
-                                                child: Text('Ok'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  if (_model.passwordTextController.text ==
-                                      _model.pcheck?.password) {
-                                    logFirebaseEvent('Button_navigate_to');
-                                    context.pushNamedAuth(
-                                      StaffLoginWidget.routeName,
-                                      context.mounted,
-                                      queryParameters: {
-                                        'staffId': serializeParam(
-                                          _model.tuk?.reference,
-                                          ParamType.DocumentReference,
-                                        ),
-                                      }.withoutNulls,
-                                    );
-                                  } else {
-                                    logFirebaseEvent('Button_alert_dialog');
-                                    await showDialog(
-                                      context: context,
-                                      builder: (alertDialogContext) {
-                                        return WebViewAware(
-                                          child: AlertDialog(
-                                            title: Text('Wrong Password'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    alertDialogContext),
-                                                child: Text('Ok'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                }
-                                if (_shouldSetState) safeSetState(() {});
-                                return;
-                              }
+                                },
+                              );
+                              return;
                             }
 
                             logFirebaseEvent('Button_auth');
                             GoRouter.of(context).prepareAuthEvent();
                             final user = await authManager.signInWithEmail(
                               context,
-                              _model.emailAddressTextController.text,
-                              _model.passwordTextController.text,
+                              emailInput,
+                              passwordInput,
                             );
                             if (user == null) {
+                              // Firebase Auth failed — `_signInOrCreateAccount`
+                              // already surfaced the specific error message via
+                              // a SnackBar (e.g. "INVALID_LOGIN_CREDENTIALS"
+                              // → "The supplied auth credential is
+                              // incorrect, malformed or has expired").
+                              //
+                              // For the Pharmacy tab specifically, if the
+                              // error code indicates the email is not a
+                              // registered Firebase user, surface a clearer
+                              // dialog guiding them to contact their
+                              // pharmacy owner to complete onboarding.
+                              if (_selectedMode == 1 && mounted) {
+                                await showDialog(
+                                  context: context,
+                                  builder: (dialogContext) {
+                                    return WebViewAware(
+                                      child: AlertDialog(
+                                        title: const Text(
+                                            'Unable to sign in'),
+                                        content: const Text(
+                                            'We could not sign you in with those credentials. If you are a pharmacy staff member who has not yet completed account setup, please ask your pharmacy owner to resend your invitation, or use the Pulse tab if this is a Pulse network account.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(dialogContext),
+                                            child: Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                  color: _primary),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
                               return;
                             }
 
@@ -808,7 +742,6 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                               HomeWidget.routeName,
                               context.mounted,
                             );
-                            if (_shouldSetState) safeSetState(() {});
                           },
                           text: 'Sign In',
                           options: FFButtonOptions(

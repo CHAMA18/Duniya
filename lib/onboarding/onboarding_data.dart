@@ -367,12 +367,12 @@ final List<OnboardingChapter> kOnboardingChapters = [
             'Pulse network Owners can invite new users from the User '
             'Management page. Tap "Invite User" to open the invite dialog — '
             'enter the new user\'s full name and work email, choose their '
-            'access level (Staff or Administrator), and Pulse sends a '
+            'access level (Staff or Owner), and Pulse sends a '
             'branded email with a secure link for them to set their own '
             'password. No temporary credentials are exchanged.',
         bullets: [
           'The invite modal has a polished light header with a brand-purple icon chip',
-          'Staff and Administrator are the only two access levels on the Pulse side',
+          'Staff and Owner are the only two access levels on the Pulse side',
           'Cancel is a ghost button (outlined) so you can dismiss without a false click',
           'The invitee receives a branded email and sets their own password — secure by design',
         ],

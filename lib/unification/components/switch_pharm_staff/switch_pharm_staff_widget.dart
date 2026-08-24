@@ -153,8 +153,7 @@ class _SwitchPharmStaffWidgetState extends State<SwitchPharmStaffWidget> {
                           builder: (context) =>
                               StreamBuilder<List<PharmacyRecord>>(
                             stream: queryPharmacyRecord(
-                              parent: AccessControl.parentRef(context) ??
-                                  currentUserReference,
+                              parent: AccessControl.networkWideQueryParent(context),
                             ),
                             builder: (context, snapshot) {
                               // Customize what your widget looks like when it's loading.
@@ -234,8 +233,7 @@ class _SwitchPharmStaffWidgetState extends State<SwitchPharmStaffWidget> {
                                     'SWITCH_PHARM_STAFF_SWITCH_BTN_ON_TAP');
                                 logFirebaseEvent('Button_firestore_query');
                                 _model.pharm = await queryPharmacyRecordOnce(
-                                  parent: AccessControl.parentRef(context) ??
-                                      currentUserReference,
+                                  parent: AccessControl.networkWideQueryParent(context),
                                   queryBuilder: (pharmacyRecord) =>
                                       pharmacyRecord.where(
                                     'Name',

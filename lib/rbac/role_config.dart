@@ -502,7 +502,7 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
   },
 
   // ═══════════════════════════════════════════════════════════════════
-  // PULSE ADMIN — Full network administrative access
+  // PULSE OWNER — Full network administrative access
   // ═══════════════════════════════════════════════════════════════════
   AppRole.pulseAdmin: {
     Permission.catalogueView,

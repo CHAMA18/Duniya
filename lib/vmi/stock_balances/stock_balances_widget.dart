@@ -695,7 +695,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 ),
                 icon: Icons.account_balance_wallet_rounded,
                 accentColor: theme.primary,
-                accentBg: const Color(0xFFEDE0FE),
+                accentBg: theme.primary.withValues(alpha: 0.08),
                 delta: '+12.4%',
                 deltaPositive: true,
               ),
@@ -706,8 +706,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 label: 'Total SKUs',
                 value: '${_lastTotalSkus}',
                 icon: Icons.category_rounded,
-                accentColor: const Color(0xFF0EA5E9),
-                accentBg: const Color(0xFFE0F2FE),
+                accentColor: theme.primary,
+                accentBg: theme.primary.withValues(alpha: 0.08),
                 delta: '${_lastTotalSkus} tracked',
                 deltaPositive: true,
                 deltaIsNeutral: true,
@@ -719,8 +719,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 label: 'Low Stock',
                 value: '${_lastLow + _lastCritical}',
                 icon: Icons.warning_amber_rounded,
-                accentColor: const Color(0xFFF59E0B),
-                accentBg: const Color(0xFFFEF3C7),
+                accentColor: theme.primary,
+                accentBg: theme.primary.withValues(alpha: 0.08),
                 delta: _lastCritical > 0
                     ? '${_lastCritical} critical'
                     : 'All healthy',
@@ -733,8 +733,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 label: 'Out of Stock',
                 value: '${_lastOut}',
                 icon: Icons.error_outline_rounded,
-                accentColor: const Color(0xFFEF4444),
-                accentBg: const Color(0xFFFEE2E2),
+                accentColor: theme.primary,
+                accentBg: theme.primary.withValues(alpha: 0.08),
                 delta: _lastOut > 0 ? 'Action needed' : 'No stock-outs',
                 deltaPositive: _lastOut == 0,
               ),
@@ -2184,15 +2184,27 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Product selector
-                          FutureBuilder<List<ProductMasterRecord>>(
-                            future: queryProductMasterRecordOnce(),
+                          // Product selector — live stream so newly
+                          // added products appear without reopening
+                          // the modal. Filtered to active products only
+                          // so discontinued items don't clutter the list.
+                          StreamBuilder<List<ProductMasterRecord>>(
+                            stream: queryProductMasterRecord(
+                              queryBuilder: (q) =>
+                                  q.where('IsActive', isEqualTo: true),
+                            ),
                             builder: (context, productSnapshot) {
                               if (!productSnapshot.hasData) {
                                 return _dialogFieldLabel(
                                     'Product', theme, child: _loadingField(theme));
                               }
                               final products = productSnapshot.data!;
+                              if (products.isEmpty) {
+                                return _dialogFieldLabel('Product', theme,
+                                    required: true,
+                                    child: _buildEmptyProductState(
+                                        theme, dialogContext));
+                              }
                               final productOptions = products
                                   .map((p) => p.hasName() ? p.name : p.sku)
                                   .toList();
@@ -2282,7 +2294,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 _model.dialogOpeningTextController!,
                                 _model.dialogOpeningFocusNode!,
                                 theme,
-                                Colors.green,
+                                theme.primary,
                               )),
                               const SizedBox(width: 12.0),
                               Expanded(
@@ -2291,7 +2303,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 _model.dialogReceivedTextController!,
                                 _model.dialogReceivedFocusNode!,
                                 theme,
-                                Colors.blue,
+                                theme.primary,
                               )),
                             ],
                           ),
@@ -2304,7 +2316,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 _model.dialogDispensedTextController!,
                                 _model.dialogDispensedFocusNode!,
                                 theme,
-                                Colors.orange,
+                                theme.primary,
                               )),
                               const SizedBox(width: 12.0),
                               Expanded(
@@ -2313,7 +2325,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                 _model.dialogTransferredTextController!,
                                 _model.dialogTransferredFocusNode!,
                                 theme,
-                                Colors.purple,
+                                theme.primary,
                               )),
                             ],
                           ),
@@ -2323,7 +2335,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                             _model.dialogAdjustedTextController!,
                             _model.dialogAdjustedFocusNode!,
                             theme,
-                            Colors.amber,
+                            theme.primary,
                           ),
                         ],
                       ),
@@ -2404,16 +2416,42 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
     ).then((_) => safeSetState(() {}));
   }
 
-  /// Generate period options for the dropdown (current + previous months)
+  /// Generate period options for the dropdown (current + previous
+  /// 11 months). Returns display-friendly labels like "Jul 2026 (current)"
+  /// so the user can tell at a glance which month is which and which is now.
+  /// The canonical 'YYYY-MM' string is encoded as the leading 7 chars so
+  /// [_periodLabelToValue] can parse it back for Firestore storage.
   static List<String> _generatePeriodOptions() {
     final now = DateTime.now();
+    final currentYM =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}';
     final options = <String>[];
+    const monthAbbr = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
     for (int i = 0; i < 12; i++) {
       final date = DateTime(now.year, now.month - i, 1);
-      options.add(
-          '${date.year}-${date.month.toString().padLeft(2, '0')}');
+      final ym =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}';
+      final label = StringBuffer('$ym · ${monthAbbr[date.month - 1]} ${date.year}');
+      if (ym == currentYM) {
+        label.write(' (current)');
+      }
+      options.add(label.toString());
     }
     return options;
+  }
+
+  /// Convert a period dropdown label (e.g. "2026-07 · Jul 2026 (current)")
+  /// back into the canonical 'YYYY-MM' string used for Firestore storage
+  /// and for matching against StockBalanceRecord.period.
+  static String? _periodLabelToValue(String? label) {
+    if (label == null || label.length < 7) return null;
+    final ym = label.substring(0, 7);
+    // Sanity-check the format before trusting it.
+    final regex = RegExp(r'^\d{4}-\d{2}$');
+    return regex.hasMatch(ym) ? ym : null;
   }
 
   /// Save a stock balance record to Firestore
@@ -2459,7 +2497,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
         daysOfStockRemaining: dispensed > 0
             ? (closing / dispensed * 30.0)
             : 999.0,
-        period: _model.dialogPeriodValue,
+        period: _periodLabelToValue(_model.dialogPeriodValue),
         updatedAt: DateTime.now(),
         createdAt: DateTime.now(),
       ),
@@ -2525,6 +2563,99 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
     );
   }
 
+  /// Empty-state shown in the Product selector of the Add Stock Balance
+  /// modal when the shared product catalogue has no active products yet.
+  /// Renders a calm, helpful message + a clear CTA that closes the
+  /// modal and routes the user straight to Add Product.
+  Widget _buildEmptyProductState(
+      FlutterFlowTheme theme, BuildContext dialogContext) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+      decoration: BoxDecoration(
+        color: theme.primary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: theme.primary.withValues(alpha: 0.25),
+          width: 1.0,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: theme.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Icon(
+              Icons.inventory_2_outlined,
+              size: 18,
+              color: theme.primary,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'No products in catalogue yet',
+                  style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    color: theme.primaryText,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Add a product to your catalogue first, then reopen this dialog to record its opening & closing quantities.',
+                  style: TextStyle(
+                    fontFamily: kAppFontFamily,
+                    fontSize: 12,
+                    height: 1.45,
+                    color: theme.secondaryText,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: FFButtonWidget(
+                    onPressed: () {
+                      Navigator.pop(dialogContext);
+                      context.pushNamed('AddProduct');
+                    },
+                    text: 'Add a product',
+                    icon: Icon(Icons.add_rounded, size: 16),
+                    options: FFButtonOptions(
+                      height: 36.0,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14.0, vertical: 0.0),
+                      color: theme.primary,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontFamily: kAppFontFamily,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      elevation: 0.0,
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Quantity input field with colored accent
   Widget _qtyField(
     String label,
@@ -2567,7 +2698,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             color: theme.primaryText,
           ),
           decoration: InputDecoration(
-            hintText: '0',
+            hintText: 'Enter quantity',
             hintStyle: TextStyle(
               fontFamily: kAppFontFamily,
               color: theme.secondaryText.withValues(alpha: 0.5),

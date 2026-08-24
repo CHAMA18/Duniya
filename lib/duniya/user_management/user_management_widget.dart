@@ -215,7 +215,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                               ButtonSegment(
                                   value: 'admin',
                                   icon: Icon(Icons.admin_panel_settings_outlined),
-                                  label: Text('Administrator')),
+                                  label: Text('Owner')),
                             ],
                             selected: {role},
                             onSelectionChanged: isSubmitting
@@ -599,7 +599,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
       children: [
         _kpiCard(theme, 'Total accounts', users.length.toString(),
             Icons.groups_rounded, _purple, const Color(0xFFF1EAFE)),
-        _kpiCard(theme, 'Administrators', adminCount.toString(),
+        _kpiCard(theme, 'Owners', adminCount.toString(),
             Icons.verified_user_rounded, _blue, const Color(0xFFE0EAFF)),
         _kpiCard(theme, 'Active', activeCount.toString(),
             Icons.check_circle_rounded, _green, const Color(0xFFECFDF5)),
@@ -928,7 +928,7 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                 },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
-                      value: 'admin', child: Text('Make administrator')),
+                      value: 'admin', child: Text('Make owner')),
                   const PopupMenuItem(
                       value: 'staff', child: Text('Make staff')),
                   PopupMenuItem(
