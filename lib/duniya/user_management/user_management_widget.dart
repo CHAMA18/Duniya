@@ -106,15 +106,27 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header
+                // Header — light, modern, with brand-purple icon chip.
+                // Previously this was a solid purple gradient block which
+                // pushed the actual form content down and competed with
+                // the primary CTA. Modern SaaS dialogs (Linear, Stripe,
+                // Vercel) keep modal headers white/light to focus on data
+                // entry.
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(28, 24, 16, 24),
+                  padding: const EdgeInsets.fromLTRB(28, 26, 16, 18),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [_purpleDark, _purple],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    color: Theme.of(dialogContext).brightness == Brightness.dark
+                        ? const Color(0xFF1A1A2E)
+                        : Colors.white,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Theme.of(dialogContext).brightness ==
+                                Brightness.dark
+                            ? const Color(0xFF3B3B4F)
+                            : const Color(0xFFEEEAFF),
+                        width: 1,
+                      ),
                     ),
                   ),
                   child: Row(children: [
@@ -122,33 +134,47 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
+                        color: _purple.withValues(alpha: 0.10),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3), width: 2),
+                            color: _purple.withValues(alpha: 0.25),
+                            width: 1.5),
                       ),
-                      child: const Icon(Icons.person_add_alt_1_rounded,
-                          color: Colors.white, size: 22),
+                      child: Icon(Icons.person_add_alt_1_rounded,
+                          color: _purple, size: 22),
                     ),
                     const SizedBox(width: 14),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                        Text('Invite Pulse User',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800)),
-                        SizedBox(height: 3),
-                        Text(
-                            'They\'ll receive a branded email and set their own password.',
-                            style: TextStyle(
-                                color: Colors.white70, fontSize: 13)),
-                      ]),
+                            Text('Invite Pulse User',
+                                style: TextStyle(
+                                    color: Theme.of(dialogContext).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : const Color(0xFF0B1C30),
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.3)),
+                            const SizedBox(height: 3),
+                            Text(
+                                'They\'ll receive a branded email and set their own password.',
+                                style: TextStyle(
+                                    color: Theme.of(dialogContext).brightness ==
+                                            Brightness.dark
+                                        ? const Color(0xFF9CA3AF)
+                                        : const Color(0xFF64748B),
+                                    fontSize: 13,
+                                    height: 1.4)),
+                          ]),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Colors.white),
+                      icon: Icon(Icons.close_rounded,
+                          color: Theme.of(dialogContext).brightness ==
+                                  Brightness.dark
+                              ? const Color(0xFF9CA3AF)
+                              : const Color(0xFF64748B)),
                       onPressed: () => Navigator.pop(dialogContext),
                     ),
                   ]),
@@ -208,28 +234,44 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                                       : Colors.transparent),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 18),
+                          // Info alert — left accent bar style
+                          // (Stripe/Linear pattern) so it reads as
+                          // 'information' instead of 'another field'.
+                          // Previously this was a tinted box that
+                          // visually competed with the text inputs
+                          // above it.
                           Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(14),
+                            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
                             decoration: BoxDecoration(
-                                color: const Color(0xFFF8F6FF),
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                    color: const Color(0xFFE7DCFF))),
-                            child: const Row(
+                              color: _purple.withValues(alpha: 0.06),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border(
+                                left: BorderSide(
+                                    color: _purple.withValues(alpha: 0.55),
+                                    width: 3),
+                              ),
+                            ),
+                            child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Icon(Icons.mark_email_read_outlined,
-                                      color: _purpleDark, size: 20),
-                                  SizedBox(width: 10),
+                                      color: _purple.withValues(alpha: 0.85),
+                                      size: 18),
+                                  const SizedBox(width: 10),
                                   Expanded(
                                       child: Text(
                                           'Pulse sends a branded email from the approved domain. The user sets their own password, so no temporary credentials are exposed.',
                                           style: TextStyle(
                                               fontSize: 12.5,
-                                              height: 1.45,
-                                              color: Color(0xFF5B4B85)))),
+                                              height: 1.5,
+                                              color: Theme.of(dialogContext)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? const Color(0xFFCBD5E1)
+                                                  : const Color(0xFF475569),
+                                              fontWeight: FontWeight.w400))),
                                 ]),
                           ),
                           if (errorMessage != null) ...[
@@ -243,25 +285,50 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                         ]),
                   ),
                 ),
-                // Footer
+                // Footer — clear divider separates the data-entry zone
+                // from the action zone (Apple HIG pattern). Cancel is a
+                // ghost button (white bg + 1px purple border + purple
+                // text) so it has clear affordance distinct from the
+                // primary CTA — previously a plain TextButton that
+                // risked false affordance next to the big purple
+                // 'Send invitation'.
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(28, 12, 28, 20),
+                  padding: const EdgeInsets.fromLTRB(28, 16, 28, 22),
                   decoration: BoxDecoration(
+                    color: Theme.of(dialogContext).brightness == Brightness.dark
+                        ? const Color(0xFF16162A)
+                        : const Color(0xFFFBFAFF),
                     border: Border(
                         top: BorderSide(
-                            color: Colors.grey.withValues(alpha: 0.15))),
+                            color: Theme.of(dialogContext).brightness ==
+                                    Brightness.dark
+                                ? const Color(0xFF3B3B4F)
+                                : const Color(0xFFEEEAFF),
+                            width: 1)),
                   ),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton(
+                        OutlinedButton(
                           onPressed: isSubmitting
                               ? null
                               : () => Navigator.pop(dialogContext),
-                          child: const Text('Cancel'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: _purple,
+                            side: BorderSide(
+                                color: _purple.withValues(alpha: 0.35),
+                                width: 1.5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          child: const Text('Cancel',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 12),
                         FilledButton.icon(
                           onPressed: isSubmitting
                               ? null
@@ -318,9 +385,14 @@ class _PulseUserManagementWidgetState extends State<PulseUserManagementWidget> {
                               backgroundColor: _purple,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 14),
+                                  horizontal: 22, vertical: 14),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14))),
+                                  borderRadius: BorderRadius.circular(10)),
+                              elevation: 0,
+                              textStyle: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.1)),
                         ),
                       ]),
                 ),
