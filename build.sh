@@ -143,6 +143,20 @@ if [[ -f "web/loader-splash.png" ]]; then
 fi
 
 # ---------------------------------------------------------------------
+# 4e. DOCUMENTATION SITE — publish the pre-built Docusaurus output at
+#     /docs/ on the same static site. Source lives in the separate
+#     github.com/CHAMA18/pulse-docs repository; its production build
+#     (baseUrl '/docs/') is committed here as docs-site/ so deploys
+#     need no npm on the builder and are fully deterministic.
+#     Live at https://pulse.duniyahealthcare.com/docs/
+# ---------------------------------------------------------------------
+if [[ -d "docs-site" ]]; then
+  mkdir -p build/web/docs
+  cp -r docs-site/. build/web/docs/
+  echo "==> Copied docs-site/ -> build/web/docs/ (documentation site)"
+fi
+
+# ---------------------------------------------------------------------
 # 5. Cache busting — inject build version into built files.
 # ---------------------------------------------------------------------
 # Generate a version string from the git commit hash (short) + timestamp.
