@@ -34,6 +34,14 @@ class StockBalancesModel extends FlutterFlowModel<StockBalancesWidget> {
   String? periodValue;
   FormFieldController<String>? periodValueController;
 
+  // State field(s) for Template (specific-month) dropdown.
+  // Lets users recall stock-balance records posted in a specific
+  // named month (January, February, …) — including past months of
+  // previous years. The value is the canonical 'YYYY-MM' string
+  // (e.g. '2025-01' for January 2025). Null = no month filter.
+  String? templateMonthValue;
+  FormFieldController<String>? templateMonthValueController;
+
   // State field(s) for Add Stock Balance dialog.
   String? dialogProductValue;
   FormFieldController<String>? dialogProductValueController;

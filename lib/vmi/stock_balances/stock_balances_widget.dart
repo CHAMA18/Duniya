@@ -84,6 +84,69 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
     return 'Healthy';
   }
 
+  /// Builds the list of selectable months for the Template dropdown.
+  /// Returns the last 18 months (current month + 17 prior) formatted
+  /// as 'Month YYYY' for display, with the canonical 'YYYY-MM' string
+  /// as the value. This lets reviewers recall stock-balance records
+  /// posted in any specific named month — including past months of
+  /// previous years (e.g. December 2024, January 2025, February 2025).
+  ///
+  /// Example options returned (as of August 2025):
+  ///   'August 2025'        → value '2025-08' (current month)
+  ///   'July 2025'          → value '2025-07'
+  ///   'June 2025'          → value '2025-06'
+  ///   ...
+  ///   'March 2024'         → value '2024-03' (18 months ago)
+  List<String> _buildTemplateMonthOptions() {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    final now = DateTime.now();
+    final options = <String>[];
+    for (int i = 0; i < 18; i++) {
+      final date = DateTime(now.year, now.month - i, 1);
+      final value =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}';
+      final label = '${monthNames[date.month - 1]} ${date.year}';
+      // FlutterFlowDropDown stores the display string as the value
+      // when no separate value map is provided. Encode as
+      // 'Label|YYYY-MM' so we can split on '|' to recover the value
+      // while showing a friendly label in the dropdown.
+      options.add('$label|$value');
+    }
+    return options;
+  }
+
+  /// Parses the 'Label|YYYY-MM' encoded template-month option into
+  /// the canonical 'YYYY-MM' string (e.g. '2025-01' for January 2025).
+  /// Returns null if the input is null or malformed.
+  String? _templateMonthValue(String? encoded) {
+    if (encoded == null) return null;
+    final parts = encoded.split('|');
+    if (parts.length != 2) return null;
+    return parts[1];
+  }
+
+  /// Parses the 'Label|YYYY-MM' encoded template-month option into
+  /// the display label (e.g. 'January 2025').
+  String? _templateMonthLabel(String? encoded) {
+    if (encoded == null) return null;
+    final parts = encoded.split('|');
+    if (parts.length != 2) return null;
+    return parts[0];
+  }
+
   Color _statusColor(String status) {
     switch (status) {
       case 'Out':
@@ -251,12 +314,45 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                                             .toLowerCase();
                                         String? pharmacyFilter =
                                             _model.pharmacyValue;
+                                        // Resolve the selected Template
+                                        // (specific-month) filter to a
+                                        // canonical 'YYYY-MM' string for
+                                        // matching against each balance's
+                                        // `period` field (e.g. '2025-01').
+                                        final templateMonth =
+                                            _templateMonthValue(
+                                                _model.templateMonthValue);
 
                                         for (var balance in balances) {
                                           ProductMasterRecord? product =
                                               productMap[balance
                                                   .productId?.path];
                                           if (product == null) continue;
+
+                                          // Template (specific-month)
+                                          // filter — when a month is
+                                          // selected, only show balances
+                                          // whose `period` field (a
+                                          // 'YYYY-MM' string on the
+                                          // StockBalanceRecord) matches.
+                                          // Fall back to deriving the
+                                          // month from `createdAt` if the
+                                          // period field is missing (for
+                                          // legacy records).
+                                          if (templateMonth != null) {
+                                            final balanceMonth =
+                                                balance.hasPeriod() &&
+                                                        balance.period
+                                                            .isNotEmpty
+                                                    ? balance.period
+                                                    : (balance.hasCreatedAt()
+                                                        ? '${balance.createdAt!.year}-${balance.createdAt!.month.toString().padLeft(2, '0')}'
+                                                        : '');
+                                            if (balanceMonth !=
+                                                templateMonth) {
+                                              continue;
+                                            }
+                                          }
 
                                           // Search filter
                                           if (search != null &&
@@ -770,6 +866,54 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
             ),
           ),
 
+          // Template (specific-month) dropdown — lets reviewers recall
+          // stock-balance records posted in a specific named month
+          // (January, February, …) including past months from
+          // previous years. The value is the canonical 'YYYY-MM'
+          // string, e.g. '2025-01' = January 2025.
+          // Generates options dynamically for the last 18 months so
+          // users can review any month in the recent history without
+          // typing a date range.
+          Container(
+            width: 180.0,
+            decoration: BoxDecoration(
+              color: theme.primaryBackground,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(color: theme.alternate, width: 1.0),
+            ),
+            child: FlutterFlowDropDown<String>(
+              controller: _model.templateMonthValueController ??=
+                  FormFieldController<String>(null),
+              options: _buildTemplateMonthOptions(),
+              onChanged: (val) => safeSetState(() {
+                _model.templateMonthValue = val;
+                // Clear the relative Period filter when a specific
+                // month is selected — they are mutually exclusive
+                // views of the same data.
+                if (val != null) {
+                  _model.periodValue = null;
+                  _model.periodValueController?.reset();
+                }
+              }),
+              width: 180.0,
+              height: 44.0,
+              textStyle: theme.bodyMedium.override(
+                fontFamily: theme.bodyMediumFamily,
+                letterSpacing: 0.0,
+                useGoogleFonts: !theme.bodyMediumIsCustom,
+              ),
+              hintText: 'Template',
+              icon: Icon(Icons.event_available_outlined,
+                  color: theme.secondaryText, size: 18.0),
+              fillColor: theme.primaryBackground,
+              borderColor: Colors.transparent,
+              borderRadius: 10.0,
+              elevation: 2,
+              borderWidth: 0.0,
+              margin: EdgeInsets.zero,
+            ),
+          ),
+
           // Period dropdown
           Container(
             width: 180.0,
@@ -812,6 +956,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
           if ((_model.searchTextController?.text ?? '').isNotEmpty ||
               _model.pharmacyValue != null ||
               _model.periodValue != null ||
+              _model.templateMonthValue != null ||
               _statusFilter != 'All')
             TextButton.icon(
               onPressed: () {
@@ -820,6 +965,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 _model.pharmacyValueController?.reset();
                 _model.periodValue = null;
                 _model.periodValueController?.reset();
+                _model.templateMonthValue = null;
+                _model.templateMonthValueController?.reset();
                 setState(() => _statusFilter = 'All');
               },
               icon: Icon(Icons.restart_alt_rounded, size: 16.0),
@@ -1577,6 +1724,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
         (_model.searchTextController?.text ?? '').isNotEmpty ||
             _model.pharmacyValue != null ||
             _model.periodValue != null ||
+            _model.templateMonthValue != null ||
             _statusFilter != 'All';
 
     return Container(
@@ -1683,6 +1831,8 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                 _model.pharmacyValueController?.reset();
                 _model.periodValue = null;
                 _model.periodValueController?.reset();
+                _model.templateMonthValue = null;
+                _model.templateMonthValueController?.reset();
                 setState(() => _statusFilter = 'All');
               },
               text: 'Clear All Filters',
