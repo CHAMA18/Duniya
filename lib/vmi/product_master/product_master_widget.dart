@@ -1787,6 +1787,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     _model.sellingPriceTextController ??= TextEditingController();
     _model.minStockTextController ??= TextEditingController();
     _model.reorderLevelTextController ??= TextEditingController();
+    _model.quantityTextController ??= TextEditingController();
 
     final isEditing = product != null;
     _model.nameTextController!.text = product?.name ?? '';
@@ -1804,6 +1805,11 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         isEditing ? product.minimumStockLevel.toString() : '';
     _model.reorderLevelTextController!.text =
         isEditing ? product.reorderLevel.toString() : '';
+    // Pre-fill Quantity from the existing TargetStockLevel field so
+    // editing an existing product shows the value the user previously
+    // set, not a blank field.
+    _model.quantityTextController!.text =
+        isEditing ? product.targetStockLevel.toString() : '';
     _model.dialogCategoryValue = product?.category;
     _model.dialogCategoryValueController =
         FormFieldController<String>(product?.category);
@@ -1984,6 +1990,24 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                   'Inventory Control', Icons.warehouse_rounded),
                               const SizedBox(height: 12.0),
                               Row(children: [
+                                // Quantity (target on-hand) | Min Stock
+                                // Level | Reorder Level — three numeric
+                                // thresholds that together describe the
+                                // product's inventory policy. Quantity
+                                // is the desired stock to maintain; Min
+                                // Stock Level is the alert floor; Reorder
+                                // Level is the replenishment trigger.
+                                Expanded(
+                                  child: _buildPremiumField(
+                                    controller:
+                                        _model.quantityTextController!,
+                                    label: 'Quantity',
+                                    hint: '0',
+                                    icon: Icons.inventory_rounded,
+                                    isNumber: true,
+                                  ),
+                                ),
+                                const SizedBox(width: 14.0),
                                 Expanded(
                                   child: _buildPremiumField(
                                     controller: _model.minStockTextController!,
@@ -2116,13 +2140,9 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             letterSpacing: 0.5,
           ),
         ),
-        const SizedBox(width: 10.0),
-        Expanded(
-          child: Container(
-            height: 1.0,
-            color: _outlineVariant.withValues(alpha: 0.5),
-          ),
-        ),
+        // Section divider line removed — the icon chip + bold title is
+        // sufficient hierarchy. The line was visual noise that made the
+        // form look busier than it needed to be.
       ],
     );
   }
@@ -2465,6 +2485,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                               _model.minStockTextController?.text ?? '0'),
                           reorderLevel: int.tryParse(
                               _model.reorderLevelTextController?.text ?? '0'),
+                          // Persist the Quantity field to the existing
+                          // TargetStockLevel column in ProductMaster.
+                          // The field existed in the schema but was
+                          // never exposed in the UI before this change.
+                          targetStockLevel: int.tryParse(
+                              _model.quantityTextController?.text ?? '0'),
                           isActive: product?.isActive ?? true,
                           createdAt:
                               product == null ? getCurrentTimestamp : null,
@@ -2488,6 +2514,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         _model.sellingPriceTextController?.clear();
                         _model.minStockTextController?.clear();
                         _model.reorderLevelTextController?.clear();
+                        _model.quantityTextController?.clear();
                         Navigator.pop(dialogContext);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

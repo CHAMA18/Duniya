@@ -51,6 +51,12 @@ class ProductMasterModel extends FlutterFlowModel<ProductMasterWidget> {
   TextEditingController? minStockTextController;
   FocusNode? reorderLevelFocusNode;
   TextEditingController? reorderLevelTextController;
+  // Quantity field — maps to TargetStockLevel in the ProductMaster schema.
+  // Captures the desired quantity to keep on hand for this product
+  // (distinct from "Min Stock Level" which is the alert threshold, and
+  // "Reorder Level" which is the trigger point for replenishment).
+  FocusNode? quantityFocusNode;
+  TextEditingController? quantityTextController;
 
   @override
   void initState(BuildContext context) {
@@ -88,5 +94,7 @@ class ProductMasterModel extends FlutterFlowModel<ProductMasterWidget> {
     minStockTextController?.dispose();
     reorderLevelFocusNode?.dispose();
     reorderLevelTextController?.dispose();
+    quantityFocusNode?.dispose();
+    quantityTextController?.dispose();
   }
 }
