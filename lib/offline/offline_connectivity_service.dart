@@ -1,6 +1,13 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'platform_connectivity.dart';
+// Prefix-imported so the platform-level `isOnline` / `onOnline` /
+// `onOffline` symbols are NOT shadowed by this class's own
+// `bool get isOnline` getter. Without the prefix, `_isOnline = isOnline`
+// would be a self-assignment (the getter returns `_isOnline`), so the
+// service would never actually read the browser's online status at
+// startup — a fresh load while already offline would fail to fire the
+// banner until the *next* online↔offline transition.
+import 'platform_connectivity.dart' as pc;
 
 /// Tracks the device's online/offline status and notifies listeners.
 ///
@@ -20,21 +27,24 @@ class OfflineConnectivityService extends ChangeNotifier {
 
   bool _isOnline = true;
   bool _initialized = false;
-  StreamSubscription? _onlineSub;
-  StreamSubscription? _offlineSub;
+  StreamSubscription<dynamic>? _onlineSub;
+  StreamSubscription<dynamic>? _offlineSub;
 
   bool get isOnline => _isOnline;
   bool get isOffline => !_isOnline;
 
   /// Initialise the service and start listening to network events.
   /// Safe to call multiple times — only the first call has effect.
+  ///
+  /// Reads the **platform** online status (not the class's own getter)
+  /// so a fresh load while already offline is detected immediately.
   void initialize() {
     if (_initialized) return;
     _initialized = true;
 
-    _isOnline = isOnline; // from platform_connectivity (conditional)
-    _onlineSub = onOnline.listen(_handleOnline);
-    _offlineSub = onOffline.listen(_handleOffline);
+    _isOnline = pc.isOnline; // read from platform_connectivity
+    _onlineSub = pc.onOnline.listen(_handleOnline);
+    _offlineSub = pc.onOffline.listen(_handleOffline);
 
     debugPrint(
         '[OfflineConnectivityService] Init — online: $_isOnline (web: $kIsWeb)');
@@ -57,9 +67,11 @@ class OfflineConnectivityService extends ChangeNotifier {
   }
 
   /// Force-refresh the status (e.g. after a failed network call).
+  /// Re-reads the platform-level status so transient browser hiccups
+  /// are reflected even when no online/offline event has fired.
   void refresh() {
     final wasOnline = _isOnline;
-    _isOnline = isOnline; // re-read from platform
+    _isOnline = pc.isOnline; // re-read from platform
     if (wasOnline != _isOnline) {
       notifyListeners();
     }

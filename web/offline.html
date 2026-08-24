@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#9900FF">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pulse — Offline</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="/favicon.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(153, 0, 255, 0.18), transparent 30rem),
+        radial-gradient(circle at 80% 90%, rgba(180, 77, 255, 0.10), transparent 22rem),
+        #07070B;
+      color: #FFFFFF;
+      overflow: hidden;
+    }
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+    }
+    .card {
+      width: min(100% - 48px, 520px);
+      text-align: center;
+      animation: fade-up 0.6s ease-out;
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .ring {
+      position: relative;
+      width: 128px;
+      height: 128px;
+      margin: 0 auto 28px;
+    }
+    .ring::before, .ring::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .ring::before {
+      border-top-color: #9900FF;
+      border-right-color: #B44DFF;
+      animation: spin 1.4s linear infinite;
+    }
+    .ring::after {
+      border-top-color: rgba(153, 0, 255, 0.22);
+      border-left-color: rgba(180, 77, 255, 0.14);
+      animation: spin 2.2s linear infinite reverse;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .logo {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px;
+      filter: drop-shadow(0 0 14px rgba(153, 0, 255, 0.45));
+      animation: breathe 2.2s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%      { transform: translate(-50%, -50%) scale(0.9); }
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    h1 em {
+      font-style: normal;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 420px;
+      margin: 0 auto 24px;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #FBBF24;
+      letter-spacing: 0.3px;
+      margin-bottom: 28px;
+    }
+    .status .dot {
+      width: 8px; height: 8px;
+      background: #F59E0B;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(0.8); }
+    }
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      background: linear-gradient(135deg, #9900FF 0%, #B44DFF 100%);
+      color: #FFFFFF;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 14.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      box-shadow: 0 8px 24px rgba(153, 0, 255, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(153, 0, 255, 0.5);
+    }
+    .btn:active { transform: translateY(0); }
+    .hint {
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      letter-spacing: 0.3px;
+    }
+    .hint button {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      color: #c47aff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+    @media (max-width: 480px) {
+      .ring { width: 110px; height: 110px; }
+      h1 { font-size: 22px; }
+      p { font-size: 13.5px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ring::before, .ring::after, .logo, .status .dot { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="ring" aria-hidden="true">
+        <img class="logo" src="/favicon-512x512.png" alt="">
+      </div>
+      <div class="status">
+        <span class="dot" aria-hidden="true"></span>
+        You&rsquo;re offline
+      </div>
+      <h1>Pulse <em>· Pharmacy Intelligence</em></h1>
+      <p>
+        We can&rsquo;t reach our servers right now. If you&rsquo;ve used Pulse
+        on this device before, your data is cached and will load
+        automatically once you reconnect — any changes you make will sync
+        the moment the network is back.
+      </p>
+      <button class="btn" type="button" onclick="tryAgain()">
+        Try again
+      </button>
+      <div class="hint" id="auto-retry">
+        We&rsquo;ll retry automatically every 10 seconds, or
+        <button type="button" onclick="tryAgain()">retry now</button>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── Auto-retry when connectivity returns ────────────────────────
+    // Two-pronged approach:
+    //   1. Listen to window.online event (fires when the browser detects
+    //      the network is back).
+    //   2. Poll every 10 seconds with a HEAD request to the current
+    //      origin — the online event can be unreliable on flaky captive
+    //      portals, so the poll is the safety net.
+    function tryAgain() {
+      // Reload the page that the user originally requested. The service
+      // worker will then serve from cache if available, or refetch from
+      // the network if connectivity is back.
+      // We strip the cache-bust query so the original URL is restored.
+      var cleanUrl = window.location.pathname + window.location.hash;
+      window.location.replace(cleanUrl);
+    }
+
+    if ('onLine' in navigator) {
+      window.addEventListener('online', function () {
+        // Small delay so the network stack settles before we reload.
+        setTimeout(tryAgain, 250);
+      });
+    }
+
+    // Safety-net poll. Each tick fires a HEAD to "/?_probe=<ts>" —
+    // success means we're back online → reload. Failure → wait 10s.
+    setInterval(function () {
+      fetch('/?_probe=' + Date.now(), {
+        method: 'HEAD',
+        cache: 'no-store',
+        credentials: 'omit',
+      }).then(function (r) {
+        if (r.ok || r.status === 401 || r.status === 403 || r.status === 404) {
+          // Any HTTP response means we're online — even auth-gated
+          // ones. Reload so the app shell can take over.
+          tryAgain();
+        }
+      }).catch(function () { /* still offline — wait */ });
+    }, 10000);
+  </script>
+</body>
+</html>

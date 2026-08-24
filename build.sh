@@ -120,6 +120,18 @@ if [[ -f "web/404.html" ]]; then
 fi
 
 # ---------------------------------------------------------------------
+# 4c-bis. OFFLINE FALLBACK — branded Pulse page served by the service
+#        worker when navigation fails AND no cached HTML exists (truly
+#        first-visit-while-offline case). Has auto-retry when the
+#        browser fires its `online` event or a 10-second poll detects
+#        connectivity. Pre-cached by the service worker's APP_SHELL list.
+# ---------------------------------------------------------------------
+if [[ -f "web/offline.html" ]]; then
+  cp web/offline.html build/web/offline.html
+  echo "==> Copied web/offline.html -> build/web/offline.html (SW offline fallback)"
+fi
+
+# ---------------------------------------------------------------------
 # 4d. Copy the branded loader splash image so both index.html (app
 #     shell) and 404.html (SPA fallback) can display it while Flutter
 #     boots. The image is a 132KB PNG showing the complete Pulse
@@ -167,6 +179,12 @@ if [[ -f "build/web/404.html" ]]; then
   sed -i "s/content=\"DEV\"/content=\"${BUILD_VERSION}\"/g" build/web/404.html
   sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/404.html
   echo "==> Injected version into 404.html (SPA fallback shell)"
+fi
+
+# Inject version into offline.html (SW offline fallback).
+if [[ -f "build/web/offline.html" ]]; then
+  sed -i "s/%%BUILD_VERSION%%/${BUILD_VERSION}/g" build/web/offline.html
+  echo "==> Injected version into offline.html (SW offline fallback)"
 fi
 
 # Replace the placeholder in manifest.json with the build version.

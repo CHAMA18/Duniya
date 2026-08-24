@@ -33,11 +33,17 @@ const APP_SHELL = [
   `/app.html?v=${CACHE_VERSION}`,
   `/404.html?v=${CACHE_VERSION}`,
   `/landing.html?v=${CACHE_VERSION}`,
+  // Dedicated offline fallback — served when navigation fails AND no
+  // cached HTML exists (truly first-visit-while-offline). Branded
+  // page with auto-retry so the user isn't stuck on the browser's
+  // "This site can't be reached" screen.
+  `/offline.html?v=${CACHE_VERSION}`,
   `/loader-splash.png?v=${CACHE_VERSION}`,
   `/manifest.json?v=${CACHE_VERSION}`,
   `/flutter_bootstrap.js?v=${CACHE_VERSION}`,
   `/favicon.svg`,
   `/favicon.png`,
+  `/favicon-512x512.png`,
   `/icons/Icon-192.png`,
   `/icons/Icon-512.png`,
 ];
@@ -163,6 +169,13 @@ self.addEventListener('fetch', (event) => {
           // Fall back to cached 404.html (SPA fallback shell).
           const cached404 = await cache.match('/404.html');
           if (cached404) return cached404;
+          // Last-resort: branded offline page. This handles the
+          // truly-first-visit-while-offline case where no app shell
+          // is cached yet. The page has auto-retry when connectivity
+          // returns, so the user isn't stuck on the browser's
+          // "This site can't be reached" screen.
+          const cachedOffline = await cache.match('/offline.html');
+          if (cachedOffline) return cachedOffline;
           throw e;
         }
       })()

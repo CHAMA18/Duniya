@@ -119,7 +119,6 @@ class _OfflineStatusChipState extends State<OfflineStatusChip>
   }
 
   Widget _buildChip(BuildContext context) {
-    final theme = FlutterFlowTheme.of(context);
     final isOnline = _connectivity.isOnline;
     final isWarming = _warmer.isWarming;
     final isSyncing = _sync.isSyncing;
