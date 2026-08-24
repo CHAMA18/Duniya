@@ -220,22 +220,56 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       _buildLoadingCard(
                                           cardBg, outlineVariant, theme)
                                     else
-                                      FutureBuilder<List<ProductMasterRecord>>(
-                                        future: queryProductMasterRecordOnce(),
-                                        builder: (context, productSnapshot) {
-                                          if (!productSnapshot.hasData) {
+                                      FutureBuilder<
+                                          ({
+                                            List<ProductMasterRecord> products,
+                                            List<StockRecord> stocks,
+                                          })>(
+                                        future: () async {
+                                          // Sales movements store a StockRecord
+                                          // reference in ProductId; transfer/
+                                          // goods-received movements store a
+                                          // ProductMaster reference. Query both
+                                          // collections so the lookup resolves
+                                          // regardless of which reference type
+                                          // the movement carries.
+                                          final results =
+                                              await Future.wait([
+                                            queryProductMasterRecordOnce(),
+                                            queryStockRecordOnce(),
+                                          ]);
+                                          return (
+                                            products: results[0]
+                                                as List<ProductMasterRecord>,
+                                            stocks: results[1]
+                                                as List<StockRecord>,
+                                          );
+                                        }(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
                                             return _buildLoadingCard(
                                                 cardBg, outlineVariant, theme);
                                           }
+                                          final data = snapshot.data!;
                                           Map<String, ProductMasterRecord>
                                               productMap = {
-                                            for (var p in productSnapshot.data!)
+                                            for (var p in data.products)
                                               p.reference.path: p
+                                          };
+                                          // Fallback map keyed by StockRecord
+                                          // path → use StockRecord.name as the
+                                          // display name when the movement's
+                                          // ProductId points at a Stock doc
+                                          // (legacy sales flow).
+                                          Map<String, StockRecord> stockMap = {
+                                            for (var s in data.stocks)
+                                              s.reference.path: s
                                           };
                                           return _buildMovementLedger(
                                             context,
                                             movements,
                                             productMap,
+                                            stockMap,
                                             theme,
                                             primaryColor,
                                             onSurface,
@@ -1233,6 +1267,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     BuildContext context,
     List<StockMovementRecord> movements,
     Map<String, ProductMasterRecord> productMap,
+    Map<String, StockRecord> stockMap,
     FlutterFlowTheme theme,
     Color primaryColor,
     Color onSurface,
@@ -1302,6 +1337,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             _buildTable(
               pageMovements,
               productMap,
+              stockMap,
               theme,
               primaryColor,
               onSurface,
@@ -1425,6 +1461,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   Widget _buildTable(
     List<StockMovementRecord> movements,
     Map<String, ProductMasterRecord> productMap,
+    Map<String, StockRecord> stockMap,
     FlutterFlowTheme theme,
     Color primaryColor,
     Color onSurface,
@@ -1553,7 +1590,16 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             ),
             child: Builder(
               builder: (context) {
+                // Resolve the product name across BOTH collections:
+                //  - Transfer / Goods Received movements store a
+                //    ProductMaster reference in ProductId → resolve via
+                //    productMap.
+                //  - Sales (SOLD) movements store a StockRecord reference
+                //    in ProductId → fall back to stockMap and use the
+                //    StockRecord.name as the display name.
                 final product = productMap[movement.productId?.path];
+                final stock = stockMap[movement.productId?.path];
+                final productName = product?.name ?? stock?.name ?? 'Unknown';
                 final mType = movement.movementType;
                 return Row(
                   children: [
@@ -1580,7 +1626,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                               borderRadius: BorderRadius.circular(6.0),
                             ),
                             child: Icon(
-                              _getProductIcon(product?.name),
+                              _getProductIcon(productName),
                               color: primaryColor,
                               size: 16.0,
                             ),
@@ -1588,7 +1634,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                           const SizedBox(width: 8.0),
                           Flexible(
                             child: Text(
-                              product?.name ?? 'Unknown',
+                              productName,
                               overflow: TextOverflow.ellipsis,
                               style:
                                   _cellStyle(onSurface, weight: FontWeight.w500),
