@@ -301,7 +301,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   // ═══════════════════════════════════════════════════════════════
 
   static const _movementTypes = <String, (String, String)>{
-    'RECEIVED': ('Stock received', 'Goods received from Duniya/supplier'),
+    'RECEIVED': ('Stock received', 'Goods received from Pulse/supplier'),
     'SOLD': ('Stock sold/dispensed', 'Dispensed to patient or customer'),
     'RETURNED': ('Stock returned', 'Returned to supplier or by customer'),
     'TRANSFERRED': ('Stock transferred', 'Moved between outlets/facilities'),

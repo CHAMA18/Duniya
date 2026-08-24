@@ -114,7 +114,7 @@ class _ResetPasswordUniWidgetState extends State<ResetPasswordUniWidget> {
                                       24.0, 0.0, 0.0, 0.0),
                                   child: Text(
                                     FFLocalizations.of(context).getText(
-                                      'lzjeytk3' /* Meditracker */,
+                                      'lzjeytk3' /* Pulse */,
                                     ),
                                     style: FlutterFlowTheme.of(context)
                                         .displaySmall

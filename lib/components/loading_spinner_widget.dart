@@ -269,12 +269,54 @@ class _LoadingSpinnerWidgetState extends State<LoadingSpinnerWidget>
     );
 
     if (widget.fullScreen) {
+      // Brand-aware full-screen loader: always render the "Pulse · Pharmacy
+      // Intelligence" wordmark below the spinner so the brand identity is
+      // unambiguous (previously the bare spinner on white caused users to
+      // misread the dotted-ring pattern as "Duniya" — pareidolia).
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       return Container(
-        color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white)
+        color: (isDark ? Colors.black : Colors.white)
             .withValues(alpha: widget.overlayOpacity),
-        child: Center(child: spinner),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              spinner,
+              SizedBox(height: effectiveSize * 0.28),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Pulse',
+                        style: TextStyle(
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF07070B),
+                          fontSize: effectiveSize * 0.32,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' · Pharmacy Intelligence',
+                        style: TextStyle(
+                          color: isDark
+                              ? const Color(0xFF94949B)
+                              : const Color(0xFF5B6478),
+                          fontSize: effectiveSize * 0.32,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
 

@@ -340,16 +340,16 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // LoginUni
   {
     'jrnivdqy': {
-      'en': 'Meditracker',
-      'af': 'Meditracker',
-      'ar': 'Meditracker',
-      'es': 'Meditracker',
-      'fr': 'Méditraqueur',
-      'hi': 'मेडिट्रैकर',
-      'it': 'Meditracker',
+      'en': 'Pulse',
+      'af': 'Pulse',
+      'ar': 'Pulse',
+      'es': 'Pulse',
+      'fr': 'Pulse',
+      'hi': 'Pulse',
+      'it': 'Pulse',
       'nd': '',
       'pt': '',
-      'sw': 'Meditracker',
+      'sw': 'Pulse',
     },
     'm8bo9n3p': {
       'en': 'Welcome Back',
@@ -487,16 +487,16 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // RegisterUni
   {
     'rokyihng': {
-      'en': 'Meditracker',
-      'af': 'Meditracker',
-      'ar': 'Meditracker',
-      'es': 'Meditracker',
-      'fr': 'Méditraqueur',
-      'hi': 'मेडिट्रैकर',
-      'it': 'Meditracker',
+      'en': 'Pulse',
+      'af': 'Pulse',
+      'ar': 'Pulse',
+      'es': 'Pulse',
+      'fr': 'Pulse',
+      'hi': 'Pulse',
+      'it': 'Pulse',
       'nd': '',
       'pt': '',
-      'sw': 'Meditracker',
+      'sw': 'Pulse',
     },
     'f18q44qg': {
       'en': 'Create your account',
@@ -4416,7 +4416,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'pkzoqjgt': {
       'en':
-          'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
+          'The Pulse System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
           'Die Pulse-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
@@ -4704,7 +4704,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'jbkf80te': {
       'en':
-          'The Provider reserves the right to amend the terms of this notice at any time. Updated versions of the notice will be made available to the User, and continued use of the System constitutes acceptance of the updated terms.\nBy accessing and using the Meditracker Pharmacy Management and Procurement System, you agree to the terms and conditions outlined in this notice. If you do not agree with these terms, please refrain from using the System.',
+          'The Provider reserves the right to amend the terms of this notice at any time. Updated versions of the notice will be made available to the User, and continued use of the System constitutes acceptance of the updated terms.\nBy accessing and using the Pulse Pharmacy Management and Procurement System, you agree to the terms and conditions outlined in this notice. If you do not agree with these terms, please refrain from using the System.',
       'af':
           'Die Verskaffer behou die reg voor om die bepalings van hierdie kennisgewing te eniger tyd te wysig. Opgedateerde weergawes van die kennisgewing sal aan die Gebruiker beskikbaar gestel word, en voortgesette gebruik van die Stelsel behels aanvaarding van die opgedateerde bepalings.\n\nDeur toegang tot en gebruik van die Pulse Apteekbestuur- en verkrygingstelsel stem jy in tot die bepalings en voorwaardes wat in hierdie kennisgewing uiteengesit word. Indien u nie met hierdie bepalings saamstem nie, weerhou asseblief daarvan om die stelsel te gebruik.',
       'ar':
@@ -4768,7 +4768,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'ikpv3v86': {
       'en':
-          'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
+          'The Pulse System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
           'Die Pulse-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
@@ -5056,7 +5056,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'xk4k6488': {
       'en':
-          'The Provider reserves the right to amend the terms of this notice at any time. Updated versions of the notice will be made available to the User, and continued use of the System constitutes acceptance of the updated terms.\nBy accessing and using the Meditracker Pharmacy Management and Procurement System, you agree to the terms and conditions outlined in this notice. If you do not agree with these terms, please refrain from using the System.',
+          'The Provider reserves the right to amend the terms of this notice at any time. Updated versions of the notice will be made available to the User, and continued use of the System constitutes acceptance of the updated terms.\nBy accessing and using the Pulse Pharmacy Management and Procurement System, you agree to the terms and conditions outlined in this notice. If you do not agree with these terms, please refrain from using the System.',
       'af':
           'Die Verskaffer behou die reg voor om die bepalings van hierdie kennisgewing te eniger tyd te wysig. Opgedateerde weergawes van die kennisgewing sal aan die Gebruiker beskikbaar gestel word, en voortgesette gebruik van die Stelsel behels aanvaarding van die opgedateerde bepalings.\n\nDeur toegang tot en gebruik van die Pulse Apteekbestuur- en verkrygingstelsel stem jy in tot die bepalings en voorwaardes wat in hierdie kennisgewing uiteengesit word. Indien u nie met hierdie bepalings saamstem nie, weerhou asseblief daarvan om die stelsel te gebruik.',
       'ar':
@@ -5309,16 +5309,16 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // ResetPasswordUni
   {
     'lzjeytk3': {
-      'en': 'Meditracker',
-      'af': 'Meditracker',
-      'ar': 'Meditracker',
-      'es': 'Meditracker',
-      'fr': 'Méditraqueur',
-      'hi': 'मेडिट्रैकर',
-      'it': 'Meditracker',
+      'en': 'Pulse',
+      'af': 'Pulse',
+      'ar': 'Pulse',
+      'es': 'Pulse',
+      'fr': 'Pulse',
+      'hi': 'Pulse',
+      'it': 'Pulse',
       'nd': '',
       'pt': '',
-      'sw': 'Meditracker',
+      'sw': 'Pulse',
     },
     'bbr0uqbv': {
       'en': 'Reset Password',
@@ -5625,7 +5625,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     '0f5z2tce': {
       'en':
-          'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
+          'The Pulse System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
           'Die Pulse-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
@@ -5657,7 +5657,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'jk95nqn1': {
       'en':
-          'a) Meditracker offers a  7-day money-back guarantee for all new users. If you are not satisfied with the Software for any reason, you may request a refund within 7 days from the date of purchase.\nb) Refunds are applicable only to the initial purchase of the Software license and do not include any additional services or customization fees.',
+          'a) Pulse offers a  7-day money-back guarantee for all new users. If you are not satisfied with the Software for any reason, you may request a refund within 7 days from the date of purchase.\nb) Refunds are applicable only to the initial purchase of the Software license and do not include any additional services or customization fees.',
       'af':
           'a) Die Gebruiker stem in om die Stelsel uitsluitlik te gebruik vir wettige en wettige doeleindes wat verband hou met apteekbestuur en verkryging.\n\nb) Ongemagtigde toegang, misbruik of misbruik van die stelsel is streng verbode.\n\nc) Die Gebruiker sal nie probeer om die funksionaliteit of sekuriteit van die Stelsel te ontwrig of in te meng nie.',
       'ar':
@@ -5689,7 +5689,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     '2mt77qqm': {
       'en':
-          'To request a refund, you must submit a written refund request to Meditracker via developer@thestackone.com. The request should include your full name, contact information, purchase details, and the reason for seeking a refund.',
+          'To request a refund, you must submit a written refund request to Pulse via developer@thestackone.com. The request should include your full name, contact information, purchase details, and the reason for seeking a refund.',
       'af':
           'a) Die Gebruiker verstaan ​​en erken dat die Stelsel sensitiewe pasiëntdata en apteekinligting hanteer.\n\nb) Die Gebruiker stem in om die vertroulikheid van alle data wat deur die Stelsel verkry is, te handhaaf en sal dit nie openbaar of met ongemagtigde partye deel nie.\n\nc) Die Gebruiker sal enige vermoedelike sekuriteitsbreuke of ongemagtigde toegang onmiddellik aan die Stelsel se administrateurs rapporteer.',
       'ar':
@@ -5721,7 +5721,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'abuoh7lv': {
       'en':
-          'a) Upon receiving your refund request, Meditracker will evaluate your eligibility for a refund based on the criteria mentioned in Sec. 1\nb) We reserve the right to decline a refund request if we find any violation of the terms of the End-User License Agreement or any fraudulent activity related to the purchase.',
+          'a) Upon receiving your refund request, Pulse will evaluate your eligibility for a refund based on the criteria mentioned in Sec. 1\nb) We reserve the right to decline a refund request if we find any violation of the terms of the End-User License Agreement or any fraudulent activity related to the purchase.',
       'af':
           'a) Die Verskaffer sal redelike pogings aanwend om ononderbroke toegang tot die Stelsel te verseker.\n\nb) Geskeduleerde instandhouding en opgraderings kan lei tot tydelike onbeskikbaarheid van die Stelsel, en die Gebruiker sal vooraf in kennis gestel word waar moontlik.',
       'ar':
@@ -5753,7 +5753,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     '0ablcek4': {
       'en':
-          'a) If your refund request is approved, Meditracker will process the refund within 3-5 business days from the date of approval.\nb) The refund will be issued using the same payment method used for the original purchase.',
+          'a) If your refund request is approved, Pulse will process the refund within 3-5 business days from the date of approval.\nb) The refund will be issued using the same payment method used for the original purchase.',
       'af':
           'a) Die Gebruiker kan tegniese ondersteuning met betrekking tot die Stelsel soek deur die aangewese ondersteuningskanale te gebruik wat deur die Verskaffer verskaf word.\n\nb) Die Verskaffer sal die beste pogings aanwend om binne \'n redelike tydraamwerk op ondersteuningsversoeke te reageer.',
       'ar':
@@ -5817,7 +5817,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'tseqrl3x': {
       'en':
-          'Meditracker reserves the right to modify or update this refund policy at any time without prior notice. The updated policy will be effective immediately upon posting on our website.',
+          'Pulse reserves the right to modify or update this refund policy at any time without prior notice. The updated policy will be effective immediately upon posting on our website.',
       'af':
           'a) Die Verskaffer sal voldoen aan alle toepaslike wette en regulasies wat verband hou met die werking en voorsiening van die Stelsel.\n\nb) Die Gebruiker stem in om die Stelsel te gebruik in ooreenstemming met alle relevante wette en regulasies.',
       'ar':
@@ -5913,7 +5913,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'uynvf2vj': {
       'en':
-          'The Meditracker System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
+          'The Pulse System is designed to optimize pharmacy operations, inventory management, and procurement processes, with the ultimate goal of enhancing efficiency and patient care.',
       'af':
           'Die Pulse-stelsel is ontwerp om apteekbedrywighede, voorraadbestuur en verkrygingsprosesse te optimaliseer, met die uiteindelike doel om doeltreffendheid en pasiëntsorg te verbeter.',
       'ar':
@@ -5945,7 +5945,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     '88wclqlh': {
       'en':
-          'a) Meditracker offers a  7-day money-back guarantee for all new users. If you are not satisfied with the Software for any reason, you may request a refund within 7 days from the date of purchase.\nb) Refunds are applicable only to the initial purchase of the Software license and do not include any additional services or customization fees.',
+          'a) Pulse offers a  7-day money-back guarantee for all new users. If you are not satisfied with the Software for any reason, you may request a refund within 7 days from the date of purchase.\nb) Refunds are applicable only to the initial purchase of the Software license and do not include any additional services or customization fees.',
       'af':
           'a) Die Gebruiker stem in om die Stelsel uitsluitlik te gebruik vir wettige en wettige doeleindes wat verband hou met apteekbestuur en verkryging.\n\nb) Ongemagtigde toegang, misbruik of misbruik van die stelsel is streng verbode.\n\nc) Die Gebruiker sal nie probeer om die funksionaliteit of sekuriteit van die Stelsel te ontwrig of in te meng nie.',
       'ar':
@@ -5977,7 +5977,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     '7avopf7z': {
       'en':
-          'To request a refund, you must submit a written refund request to Meditracker via developer@thestackone.com. The request should include your full name, contact information, purchase details, and the reason for seeking a refund.',
+          'To request a refund, you must submit a written refund request to Pulse via developer@thestackone.com. The request should include your full name, contact information, purchase details, and the reason for seeking a refund.',
       'af':
           'a) Die Gebruiker verstaan ​​en erken dat die Stelsel sensitiewe pasiëntdata en apteekinligting hanteer.\n\nb) Die Gebruiker stem in om die vertroulikheid van alle data wat deur die Stelsel verkry is, te handhaaf en sal dit nie openbaar of met ongemagtigde partye deel nie.\n\nc) Die Gebruiker sal enige vermoedelike sekuriteitsbreuke of ongemagtigde toegang onmiddellik aan die Stelsel se administrateurs rapporteer.',
       'ar':
@@ -6009,7 +6009,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'qftb602w': {
       'en':
-          'a) Upon receiving your refund request, Meditracker will evaluate your eligibility for a refund based on the criteria mentioned in Sec. 1\nb) We reserve the right to decline a refund request if we find any violation of the terms of the End-User License Agreement or any fraudulent activity related to the purchase.',
+          'a) Upon receiving your refund request, Pulse will evaluate your eligibility for a refund based on the criteria mentioned in Sec. 1\nb) We reserve the right to decline a refund request if we find any violation of the terms of the End-User License Agreement or any fraudulent activity related to the purchase.',
       'af':
           'a) Die Verskaffer sal redelike pogings aanwend om ononderbroke toegang tot die Stelsel te verseker.\n\nb) Geskeduleerde instandhouding en opgraderings kan lei tot tydelike onbeskikbaarheid van die Stelsel, en die Gebruiker sal vooraf in kennis gestel word waar moontlik.',
       'ar':
@@ -6041,7 +6041,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     'qnhm8a83': {
       'en':
-          'a) If your refund request is approved, Meditracker will process the refund within 3-5 business days from the date of approval.\nb) The refund will be issued using the same payment method used for the original purchase.',
+          'a) If your refund request is approved, Pulse will process the refund within 3-5 business days from the date of approval.\nb) The refund will be issued using the same payment method used for the original purchase.',
       'af':
           'a) Die Gebruiker kan tegniese ondersteuning met betrekking tot die Stelsel soek deur die aangewese ondersteuningskanale te gebruik wat deur die Verskaffer verskaf word.\n\nb) Die Verskaffer sal die beste pogings aanwend om binne \'n redelike tydraamwerk op ondersteuningsversoeke te reageer.',
       'ar':
@@ -6105,7 +6105,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     },
     '3q5in2x5': {
       'en':
-          'Meditracker reserves the right to modify or update this refund policy at any time without prior notice. The updated policy will be effective immediately upon posting on our website.',
+          'Pulse reserves the right to modify or update this refund policy at any time without prior notice. The updated policy will be effective immediately upon posting on our website.',
       'af':
           'a) Die Verskaffer sal voldoen aan alle toepaslike wette en regulasies wat verband hou met die werking en voorsiening van die Stelsel.\n\nb) Die Gebruiker stem in om die Stelsel te gebruik in ooreenstemming met alle relevante wette en regulasies.',
       'ar':
@@ -8435,15 +8435,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   {
     'xzjjeekv': {
       'en': 'Pulse',
-      'af': 'Meditracker',
-      'ar': 'Meditracker',
-      'es': 'Meditracker',
-      'fr': 'Méditraqueur',
-      'hi': 'मेडिट्रैकर',
-      'it': 'Meditracker',
+      'af': 'Pulse',
+      'ar': 'Pulse',
+      'es': 'Pulse',
+      'fr': 'Pulse',
+      'hi': 'Pulse',
+      'it': 'Pulse',
       'nd': '',
       'pt': '',
-      'sw': 'Meditracker',
+      'sw': 'Pulse',
     },
     'r7lr2djm': {
       'en': 'Finances',

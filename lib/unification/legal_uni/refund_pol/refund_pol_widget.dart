@@ -179,7 +179,7 @@ class _RefundPolWidgetState extends State<RefundPolWidget> {
                                     16.0, 0.0, 0.0, 10.0),
                                 child: AutoSizeText(
                                   FFLocalizations.of(context).getText(
-                                    '0f5z2tce' /* The Meditracker System is desi... */,
+                                    '0f5z2tce' /* The Pulse System is desi... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
@@ -219,7 +219,7 @@ class _RefundPolWidgetState extends State<RefundPolWidget> {
                                     16.0, 0.0, 0.0, 10.0),
                                 child: AutoSizeText(
                                   FFLocalizations.of(context).getText(
-                                    'jk95nqn1' /* a) Meditracker offers a  7-day... */,
+                                    'jk95nqn1' /* a) Pulse offers a  7-day... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
@@ -418,7 +418,7 @@ class _RefundPolWidgetState extends State<RefundPolWidget> {
                                     16.0, 0.0, 0.0, 10.0),
                                 child: Text(
                                   FFLocalizations.of(context).getText(
-                                    'tseqrl3x' /* Meditracker reserves the right... */,
+                                    'tseqrl3x' /* Pulse reserves the right... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
@@ -556,7 +556,7 @@ class _RefundPolWidgetState extends State<RefundPolWidget> {
                                     16.0, 0.0, 0.0, 10.0),
                                 child: AutoSizeText(
                                   FFLocalizations.of(context).getText(
-                                    'uynvf2vj' /* The Meditracker System is desi... */,
+                                    'uynvf2vj' /* The Pulse System is desi... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
@@ -596,7 +596,7 @@ class _RefundPolWidgetState extends State<RefundPolWidget> {
                                     16.0, 0.0, 0.0, 10.0),
                                 child: AutoSizeText(
                                   FFLocalizations.of(context).getText(
-                                    '88wclqlh' /* a) Meditracker offers a  7-day... */,
+                                    '88wclqlh' /* a) Pulse offers a  7-day... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
@@ -795,7 +795,7 @@ class _RefundPolWidgetState extends State<RefundPolWidget> {
                                     16.0, 0.0, 0.0, 10.0),
                                 child: Text(
                                   FFLocalizations.of(context).getText(
-                                    '3q5in2x5' /* Meditracker reserves the right... */,
+                                    '3q5in2x5' /* Pulse reserves the right... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)

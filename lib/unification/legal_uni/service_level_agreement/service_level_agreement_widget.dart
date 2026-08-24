@@ -182,7 +182,7 @@ class _ServiceLevelAgreementWidgetState
                                     16.0, 0.0, 0.0, 10.0),
                                 child: AutoSizeText(
                                   FFLocalizations.of(context).getText(
-                                    'pkzoqjgt' /* The Meditracker System is desi... */,
+                                    'pkzoqjgt' /* The Pulse System is desi... */,
                                   ),
                                   textAlign: TextAlign.justify,
                                   style: FlutterFlowTheme.of(context)
@@ -632,7 +632,7 @@ class _ServiceLevelAgreementWidgetState
                                     16.0, 0.0, 0.0, 10.0),
                                 child: AutoSizeText(
                                   FFLocalizations.of(context).getText(
-                                    'ikpv3v86' /* The Meditracker System is desi... */,
+                                    'ikpv3v86' /* The Pulse System is desi... */,
                                   ),
                                   textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
