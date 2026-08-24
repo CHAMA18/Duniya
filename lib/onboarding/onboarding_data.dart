@@ -144,7 +144,7 @@ final List<OnboardingChapter> kOnboardingChapters = [
       OnboardingStep(
         headline: 'Browse the product catalogue',
         body:
-            'The Product Catalogue page lists every product in your master '
+            'Your product catalogue lists every product in your master '
             'list. Search by name or SKU, filter by category, and use the '
             '"Import Excel" button to bulk-upload products. Tap "Download '
             'Template" first to get a pre-formatted spreadsheet with the '
@@ -152,7 +152,7 @@ final List<OnboardingChapter> kOnboardingChapters = [
         bullets: [
           'Download Template gives you a .xlsx with headers + instructions',
           'Import Excel accepts .xlsx, .xls, and .csv — column aliases like "Qty" are recognised',
-          'Each product can be edited inline from the catalogue',
+          'Products can be edited inline wherever you manage them',
         ],
         icon: Icons.library_books_rounded,
       ),

@@ -587,7 +587,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             isPrimary: true,
             onTap: () async {
               logFirebaseEvent('HOME_PAGE_AddProduct_ON_TAP');
-              context.pushNamed(ProductMasterWidget.routeName);
+              // Account-side aware routing: Pulse users manage the
+              // network-wide Product Catalogue; pharmacy users add
+              // products through their Store Inventory (the catalogue
+              // page now redirects them there anyway — go direct).
+              context.pushNamed(
+                AccessControl.isPulseUser(context)
+                    ? ProductMasterWidget.routeName
+                    : StoreInventoryWidget.routeName,
+              );
             },
           ),
         ],

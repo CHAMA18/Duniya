@@ -122,7 +122,23 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         parameters: {'screen_name': 'ProductMaster'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    // Pulse-side page: the network-wide Product Catalogue belongs to the
+    // Pulse network side. Pharmacy users are redirected to Store
+    // Inventory (their inventory destination, which has its own
+    // add-product flow); other non-Pulse accounts land on Home. This
+    // mirrors the inverse guards on the stock pages and covers deep
+    // links / stale history now that the sidebar hides the catalogue
+    // for pharmacy roles.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (!AccessControl.isPulseUser(context)) {
+        context.goNamed(
+          AccessControl.isPharmacyUser(context) ? 'StoreInventory' : 'Home',
+        );
+        return;
+      }
+      safeSetState(() {});
+    });
   }
 
   @override

@@ -139,77 +139,95 @@ class _SideNavWidgetState extends State<SideNavWidget> {
   }
 
   // ────────────────────────────────────────────────────────────────
-  // Expandable Inventory Section
+  // Inventory Section
   // ────────────────────────────────────────────────────────────────
-  // Presents one portal-specific inventory destination so the parent and
-  // child cannot duplicate the same section in the sidebar.
+  // A single portal-specific destination: Store Inventory for pharmacy
+  // users, Product Catalogue for Pulse network users. The old
+  // expandable parent/child structure existed only to surface the
+  // Product Catalogue child link for pharmacy users; now that the
+  // catalogue is Pulse-only, the section is a plain link.
   // ────────────────────────────────────────────────────────────────
 
-  bool _isInventoryExpanded = true;
   bool _isFooterExpanded = false;
 
-  /// Whether any inventory sub-item is currently active.
-  bool get _isInventoryChildActive => _showsStoreInventory
+  /// Whether this section's destination is currently active.
+  bool get _isInventoryActive => _showsStoreInventory
       ? FFAppState().SelectedPage == 'Store Inventory'
       : FFAppState().SelectedPage == 'Product Catalogue';
 
-  /// The full expandable Inventory section.
-  Widget _buildExpandableInventorySection(bool isCollapsed) {
-    final isParentActive = _isInventoryChildActive;
-    // Auto-expand when a child is active (user navigated to a sub-item)
-    final isExpanded = _isInventoryExpanded || isParentActive;
+  /// The Inventory section — one link to the portal destination.
+  Widget _buildInventoryNavSection(bool isCollapsed) {
+    // Pharmacy users -> Store Inventory; Pulse users -> Product Catalogue.
+    // One destination per portal, rendered by the shared link builder.
+    return _inventoryDestinationLink(
+      isCollapsed: isCollapsed,
+      isParentActive: _isInventoryActive,
+    );
+  }
 
-    // ── Collapsed sidebar: single icon → navigates to Store Inventory ──
-    if (isCollapsed) {
-      return Tooltip(
-        message: _showsStoreInventory ? 'Store Inventory' : 'Product Catalogue',
-        preferBelow: false,
-        child: InkWell(
-          splashColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () async {
-            logFirebaseEvent('SIDE_NAV_COLLAPSED_INVENTORY_ON_TAP');
-            logFirebaseEvent('SidebarLink_navigate_to');
-            context.goNamed(
-              _showsStoreInventory
-                  ? StoreInventoryWidget.routeName
-                  : ProductMasterWidget.routeName,
-              extra: <String, dynamic>{
-                '__transition_info__': TransitionInfo(
-                  hasTransition: true,
-                  transitionType: PageTransitionType.fade,
-                  duration: Duration(milliseconds: 0),
-                ),
-              },
-            );
-            FFAppState().SelectedPage =
-                _showsStoreInventory ? 'Store Inventory' : 'Product Catalogue';
-          },
-          child: Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(minHeight: 40.0),
-            decoration: BoxDecoration(
-              color: isParentActive
-                  ? FlutterFlowTheme.of(context).primary.withValues(alpha: 0.08)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(12.0, 7.0, 12.0, 7.0),
-              child: Center(
-                child: Container(
+  /// The Inventory section link used by both the expanded sidebar and
+  /// the collapsed icon rail. One destination per portal.
+  Widget _inventoryDestinationLink({
+    required bool isCollapsed,
+    required bool isParentActive,
+  }) {
+    final theme = FlutterFlowTheme.of(context);
+    final routeName = _showsStoreInventory
+        ? StoreInventoryWidget.routeName
+        : ProductMasterWidget.routeName;
+    final pageLabel =
+        _showsStoreInventory ? 'Store Inventory' : 'Product Catalogue';
+    final tooltip = isCollapsed ? pageLabel : '';
+
+    void navigate() {
+      logFirebaseEvent(isCollapsed
+          ? 'SIDE_NAV_COLLAPSED_INVENTORY_ON_TAP'
+          : 'SIDE_NAV_INVENTORY_ON_TAP');
+      logFirebaseEvent('SidebarLink_navigate_to');
+      context.goNamed(
+        routeName,
+        extra: <String, dynamic>{
+          '__transition_info__': TransitionInfo(
+            hasTransition: true,
+            transitionType: PageTransitionType.fade,
+            duration: Duration(milliseconds: 0),
+          ),
+        },
+      );
+      FFAppState().SelectedPage = pageLabel;
+    }
+
+    return Tooltip(
+      message: tooltip,
+      preferBelow: false,
+      child: InkWell(
+        splashColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: navigate,
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 40.0),
+          decoration: BoxDecoration(
+            color: isParentActive
+                ? theme.primary.withValues(alpha: 0.08)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 7.0, 10.0, 7.0),
+            child: Row(
+              children: [
+                // Icon
+                Container(
                   width: 34.0,
                   height: 34.0,
                   decoration: BoxDecoration(
                     color: isParentActive
-                        ? FlutterFlowTheme.of(context)
-                            .primary
-                            .withValues(alpha: 0.12)
-                        : FlutterFlowTheme.of(context)
-                            .primaryBackground
-                            .withValues(alpha: 0.22),
+                        ? theme.primary.withValues(alpha: 0.12)
+                        : theme.primaryBackground.withValues(alpha: 0.22),
                     borderRadius: BorderRadius.circular(9.0),
                   ),
                   child: Center(
@@ -221,251 +239,43 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             ? Icons.warehouse_rounded
                             : Icons.warehouse_outlined,
                         color: isParentActive
-                            ? FlutterFlowTheme.of(context).primary
-                            : FlutterFlowTheme.of(context).secondaryText,
+                            ? theme.primary
+                            : theme.secondaryText,
                         size: 18.0,
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    // ── Expanded sidebar: parent row + animated sub-items ──
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Parent row — opens the portal-specific inventory destination.
-        MouseRegion(
-          onEnter: (_) => safeSetState(() {}),
-          onExit: (_) => safeSetState(() {}),
-          child: InkWell(
-            splashColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onTap: () {
-              final routeName = _showsStoreInventory
-                  ? StoreInventoryWidget.routeName
-                  : ProductMasterWidget.routeName;
-              final pageLabel = _showsStoreInventory
-                  ? 'Store Inventory'
-                  : 'Product Catalogue';
-
-              logFirebaseEvent('SIDE_NAV_INVENTORY_ON_TAP');
-              context.goNamed(
-                routeName,
-                extra: <String, dynamic>{
-                  '__transition_info__': TransitionInfo(
-                    hasTransition: true,
-                    transitionType: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 0),
-                  ),
-                },
-              );
-              FFAppState().SelectedPage = pageLabel;
-
-              safeSetState(() {
-                _isInventoryExpanded = true;
-              });
-            },
-            child: Container(
-              width: double.infinity,
-              constraints: const BoxConstraints(minHeight: 40.0),
-              decoration: BoxDecoration(
-                color: isParentActive
-                    ? FlutterFlowTheme.of(context)
-                        .primary
-                        .withValues(alpha: 0.08)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10.0, 7.0, 10.0, 7.0),
-                child: Row(
-                  children: [
-                    // Icon
-                    Container(
-                      width: 34.0,
-                      height: 34.0,
-                      decoration: BoxDecoration(
+                const SizedBox(width: 10.0),
+                // Label (expanded sidebar only)
+                if (!isCollapsed)
+                  Expanded(
+                    child: Text(
+                      pageLabel,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: theme.bodyMedium.override(
+                        fontFamily: theme.bodyMediumFamily,
                         color: isParentActive
-                            ? FlutterFlowTheme.of(context)
-                                .primary
-                                .withValues(alpha: 0.12)
-                            : FlutterFlowTheme.of(context)
-                                .primaryBackground
-                                .withValues(alpha: 0.22),
-                        borderRadius: BorderRadius.circular(9.0),
-                      ),
-                      child: Center(
-                        child: SizedBox(
-                          width: 18.0,
-                          height: 18.0,
-                          child: Icon(
-                            isParentActive
-                                ? Icons.warehouse_rounded
-                                : Icons.warehouse_outlined,
-                            color: isParentActive
-                                ? FlutterFlowTheme.of(context).primary
-                                : FlutterFlowTheme.of(context).secondaryText,
-                            size: 18.0,
-                          ),
-                        ),
+                            ? theme.primaryText
+                            : theme.secondaryText,
+                        fontSize: 13.5,
+                        letterSpacing: isParentActive ? -0.1 : 0.0,
+                        fontWeight: isParentActive
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        useGoogleFonts: !theme.bodyMediumIsCustom,
                       ),
                     ),
-                    const SizedBox(width: 10.0),
-                    // Label
-                    Expanded(
-                      child: Text(
-                        _showsStoreInventory
-                            ? 'Store Inventory'
-                            : 'Product Catalogue',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).bodyMediumFamily,
-                              color: isParentActive
-                                  ? FlutterFlowTheme.of(context).primaryText
-                                  : FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 13.5,
-                              letterSpacing: isParentActive ? -0.1 : 0.0,
-                              fontWeight: isParentActive
-                                  ? FontWeight.w600
-                                  : FontWeight.w500,
-                              useGoogleFonts: !FlutterFlowTheme.of(context)
-                                  .bodyMediumIsCustom,
-                            ),
-                      ),
-                    ),
-                    const SizedBox(width: 4.0),
-                    // Animated chevron
-                    AnimatedRotation(
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeInOut,
-                      turns: isExpanded ? -0.25 : 0.25,
-                      child: Icon(
-                        Icons.chevron_right_rounded,
-                        color: FlutterFlowTheme.of(context)
-                            .secondaryText
-                            .withValues(alpha: 0.5),
-                        size: 16.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+              ],
             ),
-          ),
-        ),
-
-        // ── Sub-item: VMI Product Catalogue ──
-        // Pharmacy users see the master product list as a child of
-        // their Inventory section (Pulse users reach it as the parent
-        // item itself), so both portals have catalogue access.
-        AnimatedCrossFade(
-          duration: const Duration(milliseconds: 220),
-          crossFadeState: isExpanded
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-          firstChild: _canSee(NavItem.productCatalogue)
-              ? Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(
-                      28.0, 2.0, 10.0, 6.0),
-                  child: _inventoryChildLink(
-                    label: 'Product Catalogue',
-                    icon: Icons.menu_book_outlined,
-                    selected:
-                        FFAppState().SelectedPage == 'Product Catalogue',
-                    onTap: () {
-                      logFirebaseEvent('SIDE_NAV_PRODUCT_CATALOGUE_ON_TAP');
-                      logFirebaseEvent('SidebarLink_navigate_to');
-                      context.goNamed(
-                        ProductMasterWidget.routeName,
-                        extra: <String, dynamic>{
-                          '__transition_info__': TransitionInfo(
-                            hasTransition: true,
-                            transitionType: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 0),
-                          ),
-                        },
-                      );
-                      FFAppState().SelectedPage = 'Product Catalogue';
-                    },
-                  ),
-                )
-              : const SizedBox.shrink(),
-          secondChild: const SizedBox.shrink(),
-        ),
-      ],
-    );
-  }
-
-  /// Compact sub-item row used inside the expandable Inventory section.
-  Widget _inventoryChildLink({
-    required String label,
-    required IconData icon,
-    required bool selected,
-    required VoidCallback onTap,
-  }) {
-    final theme = FlutterFlowTheme.of(context);
-    return InkWell(
-      splashColor: Colors.transparent,
-      focusColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(9.0),
-      child: Container(
-        width: double.infinity,
-        constraints: const BoxConstraints(minHeight: 34.0),
-        decoration: BoxDecoration(
-          color: selected
-              ? theme.primary.withValues(alpha: 0.08)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(9.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(8.0, 5.0, 8.0, 5.0),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 15.0,
-                color: selected
-                    ? theme.primary
-                    : theme.secondaryText.withValues(alpha: 0.85),
-              ),
-              const SizedBox(width: 9.0),
-              Expanded(
-                child: Text(
-                  label,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: theme.bodyMedium.override(
-                    fontFamily: theme.bodyMediumFamily,
-                    color: selected ? theme.primaryText : theme.secondaryText,
-                    fontSize: 12.5,
-                    letterSpacing: 0.0,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                    useGoogleFonts: !theme.bodyMediumIsCustom,
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
     final isCollapsed = FFAppState().SidebarCollapsed;
@@ -1110,7 +920,7 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                             KeyedSubtree(
                               key: PulseTourTargets.inventory,
                               child:
-                                  _buildExpandableInventorySection(isCollapsed),
+                                  _buildInventoryNavSection(isCollapsed),
                             ),
 
                           // ─── Divider ───

@@ -590,6 +590,13 @@ final Map<AppRole, Set<Permission>> rolePermissions = {
 ///   - Pharmacy roles: Store Inventory ONLY (never Product Catalogue)
 ///   - Pulse roles: Product Catalogue ONLY (never Store Inventory)
 ///   - These are mutually exclusive by design
+///
+/// The Product Catalogue (ProductMaster — the network-wide shared
+/// catalogue) is a Pulse-side destination. Pharmacy users previously
+/// also had it as a sidebar child under INVENTORY; removed so the
+/// pharmacy side shows a single Store Inventory destination. Pharmacy
+/// users deep-linking to the catalogue page are redirected to Store
+/// Inventory by the page itself.
 /// ─────────────────────────────────────────────────────────────────────
 final Map<AppRole, Set<NavItem>> roleNavItems = {
   // ═══ Owner ═══
@@ -609,7 +616,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.finances,
     NavItem.pendingApprovals,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -645,7 +651,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.humanResource,
     NavItem.finances,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -675,7 +680,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   AppRole.pharmacist: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -709,7 +713,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   AppRole.pharmacyTechnician: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -738,7 +741,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
   AppRole.stockController: {
     NavItem.home,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
@@ -759,7 +761,6 @@ final Map<AppRole, Set<NavItem>> roleNavItems = {
     NavItem.finances,
     NavItem.salesAnalytics,
     NavItem.storeInventory,
-    NavItem.productCatalogue,
     NavItem.stockBalances,
     NavItem.stockMovements,
     NavItem.stockCounts,
