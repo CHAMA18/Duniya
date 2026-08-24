@@ -54,6 +54,15 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
   // Status filter pills
   String _statusFilter = 'All'; // All | Healthy | Low | Critical | Out
 
+  // Hoisted ProductMaster future. The previous code had an inline
+  // `FutureBuilder(future: queryProductMasterRecordOnce())` nested
+  // inside the StockBalance StreamBuilder. Every stream emit
+  // (any balance doc changes) re-created the Future → re-fetched
+  // the entire ProductMaster catalogue. Since ProductMaster is
+  // network-wide shared data, hoisting it to a state field populated
+  // once in initState eliminates the re-fetch storm.
+  late final Future<List<ProductMasterRecord>> _productMasterFuture;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +71,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
         parameters: {'screen_name': 'StockBalances'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
+    _productMasterFuture = queryProductMasterRecordOnce();
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -289,7 +299,7 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
 
                                     return FutureBuilder<
                                         List<ProductMasterRecord>>(
-                                      future: queryProductMasterRecordOnce(),
+                                      future: _productMasterFuture,
                                       builder: (context, productSnapshot) {
                                         if (!productSnapshot.hasData) {
                                           return _buildLoadingState();

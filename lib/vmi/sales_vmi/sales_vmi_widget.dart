@@ -76,7 +76,12 @@ class _SalesVMIWidgetState extends State<SalesVMIWidget> {
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      safeSetState(() {});
+      // Removed: an empty `safeSetState(() {})` before `_loadStock()`.
+      // An empty setState on the first frame triggers a full widget-tree
+      // rebuild right after mount — which re-fires any inline FutureBuilders
+      // and produces a visible "flash" of the loading state. _loadStock()
+      // calls safeSetState itself when the stock query completes, so the
+      // empty setState here was redundant and harmful.
       _loadStock();
     });
   }

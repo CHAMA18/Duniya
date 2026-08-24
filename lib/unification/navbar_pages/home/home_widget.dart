@@ -119,6 +119,16 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   Future<_PharmacyDashboardData>? _pharmacyDashboardFuture;
   String? _pharmacyDashboardFutureKey;
 
+  // Hoisted finance-overview future. Previously this was created inline
+  // in `_buildFinanceNetworkSection`'s FutureBuilder, which meant every
+  // parent rebuild (e.g., period-chip taps, dialog updates, post-frame
+  // callbacks) re-fired the entire `_loadPulseFinanceOverview` chain
+  // — multiple sequential Firestore queries. Hoisting it to a state
+  // field + invalidating on ownerRef change eliminates the re-fetch
+  // storm.
+  Future<_PulseFinanceOverviewData>? _pulseFinanceOverviewFuture;
+  DocumentReference? _pulseFinanceOverviewOwnerKey;
+
   @override
   void initState() {
     super.initState();
@@ -144,7 +154,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    // Removed: `WidgetsBinding.instance.addPostFrameCallback((_) =>
+    // safeSetState(() {}))`. An empty setState on the first frame triggers
+    // a full widget-tree rebuild right after mount — which re-fires every
+    // inline FutureBuilder on the page (StockRecord, SalesRecord, etc.)
+    // and produces a visible "flash" of the loading state. The initState
+    // block above already runs the page-link generation + onboarding tour
+    // launch in its own post-frame callback, so this empty setState is
+    // redundant and harmful.
 
     // Pulse animation for low stock badge
     _pulseController = AnimationController(
@@ -989,9 +1006,18 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   Widget _buildFinanceNetworkSection({required bool isPhone}) {
     final ownerRef = currentUserReference!;
 
+    // Hoist the future so it doesn't re-fire on every parent rebuild.
+    // Invalidate when ownerRef changes (e.g., user re-authenticates).
+    if (_pulseFinanceOverviewFuture == null ||
+        _pulseFinanceOverviewOwnerKey != ownerRef) {
+      _pulseFinanceOverviewOwnerKey = ownerRef;
+      _pulseFinanceOverviewFuture =
+          _loadPulseFinanceOverview(ownerRef: ownerRef);
+    }
+
     return AuthUserStreamWidget(
       builder: (context) => FutureBuilder<_PulseFinanceOverviewData>(
-        future: _loadPulseFinanceOverview(ownerRef: ownerRef),
+        future: _pulseFinanceOverviewFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildPremiumCard(
@@ -4329,29 +4355,40 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   }) async {
     final scope = ownerRef ?? currentUserReference;
 
-    // Wrap each query individually so a single failure doesn't break
-    // the entire dashboard.
-    PharmacyRecord? pharmacy;
-    try {
-      final pharmacyList = await queryPharmacyRecordOnce(
-        parent: scope,
-        queryBuilder: (query) => activePharmacy.isNotEmpty
-            ? query.where('Name', isEqualTo: activePharmacy)
-            : query,
-        singleRecord: true,
-      );
-      pharmacy = pharmacyList.firstOrNull;
-    } catch (_) {}
+    // ─────────────────────────────────────────────────────────────
+    //  Parallelized dashboard data load
+    //
+    // Previously this fired 7 sequential awaits (one per collection),
+    // each waiting for the previous to complete. That's 7 round-trips
+    // to Firestore back-to-back — visible "stuck" dashboard on cold
+    // loads.
+    //
+    // Plan:
+    //   Wave 1 (parallel): Pharmacy, Stock, ProductMaster,
+    //                     GoodsReceived, Movements.
+    //   Wave 2 (parallel): Sales + LowStockAlertCount — both need
+    //                     the resolved Pharmacy reference, so they
+    //                     wait on Wave 1's pharmacy result.
+    //
+    // Per-future try/catch keeps the "single failure doesn't break
+    // the whole dashboard" guarantee.
+    // ─────────────────────────────────────────────────────────────
 
-    List<StockRecord> stockItems = [];
-    try {
-      stockItems = await queryStockRecordOnce(
-        parent: scope,
-        queryBuilder: (query) => activePharmacy.isNotEmpty
-            ? query.where('Pharmacy', isEqualTo: activePharmacy)
-            : query.where('Quantity', isGreaterThan: 0),
-      );
-    } catch (_) {}
+    // Wave 1 — fully independent queries.
+    final pharmacyFuture = queryPharmacyRecordOnce(
+      parent: scope,
+      queryBuilder: (query) => activePharmacy.isNotEmpty
+          ? query.where('Name', isEqualTo: activePharmacy)
+          : query,
+      singleRecord: true,
+    ).then((l) => l.firstOrNull).catchError((_) => null);
+
+    final stockFuture = queryStockRecordOnce(
+      parent: scope,
+      queryBuilder: (query) => activePharmacy.isNotEmpty
+          ? query.where('Pharmacy', isEqualTo: activePharmacy)
+          : query.where('Quantity', isGreaterThan: 0),
+    ).catchError((_) => <StockRecord>[]);
 
     // Active products in the Product Catalogue. Used to drive the
     // "active SKUs" count and as a fallback for the "Inventory Value"
@@ -4359,49 +4396,57 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     // pharmacy has imported its catalogue but hasn't yet received
     // any goods against it). Both create paths in product_master_widget
     // set IsActive=true on insert, so this filter is safe.
-    List<ProductMasterRecord> productMaster = [];
-    try {
-      productMaster = await queryProductMasterRecordOnce(
-        queryBuilder: (query) => query.where('IsActive', isEqualTo: true),
-      );
-    } catch (_) {}
+    final productMasterFuture = queryProductMasterRecordOnce(
+      queryBuilder: (query) => query.where('IsActive', isEqualTo: true),
+    ).catchError((_) => <ProductMasterRecord>[]);
 
-    List<SalesRecord> salesRecords = [];
-    try {
-      salesRecords = await querySalesRecordOnce(
-        parent: scope,
-        queryBuilder: (query) => pharmacy != null
-            ? query.where('PharmaID', isEqualTo: pharmacy.reference)
-            : query,
-      );
-    } catch (_) {}
+    final goodsReceivedFuture = queryGoodsReceivedRecordOnce(
+      parent: scope,
+      queryBuilder: (query) =>
+          query.orderBy('CreatedAt', descending: true).limit(6),
+    ).catchError((_) => <GoodsReceivedRecord>[]);
 
-    List<GoodsReceivedRecord> goodsReceived = [];
-    try {
-      goodsReceived = await queryGoodsReceivedRecordOnce(
-        parent: scope,
-        queryBuilder: (query) =>
-            query.orderBy('CreatedAt', descending: true).limit(6),
-      );
-    } catch (_) {}
+    final movementsFuture = queryStockMovementRecordOnce(
+      parent: scope,
+      queryBuilder: (query) =>
+          query.orderBy('CreatedAt', descending: true).limit(6),
+    ).catchError((_) => <StockMovementRecord>[]);
 
-    List<StockMovementRecord> movements = [];
-    try {
-      movements = await queryStockMovementRecordOnce(
-        parent: scope,
-        queryBuilder: (query) =>
-            query.orderBy('CreatedAt', descending: true).limit(6),
-      );
-    } catch (_) {}
+    // Fire all 5 in parallel.
+    final wave1 = await Future.wait([
+      pharmacyFuture,
+      stockFuture,
+      productMasterFuture,
+      goodsReceivedFuture,
+      movementsFuture,
+    ]);
 
-    int lowStockAlertCount = 0;
-    try {
-      lowStockAlertCount = await queryLowStockAlertRecordCount(
-        queryBuilder: (query) => pharmacy != null
-            ? query.where('PharmacyId', isEqualTo: pharmacy.reference)
-            : query,
-      );
-    } catch (_) {}
+    final pharmacy = wave1[0] as PharmacyRecord?;
+    final List<StockRecord> stockItems = wave1[1] as List<StockRecord>;
+    final List<ProductMasterRecord> productMaster =
+        wave1[2] as List<ProductMasterRecord>;
+    final List<GoodsReceivedRecord> goodsReceived =
+        wave1[3] as List<GoodsReceivedRecord>;
+    final List<StockMovementRecord> movements =
+        wave1[4] as List<StockMovementRecord>;
+
+    // Wave 2 — both depend on `pharmacy` being resolved.
+    final salesFuture = querySalesRecordOnce(
+      parent: scope,
+      queryBuilder: (query) => pharmacy != null
+          ? query.where('PharmaID', isEqualTo: pharmacy.reference)
+          : query,
+    ).catchError((_) => <SalesRecord>[]);
+
+    final lowStockFuture = queryLowStockAlertRecordCount(
+      queryBuilder: (query) => pharmacy != null
+          ? query.where('PharmacyId', isEqualTo: pharmacy.reference)
+          : query,
+    ).catchError((_) => 0);
+
+    final wave2 = await Future.wait([salesFuture, lowStockFuture]);
+    final List<SalesRecord> salesRecords = wave2[0] as List<SalesRecord>;
+    final int lowStockAlertCount = wave2[1] as int;
 
     // Inventory value:
     //   1. If the pharmacy has any on-hand stock, sum quantity × price

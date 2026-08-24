@@ -18,8 +18,10 @@
 #   - Uses --no-native-null-assertions to bypass strict compile-time
 #     null enforcement that fails on legacy code patterns. The bundled static
 #     Satoshi faces are CanvasKit-safe; variable Satoshi files are excluded.
-#   - Skips --tree-shake-icons (long, memory-heavy step with no
-#     observable bundle-size benefit for this app).
+#   - Enables --tree-shake-icons (the Flutter default) to strip unused
+#     Material Icons glyphs from the shipped MaterialIcons-Regular.otf
+#     font. This drops the font from ~1.6 MB to ~30-80 KB and saves
+#     ~1.5 MB on first load. Worth the extra build step.
 # =====================================================================
 set -euo pipefail
 
@@ -68,9 +70,9 @@ flutter pub get
 # ---------------------------------------------------------------------
 # 3. Build the web app
 # ---------------------------------------------------------------------
-echo "==> flutter build web (CanvasKit renderer + static Satoshi font)"
+echo "==> flutter build web (CanvasKit renderer + static Satoshi font + icon tree-shake)"
 flutter build web --release \
-  --no-tree-shake-icons \
+  --tree-shake-icons \
   --no-native-null-assertions
 
 echo "==> Build complete. Output: $(pwd)/build/web"

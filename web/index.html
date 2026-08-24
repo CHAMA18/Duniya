@@ -37,6 +37,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="keywords" content="pulse, pharmacy, inventory, stock, health, management">
   <meta name="author" content="Pulse">
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Performance hints — preconnect to the backends the app shell
+       will hit on first load so the DNS+TLS+handshake happens in
+       parallel with the bundle download, shaving ~150-300 ms off
+       first-Firestore-call latency.
+       ═══════════════════════════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="preconnect" href="https://www.googleapis.com">
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.googleapis.com">
   <meta property="og:title" content="Pulse">
   <meta property="og:description" content="Pulse — pharmacy and inventory management for modern health teams.">
   <meta property="og:type" content="website">
@@ -270,12 +281,15 @@
     })();
   </script>
 
-  <!-- Map screens rely on the Google Maps global when they are opened. Keep
-       this asynchronous so it never blocks the Flutter bootstrap.
+  <!-- Map screens rely on the Google Maps global when they are opened.
+       Loaded with `defer` (not `async`) so it doesn't compete with the
+       Flutter bundle download for parser/network bandwidth. `defer`
+       scripts download in parallel but execute after the document has
+       been parsed — i.e. after the Flutter bootstrap is well underway.
        SECURITY: This API key must be domain-restricted to
        duniya-web.onrender.com in the Google Cloud Console
        (APIs & Services → Credentials → Application restrictions). -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-HDfLffnuYVQUL4aR6DDPNqFWr5navE&loading=async" async></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3-HDfLffnuYVQUL4aR6DDPNqFWr5navE&loading=async" defer></script>
 
   <!-- Cache-bust: force fresh flutter_bootstrap.js on every deploy -->
   <!-- Build version: %%BUILD_VERSION%% (injected by build.sh) -->

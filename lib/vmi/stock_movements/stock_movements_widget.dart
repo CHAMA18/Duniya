@@ -30,6 +30,22 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedPeriod = '24h';
 
+  // Hoisted lookup-data future. Previously this was an inline IIFE
+  // inside a FutureBuilder nested in the movements StreamBuilder:
+  //   future: () async {
+  //     final results = await Future.wait([
+  //       queryProductMasterRecordOnce(),
+  //       queryStockRecordOnce(),
+  //     ]);
+  //     return (products: ..., stocks: ...);
+  //   }()
+  // Every stream emit (any movement doc changes) re-created the
+  // IIFE → re-fetched the entire ProductMaster AND Stock collections.
+  // Hoisting it to a state field populated once in initState
+  // eliminates the re-fetch storm.
+  late final Future<({List<ProductMasterRecord> products, List<StockRecord> stocks})>
+      _lookupDataFuture;
+
   /// Keep the page comfortably inset on small screens while allowing the
   /// operational content (metrics, chart and ledger) to use the full desktop
   /// canvas. A fixed 32px gutter made wide workspaces feel unnecessarily
@@ -53,6 +69,22 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
     _model = createModel(context, () => StockMovementsModel());
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'StockMovements'});
+    // Pre-fire the lookup-data queries in parallel so they're ready
+    // by the time the StreamBuilder emits its first frame.
+    _lookupDataFuture = () async {
+      // Sales movements store a StockRecord reference in ProductId;
+      // transfer/goods-received movements store a ProductMaster
+      // reference. Query both collections so the lookup resolves
+      // regardless of which reference type the movement carries.
+      final results = await Future.wait([
+        queryProductMasterRecordOnce(),
+        queryStockRecordOnce(),
+      ]);
+      return (
+        products: results[0] as List<ProductMasterRecord>,
+        stocks: results[1] as List<StockRecord>,
+      );
+    }();
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -222,26 +254,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                             List<ProductMasterRecord> products,
                                             List<StockRecord> stocks,
                                           })>(
-                                        future: () async {
-                                          // Sales movements store a StockRecord
-                                          // reference in ProductId; transfer/
-                                          // goods-received movements store a
-                                          // ProductMaster reference. Query both
-                                          // collections so the lookup resolves
-                                          // regardless of which reference type
-                                          // the movement carries.
-                                          final results =
-                                              await Future.wait([
-                                            queryProductMasterRecordOnce(),
-                                            queryStockRecordOnce(),
-                                          ]);
-                                          return (
-                                            products: results[0]
-                                                as List<ProductMasterRecord>,
-                                            stocks: results[1]
-                                                as List<StockRecord>,
-                                          );
-                                        }(),
+                                        future: _lookupDataFuture,
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData) {
                                             return _buildLoadingCard(

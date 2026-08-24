@@ -51,6 +51,13 @@ class CacheWarmerService extends ChangeNotifier {
   /// Returns the total number of documents cached.
   /// Reports progress via [notifyListeners] so the UI can show a
   /// progress bar.
+  ///
+  /// All 16 collections are fired in parallel via `Future.wait` —
+  /// previously each step awaited sequentially with a 50 ms sleep
+  /// per step (≥800 ms of pure sleep + 16× Firestore RTT back-to-
+  /// back). Now the warm completes in roughly one network wave.
+  /// Per-future try/catch preserves the "partial warm > no warm"
+  /// guarantee.
   Future<int> warmCache() async {
     if (_isWarming) return _recordsCached;
 
@@ -79,96 +86,53 @@ class CacheWarmerService extends ChangeNotifier {
     _progress = 0.0;
     _recordsCached = 0;
     _lastError = null;
+    _currentStep = 'Warming 16 collections in parallel';
     notifyListeners();
 
-    final steps = <_WarmStep>[
-      _WarmStep(
-        name: 'Pharmacies',
-        query: queryPharmacyRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Product Catalogue',
-        query: queryProductMasterRecordOnce(),
-      ),
-      _WarmStep(
-        name: 'Inventory',
-        query: queryStockRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Stock Balances',
-        query: queryStockBalanceRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Stock Counts',
-        query: queryStockCountRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Sales',
-        query: querySalesRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Finance',
-        query: queryFinanceRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Outlets',
-        query: queryOutletRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Damaged Stock',
-        query: queryDamagedStockRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Low Stock Alerts',
-        query: queryLowStockAlertRecordOnce(),
-      ),
-      _WarmStep(
-        name: 'Goods Received',
-        query: queryGoodsReceivedRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Stock Movements',
-        query: queryStockMovementRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Pharmacy Staff',
-        query: queryPharmacyStaffRecordOnce(parent: workspaceParent),
-      ),
-      _WarmStep(
-        name: 'Suppliers',
-        query: querySupplierRecordOnce(),
-      ),
-      _WarmStep(
-        name: 'Batches',
-        query: queryBatchRecordOnce(),
-      ),
-      _WarmStep(
-        name: 'Replenishment',
-        query: queryReplenishmentRecordOnce(),
-      ),
-    ];
-
-    int total = 0;
-    for (var i = 0; i < steps.length; i++) {
-      final step = steps[i];
-      _currentStep = step.name;
-      _progress = i / steps.length;
-      notifyListeners();
-
+    // Wrap each query with a per-future try/catch so one failure
+    // doesn't break the rest. Returns a (name, docCount) tuple.
+    Future<({String name, int count})> guarded(
+      String name,
+      Future<List<dynamic>> future,
+    ) async {
       try {
-        final docs = await step.query;
-        total += docs.length;
-        _recordsCached = total;
-        // Slight delay so the UI can show progress per step
-        await Future.delayed(const Duration(milliseconds: 50));
-        debugPrint(
-            '[CacheWarmer] ${step.name}: ${docs.length} docs cached (total: $total)');
+        final docs = await future;
+        return (name: name, count: docs.length);
       } catch (e) {
-        debugPrint('[CacheWarmer] ${step.name} failed: $e');
-        // Continue with other steps — partial warm is better than none
+        debugPrint('[CacheWarmer] $name failed: $e');
+        return (name: name, count: 0);
       }
     }
 
+    final futures = <Future<({String name, int count})>>[
+      guarded('Pharmacies', queryPharmacyRecordOnce(parent: workspaceParent)),
+      guarded('Product Catalogue', queryProductMasterRecordOnce()),
+      guarded('Inventory', queryStockRecordOnce(parent: workspaceParent)),
+      guarded('Stock Balances', queryStockBalanceRecordOnce(parent: workspaceParent)),
+      guarded('Stock Counts', queryStockCountRecordOnce(parent: workspaceParent)),
+      guarded('Sales', querySalesRecordOnce(parent: workspaceParent)),
+      guarded('Finance', queryFinanceRecordOnce(parent: workspaceParent)),
+      guarded('Outlets', queryOutletRecordOnce(parent: workspaceParent)),
+      guarded('Damaged Stock', queryDamagedStockRecordOnce(parent: workspaceParent)),
+      guarded('Low Stock Alerts', queryLowStockAlertRecordOnce()),
+      guarded('Goods Received', queryGoodsReceivedRecordOnce(parent: workspaceParent)),
+      guarded('Stock Movements', queryStockMovementRecordOnce(parent: workspaceParent)),
+      guarded('Pharmacy Staff', queryPharmacyStaffRecordOnce(parent: workspaceParent)),
+      guarded('Suppliers', querySupplierRecordOnce()),
+      guarded('Batches', queryBatchRecordOnce()),
+      guarded('Replenishment', queryReplenishmentRecordOnce()),
+    ];
+
+    // Fire all 16 in parallel — single wave to Firestore.
+    final results = await Future.wait(futures);
+
+    int total = 0;
+    for (final r in results) {
+      total += r.count;
+      debugPrint('[CacheWarmer] ${r.name}: ${r.count} docs cached');
+    }
+
+    _recordsCached = total;
     _progress = 1.0;
     _currentStep = 'Complete';
     _lastWarmedAt = DateTime.now();
@@ -176,13 +140,7 @@ class CacheWarmerService extends ChangeNotifier {
     notifyListeners();
 
     debugPrint(
-        '[CacheWarmer] Cache warm complete — $total records cached across ${steps.length} collections');
+        '[CacheWarmer] Cache warm complete — $total records cached across ${results.length} collections');
     return total;
   }
-}
-
-class _WarmStep {
-  final String name;
-  final Future<List<dynamic>> query;
-  _WarmStep({required this.name, required this.query});
 }

@@ -213,29 +213,10 @@ flutter:
     - assets/jsons/
 
   fonts:
-    # Inter remains available for legacy content, but Pulse uses Satoshi.
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Inter-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Inter-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Inter-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Inter-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Inter-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/Inter-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Inter-Italic.ttf
-          weight: 400
-          style: italic
-        - asset: assets/fonts/Inter-BoldItalic.ttf
-          weight: 700
-          style: italic
+    # NOTE: The Inter family was previously registered here but is no longer
+    # referenced anywhere in lib/ (grep for fontFamily: 'Inter' returns 0).
+    # Removing it drops ~3.4 MB of TTF payload from the deployed bundle.
+    # If a future feature needs Inter, re-add it as a single Regular weight.
     - family: Satoshi
       fonts:
         # These are static TTF instances and are safe for CanvasKit. Do not

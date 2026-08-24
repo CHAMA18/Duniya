@@ -61,3 +61,6 @@ node_modules/
 functions/lib/*.dart.bak
 *.py
 web/.favicon_backup/
+
+# Local backup of removed Inter TTFs (kept for reference, not deployed)
+.removed_inter_fonts_backup/
