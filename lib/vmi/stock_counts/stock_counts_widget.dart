@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/custom_code/actions/header_layout.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -418,87 +419,121 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
           ),
           const SizedBox(height: 12.0),
 
-          // Title + actions row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Gradient icon badge
-              Container(
-                width: 56.0,
-                height: 56.0,
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(30),
-                  borderRadius: BorderRadius.circular(16.0),
-                  border: Border.all(
-                    color: Colors.white.withAlpha(60),
-                    width: 1.0,
+          // Title + actions row. The hero actions flow beneath the title in
+          // a Wrap on narrower containers instead of squeezing the title
+          // block into a sliver (same responsive pattern as Stock Balances).
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final actionButtons = [
+                if (responsiveVisibility(
+                  context: context,
+                  phone: false,
+                  tablet: false,
+                )) ...[
+                  _HeroActionButton(
+                    icon: Icons.download_rounded,
+                    label: 'Export',
+                    onTap: () => _showToast('Exporting stock counts…'),
+                    isPrimary: false,
                   ),
-                ),
-                child: const Icon(
-                  Icons.fact_check_rounded,
-                  color: Colors.white,
-                  size: 28.0,
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              // Title + subtitle
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Stock Counts',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        height: 1.1,
-                        letterSpacing: -0.5,
+                  _HeroActionButton(
+                    icon: Icons.refresh_rounded,
+                    label: 'Refresh',
+                    onTap: () => safeSetState(() {}),
+                    isPrimary: false,
+                  ),
+                  _HeroActionButton(
+                    icon: Icons.add_rounded,
+                    label: 'New Count',
+                    onTap: () async {
+                      context.pushNamed(StockCountDetailWidget.routeName);
+                    },
+                    isPrimary: true,
+                  ),
+                ],
+              ];
+              // Gradient icon badge + title block (shared by both layouts).
+              final titleRow = Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 56.0,
+                    height: 56.0,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(30),
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(
+                        color: Colors.white.withAlpha(60),
+                        width: 1.0,
                       ),
                     ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Track physical inventory counts, reconcile variances, and maintain audit-ready records across all pharmacies.',
-                      style: TextStyle(
-                        color: Colors.white.withAlpha(200),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        height: 1.4,
-                      ),
+                    child: const Icon(
+                      Icons.fact_check_rounded,
+                      color: Colors.white,
+                      size: 28.0,
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Stock Counts',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            height: 1.1,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        Text(
+                          'Track physical inventory counts, reconcile variances, and maintain audit-ready records across all pharmacies.',
+                          style: TextStyle(
+                            color: Colors.white.withAlpha(200),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+              if (actionButtons.isEmpty) {
+                return titleRow;
+              }
+              // Layout contract lives in header_layout.dart (unit-tested).
+              if (stockCountsHeroActionsInline(constraints.maxWidth)) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: titleRow),
+                    const SizedBox(width: 16.0),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: actionButtons,
                     ),
                   ],
-                ),
-              ),
-              // Action buttons (desktop only)
-              if (responsiveVisibility(
-                context: context,
-                phone: false,
-                tablet: false,
-              )) ...[
-                _HeroActionButton(
-                  icon: Icons.download_rounded,
-                  label: 'Export',
-                  onTap: () => _showToast('Exporting stock counts…'),
-                  isPrimary: false,
-                ),
-                const SizedBox(width: 8.0),
-                _HeroActionButton(
-                  icon: Icons.refresh_rounded,
-                  label: 'Refresh',
-                  onTap: () => safeSetState(() {}),
-                  isPrimary: false,
-                ),
-                const SizedBox(width: 8.0),
-                _HeroActionButton(
-                  icon: Icons.add_rounded,
-                  label: 'New Count',
-                  onTap: () async {
-                    context.pushNamed(StockCountDetailWidget.routeName);
-                  },
-                  isPrimary: true,
-                ),
-              ],
-            ],
+                );
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  titleRow,
+                  const SizedBox(height: 16.0),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: actionButtons,
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 16.0),
 
@@ -920,15 +955,22 @@ class _StockCountsWidgetState extends State<StockCountsWidget> {
                 Icon(Icons.format_list_numbered_rounded,
                     color: theme.primary, size: 18.0),
                 const SizedBox(width: 8.0),
-                Text(
-                  'Showing ${counts.length} stock ${counts.length == 1 ? 'count' : 'counts'}',
-                  style: theme.titleSmall.override(
-                    fontFamily: theme.titleSmallFamily,
-                    letterSpacing: 0.0,
-                    useGoogleFonts: !theme.titleSmallIsCustom,
+                // Flexible so the label ellipsizes instead of being pushed
+                // off-screen by the trailing action buttons on tight rows.
+                Flexible(
+                  child: Text(
+                    'Showing ${counts.length} stock ${counts.length == 1 ? 'count' : 'counts'}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.titleSmall.override(
+                      fontFamily: theme.titleSmallFamily,
+                      letterSpacing: 0.0,
+                      useGoogleFonts: !theme.titleSmallIsCustom,
+                    ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 12.0),
+                Spacer(),
                 // New count button (contextual)
                 FFButtonWidget(
                   onPressed: () async {

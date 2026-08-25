@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/custom_code/actions/header_layout.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -569,102 +570,135 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
           ),
           const SizedBox(height: 12.0),
 
-          // Title + actions row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Gradient icon badge
-              Container(
-                width: 56.0,
-                height: 56.0,
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(30),
-                  borderRadius: BorderRadius.circular(16.0),
-                  border: Border.all(
-                    color: Colors.white.withAlpha(60),
-                    width: 1.0,
+          // Title + actions row. The five hero actions (Export / Refresh /
+          // Import / Template / Add Balance) span ≈ 700px side by side, so
+          // on narrower containers they flow beneath the title in a Wrap
+          // instead of squeezing it into a sliver or clipping off-screen.
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final actionButtons = [
+                if (responsiveVisibility(
+                  context: context,
+                  phone: false,
+                  tablet: false,
+                )) ...[
+                  _HeroActionButton(
+                    icon: Icons.download_rounded,
+                    label: 'Export',
+                    onTap: () => _showToast('Exporting stock balances…'),
+                    isPrimary: false,
                   ),
-                ),
-                child: const Icon(
-                  Icons.inventory_2_rounded,
-                  color: Colors.white,
-                  size: 28.0,
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              // Title + subtitle
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Stock Balances',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        height: 1.1,
-                        letterSpacing: -0.5,
+                  _HeroActionButton(
+                    icon: Icons.refresh_rounded,
+                    label: 'Refresh',
+                    onTap: () => safeSetState(() {}),
+                    isPrimary: false,
+                  ),
+                  // Owner-only Import button — opens the Import Wizard
+                  // (smart-detect → reconcile → owner sign-off → write).
+                  // Hidden for non-owners via ImportButton's role check.
+                  ImportButton(
+                    config: StockBalanceImportConfig(),
+                    label: 'Import',
+                    icon: Icons.upload_file_rounded,
+                  ),
+                  // Owner-only Template button — downloads a pre-formatted
+                  // .xlsx or .csv template with the correct column headers.
+                  // Hidden for non-owners, consistent with ImportButton.
+                  TemplateButton(
+                    config: StockBalanceImportConfig(),
+                    label: 'Template',
+                  ),
+                  _HeroActionButton(
+                    icon: Icons.add_rounded,
+                    label: 'Add Balance',
+                    onTap: () => _showAddBalanceDialog(context),
+                    isPrimary: true,
+                  ),
+                ],
+              ];
+              // Gradient icon badge + title block (shared by both layouts).
+              final titleRow = Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 56.0,
+                    height: 56.0,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(30),
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(
+                        color: Colors.white.withAlpha(60),
+                        width: 1.0,
                       ),
                     ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Track opening, movements, and closing stock across all your pharmacies in real time.',
-                      style: TextStyle(
-                        color: Colors.white.withAlpha(200),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        height: 1.4,
-                      ),
+                    child: const Icon(
+                      Icons.inventory_2_rounded,
+                      color: Colors.white,
+                      size: 28.0,
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Stock Balances',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            height: 1.1,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        Text(
+                          'Track opening, movements, and closing stock across all your pharmacies in real time.',
+                          style: TextStyle(
+                            color: Colors.white.withAlpha(200),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+              if (actionButtons.isEmpty) {
+                return titleRow;
+              }
+              // Layout contract lives in header_layout.dart (unit-tested).
+              if (stockBalancesHeroActionsInline(constraints.maxWidth)) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: titleRow),
+                    const SizedBox(width: 16.0),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: actionButtons,
                     ),
                   ],
-                ),
-              ),
-              // Action buttons (desktop only)
-              if (responsiveVisibility(
-                context: context,
-                phone: false,
-                tablet: false,
-              )) ...[
-                _HeroActionButton(
-                  icon: Icons.download_rounded,
-                  label: 'Export',
-                  onTap: () => _showToast('Exporting stock balances…'),
-                  isPrimary: false,
-                ),
-                const SizedBox(width: 8.0),
-                _HeroActionButton(
-                  icon: Icons.refresh_rounded,
-                  label: 'Refresh',
-                  onTap: () => safeSetState(() {}),
-                  isPrimary: false,
-                ),
-                const SizedBox(width: 8.0),
-                // Owner-only Import button — opens the Import Wizard
-                // (smart-detect → reconcile → owner sign-off → write).
-                // Hidden for non-owners via ImportButton's role check.
-                ImportButton(
-                  config: StockBalanceImportConfig(),
-                  label: 'Import',
-                  icon: Icons.upload_file_rounded,
-                ),
-                const SizedBox(width: 8.0),
-                // Owner-only Template button — downloads a pre-formatted
-                // .xlsx or .csv template with the correct column headers.
-                // Hidden for non-owners, consistent with ImportButton.
-                TemplateButton(
-                  config: StockBalanceImportConfig(),
-                  label: 'Template',
-                ),
-                const SizedBox(width: 8.0),
-                _HeroActionButton(
-                  icon: Icons.add_rounded,
-                  label: 'Add Balance',
-                  onTap: () => _showAddBalanceDialog(context),
-                  isPrimary: true,
-                ),
-              ],
-            ],
+                );
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  titleRow,
+                  const SizedBox(height: 16.0),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: actionButtons,
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 16.0),
 

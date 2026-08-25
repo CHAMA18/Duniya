@@ -7,3 +7,14 @@ export 'download_product_catalogue_template.dart'
     show downloadProductCatalogueTemplate;
 export 'download_reconciliation_template.dart'
     show downloadReconciliationTemplate;
+export 'header_layout.dart'
+    show
+        stockMovementsActionsInline,
+        stockBalancesHeroActionsInline,
+        stockCountsHeroActionsInline,
+        kStockMovementsActionsWidth,
+        kStockMovementsTitleWidth,
+        kStockBalancesHeroActionsWidth,
+        kStockBalancesHeroTitleWidth,
+        kStockCountsHeroActionsWidth,
+        kStockCountsHeroTitleWidth;

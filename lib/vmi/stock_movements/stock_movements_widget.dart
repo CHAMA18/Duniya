@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/custom_code/actions/header_layout.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -359,15 +360,34 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
         padding: EdgeInsets.all(24.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final isWide = constraints.maxWidth > 800;
+            // Layout contract lives in header_layout.dart (unit-tested):
+            // the action bar holds up to five controls (Record Movement,
+            // Import, Template and two filter dropdowns ≈ 900px intrinsic
+            // width). Below the breakpoint they belong on their own lines
+            // beneath the title instead of fighting it for space.
+            final isWide = stockMovementsActionsInline(constraints.maxWidth);
             if (isWide) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildHeaderLeft(
-                      theme, primaryColor, onSurface, onSurfaceVariant),
-                  _buildHeaderActions(context, theme, primaryColor, onSurface,
-                      onSurfaceVariant, outlineVariant, cardBg),
+                  // Flexible (not Expanded) so the title never eats space the
+                  // action bar needs, and ellipsizes instead of overflowing.
+                  Flexible(
+                    flex: 5,
+                    child: _buildHeaderLeft(
+                        theme, primaryColor, onSurface, onSurfaceVariant),
+                  ),
+                  SizedBox(width: 24.0),
+                  // Flexible gives the Wrap BOUNDED constraints — a plain
+                  // child of Row receives unbounded width, which is why the
+                  // buttons could never wrap and ran off-screen. Now they
+                  // flow onto a second line instead of being clipped.
+                  Flexible(
+                    flex: 6,
+                    child: _buildHeaderActions(context, theme, primaryColor,
+                        onSurface, onSurfaceVariant, outlineVariant, cardBg),
+                  ),
                 ],
               );
             }
@@ -377,6 +397,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                 _buildHeaderLeft(
                     theme, primaryColor, onSurface, onSurfaceVariant),
                 SizedBox(height: 16.0),
+                // Full-width bounded constraints → the Wrap flows the
+                // buttons across as many lines as the screen needs.
                 _buildHeaderActions(context, theme, primaryColor, onSurface,
                     onSurfaceVariant, outlineVariant, cardBg),
               ],
@@ -406,6 +428,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           children: [
             Text(
               'Stock Movements',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: kAppFontFamily,
                 fontSize: 22.0,
@@ -416,6 +440,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             ),
             Text(
               'Real-time tracking of all clinical inventory transitions.',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: kAppFontFamily,
                 fontSize: 14.0,
@@ -469,7 +495,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        const SizedBox(width: 8.0),
+        // NOTE: gaps come from Wrap.spacing (12px) — no SizedBox spacers
+        // here, they used to double the gap AND steal width on tight rows.
         // Owner-only Import button — opens the Import Wizard
         // (smart-detect → reconcile → owner sign-off → write).
         // Hidden for non-owners via ImportButton's role check.
@@ -478,7 +505,6 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           label: 'Import',
           icon: Icons.upload_file_rounded,
         ),
-        const SizedBox(width: 8.0),
         // Owner-only Template button — downloads a pre-formatted .xlsx or
         // .csv template with the correct column headers for movements.
         // Hidden for non-owners, consistent with ImportButton.
