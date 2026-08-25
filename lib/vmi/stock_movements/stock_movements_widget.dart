@@ -1920,6 +1920,44 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
 
     final theme = FlutterFlowTheme.of(context);
 
+    // Location + supplier options for the route dropdowns. Loaded once
+    // before the dialog opens so the fields are dropdowns (not free
+    // text) with real destinations to pick from.
+    Future<(List<String>, List<String>, List<String>)>
+        loadRouteOptions() async {
+      final locations = <String>[];
+      final suppliers = <String>[];
+      try {
+        final outlets = await queryOutletRecordOnce(
+            parent: AccessControl.parentRef(context));
+        locations.addAll(outlets.map((o) => o.name).where((n) => n.isNotEmpty));
+      } catch (_) {}
+      try {
+        final pharmacies =
+            await queryPharmacyRecordOnce(parent: null);
+        locations.addAll(
+            pharmacies.map((p) => p.name).where((n) => n.isNotEmpty));
+      } catch (_) {}
+      try {
+        final suppliersRecords = await querySupplierRecordOnce();
+        suppliers.addAll(
+            suppliersRecords.map((s) => s.name).where((n) => n.isNotEmpty));
+      } catch (_) {}
+      // De-duplicate, keep order.
+      locations
+        ..removeWhere((n) => locations.indexOf(n) != locations.lastIndexOf(n))
+        ..sort();
+      suppliers
+        ..removeWhere((n) => suppliers.indexOf(n) != suppliers.lastIndexOf(n))
+        ..sort();
+      return (locations, locations, suppliers);
+    }
+
+    // Compute once — referencing this future in the dialog builder
+    // means the Firestore fetches happen once per dialog open, not on
+    // every setDialogState rebuild.
+    final routeOptionsFuture = loadRouteOptions();
+
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -2218,110 +2256,134 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                             if (_model.dialogMovementTypeValue ==
                                 'TRANSFERRED') ...[
                               const SizedBox(height: 18.0),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Column(
+                              FutureBuilder<
+                                      (List<String>, List<String>,
+                                          List<String>)>(
+                                  future: routeOptionsFuture,
+                                  builder: (context, routeSnap) {
+                                    final locations =
+                                        routeSnap.data?.$1 ?? const [];
+                                    return Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        _dialogFieldLabel(
-                                          label: 'From (source)',
-                                          icon: Icons.store_outlined,
-                                          required_: true,
-                                          theme: theme,
-                                        ),
-                                        const SizedBox(height: 8.0),
-                                        TextFormField(
-                                          controller: _model
-                                              .dialogFromTextController ??=
-                                              TextEditingController(),
-                                          focusNode:
-                                              _model.dialogFromFocusNode ??=
-                                                  FocusNode(),
-                                          decoration: _dialogInputDecoration(
-                                            theme,
-                                            hint: 'e.g. Main branch',
-                                            valid: true,
+                                        Expanded(
+                                          child: _routeDropdown(
+                                            label: 'From (source)',
+                                            icon: Icons.store_outlined,
+                                            options: locations,
+                                            selectedValue:
+                                                _model.dialogFromValue,
+                                            isOther: _model.dialogFromIsOther,
+                                            onOtherChanged: (v) =>
+                                                setDialogState(() {
+                                              _model.dialogFromIsOther = v;
+                                              if (v) {
+                                                _model.dialogFromValue =
+                                                    '__other__';
+                                                _model.dialogFromTextController
+                                                    ?.clear();
+                                              } else {
+                                                _model.dialogFromValue = null;
+                                              }
+                                            }),
+                                            onChanged: (v) =>
+                                                setDialogState(() =>
+                                                    _model.dialogFromValue =
+                                                        v),
+                                            textController: _model
+                                                .dialogFromTextController ??=
+                                                TextEditingController(),
+                                            textFocusNode: _model
+                                                .dialogFromFocusNode ??=
+                                                FocusNode(),
+                                            textHint: 'e.g. Head office',
+                                            theme: theme,
                                           ),
-                                          style: theme.bodyMedium.override(
-                                            fontFamily:
-                                                theme.bodyMediumFamily,
-                                            letterSpacing: 0.0,
-                                            useGoogleFonts:
-                                                !theme.bodyMediumIsCustom,
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                        Expanded(
+                                          child: _routeDropdown(
+                                            label: 'To (destination)',
+                                            icon: Icons.flag_outlined,
+                                            options: locations,
+                                            selectedValue:
+                                                _model.dialogToValue,
+                                            isOther: _model.dialogToIsOther,
+                                            onOtherChanged: (v) =>
+                                                setDialogState(() {
+                                              _model.dialogToIsOther = v;
+                                              if (v) {
+                                                _model.dialogToValue =
+                                                    '__other__';
+                                                _model.dialogToTextController
+                                                    ?.clear();
+                                              } else {
+                                                _model.dialogToValue = null;
+                                              }
+                                            }),
+                                            onChanged: (v) =>
+                                                setDialogState(() =>
+                                                    _model.dialogToValue = v),
+                                            textController: _model
+                                                .dialogToTextController ??=
+                                                TextEditingController(),
+                                            textFocusNode:
+                                                _model.dialogToFocusNode ??=
+                                                    FocusNode(),
+                                            textHint:
+                                                'e.g. North ridge outlet',
+                                            theme: theme,
                                           ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12.0),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        _dialogFieldLabel(
-                                          label: 'To (destination)',
-                                          icon: Icons.flag_outlined,
-                                          required_: true,
-                                          theme: theme,
-                                        ),
-                                        const SizedBox(height: 8.0),
-                                        TextFormField(
-                                          controller: _model
-                                              .dialogToTextController ??=
-                                              TextEditingController(),
-                                          focusNode:
-                                              _model.dialogToFocusNode ??=
-                                                  FocusNode(),
-                                          decoration: _dialogInputDecoration(
-                                            theme,
-                                            hint: 'e.g. North ridge outlet',
-                                            valid: true,
-                                          ),
-                                          style: theme.bodyMedium.override(
-                                            fontFamily:
-                                                theme.bodyMediumFamily,
-                                            letterSpacing: 0.0,
-                                            useGoogleFonts:
-                                                !theme.bodyMediumIsCustom,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                    );
+                                  }),
                             ],
                             if (_model.dialogMovementTypeValue ==
                                 'RECEIVED') ...[
                               const SizedBox(height: 18.0),
-                              _dialogFieldLabel(
-                                label: 'Received from (supplier / origin)',
-                                icon: Icons.local_shipping_outlined,
-                                required_: false,
-                                theme: theme,
-                              ),
-                              const SizedBox(height: 8.0),
-                              TextFormField(
-                                controller: _model.dialogFromTextController ??=
-                                    TextEditingController(),
-                                focusNode: _model.dialogFromFocusNode ??=
-                                    FocusNode(),
-                                decoration: _dialogInputDecoration(
-                                  theme,
-                                  hint: 'e.g. MediSupply Ltd',
-                                  valid: true,
-                                ),
-                                style: theme.bodyMedium.override(
-                                  fontFamily: theme.bodyMediumFamily,
-                                  letterSpacing: 0.0,
-                                  useGoogleFonts:
-                                      !theme.bodyMediumIsCustom,
-                                ),
-                              ),
+                              FutureBuilder<
+                                      (List<String>, List<String>,
+                                          List<String>)>(
+                                  future: routeOptionsFuture,
+                                  builder: (context, routeSnap) {
+                                    final suppliers =
+                                        routeSnap.data?.$3 ?? const [];
+                                    return _routeDropdown(
+                                      label:
+                                          'Received from (supplier / origin)',
+                                      icon: Icons.local_shipping_outlined,
+                                      options: suppliers,
+                                      selectedValue:
+                                          _model.dialogReceivedFromValue,
+                                      isOther:
+                                          _model.dialogReceivedFromIsOther,
+                                      onOtherChanged: (v) =>
+                                          setDialogState(() {
+                                        _model.dialogReceivedFromIsOther = v;
+                                        if (v) {
+                                          _model.dialogReceivedFromValue =
+                                              '__other__';
+                                          _model.dialogFromTextController
+                                              ?.clear();
+                                        } else {
+                                          _model.dialogReceivedFromValue =
+                                              null;
+                                        }
+                                      }),
+                                      onChanged: (v) => setDialogState(() =>
+                                          _model.dialogReceivedFromValue = v),
+                                      textController: _model
+                                          .dialogFromTextController ??=
+                                          TextEditingController(),
+                                      textFocusNode: _model
+                                          .dialogFromFocusNode ??=
+                                          FocusNode(),
+                                      textHint: 'e.g. MediSupply Ltd',
+                                      theme: theme,
+                                    );
+                                  }),
                             ],
                             const SizedBox(height: 18.0),
                             Row(
@@ -2541,12 +2603,25 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       // column):
                                       //   TRANSFERRED: "From A to B — note"
                                       //   RECEIVED:    "From A — note"
-                                      final routeFrom = _model
-                                          .dialogFromTextController?.text
-                                          .trim();
-                                      final routeTo = _model
-                                          .dialogToTextController?.text
-                                          .trim();
+                                      // Route values — dropdown selection
+                                      // wins; "Other…" falls back to the
+                                      // manually-typed text.
+                                      final routeFrom = !_model
+                                              .dialogFromIsOther &&
+                                              (_model.dialogFromValue ?? '')
+                                                  .isNotEmpty
+                                          ? _model.dialogFromValue
+                                          : _model.dialogFromTextController
+                                              ?.text
+                                              .trim();
+                                      final routeTo = !_model
+                                              .dialogToIsOther &&
+                                              (_model.dialogToValue ?? '')
+                                                  .isNotEmpty
+                                          ? _model.dialogToValue
+                                          : _model.dialogToTextController
+                                              ?.text
+                                              .trim();
                                       final note = _model
                                           .dialogReasonTextController?.text
                                           .trim();
@@ -2567,10 +2642,19 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                       } else if (_model
                                               .dialogMovementTypeValue ==
                                           'RECEIVED') {
-                                        if ((routeFrom ?? '').isNotEmpty) {
+                                        // Supplier dropdown selection wins
+                                        // over the "Other…" text field.
+                                        final receivedFrom = !_model
+                                                    .dialogReceivedFromIsOther &&
+                                                (_model.dialogReceivedFromValue ??
+                                                        '')
+                                                    .isNotEmpty
+                                            ? _model.dialogReceivedFromValue
+                                            : routeFrom;
+                                        if ((receivedFrom ?? '').isNotEmpty) {
                                           reason = (note ?? '').isEmpty
-                                              ? 'From $routeFrom'
-                                              : 'From $routeFrom — $note';
+                                              ? 'From $receivedFrom'
+                                              : 'From $receivedFrom — $note';
                                         }
                                       }
 
@@ -2600,6 +2684,12 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                           ?.clear();
                                       _model.dialogFromTextController?.clear();
                                       _model.dialogToTextController?.clear();
+                                      _model.dialogFromValue = null;
+                                      _model.dialogToValue = null;
+                                      _model.dialogReceivedFromValue = null;
+                                      _model.dialogFromIsOther = false;
+                                      _model.dialogToIsOther = false;
+                                      _model.dialogReceivedFromIsOther = false;
                                       _model.currentPage = 1;
                                       if (!mounted) return;
                                       Navigator.pop(dialogContext);
@@ -2674,6 +2764,155 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           ),
         );
       },
+    );
+  }
+
+  /// Route dropdown for transfer/receipt origin fields — a
+  /// DropdownButtonFormField over the real outlets/pharmacies (or
+  /// suppliers for receipts), with an "Other (type manually)…" option
+  /// that reveals a text input for destinations not in the list.
+  Widget _routeDropdown({
+    required String label,
+    required IconData icon,
+    required List<String> options,
+    required String? selectedValue,
+    required bool isOther,
+    required ValueChanged<bool> onOtherChanged,
+    required ValueChanged<String?> onChanged,
+    required TextEditingController textController,
+    required FocusNode textFocusNode,
+    required String textHint,
+    required FlutterFlowTheme theme,
+  }) {
+    // "Other" sentinel — the text field carries the actual value.
+    const otherValue = '__other__';
+    final dropdownValue =
+        isOther ? otherValue : (selectedValue ?? '');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _dialogFieldLabel(
+          label: label,
+          icon: icon,
+          required_: false,
+          theme: theme,
+        ),
+        const SizedBox(height: 8.0),
+        Container(
+          decoration: BoxDecoration(
+            color: theme.primaryBackground,
+            borderRadius: BorderRadius.circular(12.0),
+            border: Border.all(
+              color: dropdownValue.isNotEmpty
+                  ? theme.primary.withValues(alpha: 0.4)
+                  : theme.alternate,
+              width: dropdownValue.isNotEmpty ? 1.5 : 1.0,
+            ),
+          ),
+          child: DropdownButtonFormField<String>(
+            key: ValueKey('route_dropdown_$label'),
+            initialValue:
+                options.contains(selectedValue) || isOther ? dropdownValue : null,
+            isExpanded: true,
+            items: [
+              ...options.map((o) => DropdownMenuItem<String>(
+                    value: o,
+                    child: Text(
+                      o,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.bodyMedium.override(
+                        fontFamily: theme.bodyMediumFamily,
+                        fontSize: 13.5,
+                        letterSpacing: 0.0,
+                        useGoogleFonts: !theme.bodyMediumIsCustom,
+                      ),
+                    ),
+                  )),
+              if (options.isNotEmpty)
+                DropdownMenuItem<String>(
+                  value: otherValue,
+                  child: Text(
+                    'Other (type manually)…',
+                    style: theme.bodyMedium.override(
+                      fontFamily: theme.bodyMediumFamily,
+                      fontSize: 13.0,
+                      fontStyle: FontStyle.italic,
+                      color: theme.secondaryText,
+                      letterSpacing: 0.0,
+                      useGoogleFonts: !theme.bodyMediumIsCustom,
+                    ),
+                  ),
+                ),
+            ],
+            onChanged: (v) {
+              if (v == otherValue) {
+                onOtherChanged(true);
+              } else {
+                onOtherChanged(false);
+                onChanged(v);
+              }
+            },
+            decoration: InputDecoration(
+              hintText: options.isEmpty
+                  ? 'Type below (no saved locations yet)'
+                  : 'Select…',
+              hintStyle: theme.bodyMedium.override(
+                fontFamily: theme.bodyMediumFamily,
+                fontSize: 13.0,
+                color: theme.secondaryText,
+                letterSpacing: 0.0,
+                useGoogleFonts: !theme.bodyMediumIsCustom,
+              ),
+              filled: true,
+              fillColor: Colors.transparent,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 14.0, vertical: 13.0),
+              border: InputBorder.none,
+            ),
+            icon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: theme.primary.withValues(alpha: 0.6),
+              size: 22.0,
+            ),
+            elevation: 2,
+            dropdownColor: theme.secondaryBackground,
+            menuMaxHeight: 280,
+          ),
+        ),
+        // Manual entry revealed by "Other…"
+        if (isOther) ...[
+          const SizedBox(height: 8.0),
+          TextFormField(
+            controller: textController,
+            focusNode: textFocusNode,
+            decoration: _dialogInputDecoration(
+              theme,
+              hint: textHint,
+              valid: true,
+            ),
+            style: theme.bodyMedium.override(
+              fontFamily: theme.bodyMediumFamily,
+              letterSpacing: 0.0,
+              useGoogleFonts: !theme.bodyMediumIsCustom,
+            ),
+          ),
+        ],
+        if (options.isEmpty && !isOther)
+          Padding(
+            padding: const EdgeInsets.only(top: 6.0),
+            child: Text(
+              'No saved locations found — pick "Other (type manually)…" above.',
+              style: theme.bodySmall.override(
+                fontFamily: theme.bodySmallFamily,
+                fontSize: 11.0,
+                color: theme.secondaryText,
+                letterSpacing: 0.0,
+                useGoogleFonts: !theme.bodySmallIsCustom,
+              ),
+            ),
+          ),
+      ],
     );
   }
 

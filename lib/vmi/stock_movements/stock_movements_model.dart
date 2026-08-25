@@ -50,6 +50,17 @@ class StockMovementsModel extends FlutterFlowModel<StockMovementsWidget> {
   TextEditingController? dialogFromTextController;
   FocusNode? dialogToFocusNode;
   TextEditingController? dialogToTextController;
+  // Dropdown selections for the transfer route / receipt origin.
+  // When the user picks "Other (type manually)…" the text controllers
+  // carry the custom value instead.
+  String? dialogFromValue;
+  String? dialogToValue;
+  String? dialogReceivedFromValue;
+  // True when the "Other…" option is selected for the corresponding
+  // field — reveals the manual text input.
+  bool dialogFromIsOther = false;
+  bool dialogToIsOther = false;
+  bool dialogReceivedFromIsOther = false;
 
   @override
   void initState(BuildContext context) {
