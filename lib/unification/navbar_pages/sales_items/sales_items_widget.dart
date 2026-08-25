@@ -3,7 +3,6 @@ import '/backend/backend.dart';
 import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import '/unification/components/no_record_component/no_record_component_widget.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
@@ -181,904 +180,16 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          FFLocalizations.of(context).getText(
-                                            '6iblhfc3' /* Below are the products sold */,
-                                          ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .displaySmall
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .displaySmallFamily,
-                                                letterSpacing: 0.0,
-                                                useGoogleFonts:
-                                                    !FlutterFlowTheme.of(
-                                                            context)
-                                                        .displaySmallIsCustom,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Container(
-                                        width: double.infinity,
-                                        constraints: BoxConstraints(
-                                          maxWidth: double.infinity,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          border: Border.all(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  if (responsiveVisibility(
-                                                    context: context,
-                                                    phone: false,
-                                                    tablet: false,
-                                                    tabletLandscape: false,
-                                                  ))
-                                                    Expanded(
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          StreamBuilder<
-                                                              PharmacyRecord>(
-                                                            stream: PharmacyRecord
-                                                                .getDocument(
-                                                                    salesItemsSalesRecord
-                                                                        .pharmaID!),
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              // Customize what your widget looks like when it's loading.
-                                                              if (!snapshot
-                                                                  .hasData) {
-                                                                return Center(
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width:
-                                                                        100.0,
-                                                                    height:
-                                                                        100.0,
-                                                                    child:
-                                                                        SpinKitRing(
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primary,
-                                                                      size:
-                                                                          100.0,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }
+                                    // ── Page header: title + transaction chip ──
+                                    _pageHeader(salesItemsSalesRecord),
 
-                                                              final textPharmacyRecord =
-                                                                  snapshot
-                                                                      .data!;
+                                    // ── Summary hero card ──
+                                    _saleSummaryCard(salesItemsSalesRecord),
 
-                                                              return Text(
-                                                                'Pharmacy Name: ${textPharmacyRecord.name}',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      fontSize:
-                                                                          20.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                              );
-                                                            },
-                                                          ),
-                                                          Text(
-                                                            'Date: ${dateTimeFormat(
-                                                              "yMMMd",
-                                                              salesItemsSalesRecord
-                                                                  .date,
-                                                              locale: FFLocalizations
-                                                                      .of(context)
-                                                                  .languageCode,
-                                                            )} ${dateTimeFormat(
-                                                              "Hm",
-                                                              salesItemsSalesRecord
-                                                                  .date,
-                                                              locale: FFLocalizations
-                                                                      .of(context)
-                                                                  .languageCode,
-                                                            )}',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyMedium
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMediumFamily,
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMediumIsCustom,
-                                                                ),
-                                                          ),
-                                                          StreamBuilder<
-                                                              UserRecord>(
-                                                            stream: UserRecord
-                                                                .getDocument(
-                                                                    salesItemsSalesRecord
-                                                                        .userID!),
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              // Customize what your widget looks like when it's loading.
-                                                              if (!snapshot
-                                                                  .hasData) {
-                                                                return Center(
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width:
-                                                                        100.0,
-                                                                    height:
-                                                                        100.0,
-                                                                    child:
-                                                                        SpinKitRing(
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primary,
-                                                                      size:
-                                                                          100.0,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }
+                                    // ── Products card ──
+                                    _productsCard(salesItemsSalesRecord),
 
-                                                              final textUserRecord =
-                                                                  snapshot
-                                                                      .data!;
-
-                                                              return Text(
-                                                                'Cashier Name: ${textUserRecord.displayName}',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyMediumFamily,
-                                                                      fontSize:
-                                                                          20.0,
-                                                                      letterSpacing:
-                                                                          0.0,
-                                                                      useGoogleFonts:
-                                                                          !FlutterFlowTheme.of(context)
-                                                                              .bodyMediumIsCustom,
-                                                                    ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      logFirebaseEvent(
-                                                          'SALES_ITEMS_REVERSE_TRANSACTION_BTN_ON_T');
-                                                      var _shouldSetState =
-                                                          false;
-                                                      logFirebaseEvent(
-                                                          'Button_alert_dialog');
-                                                      var confirmDialogResponse =
-                                                          await showDialog<
-                                                                  bool>(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (alertDialogContext) {
-                                                                  return WebViewAware(
-                                                                    child:
-                                                                        AlertDialog(
-                                                                      title: Text(
-                                                                          'Reverse confirmation'),
-                                                                      content: Text(
-                                                                          'This action cannot be reversed'),
-                                                                      actions: [
-                                                                        TextButton(
-                                                                          onPressed: () => Navigator.pop(
-                                                                              alertDialogContext,
-                                                                              false),
-                                                                          child:
-                                                                              Text('Cancel'),
-                                                                        ),
-                                                                        TextButton(
-                                                                          onPressed: () => Navigator.pop(
-                                                                              alertDialogContext,
-                                                                              true),
-                                                                          child:
-                                                                              Text('Confirm'),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              ) ??
-                                                              false;
-                                                      if (!confirmDialogResponse) {
-                                                        if (_shouldSetState)
-                                                          safeSetState(() {});
-                                                        return;
-                                                      }
-                                                      logFirebaseEvent(
-                                                          'Button_firestore_query');
-                                                      _model.salesItems =
-                                                          await querySaleitemRecordOnce(
-                                                        parent:
-                                                            currentUserReference,
-                                                        queryBuilder:
-                                                            (saleitemRecord) =>
-                                                                saleitemRecord
-                                                                    .where(
-                                                          'SaleID',
-                                                          isEqualTo:
-                                                              widget.sale,
-                                                        ),
-                                                      );
-                                                      _shouldSetState = true;
-                                                      logFirebaseEvent(
-                                                          'Button_update_app_state');
-                                                      FFAppState().LoopCounter =
-                                                          0;
-                                                      while (FFAppState()
-                                                              .LoopCounter !=
-                                                          _model.salesItems
-                                                              ?.length) {
-                                                        logFirebaseEvent(
-                                                            'Button_backend_call');
-
-                                                        await _model.salesItems!
-                                                            .elementAtOrNull(
-                                                                FFAppState()
-                                                                    .LoopCounter)!
-                                                            .stockID!
-                                                            .update({
-                                                          ...mapToFirestore(
-                                                            {
-                                                              'Quantity': FieldValue.increment(_model
-                                                                  .salesItems!
-                                                                  .elementAtOrNull(
-                                                                      FFAppState()
-                                                                          .LoopCounter)!
-                                                                  .quantity),
-                                                            },
-                                                          ),
-                                                        });
-                                                        logFirebaseEvent(
-                                                            'Button_backend_call');
-                                                        await _model.salesItems!
-                                                            .elementAtOrNull(
-                                                                FFAppState()
-                                                                    .LoopCounter)!
-                                                            .reference
-                                                            .delete();
-                                                        logFirebaseEvent(
-                                                            'Button_update_app_state');
-                                                        FFAppState()
-                                                                .LoopCounter =
-                                                            FFAppState()
-                                                                    .LoopCounter +
-                                                                1;
-                                                      }
-                                                      logFirebaseEvent(
-                                                          'Button_firestore_query');
-                                                      _model.finee =
-                                                          await queryFinanceRecordOnce(
-                                                        parent:
-                                                            currentUserReference,
-                                                        singleRecord: true,
-                                                      ).then((s) =>
-                                                              s.firstOrNull);
-                                                      _shouldSetState = true;
-                                                      logFirebaseEvent(
-                                                          'Button_backend_call');
-
-                                                      await _model
-                                                          .finee!.reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Revenue': FieldValue
-                                                                .increment(
-                                                                    -(salesItemsSalesRecord
-                                                                        .totalAmount)),
-                                                          },
-                                                        ),
-                                                      });
-                                                      logFirebaseEvent(
-                                                          'Button_backend_call');
-                                                      await widget.sale!
-                                                          .delete();
-                                                      logFirebaseEvent(
-                                                          'Button_update_app_state');
-                                                      FFAppState().LoopCounter =
-                                                          0;
-                                                      logFirebaseEvent(
-                                                          'Button_navigate_to');
-
-                                                      context.goNamed(
-                                                          FinancesWidget
-                                                              .routeName);
-
-                                                      if (_shouldSetState)
-                                                        safeSetState(() {});
-                                                    },
-                                                    text: FFLocalizations.of(
-                                                            context)
-                                                        .getText(
-                                                      '9krie4rw' /* Reverse Transaction */,
-                                                    ),
-                                                    options: FFButtonOptions(
-                                                      height: 40.0,
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  24.0,
-                                                                  0.0,
-                                                                  24.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .error,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmallFamily,
-                                                                color: Colors
-                                                                    .white,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                useGoogleFonts:
-                                                                    !FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleSmallIsCustom,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 16.0, 0.0, 0.0),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  height: 40.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(8.0),
-                                                      topRight:
-                                                          Radius.circular(8.0),
-                                                    ),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(10.0, 0.0,
-                                                                10.0, 0.0),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Expanded(
-                                                          flex: 2,
-                                                          child: Text(
-                                                            FFLocalizations.of(
-                                                                    context)
-                                                                .getText(
-                                                              'cl67i69t' /* Name */,
-                                                            ),
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Text(
-                                                            FFLocalizations.of(
-                                                                    context)
-                                                                .getText(
-                                                              'hkrv38f2' /* Quantity */,
-                                                            ),
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodySmall
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodySmallFamily,
-                                                                  letterSpacing:
-                                                                      0.0,
-                                                                  useGoogleFonts:
-                                                                      !FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodySmallIsCustom,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          flex: 2,
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    -1.0, 0.0),
-                                                            child: Text(
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .getText(
-                                                                '57h8orky' /* Action */,
-                                                              ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodySmall
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodySmallFamily,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    useGoogleFonts:
-                                                                        !FlutterFlowTheme.of(context)
-                                                                            .bodySmallIsCustom,
-                                                                  ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              AuthUserStreamWidget(
-                                                builder: (context) =>
-                                                    StreamBuilder<
-                                                        List<SaleitemRecord>>(
-                                                  stream: querySaleitemRecord(
-                                                    parent: AccessControl.parentRef(context),
-                                                    queryBuilder:
-                                                        (saleitemRecord) =>
-                                                            saleitemRecord
-                                                                .where(
-                                                      'SaleID',
-                                                      isEqualTo: widget.sale,
-                                                    ),
-                                                  ),
-                                                  builder: (context, snapshot) {
-                                                    // Customize what your widget looks like when it's loading.
-                                                    if (!snapshot.hasData) {
-                                                      return Center(
-                                                        child: SizedBox(
-                                                          width: 100.0,
-                                                          height: 100.0,
-                                                          child: SpinKitRing(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            size: 100.0,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                    List<SaleitemRecord>
-                                                        listViewSaleitemRecordList =
-                                                        snapshot.data!;
-                                                    if (listViewSaleitemRecordList
-                                                        .isEmpty) {
-                                                      return Center(
-                                                        child:
-                                                            NoRecordComponentWidget(),
-                                                      );
-                                                    }
-
-                                                    return ListView.builder(
-                                                      padding: EdgeInsets.zero,
-                                                      shrinkWrap: true,
-                                                      scrollDirection:
-                                                          Axis.vertical,
-                                                      itemCount:
-                                                          listViewSaleitemRecordList
-                                                              .length,
-                                                      itemBuilder: (context,
-                                                          listViewIndex) {
-                                                        final listViewSaleitemRecord =
-                                                            listViewSaleitemRecordList[
-                                                                listViewIndex];
-                                                        return Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      1.0),
-                                                          child: Container(
-                                                            width: 100.0,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .secondaryBackground,
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  blurRadius:
-                                                                      0.0,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                                  offset:
-                                                                      Offset(
-                                                                    0.0,
-                                                                    1.0,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 2,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            8.0,
-                                                                            0.0,
-                                                                            8.0),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          flex:
-                                                                              2,
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisSize:
-                                                                                MainAxisSize.max,
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.center,
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              StreamBuilder<StockRecord>(
-                                                                                stream: StockRecord.getDocument(listViewSaleitemRecord.stockID!),
-                                                                                builder: (context, snapshot) {
-                                                                                  // Customize what your widget looks like when it's loading.
-                                                                                  if (!snapshot.hasData) {
-                                                                                    return Center(
-                                                                                      child: SizedBox(
-                                                                                        width: 100.0,
-                                                                                        height: 100.0,
-                                                                                        child: SpinKitRing(
-                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                          size: 100.0,
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                                  }
-
-                                                                                  final textStockRecord = snapshot.data!;
-
-                                                                                  return Text(
-                                                                                    textStockRecord.name,
-                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                          fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                                          letterSpacing: 0.0,
-                                                                                          fontWeight: FontWeight.bold,
-                                                                                          useGoogleFonts: !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                                        ),
-                                                                                  );
-                                                                                },
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 1,
-                                                                  child: Text(
-                                                                    listViewSaleitemRecord
-                                                                        .quantity
-                                                                        .toString(),
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).bodyMediumFamily,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          useGoogleFonts:
-                                                                              !FlutterFlowTheme.of(context).bodyMediumIsCustom,
-                                                                        ),
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 2,
-                                                                  child: Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .end,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            10.0),
-                                                                        child:
-                                                                            FFButtonWidget(
-                                                                          onPressed:
-                                                                              () async {
-                                                                            logFirebaseEvent('SALES_ITEMS_REVERSE_TRANSACTION_BTN_ON_T');
-                                                                            var _shouldSetState =
-                                                                                false;
-                                                                            logFirebaseEvent('Button_alert_dialog');
-                                                                            var confirmDialogResponse = await showDialog<bool>(
-                                                                                  context: context,
-                                                                                  builder: (alertDialogContext) {
-                                                                                    return WebViewAware(
-                                                                                      child: AlertDialog(
-                                                                                        title: Text('Reverse confirmation'),
-                                                                                        content: Text('This action cannot be reversed'),
-                                                                                        actions: [
-                                                                                          TextButton(
-                                                                                            onPressed: () => Navigator.pop(alertDialogContext, false),
-                                                                                            child: Text('Cancel'),
-                                                                                          ),
-                                                                                          TextButton(
-                                                                                            onPressed: () => Navigator.pop(alertDialogContext, true),
-                                                                                            child: Text('Confirm'),
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                    );
-                                                                                  },
-                                                                                ) ??
-                                                                                false;
-                                                                            if (!confirmDialogResponse) {
-                                                                              if (_shouldSetState)
-                                                                                safeSetState(() {});
-                                                                              return;
-                                                                            }
-                                                                            logFirebaseEvent('Button_firestore_query');
-                                                                            _model.fineeCopy =
-                                                                                await queryFinanceRecordOnce(
-                                                                              parent: currentUserReference,
-                                                                              singleRecord: true,
-                                                                            ).then((s) => s.firstOrNull);
-                                                                            _shouldSetState =
-                                                                                true;
-                                                                            logFirebaseEvent('Button_backend_call');
-
-                                                                            // Guard against no Finance record — new
-                                                                            // accounts may have never made a sale.
-                                                                            if (_model.fineeCopy != null) {
-                                                                              await _model.fineeCopy!.reference.update({
-                                                                                ...mapToFirestore(
-                                                                                  {
-                                                                                    'Revenue': FieldValue.increment(-(listViewSaleitemRecord.totalPrice)),
-                                                                                  },
-                                                                                ),
-                                                                              });
-                                                                            }
-                                                                            logFirebaseEvent('Button_backend_call');
-
-                                                                            await salesItemsSalesRecord.reference.update({
-                                                                              ...mapToFirestore(
-                                                                                {
-                                                                                  'Total_amount': FieldValue.increment(-(listViewSaleitemRecord.totalPrice)),
-                                                                                  'NumberOfItems': FieldValue.increment(-(1)),
-                                                                                },
-                                                                              ),
-                                                                            });
-                                                                            logFirebaseEvent('Button_backend_call');
-
-                                                                            // Stock link may be null for manually-created
-                                                                            // sale items — guard before re-incrementing.
-                                                                            if (listViewSaleitemRecord.stockID != null) {
-                                                                              await listViewSaleitemRecord.stockID!.update({
-                                                                                ...mapToFirestore(
-                                                                                  {
-                                                                                    'Quantity': FieldValue.increment(listViewSaleitemRecord.quantity),
-                                                                                  },
-                                                                                ),
-                                                                              });
-                                                                              logFirebaseEvent('Button_backend_call');
-
-                                                                              // Write an audit-trail StockMovement so the
-                                                                              // stock-movements ledger can trace the reversal.
-                                                                              final ownerRef = currentUserReference;
-                                                                              if (ownerRef != null) {
-                                                                                await StockMovementRecord.createDoc(ownerRef).set(createStockMovementRecordData(
-                                                                                  productId: listViewSaleitemRecord.stockID,
-                                                                                  productName: null,
-                                                                                  quantity: listViewSaleitemRecord.quantity,
-                                                                                  movementType: 'SALE_RETURN',
-                                                                                  reason: 'Reversal of sale ${salesItemsSalesRecord.reference.id}',
-                                                                                  movementReference: salesItemsSalesRecord.reference.id,
-                                                                                  recordedById: currentUserReference,
-                                                                                  createdAt: DateTime.now(),
-                                                                                ));
-                                                                              }
-                                                                            }
-                                                                            logFirebaseEvent('Button_backend_call');
-                                                                            await listViewSaleitemRecord.reference.delete();
-                                                                            logFirebaseEvent('Button_backend_call');
-                                                                            _model.sale =
-                                                                                await SalesRecord.getDocumentOnce(widget.sale!);
-                                                                            _shouldSetState =
-                                                                                true;
-                                                                            if (_model.sale?.numberOfItems ==
-                                                                                0) {
-                                                                              logFirebaseEvent('Button_backend_call');
-                                                                              await widget.sale!.delete();
-                                                                            }
-                                                                            logFirebaseEvent('Button_navigate_to');
-
-                                                                            context.goNamed(
-                                                                              SalesItemsWidget.routeName,
-                                                                              queryParameters: {
-                                                                                'sale': serializeParam(
-                                                                                  widget.sale,
-                                                                                  ParamType.DocumentReference,
-                                                                                ),
-                                                                              }.withoutNulls,
-                                                                            );
-
-                                                                            if (_shouldSetState)
-                                                                              safeSetState(() {});
-                                                                          },
-                                                                          text:
-                                                                              FFLocalizations.of(context).getText(
-                                                                            'zs90o1wc' /* Reverse Transaction */,
-                                                                          ),
-                                                                          options:
-                                                                              FFButtonOptions(
-                                                                            height:
-                                                                                40.0,
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                24.0,
-                                                                                0.0,
-                                                                                24.0,
-                                                                                0.0),
-                                                                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0.0,
-                                                                                0.0,
-                                                                                0.0,
-                                                                                0.0),
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).error,
-                                                                            textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                                                                                  fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
-                                                                                  color: Colors.white,
-                                                                                  letterSpacing: 0.0,
-                                                                                  useGoogleFonts: !FlutterFlowTheme.of(context).titleSmallIsCustom,
-                                                                                ),
-                                                                            elevation:
-                                                                                3.0,
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Colors.transparent,
-                                                                              width: 1.0,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ]
+]
                                       .divide(SizedBox(height: 16.0))
                                       .around(SizedBox(height: 16.0)),
                                 ),
@@ -1095,4 +206,852 @@ class _SalesItemsWidgetState extends State<SalesItemsWidget> {
       },
     );
   }
+  // ═══════════════════════════════════════════════════════════════
+  //  SALE DETAIL — premium layout builders
+  // ═══════════════════════════════════════════════════════════════
+
+  static const Color _accent = Color(0xFF9900FF);
+
+  /// Page header — title plus a transaction-ID chip so the sale can be
+  /// referenced from paper records.
+  Widget _pageHeader(SalesRecord sale) {
+    final theme = FlutterFlowTheme.of(context);
+    final shortId = sale.reference.id.length >= 6
+        ? sale.reference.id.substring(0, 6).toUpperCase()
+        : sale.reference.id.toUpperCase();
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Sale Details',
+            style: theme.displaySmall.override(
+              fontFamily: theme.displaySmallFamily,
+              fontSize: 26.0,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+              useGoogleFonts: !theme.displaySmallIsCustom,
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 7.0),
+          decoration: BoxDecoration(
+            color: theme.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(9999.0),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.receipt_long_rounded,
+                  size: 14.0, color: theme.primary),
+              const SizedBox(width: 6.0),
+              Text(
+                'TXN-$shortId',
+                style: theme.bodySmall.override(
+                  fontFamily: theme.bodySmallFamily,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.4,
+                  color: theme.primary,
+                  useGoogleFonts: !theme.bodySmallIsCustom,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// One label/value pair with a leading icon for the summary card.
+  Widget _summaryTile(IconData icon, String label, Widget value) {
+    final theme = FlutterFlowTheme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 34.0,
+          height: 34.0,
+          decoration: BoxDecoration(
+            color: theme.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(9.0),
+          ),
+          child:
+              Icon(icon, size: 17.0, color: theme.primary),
+        ),
+        const SizedBox(width: 10.0),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label.toUpperCase(),
+                style: theme.bodySmall.override(
+                  fontFamily: theme.bodySmallFamily,
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.6,
+                  color: theme.secondaryText,
+                  useGoogleFonts: !theme.bodySmallIsCustom,
+                ),
+              ),
+              const SizedBox(height: 2.0),
+              value,
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Small value text used inside summary tiles.
+  Widget _summaryValue(String text) {
+    final theme = FlutterFlowTheme.of(context);
+    return Text(
+      text,
+      style: theme.bodyMedium.override(
+        fontFamily: theme.bodyMediumFamily,
+        fontSize: 14.5,
+        fontWeight: FontWeight.w600,
+        color: theme.primaryText,
+        useGoogleFonts: !theme.bodyMediumIsCustom,
+      ),
+    );
+  }
+
+  /// Compact loading placeholder for the summary tiles (replaces the
+  /// old 100px spinners that broke the card layout while loading).
+  Widget _summaryValueLoading() {
+    final theme = FlutterFlowTheme.of(context);
+    return Text(
+      '…',
+      style: theme.bodyMedium.override(
+        fontFamily: theme.bodyMediumFamily,
+        fontSize: 14.5,
+        fontWeight: FontWeight.w600,
+        color: theme.secondaryText,
+        useGoogleFonts: !theme.bodyMediumIsCustom,
+      ),
+    );
+  }
+
+  /// Payment-method badge — icon + label; Mobile Money shows the
+  /// provider (Zamtel / Airtel / MTN) when recorded.
+  Widget _paymentBadge(SalesRecord sale) {
+    final theme = FlutterFlowTheme.of(context);
+    final pm = sale.paymentMethod ?? 'Cash';
+    final provider = sale.mobileMoneyProvider;
+
+    IconData icon;
+    String label;
+    switch (pm) {
+      case 'Card':
+        icon = Icons.credit_card_rounded;
+        label = 'Card';
+        break;
+      case 'MobileMoney':
+        icon = Icons.phone_android_rounded;
+        label = provider ?? 'Mobile Money';
+        break;
+      default:
+        icon = Icons.payments_rounded;
+        label = 'Cash';
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFF10B981).withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(9999.0),
+        border: Border.all(
+            color: const Color(0xFF10B981).withValues(alpha: 0.35),
+            width: 1.0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14.0, color: const Color(0xFF059669)),
+          const SizedBox(width: 6.0),
+          Text(
+            label,
+            style: theme.bodySmall.override(
+              fontFamily: theme.bodySmallFamily,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF059669),
+              useGoogleFonts: !theme.bodySmallIsCustom,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Summary hero card — who / when / where on the left, the money on
+  /// the right. Replaces the old flat same-size "Label: value" text
+  /// block that had no hierarchy.
+  Widget _saleSummaryCard(SalesRecord sale) {
+    final theme = FlutterFlowTheme.of(context);
+    final dateText =
+        '${dateTimeFormat("yMMMd", sale.date, locale: FFLocalizations.of(context).languageCode)}'
+        ' · ${dateTimeFormat("Hm", sale.date, locale: FFLocalizations.of(context).languageCode)}';
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.secondaryBackground,
+        borderRadius: BorderRadius.circular(16.0),
+        border: Border.all(color: theme.alternate.withValues(alpha: 0.6)),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 12.0,
+            color: Colors.black.withValues(alpha: 0.03),
+            offset: const Offset(0.0, 4.0),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(22.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left: transaction metadata
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  StreamBuilder<PharmacyRecord>(
+                    stream: sale.pharmaID != null
+                        ? PharmacyRecord.getDocument(sale.pharmaID!)
+                        : null,
+                    builder: (context, snapshot) {
+                      if (sale.pharmaID == null) {
+                        return _summaryTile(Icons.local_pharmacy_rounded,
+                            'Pharmacy', _summaryValue('—'));
+                      }
+                      if (!snapshot.hasData) {
+                        return _summaryTile(Icons.local_pharmacy_rounded,
+                            'Pharmacy', _summaryValueLoading());
+                      }
+                      return _summaryTile(Icons.local_pharmacy_rounded,
+                          'Pharmacy', _summaryValue(snapshot.data!.name));
+                    },
+                  ),
+                  const SizedBox(height: 14.0),
+                  _summaryTile(
+                      Icons.schedule_rounded, 'Date', _summaryValue(dateText)),
+                  const SizedBox(height: 14.0),
+                  StreamBuilder<UserRecord>(
+                    stream: sale.userID != null
+                        ? UserRecord.getDocument(sale.userID!)
+                        : null,
+                    builder: (context, snapshot) {
+                      if (sale.userID == null) {
+                        return _summaryTile(Icons.person_rounded, 'Cashier',
+                            _summaryValue('—'));
+                      }
+                      if (!snapshot.hasData) {
+                        return _summaryTile(Icons.person_rounded, 'Cashier',
+                            _summaryValueLoading());
+                      }
+                      return _summaryTile(Icons.person_rounded, 'Cashier',
+                          _summaryValue(snapshot.data!.displayName));
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 24.0),
+            // Right: the money
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'TOTAL',
+                    style: theme.bodySmall.override(
+                      fontFamily: theme.bodySmallFamily,
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.0,
+                      color: theme.secondaryText,
+                      useGoogleFonts: !theme.bodySmallIsCustom,
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    'K ${sale.totalAmount.toStringAsFixed(2)}',
+                    style: theme.titleLarge.override(
+                      fontFamily: theme.titleLargeFamily,
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
+                      color: _accent,
+                      useGoogleFonts: !theme.titleLargeIsCustom,
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  _paymentBadge(sale),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    '${sale.numberOfItems} item${sale.numberOfItems == 1 ? '' : 's'} sold',
+                    style: theme.bodySmall.override(
+                      fontFamily: theme.bodySmallFamily,
+                      fontSize: 12.0,
+                      color: theme.secondaryText,
+                      useGoogleFonts: !theme.bodySmallIsCustom,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Products card — header with the whole-sale reverse action, then
+  /// the item table (name, unit price, quantity, line total, per-item
+  /// reverse). Replaces the old Name/Quantity/Action-only table.
+  Widget _productsCard(SalesRecord sale) {
+    final theme = FlutterFlowTheme.of(context);
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.secondaryBackground,
+        borderRadius: BorderRadius.circular(16.0),
+        border: Border.all(color: theme.alternate.withValues(alpha: 0.6)),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 12.0,
+            color: Colors.black.withValues(alpha: 0.03),
+            offset: const Offset(0.0, 4.0),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Card header + whole-sale reverse
+            Row(
+              children: [
+                Icon(Icons.shopping_bag_rounded,
+                    size: 20.0, color: theme.primary),
+                const SizedBox(width: 10.0),
+                Text(
+                  'Products Sold',
+                  style: theme.titleMedium.override(
+                    fontFamily: theme.titleMediumFamily,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                    useGoogleFonts: !theme.titleMediumIsCustom,
+                  ),
+                ),
+                const Spacer(),
+                OutlinedButton.icon(
+                  onPressed: () => _reverseEntireSale(sale),
+                  icon: const Icon(Icons.undo_rounded, size: 16.0),
+                  label: const Text('Reverse Entire Sale'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: theme.error,
+                    side: BorderSide(color: theme.error, width: 1.2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 12.0),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            // Table header
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+              decoration: BoxDecoration(
+                color: theme.primaryBackground,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      'PRODUCT',
+                      style: theme.bodySmall.override(
+                        fontFamily: theme.bodySmallFamily,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                        color: theme.secondaryText,
+                        useGoogleFonts: !theme.bodySmallIsCustom,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'UNIT PRICE',
+                      textAlign: TextAlign.right,
+                      style: theme.bodySmall.override(
+                        fontFamily: theme.bodySmallFamily,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                        color: theme.secondaryText,
+                        useGoogleFonts: !theme.bodySmallIsCustom,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'QTY',
+                      textAlign: TextAlign.center,
+                      style: theme.bodySmall.override(
+                        fontFamily: theme.bodySmallFamily,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                        color: theme.secondaryText,
+                        useGoogleFonts: !theme.bodySmallIsCustom,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'TOTAL',
+                      textAlign: TextAlign.right,
+                      style: theme.bodySmall.override(
+                        fontFamily: theme.bodySmallFamily,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                        color: theme.secondaryText,
+                        useGoogleFonts: !theme.bodySmallIsCustom,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 44.0),
+                ],
+              ),
+            ),
+            // Items
+            AuthUserStreamWidget(
+              builder: (context) => StreamBuilder<List<SaleitemRecord>>(
+                stream: querySaleitemRecord(
+                  parent: AccessControl.parentRef(context),
+                  queryBuilder: (saleitemRecord) => saleitemRecord.where(
+                    'SaleID',
+                    isEqualTo: widget.sale,
+                  ),
+                ),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.all(28.0),
+                      child: Center(
+                        child: SizedBox(
+                          width: 28.0,
+                          height: 28.0,
+                          child: SpinKitRing(
+                            color: theme.primary,
+                            size: 28.0,
+                            lineWidth: 2.4,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  final items = snapshot.data!;
+                  if (items.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: NoRecordComponentWidget(),
+                    );
+                  }
+                  return Column(
+                    children: [
+                      for (final item in items)
+                        _productRow(item, sale, items.indexOf(item) == items.length - 1),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// One product row: med icon + name, unit price, qty badge, line
+  /// total, and a compact per-item reverse (icon + tooltip) instead of
+  /// the old full-width duplicate button.
+  Widget _productRow(SaleitemRecord item, SalesRecord sale, bool isLast) {
+    final theme = FlutterFlowTheme.of(context);
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.secondaryBackground,
+        border: Border(
+          bottom: isLast
+              ? BorderSide.none
+              : BorderSide(color: theme.alternate.withValues(alpha: 0.4)),
+        ),
+      ),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 12.0, vertical: 13.0),
+      child: Row(
+        children: [
+          // Product
+          Expanded(
+            flex: 3,
+            child: Row(
+              children: [
+                Container(
+                  width: 34.0,
+                  height: 34.0,
+                  decoration: BoxDecoration(
+                    color: theme.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(9.0),
+                  ),
+                  child: Icon(Icons.medication_rounded,
+                      size: 17.0, color: theme.primary),
+                ),
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: StreamBuilder<StockRecord>(
+                    stream: item.stockID != null
+                        ? StockRecord.getDocument(item.stockID!)
+                        : null,
+                    builder: (context, snapshot) {
+                      if (item.stockID == null) {
+                        return Text(
+                          'Unknown product',
+                          style: theme.bodyMedium.override(
+                            fontFamily: theme.bodyMediumFamily,
+                            fontWeight: FontWeight.w600,
+                            color: theme.secondaryText,
+                            useGoogleFonts: !theme.bodyMediumIsCustom,
+                          ),
+                        );
+                      }
+                      if (!snapshot.hasData) {
+                        return Text(
+                          '…',
+                          style: theme.bodyMedium.override(
+                            fontFamily: theme.bodyMediumFamily,
+                            fontWeight: FontWeight.w600,
+                            useGoogleFonts: !theme.bodyMediumIsCustom,
+                          ),
+                        );
+                      }
+                      return Text(
+                        snapshot.data!.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.bodyMedium.override(
+                          fontFamily: theme.bodyMediumFamily,
+                          fontWeight: FontWeight.w600,
+                          useGoogleFonts: !theme.bodyMediumIsCustom,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Unit price
+          Expanded(
+            flex: 2,
+            child: Text(
+              'K ${item.unitPrice.toStringAsFixed(2)}',
+              textAlign: TextAlign.right,
+              style: theme.bodyMedium.override(
+                fontFamily: theme.bodyMediumFamily,
+                fontSize: 13.0,
+                color: theme.secondaryText,
+                useGoogleFonts: !theme.bodyMediumIsCustom,
+              ),
+            ),
+          ),
+          // Qty badge
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                  color: theme.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(9999.0),
+                ),
+                child: Text(
+                  '${item.quantity}',
+                  style: theme.bodySmall.override(
+                    fontFamily: theme.bodySmallFamily,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w700,
+                    color: theme.primary,
+                    useGoogleFonts: !theme.bodySmallIsCustom,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Line total
+          Expanded(
+            flex: 2,
+            child: Text(
+              'K ${item.totalPrice.toStringAsFixed(2)}',
+              textAlign: TextAlign.right,
+              style: theme.bodyMedium.override(
+                fontFamily: theme.bodyMediumFamily,
+                fontWeight: FontWeight.w700,
+                useGoogleFonts: !theme.bodyMediumIsCustom,
+              ),
+            ),
+          ),
+          // Per-item reverse — compact icon action
+          const SizedBox(width: 8.0),
+          Tooltip(
+            message: 'Reverse this item',
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8.0),
+              onTap: () => _reverseItem(item, sale),
+              child: Container(
+                width: 36.0,
+                height: 36.0,
+                decoration: BoxDecoration(
+                  color: theme.error.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(9.0),
+                ),
+                child: Icon(Icons.undo_rounded,
+                    size: 17.0, color: theme.error),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  REVERSAL ACTIONS (extracted from the old inline buttons)
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Reverses the entire sale: restores stock for every item, deletes
+  /// the item rows, decrements revenue, and deletes the sale.
+  Future<void> _reverseEntireSale(SalesRecord sale) async {
+    logFirebaseEvent('SALES_ITEMS_REVERSE_TRANSACTION_BTN_ON_T');
+    final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (alertDialogContext) {
+            return WebViewAware(
+              child: AlertDialog(
+                title: const Text('Reverse entire sale?'),
+                content: Text(
+                    'All ${sale.numberOfItems} item(s) will be returned to stock, revenue will be adjusted, and the sale will be deleted. This action cannot be reversed.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext, true),
+                    child: const Text('Confirm'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ) ??
+        false;
+    if (!confirmed) return;
+
+    try {
+      // Query under the same parent the page displays from — the old
+      // code used currentUserReference, which found zero items for
+      // staff accounts and deleted the sale without restoring stock.
+      final parent = AccessControl.parentRef(context) ?? currentUserReference;
+      final items = await querySaleitemRecordOnce(
+        parent: parent,
+        queryBuilder: (saleitemRecord) => saleitemRecord.where(
+          'SaleID',
+          isEqualTo: widget.sale,
+        ),
+      );
+
+      for (final item in items) {
+        if (item.stockID != null) {
+          await item.stockID!.update({
+            ...mapToFirestore(
+              {
+                'Quantity': FieldValue.increment(item.quantity),
+              },
+            ),
+          });
+          if (parent != null) {
+            await StockMovementRecord.createDoc(parent).set(
+                createStockMovementRecordData(
+                  productId: item.stockID,
+                  quantity: item.quantity,
+                  movementType: 'SALE_RETURN',
+                  reason: 'Reversal of sale ${sale.reference.id}',
+                  movementReference: sale.reference.id,
+                  recordedById: currentUserReference,
+                  createdAt: DateTime.now(),
+                ));
+          }
+        }
+        await item.reference.delete();
+      }
+
+      final finance = await queryFinanceRecordOnce(
+        parent: parent,
+        singleRecord: true,
+      ).then((s) => s.firstOrNull);
+      if (finance != null) {
+        await finance.reference.update({
+          ...mapToFirestore(
+            {
+              'Revenue': FieldValue.increment(-(sale.totalAmount)),
+            },
+          ),
+        });
+      }
+
+      await widget.sale!.delete();
+
+      if (!mounted) return;
+      context.goNamed(FinancesWidget.routeName);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Could not reverse the sale. Please try again.'),
+          backgroundColor: FlutterFlowTheme.of(context).error,
+        ),
+      );
+    }
+  }
+
+  /// Reverses a single line item: restores its stock, adjusts revenue
+  /// and the sale totals, writes a SALE_RETURN movement, deletes the
+  /// item, and deletes the sale itself when the last item is removed.
+  Future<void> _reverseItem(SaleitemRecord item, SalesRecord sale) async {
+    logFirebaseEvent('SALES_ITEMS_REVERSE_ITEM_BTN_ON_T');
+    final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (alertDialogContext) {
+            return WebViewAware(
+              child: AlertDialog(
+                title: const Text('Reverse this item?'),
+                content: Text(
+                    'This item will be returned to stock and the sale total adjusted. This action cannot be reversed.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(alertDialogContext, true),
+                    child: const Text('Confirm'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ) ??
+        false;
+    if (!confirmed) return;
+
+    try {
+      final parent = AccessControl.parentRef(context) ?? currentUserReference;
+
+      // Finance under the same parent the revenue was recorded to.
+      final finance = await queryFinanceRecordOnce(
+        parent: parent,
+        singleRecord: true,
+      ).then((s) => s.firstOrNull);
+      if (finance != null) {
+        await finance.reference.update({
+          ...mapToFirestore(
+            {
+              'Revenue': FieldValue.increment(-(item.totalPrice)),
+            },
+          ),
+        });
+      }
+
+      await sale.reference.update({
+        ...mapToFirestore(
+          {
+            'Total_amount': FieldValue.increment(-(item.totalPrice)),
+            'NumberOfItems': FieldValue.increment(-(1)),
+          },
+        ),
+      });
+
+      // Stock link may be null for manually-created sale items — guard
+      // before re-incrementing.
+      if (item.stockID != null) {
+        await item.stockID!.update({
+          ...mapToFirestore(
+            {
+              'Quantity': FieldValue.increment(item.quantity),
+            },
+          ),
+        });
+        if (parent != null) {
+          await StockMovementRecord.createDoc(parent).set(
+              createStockMovementRecordData(
+                productId: item.stockID,
+                quantity: item.quantity,
+                movementType: 'SALE_RETURN',
+                reason: 'Reversal of sale ${sale.reference.id}',
+                movementReference: sale.reference.id,
+                recordedById: currentUserReference,
+                createdAt: DateTime.now(),
+              ));
+        }
+      }
+
+      await item.reference.delete();
+
+      final refreshed =
+          await SalesRecord.getDocumentOnce(widget.sale!);
+      if (refreshed.numberOfItems == 0) {
+        await widget.sale!.delete();
+      }
+
+      if (!mounted) return;
+      context.goNamed(
+        SalesItemsWidget.routeName,
+        queryParameters: {
+          'sale': serializeParam(
+            widget.sale,
+            ParamType.DocumentReference,
+          ),
+        }.withoutNulls,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Could not reverse the item. Please try again.'),
+          backgroundColor: FlutterFlowTheme.of(context).error,
+        ),
+      );
+    }
+  }
+
 }
