@@ -509,53 +509,344 @@ function welcomeTemplate(displayName) {
   const portalUrl = getConfiguredPortalUrl();
   return `
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5">
-<div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-  <div style="background:linear-gradient(135deg,#9900FF,#7C3AED);padding:32px;text-align:center">
-    <h1 style="color:#fff;margin:0;font-size:24px">Welcome to Pulse</h1>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Welcome to Pulse</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; }
+      .pad-mobile { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;word-spacing:normal;background-color:#F0F0F5;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div role="article" aria-roledescription="email" lang="en" style="text-size-adjust:100%;">
+    <div style="display:none;font-size:1px;color:#F0F0F5;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+      Welcome to Pulse — your pharmacy and inventory management platform. You're all set to get started.
+    </div>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#F0F0F5;">
+      <tr>
+        <td align="center" style="padding:40px 16px 60px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width:520px;margin:0 auto;" class="email-container">
+
+            <!-- Header -->
+            <tr>
+              <td style="padding:0 0 2px;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:20px 20px 0 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td style="padding:28px 40px 0;text-align:center;" class="pad-mobile">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center"><tr>
+                        <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;">
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+                            <td style="vertical-align:middle;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;"><rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.2)"/><rect x="11" y="5" width="6" height="18" rx="2" fill="white"/><rect x="5" y="11" width="18" height="6" rx="2" fill="white"/></svg></td>
+                            <td style="vertical-align:middle;padding-left:10px;"><span style="color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Pulse</span></td>
+                          </tr></table>
+                        </td>
+                      </tr></table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:28px 40px 36px;text-align:center;" class="pad-mobile">
+                      <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.3;">Welcome to Pulse</h1>
+                      <div style="margin:12px auto 0;background:rgba(255,255,255,0.18);border-radius:8px;padding:8px 20px;display:inline-block;">
+                        <span style="color:#ffffff;font-size:15px;font-weight:600;">Modern Pharmacy Intelligence</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Greeting -->
+            <tr>
+              <td style="background:#ffffff;padding:40px 40px 0;" class="pad-mobile">
+                <p style="margin:0;color:#0B1C30;font-size:17px;font-weight:600;">Hi ${displayName},</p>
+                <p style="margin:12px 0 0;color:#475569;font-size:15px;line-height:1.7;">Welcome to Pulse — your pharmacy and inventory management platform. You're all set to get started.</p>
+                <p style="margin:12px 0 0;color:#475569;font-size:15px;line-height:1.7;">You can log in anytime to manage your pharmacy, track inventory, process sales, and more.</p>
+              </td>
+            </tr>
+
+            <!-- CTA -->
+            <tr>
+              <td style="background:#ffffff;padding:32px 40px;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td align="center">
+                  <a href="${portalUrl}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 50%,#6D28D9 100%);color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;padding:16px 48px;border-radius:14px;box-shadow:0 4px 14px rgba(124,58,237,0.35);">Open Pulse &rarr;</a>
+                </td></tr></table>
+              </td>
+            </tr>
+
+            <!-- Features -->
+            <tr>
+              <td style="background:#ffffff;padding:0 40px 32px;" class="pad-mobile">
+                <p style="margin:0 0 16px;color:#64748B;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-align:center;">What you can do</p>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#FAFBFF;border-radius:12px;border:1px solid #F1F5F9;">
+                  <tr><td style="padding:20px 24px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr><td width="36" style="vertical-align:top;padding-right:12px;"><span style="font-size:18px;">📊</span></td><td style="vertical-align:top;padding-bottom:12px;"><p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">Real-time Dashboard</p><p style="margin:2px 0 0;color:#64748B;font-size:13px;">Track sales, inventory, and performance at a glance</p></td></tr>
+                      <tr><td width="36" style="vertical-align:top;padding-right:12px;"><span style="font-size:18px;">💊</span></td><td style="vertical-align:top;padding-bottom:12px;"><p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">Inventory Management</p><p style="margin:2px 0 0;color:#64748B;font-size:13px;">Stock tracking, low alerts, and batch expiry monitoring</p></td></tr>
+                      <tr><td width="36" style="vertical-align:top;padding-right:12px;"><span style="font-size:18px;">🛒</span></td><td style="vertical-align:top;"><p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">Point of Sale</p><p style="margin:2px 0 0;color:#64748B;font-size:13px;">Process sales and manage transactions seamlessly</p></td></tr>
+                    </table>
+                  </td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background:#ffffff;padding:24px 40px 0;border-top:1px solid #F1F5F9;" class="pad-mobile">
+                <p style="margin:0 0 8px;color:#94A3B8;font-size:12px;text-align:center;">Sent with care by the <strong style="color:#7C3AED;">Pulse</strong> team</p>
+                <p style="margin:0;color:#CBD5E1;font-size:11px;text-align:center;">Pulse — Modern Pharmacy Intelligence</p>
+              </td>
+            </tr>
+
+            <!-- Bottom Bar -->
+            <tr><td>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:0 0 20px 20px;">
+                <tr><td style="padding:16px 40px;text-align:center;" class="pad-mobile"><p style="margin:0;color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.5px;">&copy; 2025 Duniya Healthcare &bull; Powered by Pulse</p></td></tr>
+              </table>
+            </td></tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
   </div>
-  <div style="padding:32px">
-    <p style="font-size:16px;color:#333">Hi ${displayName},</p>
-    <p style="font-size:15px;color:#555;line-height:1.6">Welcome to Pulse — your pharmacy and inventory management platform. You're all set to get started.</p>
-    <p style="font-size:15px;color:#555;line-height:1.6">You can log in anytime to manage your pharmacy, track inventory, process sales, and more.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td align="center">
-      <a href="${portalUrl}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#9900FF,#7C3AED);color:#fff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px">Open Pulse →</a>
-    </td></tr></table>
-    <p style="font-size:15px;color:#555;line-height:1.6">If you have any questions, our support team is here to help.</p>
-    <p style="font-size:15px;color:#555;margin-top:24px">Best regards,<br>The Pulse Team</p>
-  </div>
-  <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
-    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Management</p>
-  </div>
-</div>
 </body>
 </html>`;
 }
 
 function lowStockTemplate(pharmacyName, productName, currentStock, reorderLevel) {
+  const percentage = Math.round((currentStock / reorderLevel) * 100);
+  const barColor = percentage <= 25 ? '#DC2626' : percentage <= 50 ? '#F59E0B' : '#EAB308';
   return `
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5">
-<div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-  <div style="background:#dc2626;padding:32px;text-align:center">
-    <h1 style="color:#fff;margin:0;font-size:24px">⚠️ Low Stock Alert</h1>
-  </div>
-  <div style="padding:32px">
-    <p style="font-size:15px;color:#555;line-height:1.6">The following item at <strong>${pharmacyName}</strong> is running low:</p>
-    <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px">
-      <thead><tr style="background:#f9fafb"><th style="padding:8px;text-align:left">Item</th><th style="padding:8px;text-align:center">In Stock</th><th style="padding:8px;text-align:center">Reorder Level</th></tr></thead>
-      <tbody><tr><td style="padding:8px;border-bottom:1px solid #eee">${productName}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${currentStock}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;color:#dc2626">${reorderLevel}</td></tr></tbody>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Low Stock Alert — ${pharmacyName}</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; }
+      .pad-mobile { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;word-spacing:normal;background-color:#F0F0F5;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div role="article" aria-roledescription="email" lang="en" style="text-size-adjust:100%;">
+    <!-- Preheader -->
+    <div style="display:none;font-size:1px;color:#F0F0F5;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+      Low stock alert: ${productName} at ${pharmacyName} — ${currentStock} remaining (reorder at ${reorderLevel}).
+    </div>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#F0F0F5;">
+      <tr>
+        <td align="center" style="padding:40px 16px 60px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width:520px;margin:0 auto;" class="email-container">
+
+            <!-- ═══════════ HEADER — Pulse Brand + Alert Badge ═══════════ -->
+            <tr>
+              <td style="padding:0 0 2px;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:20px 20px 0 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <!-- Pulse Logo -->
+                  <tr>
+                    <td style="padding:28px 40px 0;text-align:center;" class="pad-mobile">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tr>
+                          <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+                              <td style="vertical-align:middle;">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;"><rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.2)"/><rect x="11" y="5" width="6" height="18" rx="2" fill="white"/><rect x="5" y="11" width="18" height="6" rx="2" fill="white"/></svg>
+                              </td>
+                              <td style="vertical-align:middle;padding-left:10px;">
+                                <span style="color:#ffffff;font-family:'Inter',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Pulse</span>
+                              </td>
+                            </tr></table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Alert Title -->
+                  <tr>
+                    <td style="padding:28px 40px 36px;text-align:center;" class="pad-mobile">
+                      <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.3;">
+                        ⚠️ Low Stock Alert
+                      </h1>
+                      <div style="margin:12px auto 0;background:rgba(220,38,38,0.3);border-radius:8px;padding:8px 20px;display:inline-block;">
+                        <span style="color:#ffffff;font-size:15px;font-weight:600;">${pharmacyName}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ GREETING ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:40px 40px 0;" class="pad-mobile">
+                <p style="margin:0;color:#0B1C30;font-size:15px;line-height:1.7;">
+                  The following item at <strong style="color:#0B1C30;">${pharmacyName}</strong> is running low and needs attention:
+                </p>
+              </td>
+            </tr>
+
+            <!-- ═══════════ PRODUCT ALERT CARD ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:24px 40px 0;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #FEE2E2;border-radius:14px;overflow:hidden;">
+                  <!-- Card Header -->
+                  <tr>
+                    <td style="background:linear-gradient(135deg,#FEF2F2 0%,#FEE2E2 100%);padding:16px 24px;border-bottom:1px solid #FECACA;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td style="vertical-align:middle;">
+                            <span style="font-size:11px;font-weight:700;color:#DC2626;text-transform:uppercase;letter-spacing:1.2px;">⚠️ Reorder Required</span>
+                          </td>
+                          <td align="right" style="vertical-align:middle;">
+                            <span style="display:inline-block;background:linear-gradient(135deg,#DC2626,#B91C1C);color:#ffffff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">Low Stock</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Card Body -->
+                  <tr>
+                    <td style="padding:24px;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <!-- Product Name -->
+                        <tr>
+                          <td width="48" style="vertical-align:top;padding-right:16px;">
+                            <div style="width:44px;height:44px;background:linear-gradient(135deg,#DC2626,#B91C1C);border-radius:12px;text-align:center;line-height:44px;">
+                              <span style="font-size:20px;">💊</span>
+                            </div>
+                          </td>
+                          <td style="vertical-align:top;">
+                            <p style="margin:0 0 4px;color:#64748B;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Product</p>
+                            <p style="margin:0;color:#0B1C30;font-size:16px;font-weight:700;">${productName}</p>
+                          </td>
+                        </tr>
+                        <tr><td colspan="2" style="padding:16px 0;"><div style="border-top:1px solid #F1F5F9;"></div></td></tr>
+                        <!-- Stock Levels -->
+                        <tr>
+                          <td colspan="2">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                              <tr>
+                                <td width="50%" style="padding-right:8px;">
+                                  <div style="background:#FEF2F2;border-radius:10px;padding:14px 16px;text-align:center;">
+                                    <p style="margin:0 0 4px;color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">In Stock</p>
+                                    <p style="margin:0;color:#DC2626;font-size:28px;font-weight:800;line-height:1;">${currentStock}</p>
+                                  </div>
+                                </td>
+                                <td width="50%" style="padding-left:8px;">
+                                  <div style="background:#F0FDF4;border-radius:10px;padding:14px 16px;text-align:center;">
+                                    <p style="margin:0 0 4px;color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Reorder At</p>
+                                    <p style="margin:0;color:#16A34A;font-size:28px;font-weight:800;line-height:1;">${reorderLevel}</p>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <!-- Stock Progress Bar -->
+                        <tr><td colspan="2" style="padding:20px 0 0;">
+                          <p style="margin:0 0 8px;color:#64748B;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Stock Level</p>
+                          <div style="background:#F1F5F9;border-radius:8px;height:12px;overflow:hidden;">
+                            <div style="background:${barColor};width:${Math.min(percentage, 100)}%;height:12px;border-radius:8px;min-width:8px;"></div>
+                          </div>
+                          <p style="margin:8px 0 0;color:${barColor};font-size:12px;font-weight:600;">${percentage}% of reorder level</p>
+                        </td></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ CTA BUTTON ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:32px 40px;" class="pad-mobile">
+                <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;text-align:center;">
+                  Review your inventory and place a replenishment order:
+                </p>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a href="${getConfiguredPortalUrl()}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 50%,#6D28D9 100%);color:#ffffff;font-family:'Inter',sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 48px;border-radius:14px;box-shadow:0 4px 14px rgba(124,58,237,0.35);">
+                        Open Pulse &rarr;
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ TIPS CARD ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:0 40px 32px;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#FAFBFF;border-radius:12px;border:1px solid #F1F5F9;">
+                  <tr>
+                    <td style="padding:20px 24px;">
+                      <p style="margin:0 0 12px;color:#64748B;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">💡 Quick Actions</p>
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;"><span style="font-size:14px;">📋</span></td>
+                          <td style="padding-bottom:10px;"><p style="margin:0;color:#0B1C30;font-size:13px;line-height:1.5;">Create a <strong>purchase order</strong> for this product</p></td>
+                        </tr>
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;"><span style="font-size:14px;">🔄</span></td>
+                          <td style="padding-bottom:10px;"><p style="margin:0;color:#0B1C30;font-size:13px;line-height:1.5;">Check <strong>stock movements</strong> to identify usage patterns</p></td>
+                        </tr>
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;"><span style="font-size:14px;">🤝</span></td>
+                          <td><p style="margin:0;color:#0B1C30;font-size:13px;line-height:1.5;">Request a <strong>Pulse dispatch</strong> from the network</p></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ FOOTER ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:24px 40px 0;border-top:1px solid #F1F5F9;" class="pad-mobile">
+                <p style="margin:0 0 8px;color:#94A3B8;font-size:12px;text-align:center;">Automated alert by <strong style="color:#7C3AED;">Pulse</strong> — Inventory Intelligence</p>
+                <p style="margin:0;color:#CBD5E1;font-size:11px;text-align:center;">Pulse — Modern Pharmacy Intelligence</p>
+              </td>
+            </tr>
+
+            <!-- ═══════════ BOTTOM BAR ═══════════ -->
+            <tr>
+              <td>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:0 0 20px 20px;">
+                  <tr>
+                    <td style="padding:16px 40px;text-align:center;" class="pad-mobile">
+                      <p style="margin:0;color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.5px;">
+                        &copy; 2025 Duniya Healthcare &bull; Powered by Pulse
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
     </table>
-    <p style="font-size:15px;color:#555;line-height:1.6;margin-top:20px">Please review and replenish as needed.</p>
   </div>
-  <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
-    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Management</p>
-  </div>
-</div>
 </body>
 </html>`;
 }
@@ -563,31 +854,215 @@ function lowStockTemplate(pharmacyName, productName, currentStock, reorderLevel)
 function expiryWarningTemplate(pharmacyName, items) {
   const rows = items
     .map(
-      (i) => `<tr><td style="padding:8px;border-bottom:1px solid #eee">${i.productName}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${i.batchNumber}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;color:#dc2626">${i.expiryDate}</td></tr>`
+      (i) => `<tr>
+        <td style="padding:14px 16px;border-bottom:1px solid #F1F5F9;">
+          <p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">${i.productName}</p>
+        </td>
+        <td style="padding:14px 16px;border-bottom:1px solid #F1F5F9;text-align:center;">
+          <span style="display:inline-block;background:#F1F5F9;color:#475569;font-size:12px;font-weight:600;padding:3px 10px;border-radius:6px;">${i.batchNumber}</span>
+        </td>
+        <td style="padding:14px 16px;border-bottom:1px solid #F1F5F9;text-align:center;">
+          <span style="color:#DC2626;font-size:14px;font-weight:700;">${i.expiryDate}</span>
+        </td>
+      </tr>`
     )
     .join("");
 
+  const itemCount = items.length;
+
   return `
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#f5f5f5">
-<div style="max-width:600px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-  <div style="background:#f59e0b;padding:32px;text-align:center">
-    <h1 style="color:#fff;margin:0;font-size:24px">⏰ Expiry Warning</h1>
-  </div>
-  <div style="padding:32px">
-    <p style="font-size:15px;color:#555;line-height:1.6">The following items at <strong>${pharmacyName}</strong> are expiring within 30 days:</p>
-    <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px">
-      <thead><tr style="background:#f9fafb"><th style="padding:8px;text-align:left">Item</th><th style="padding:8px;text-align:center">Batch</th><th style="padding:8px;text-align:center">Expiry Date</th></tr></thead>
-      <tbody>${rows}</tbody>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Expiry Warning — ${pharmacyName}</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; }
+      .pad-mobile { padding-left: 24px !important; padding-right: 24px !important; }
+      .stack-column { display: block !important; width: 100% !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;word-spacing:normal;background-color:#F0F0F5;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div role="article" aria-roledescription="email" lang="en" style="text-size-adjust:100%;">
+    <!-- Preheader -->
+    <div style="display:none;font-size:1px;color:#F0F0F5;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+      Expiry warning for ${pharmacyName}: ${itemCount} item(s) expiring within 30 days.
+    </div>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#F0F0F5;">
+      <tr>
+        <td align="center" style="padding:40px 16px 60px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width:520px;margin:0 auto;" class="email-container">
+
+            <!-- ═══════════ HEADER — Pulse Brand + Alert Badge ═══════════ -->
+            <tr>
+              <td style="padding:0 0 2px;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:20px 20px 0 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <!-- Pulse Logo -->
+                  <tr>
+                    <td style="padding:28px 40px 0;text-align:center;" class="pad-mobile">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tr>
+                          <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+                              <td style="vertical-align:middle;">
+                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;"><rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.2)"/><rect x="11" y="5" width="6" height="18" rx="2" fill="white"/><rect x="5" y="11" width="18" height="6" rx="2" fill="white"/></svg>
+                              </td>
+                              <td style="vertical-align:middle;padding-left:10px;">
+                                <span style="color:#ffffff;font-family:'Inter',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Pulse</span>
+                              </td>
+                            </tr></table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Alert Title -->
+                  <tr>
+                    <td style="padding:28px 40px 36px;text-align:center;" class="pad-mobile">
+                      <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.3;">
+                        ⏰ Expiry Warning
+                      </h1>
+                      <div style="margin:12px auto 0;background:rgba(245,158,11,0.3);border-radius:8px;padding:8px 20px;display:inline-block;">
+                        <span style="color:#ffffff;font-size:15px;font-weight:600;">${pharmacyName}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ GREETING ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:40px 40px 0;" class="pad-mobile">
+                <p style="margin:0;color:#0B1C30;font-size:15px;line-height:1.7;">
+                  The following <strong style="color:#0B1C30;">${itemCount} item(s)</strong> at <strong style="color:#0B1C30;">${pharmacyName}</strong> are expiring within 30 days and require immediate attention:
+                </p>
+              </td>
+            </tr>
+
+            <!-- ═══════════ ITEMS TABLE CARD ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:24px 40px 0;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #FEF3C7;border-radius:14px;overflow:hidden;">
+                  <!-- Card Header -->
+                  <tr>
+                    <td style="background:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%);padding:16px 24px;border-bottom:1px solid #FDE68A;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td style="vertical-align:middle;">
+                            <span style="font-size:11px;font-weight:700;color:#D97706;text-transform:uppercase;letter-spacing:1.2px;">⏰ Expiring Soon</span>
+                          </td>
+                          <td align="right" style="vertical-align:middle;">
+                            <span style="display:inline-block;background:linear-gradient(135deg,#F59E0B,#D97706);color:#ffffff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">${itemCount} Items</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Table Header -->
+                  <tr>
+                    <td style="padding:0 24px;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td style="padding:16px 16px 10px;border-bottom:2px solid #F1F5F9;">
+                            <p style="margin:0;color:#64748B;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;">Product</p>
+                          </td>
+                          <td style="padding:16px 16px 10px;border-bottom:2px solid #F1F5F9;text-align:center;">
+                            <p style="margin:0;color:#64748B;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;">Batch</p>
+                          </td>
+                          <td style="padding:16px 16px 10px;border-bottom:2px solid #F1F5F9;text-align:center;">
+                            <p style="margin:0;color:#64748B;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;">Expiry Date</p>
+                          </td>
+                        </tr>
+                        ${rows}
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ CTA BUTTON ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:32px 40px;" class="pad-mobile">
+                <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;text-align:center;">
+                  Review these items and take action to prevent losses:
+                </p>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a href="${getConfiguredPortalUrl()}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 50%,#6D28D9 100%);color:#ffffff;font-family:'Inter',sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 48px;border-radius:14px;box-shadow:0 4px 14px rgba(124,58,237,0.35);">
+                        Open Pulse &rarr;
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ TIPS CARD ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:0 40px 32px;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#FAFBFF;border-radius:12px;border:1px solid #F1F5F9;">
+                  <tr>
+                    <td style="padding:20px 24px;">
+                      <p style="margin:0 0 12px;color:#64748B;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">💡 Quick Actions</p>
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;"><span style="font-size:14px;">📋</span></td>
+                          <td style="padding-bottom:10px;"><p style="margin:0;color:#0B1C30;font-size:13px;line-height:1.5;">Create a <strong>return order</strong> to your supplier</p></td>
+                        </tr>
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;"><span style="font-size:14px;">🔄</span></td>
+                          <td style="padding-bottom:10px;"><p style="margin:0;color:#0B1C30;font-size:13px;line-height:1.5;">Mark expired items as <strong>damaged stock</strong></p></td>
+                        </tr>
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;"><span style="font-size:14px;">📊</span></td>
+                          <td><p style="margin:0;color:#0B1C30;font-size:13px;line-height:1.5;">Review <strong>expiry tracking</strong> for trends</p></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ FOOTER ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:24px 40px 0;border-top:1px solid #F1F5F9;" class="pad-mobile">
+                <p style="margin:0 0 8px;color:#94A3B8;font-size:12px;text-align:center;">Automated alert by <strong style="color:#7C3AED;">Pulse</strong> — Expiry Intelligence</p>
+                <p style="margin:0;color:#CBD5E1;font-size:11px;text-align:center;">Pulse — Modern Pharmacy Intelligence</p>
+              </td>
+            </tr>
+
+            <!-- ═══════════ BOTTOM BAR ═══════════ -->
+            <tr>
+              <td>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:0 0 20px 20px;">
+                  <tr>
+                    <td style="padding:16px 40px;text-align:center;" class="pad-mobile">
+                      <p style="margin:0;color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.5px;">
+                        &copy; 2025 Duniya Healthcare &bull; Powered by Pulse
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
     </table>
-    <p style="font-size:15px;color:#555;line-height:1.6;margin-top:20px">Please take action to prevent losses from expired stock.</p>
   </div>
-  <div style="padding:16px 32px;background:#f9fafb;border-top:1px solid #eee;text-align:center">
-    <p style="font-size:12px;color:#999;margin:0">Pulse — Pharmacy Management</p>
-  </div>
-</div>
 </body>
 </html>`;
 }
@@ -859,76 +1334,309 @@ exports.sendStaffInvitation = functions
 
     const emailHtml = `
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>You're Invited to Join ${pharmacyName || 'Pulse'}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; margin: 0 !important; }
+      .fluid { max-width: 100% !important; height: auto !important; margin-left: auto !important; margin-right: auto !important; }
+      .stack-column, .stack-column-center { display: block !important; width: 100% !important; max-width: 100% !important; direction: ltr !important; }
+      .pad-mobile { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+  </style>
 </head>
-<body style="margin:0;padding:0;background-color:#F8F9FF;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F9FF;padding:40px 20px;">
-    <tr><td align="center">
-      <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-        <!-- Header -->
-        <tr>
-          <td style="padding:32px 32px 24px;text-align:center;background:linear-gradient(135deg,#9900FF,#1D4ED8);">
-            <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.3px;">You're Invited to Join</h1>
-            <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">${pharmacyName || 'Your Pharmacy'}</p>
-          </td>
-        </tr>
-        <!-- Body -->
-        <tr>
-          <td style="padding:32px;">
-            <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">Hi <strong>${name}</strong>,</p>
-            <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">
-              You've been invited to join <strong>${pharmacyName || 'a pharmacy'}</strong> as a <strong>${roleLabel}</strong> on Pulse — a modern pharmacy management platform.
-            </p>
-            <p style="margin:0 0 16px;color:#0B1C30;font-size:15px;line-height:1.6;">
-              Click the button below to create your account and get started:
-            </p>
-            <!-- CTA Button -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;">
-              <tr>
-                <td align="center">
-                  <a href="${invitationUrl}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#9900FF,#7C3AED);color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;letter-spacing:0.2px;">
-                    Accept Invitation →
-                  </a>
-                </td>
-              </tr>
-            </table>
-            <!-- Role Card -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">
-              <tr>
-                <td style="padding:16px;background:#F8F9FF;border-radius:12px;border:1px solid #E2E8F0;">
-                  <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td style="color:#64748B;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;padding-bottom:8px;">Assigned Role</td>
-                    </tr>
-                    <tr>
-                      <td style="color:#0B1C30;font-size:16px;font-weight:700;">${roleLabel}</td>
-                    </tr>
-                    <tr>
-                      <td style="padding-top:8px;color:#64748B;font-size:13px;">Pharmacy: ${pharmacyName || 'N/A'}</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-            <p style="margin:16px 0 0;color:#64748B;font-size:13px;line-height:1.5;">
-              This invitation expires in 7 days. If you didn't expect this invitation, you can safely ignore this email.
-            </p>
-          </td>
-        </tr>
-        <!-- Footer -->
-        <tr>
-          <td style="padding:16px 32px 24px;text-align:center;border-top:1px solid #F1F5F9;">
-            <p style="margin:0;color:#94A3B8;font-size:11px;">
-              © 2025 Pulse · Powered by Resend
-            </p>
-          </td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
+<body style="margin:0;padding:0;word-spacing:normal;background-color:#F0F0F5;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div role="article" aria-roledescription="email" aria-label="Pulse Staff Invitation" lang="en" style="text-size-adjust:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+    <!-- Preheader (hidden text for inbox preview) -->
+    <div style="display:none;font-size:1px;color:#F0F0F5;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+      You've been invited to join ${pharmacyName || 'Pulse'} as ${roleLabel} on Pulse — the modern pharmacy management platform.
+    </div>
+
+    <!-- Email Body -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#F0F0F5;">
+      <tr>
+        <td align="center" style="padding:40px 16px 60px;">
+          <!--[if mso]>
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="520" align="center"><tr><td>
+          <![endif]-->
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width:520px;margin:0 auto;" class="email-container">
+
+            <!-- ═══════════ HEADER — Pulse Brand Bar ═══════════ -->
+            <tr>
+              <td style="padding:0 0 2px;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:20px 20px 0 0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td style="padding:28px 40px 0;text-align:center;" class="pad-mobile">
+                      <!-- Pulse Logo -->
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tr>
+                          <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                              <tr>
+                                <td style="vertical-align:middle;">
+                                  <!-- Pulse icon: pharmacy cross -->
+                                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
+                                    <rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.2)"/>
+                                    <rect x="11" y="5" width="6" height="18" rx="2" fill="white"/>
+                                    <rect x="5" y="11" width="18" height="6" rx="2" fill="white"/>
+                                  </svg>
+                                </td>
+                                <td style="vertical-align:middle;padding-left:10px;">
+                                  <span style="color:#ffffff;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;">Pulse</span>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:28px 40px 36px;text-align:center;" class="pad-mobile">
+                      <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.3;">
+                        You're Invited to Join
+                      </h1>
+                      <div style="margin:12px auto 0;background:rgba(255,255,255,0.18);border-radius:8px;padding:8px 20px;display:inline-block;">
+                        <span style="color:#ffffff;font-size:15px;font-weight:600;letter-spacing:0.3px;">${pharmacyName || 'Your Pharmacy'}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ GREETING ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:40px 40px 0;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td style="padding-bottom:24px;">
+                      <p style="margin:0;color:#0B1C30;font-size:17px;font-weight:600;line-height:1.5;">
+                        Hi ${name},
+                      </p>
+                      <p style="margin:12px 0 0;color:#475569;font-size:15px;line-height:1.7;">
+                        You've been invited to join <strong style="color:#0B1C30;">${pharmacyName || 'a pharmacy'}</strong> as a <strong style="color:#7C3AED;">${roleLabel}</strong> on Pulse — the modern pharmacy management platform trusted by pharmacies across the network.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ ROLE & PHARMACY CARD ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:0 40px;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #E9E5F5;border-radius:14px;overflow:hidden;">
+                  <!-- Card Header -->
+                  <tr>
+                    <td style="background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%);padding:16px 24px;border-bottom:1px solid #E9E5F5;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td style="vertical-align:middle;">
+                            <span style="font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1.2px;">Your Assignment</span>
+                          </td>
+                          <td align="right" style="vertical-align:middle;">
+                            <span style="display:inline-block;background:linear-gradient(135deg,#7C3AED,#9900FF);color:#ffffff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;">${roleLabel}</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Card Body -->
+                  <tr>
+                    <td style="padding:24px;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td width="48" style="vertical-align:top;padding-right:16px;">
+                            <div style="width:44px;height:44px;background:linear-gradient(135deg,#7C3AED,#9900FF);border-radius:12px;text-align:center;line-height:44px;">
+                              <span style="font-size:20px;">${roleLabel === 'Owner' ? '👑' : roleLabel === 'Pharmacist' ? '💊' : roleLabel === 'Cashier' ? '💰' : roleLabel === 'Pharmacy Technician' ? '🔬' : roleLabel === 'Stock Controller' ? '📦' : roleLabel === 'Finance/Admin Viewer' ? '📊' : roleLabel === 'Sales Assistant' ? '🛒' : roleLabel === 'Pharmacy Manager' ? '🏥' : '👤'}</span>
+                            </div>
+                          </td>
+                          <td style="vertical-align:top;">
+                            <p style="margin:0 0 4px;color:#64748B;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Role</p>
+                            <p style="margin:0;color:#0B1C30;font-size:16px;font-weight:700;">${roleLabel}</p>
+                          </td>
+                        </tr>
+                        <tr><td colspan="2" style="padding:16px 0;"><div style="border-top:1px solid #F1F5F9;"></div></td></tr>
+                        <tr>
+                          <td width="48" style="vertical-align:top;padding-right:16px;">
+                            <div style="width:44px;height:44px;background:linear-gradient(135deg,#2563EB,#3B82F6);border-radius:12px;text-align:center;line-height:44px;">
+                              <span style="font-size:20px;">🏪</span>
+                            </div>
+                          </td>
+                          <td style="vertical-align:top;">
+                            <p style="margin:0 0 4px;color:#64748B;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Pharmacy</p>
+                            <p style="margin:0;color:#0B1C30;font-size:16px;font-weight:700;">${pharmacyName || 'Your Pharmacy'}</p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ CTA BUTTON ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:32px 40px;" class="pad-mobile">
+                <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.6;text-align:center;">
+                  Tap below to create your account and start using Pulse:
+                </p>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <!--[if mso]>
+                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${invitationUrl}" style="height:52px;v-text-anchor:middle;width:280px;" arcsize="19%" stroke="f" fillcolor="#7C3AED">
+                        <w:anchorlock/>
+                        <center style="color:#ffffff;font-family:'Inter',sans-serif;font-size:16px;font-weight:700;">
+                          Accept Invitation →
+                        </center>
+                      </v:roundrect>
+                      <![endif]-->
+                      <!--[if !mso]><!-->
+                      <a href="${invitationUrl}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 50%,#6D28D9 100%);color:#ffffff;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 48px;border-radius:14px;letter-spacing:0.3px;text-align:center;box-shadow:0 4px 14px rgba(124,58,237,0.35);transition:all 0.2s ease;">
+                        Accept Invitation &rarr;
+                      </a>
+                      <!--<![endif]-->
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ WHAT YOU CAN DO (Feature Highlights) ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:0 40px 32px;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td style="padding-bottom:16px;">
+                      <p style="margin:0;color:#64748B;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-align:center;">What you'll get access to</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#FAFBFF;border-radius:12px;border:1px solid #F1F5F9;">
+                        <tr>
+                          <td style="padding:20px 24px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                              <tr>
+                                <td width="36" style="vertical-align:top;padding-right:12px;">
+                                  <span style="font-size:18px;">📊</span>
+                                </td>
+                                <td style="vertical-align:top;padding-bottom:12px;">
+                                  <p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">Real-time Dashboard</p>
+                                  <p style="margin:2px 0 0;color:#64748B;font-size:13px;line-height:1.5;">Track sales, inventory, and performance at a glance</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td width="36" style="vertical-align:top;padding-right:12px;">
+                                  <span style="font-size:18px;">💊</span>
+                                </td>
+                                <td style="vertical-align:top;padding-bottom:12px;">
+                                  <p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">Inventory Management</p>
+                                  <p style="margin:2px 0 0;color:#64748B;font-size:13px;line-height:1.5;">Stock tracking, low alerts, and batch expiry monitoring</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td width="36" style="vertical-align:top;padding-right:12px;">
+                                  <span style="font-size:18px;">🛒</span>
+                                </td>
+                                <td style="vertical-align:top;">
+                                  <p style="margin:0;color:#0B1C30;font-size:14px;font-weight:600;">Point of Sale</p>
+                                  <p style="margin:2px 0 0;color:#64748B;font-size:13px;line-height:1.5;">Process sales and manage transactions seamlessly</p>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ EXPIRY NOTICE ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:0 40px 8px;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#FFFBEB;border-radius:12px;border:1px solid #FDE68A;">
+                  <tr>
+                    <td style="padding:16px 20px;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td width="28" style="vertical-align:top;padding-right:10px;">
+                            <span style="font-size:16px;">⏰</span>
+                          </td>
+                          <td style="vertical-align:top;">
+                            <p style="margin:0;color:#92400E;font-size:13px;line-height:1.5;">
+                              <strong>This invitation expires in 7 days.</strong> If you didn't expect this invitation, you can safely ignore this email.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ FOOTER ═══════════ -->
+            <tr>
+              <td style="background:#ffffff;padding:24px 40px 0;border-top:1px solid #F1F5F9;" class="pad-mobile">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <p style="margin:0 0 8px;color:#94A3B8;font-size:12px;line-height:1.5;">
+                        Sent with care by the <strong style="color:#7C3AED;">Pulse</strong> team
+                      </p>
+                      <p style="margin:0;color:#CBD5E1;font-size:11px;">
+                        Pulse &mdash; Modern Pharmacy Intelligence
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ═══════════ BOTTOM BAR ═══════════ -->
+            <tr>
+              <td style="padding:0;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:0 0 20px 20px;">
+                  <tr>
+                    <td style="padding:16px 40px;text-align:center;" class="pad-mobile">
+                      <p style="margin:0;color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.5px;">
+                        &copy; 2025 Duniya Healthcare &bull; Powered by Pulse
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+          </table>
+          <!--[if mso]>
+          </td></tr></table>
+          <![endif]-->
+        </td>
+      </tr>
+    </table>
+  </div>
 </body>
 </html>`;
 
@@ -938,8 +1646,9 @@ exports.sendStaffInvitation = functions
         {
           from: fromAddress,
           to: [email.toLowerCase().trim()],
-          subject: `You're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel}`,
+          subject: `💎 ${name}, you're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel}`,
           html: emailHtml,
+          text: `You're invited to join ${pharmacyName || 'Pulse'} as ${roleLabel} on Pulse.\n\nHi ${name},\n\nYou've been invited to join ${pharmacyName || 'a pharmacy'} as a ${roleLabel} on Pulse — the modern pharmacy management platform.\n\nAccept your invitation: ${invitationUrl}\n\nThis invitation expires in 7 days.`,
         },
         {
           headers: {
