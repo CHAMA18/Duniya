@@ -207,9 +207,49 @@ class _SwitchPharmStockWidgetState extends State<SwitchPharmStockWidget> {
                                 'SWITCH_PHARM_STOCK_SWITCH_BTN_ON_TAP');
                             logFirebaseEvent('Button_backend_call');
 
+                            // Capture the PREVIOUS pharmacy before the
+                            // reassignment — the audit movement records
+                            // where the stock was transferred FROM.
+                            String? fromPharmacy;
+                            try {
+                              final snap = await widget.stockId!.get();
+                              if (snap.exists) {
+                                fromPharmacy =
+                                    (snap.data() as Map<String, dynamic>?)
+                                        ?['pharmacy'] as String?;
+                              }
+                            } catch (_) {}
+
                             await widget.stockId!.update(createStockRecordData(
                               pharmacy: _model.dropDownValue,
                             ));
+
+                            // Write a TRANSFERRED movement so the ledger
+                            // answers "from where, to where" — previously
+                            // this flow reassigned stock silently with NO
+                            // audit trail at all.
+                            try {
+                              final scopeRef = widget.stockId!.path
+                                  .split('/')
+                                  .take(2)
+                                  .join('/');
+                              await StockMovementRecord.createDoc(
+                                      FirebaseFirestore.instance.doc(scopeRef))
+                                  .set(createStockMovementRecordData(
+                                productId: widget.stockId,
+                                outletId: null,
+                                quantity: 0,
+                                movementType: 'TRANSFERRED',
+                                reason:
+                                    'From ${fromPharmacy ?? 'unspecified'} to ${_model.dropDownValue ?? 'unspecified'} — pharmacy stock transfer',
+                                movementReference: widget.stockId!.id,
+                                recordedById: currentUserReference,
+                                createdAt: DateTime.now(),
+                              ));
+                            } catch (e) {
+                              debugPrint(
+                                  '[SwitchPharmStock] Movement audit write failed: $e');
+                            }
                             logFirebaseEvent('Button_close_dialog_drawer_etc');
                             Navigator.pop(context);
                           },

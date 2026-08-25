@@ -42,6 +42,14 @@ class StockMovementsModel extends FlutterFlowModel<StockMovementsWidget> {
   TextEditingController? dialogReasonTextController;
   FocusNode? dialogReferenceFocusNode;
   TextEditingController? dialogReferenceTextController;
+  // Transfer route — where the stock came FROM and where it went.
+  // Populated when the movement type is TRANSFERRED (from + to) or
+  // RECEIVED (supplier origin), stored into the movement reason as
+  // "From X to Y" / "From X" so the ledger answers routing questions.
+  FocusNode? dialogFromFocusNode;
+  TextEditingController? dialogFromTextController;
+  FocusNode? dialogToFocusNode;
+  TextEditingController? dialogToTextController;
 
   @override
   void initState(BuildContext context) {
@@ -61,5 +69,9 @@ class StockMovementsModel extends FlutterFlowModel<StockMovementsWidget> {
     dialogReasonTextController?.dispose();
     dialogReferenceFocusNode?.dispose();
     dialogReferenceTextController?.dispose();
+    dialogFromFocusNode?.dispose();
+    dialogFromTextController?.dispose();
+    dialogToFocusNode?.dispose();
+    dialogToTextController?.dispose();
   }
 }

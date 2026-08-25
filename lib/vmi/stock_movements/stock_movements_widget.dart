@@ -10,11 +10,20 @@ import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'stock_movements_model.dart';
 export 'stock_movements_model.dart';
+
+/// Parses "From X to Y — note" transfer reasons into (from, to).
+/// Public static so unit tests can exercise the writer↔reader format
+/// contract without instantiating the widget.
+(String, String)? parseTransferRouteForTest(String reason) =>
+    _StockMovementsWidgetState._parseTransferRoute(reason);
+
+/// Parses "From X — note" received reasons into the origin name.
+String? parseReceivedOriginForTest(String reason) =>
+    _StockMovementsWidgetState._parseReceivedOrigin(reason);
 
 class StockMovementsWidget extends StatefulWidget {
   const StockMovementsWidget({super.key});
@@ -324,265 +333,9 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
   // PAGE HEADER
   // ═══════════════════════════════════════════════════════════
 
-  Widget _dialogLabel(FlutterFlowTheme theme, String text) => Text(
-        text,
-        style: theme.labelMedium.override(
-          fontFamily: theme.labelMediumFamily,
-          fontWeight: FontWeight.w600,
-          fontSize: 12.5,
-          letterSpacing: 0.3,
-          color: theme.secondaryText,
-          useGoogleFonts: !theme.labelMediumIsCustom,
-        ),
-      );
-
-  // ═══════════════════════════════════════════════════════════════
-  //   RECORD MOVEMENT — manual stock movement entry
-  //   Captures the full VMI movement record: product, quantity,
-  //   pharmacy/outlet, movement type (all 8 types), reason and a
-  //   supporting reference/note. The recorder and timestamp are
-  //   stamped automatically. Positive-quantity types (RETURNED)
-  //   increase stock; all others reduce it.
-  // ═══════════════════════════════════════════════════════════════
-
-  static const _movementTypes = <String, (String, String)>{
-    'RECEIVED': ('Stock received', 'Goods received from Pulse/supplier'),
-    'SOLD': ('Stock sold/dispensed', 'Dispensed to patient or customer'),
-    'RETURNED': ('Stock returned', 'Returned to supplier or by customer'),
-    'TRANSFERRED': ('Stock transferred', 'Moved between outlets/facilities'),
-    'DAMAGED': ('Stock damaged', 'Damaged, spoiled or broken stock'),
-    'EXPIRED': ('Stock expired', 'Removed after passing expiry date'),
-    'ADJUSTMENT': ('Stock adjustment', 'Manual correction of stock level'),
-    'COUNT_CORRECTION': ('Stock count correction',
-        'Correction from a physical stock count'),
-  };
-
-  Future<void> _openRecordMovementDialog() async {
-    final theme = FlutterFlowTheme.of(context);
-
-    // Load real products (stock) for this user's scope.
-    List<StockRecord> stocks = [];
-    try {
-      stocks = await queryStockRecordOnce(
-        parent: AccessControl.networkWideQueryParent(context),
-      );
-    } catch (_) {
-      // Leave empty — dialog shows the empty hint.
-    }
-
-    final qtyController = TextEditingController();
-    final reasonController = TextEditingController();
-    final refController = TextEditingController();
-    String? selectedType;
-    String? selectedProductId;
-
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Row(children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: theme.primary.withAlpha(24),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(Icons.swap_vert_circle_rounded,
-                  color: theme.primary, size: 21),
-            ),
-            const SizedBox(width: 12),
-            const Text('Record Stock Movement',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          ]),
-          content: SingleChildScrollView(
-            child: SizedBox(
-              width: 460,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Movement type
-                  _dialogLabel(theme, 'Movement type'),
-                  DropdownButtonFormField<String>(
-                    value: selectedType,
-                    isExpanded: true,
-                    items: _movementTypes.entries
-                        .map((e) => DropdownMenuItem(
-                              value: e.key,
-                              child: Text(e.value.$1),
-                            ))
-                        .toList(),
-                    onChanged: (v) =>
-                        setDialogState(() => selectedType = v),
-                    decoration: _dialogInputDecoration(
-                        theme,
-                        hint: 'Select movement type',
-                        valid: selectedType != null),
-                  ),
-                  if (selectedType != null) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                      _movementTypes[selectedType!]!.$2,
-                      style: theme.bodySmall.override(
-                        fontFamily: theme.bodySmallFamily,
-                        color: theme.secondaryText,
-                        fontSize: 11.5,
-                        letterSpacing: 0.0,
-                        useGoogleFonts: !theme.bodySmallIsCustom,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 14),
-
-                  // Product
-                  _dialogLabel(theme, 'Product'),
-                  DropdownButtonFormField<String>(
-                    value: selectedProductId,
-                    isExpanded: true,
-                    menuMaxHeight: 320,
-                    items: stocks
-                        .map((s) => DropdownMenuItem(
-                              value: s.reference.id,
-                              child: Text(
-                                s.name.isEmpty
-                                    ? s.reference.id
-                                    : s.name,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (v) =>
-                        setDialogState(() => selectedProductId = v),
-                    decoration: _dialogInputDecoration(
-                        theme,
-                        hint: stocks.isEmpty
-                            ? 'No stock items found'
-                            : 'Select product',
-                        valid: selectedProductId != null),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // Quantity
-                  _dialogLabel(theme, 'Quantity'),
-                  TextFormField(
-                    controller: qtyController,
-                    keyboardType: TextInputType.number,
-                    decoration: _dialogInputDecoration(theme,
-                        hint: 'e.g. 10', valid: true),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // Reason
-                  _dialogLabel(theme, 'Reason'),
-                  TextFormField(
-                    controller: reasonController,
-                    decoration: _dialogInputDecoration(
-                        theme,
-                        hint: 'Why is this movement happening?',
-                        valid: true),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // Supporting reference / note
-                  _dialogLabel(theme, 'Supporting document / note (optional)'),
-                  TextFormField(
-                    controller: refController,
-                    decoration: _dialogInputDecoration(
-                        theme,
-                        hint: 'e.g. GRN-0042, delivery note, memo',
-                        valid: true),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: theme.primary,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              onPressed: () async {
-                final qty =
-                    int.tryParse(qtyController.text.trim()) ?? 0;
-                final product = selectedProductId == null
-                    ? null
-                    : stocks.firstWhere(
-                        (s) => s.reference.id == selectedProductId,
-                        orElse: () => stocks.first);
-                if (selectedType == null ||
-                    product == null ||
-                    qty <= 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            'Select a movement type, a product and a quantity above 0.')),
-                  );
-                  return;
-                }
-                try {
-                  // The movement is written under the SAME scope that
-                  // owns the selected stock document, so it appears in
-                  // the right ledger for both pharmacy and Pulse users.
-                  // Convention matches Goods Received: StockMovement docs
-                  // are created via StockMovementRecord.createDoc(scope).
-                  final stockPathSegments =
-                      product.reference.path.split('/');
-                  // e.g. Users/{uid}/Stock/{id} -> Users/{uid}
-                  final scopeRef = stockPathSegments.length >= 2
-                      ? FirebaseFirestore.instance
-                          .doc(stockPathSegments.sublist(0, 2).join('/'))
-                      : currentUserReference;
-                  if (scopeRef == null) {
-                    throw StateError('No scope for the movement.');
-                  }
-                  await StockMovementRecord.createDoc(scopeRef).set(
-                      createStockMovementRecordData(
-                        productId: product.reference,
-                        productName: product.hasName() ? product.name : null,
-                        outletId: null,
-                        quantity: qty,
-                        movementType: selectedType,
-                        reason: reasonController.text.trim(),
-                        movementReference: refController.text.trim(),
-                        recordedById: currentUserReference,
-                        createdAt: DateTime.now(),
-                      ));
-                  if (!dialogContext.mounted) return;
-                  Navigator.pop(dialogContext);
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                          'Movement recorded: ${_movementTypes[selectedType]!.$1} — ${product.name}'),
-                      backgroundColor: theme.primary,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                } catch (_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            'Could not record the movement. Please try again.')),
-                  );
-                }
-              },
-              child: const Text('Record',
-                  style: TextStyle(fontWeight: FontWeight.w700)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // NOTE: an alternative AlertDialog-based movement recorder
+  // (_openRecordMovementDialog) was removed — it was never invoked;
+  // the live entry point is _showAddMovementDialog below.
 
   Widget _buildPageHeader(
     BuildContext context,
@@ -1690,10 +1443,11 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                     ),
                     buildCell(
                       flex: columnFlexes[4],
-                      child: Text(
-                        movement.movementReference ?? movement.reason ?? '-',
-                        overflow: TextOverflow.ellipsis,
-                        style: _cellStyle(onSurfaceVariant),
+                      child: _sourceDestinationCell(
+                        movement,
+                        onSurface,
+                        onSurfaceVariant,
+                        primaryColor,
                       ),
                     ),
                     buildCell(
@@ -1712,6 +1466,111 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
           ),
       ],
     );
+  }
+
+  /// Renders the Source / Destination cell for a movement row.
+  ///
+  /// Transfers show an explicit "From X → Y" route (parsed from the
+  /// stored reason — see the record dialog's format conventions); if
+  /// only part of the route is known, that part is shown alone.
+  /// Receipts show their origin. Everything else falls back to the
+  /// supporting reference or reason.
+  Widget _sourceDestinationCell(
+    StockMovementRecord movement,
+    Color onSurface,
+    Color onSurfaceVariant,
+    Color primaryColor,
+  ) {
+    final reason = movement.reason ?? '';
+    final mType = movement.movementType;
+
+    if (mType == 'TRANSFERRED') {
+      final route = _parseTransferRoute(reason);
+      if (route != null) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                route.$1,
+                overflow: TextOverflow.ellipsis,
+                style: _cellStyle(onSurfaceVariant),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Icon(Icons.arrow_forward_rounded,
+                  size: 13, color: primaryColor),
+            ),
+            Flexible(
+              child: Text(
+                route.$2,
+                overflow: TextOverflow.ellipsis,
+                style: _cellStyle(onSurface, weight: FontWeight.w500),
+              ),
+            ),
+          ],
+        );
+      }
+      // No parseable route — show the raw reason/reference.
+      return Text(
+        movement.movementReference ?? (reason.isEmpty ? '-' : reason),
+        overflow: TextOverflow.ellipsis,
+        style: _cellStyle(onSurfaceVariant),
+      );
+    }
+
+    if (mType == 'RECEIVED') {
+      final from = _parseReceivedOrigin(reason);
+      if (from != null) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.login, size: 13, color: primaryColor),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                from,
+                overflow: TextOverflow.ellipsis,
+                style: _cellStyle(onSurfaceVariant),
+              ),
+            ),
+          ],
+        );
+      }
+    }
+
+    return Text(
+      movement.movementReference ?? (reason.isEmpty ? '-' : reason),
+      overflow: TextOverflow.ellipsis,
+      style: _cellStyle(onSurfaceVariant),
+    );
+  }
+
+  /// Parses "From X to Y — note" transfer reasons into (from, to).
+  /// Returns null when the reason carries no route information.
+  static (String, String)? _parseTransferRoute(String reason) {
+    if (reason.isEmpty) return null;
+    final fromMatch =
+        RegExp(r'From\s+(.+?)\s+to\s+(.+?)(?:\s+—|\s+-|\s+--|$)', caseSensitive: false)
+            .firstMatch(reason);
+    if (fromMatch != null) {
+      return (fromMatch.group(1)!.trim(), fromMatch.group(2)!.trim());
+    }
+    // Partial: "From X" only (transfer-out with unknown destination)
+    final fromOnly = RegExp(r'^From\s+(.+)$', caseSensitive: false).firstMatch(reason);
+    if (fromOnly != null) {
+      return (fromOnly.group(1)!.trim(), 'unspecified');
+    }
+    return null;
+  }
+
+  /// Parses "From X — note" received reasons into the origin name.
+  static String? _parseReceivedOrigin(String reason) {
+    if (reason.isEmpty) return null;
+    final m = RegExp(r'From\s+(.+?)(?:\s+—|\s+-|\s+--|$)', caseSensitive: false)
+        .firstMatch(reason);
+    return m?.group(1)?.trim();
   }
 
   TextStyle _headerStyle(Color color) => TextStyle(
@@ -2349,6 +2208,121 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                 );
                               }).toList(),
                             ),
+                            // ── Transfer / receipt route ──
+                            // TRANSFERRED movements capture WHERE the
+                            // stock came from and went; RECEIVED captures
+                            // the supplier origin. Stored in the reason as
+                            // "From X to Y" so the ledger always answers
+                            // "from where, to where" (rendered with a →
+                            // in the table's Source / Destination column).
+                            if (_model.dialogMovementTypeValue ==
+                                'TRANSFERRED') ...[
+                              const SizedBox(height: 18.0),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _dialogFieldLabel(
+                                          label: 'From (source)',
+                                          icon: Icons.store_outlined,
+                                          required_: true,
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        TextFormField(
+                                          controller: _model
+                                              .dialogFromTextController ??=
+                                              TextEditingController(),
+                                          focusNode:
+                                              _model.dialogFromFocusNode ??=
+                                                  FocusNode(),
+                                          decoration: _dialogInputDecoration(
+                                            theme,
+                                            hint: 'e.g. Main branch',
+                                            valid: true,
+                                          ),
+                                          style: theme.bodyMedium.override(
+                                            fontFamily:
+                                                theme.bodyMediumFamily,
+                                            letterSpacing: 0.0,
+                                            useGoogleFonts:
+                                                !theme.bodyMediumIsCustom,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12.0),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _dialogFieldLabel(
+                                          label: 'To (destination)',
+                                          icon: Icons.flag_outlined,
+                                          required_: true,
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        TextFormField(
+                                          controller: _model
+                                              .dialogToTextController ??=
+                                              TextEditingController(),
+                                          focusNode:
+                                              _model.dialogToFocusNode ??=
+                                                  FocusNode(),
+                                          decoration: _dialogInputDecoration(
+                                            theme,
+                                            hint: 'e.g. North ridge outlet',
+                                            valid: true,
+                                          ),
+                                          style: theme.bodyMedium.override(
+                                            fontFamily:
+                                                theme.bodyMediumFamily,
+                                            letterSpacing: 0.0,
+                                            useGoogleFonts:
+                                                !theme.bodyMediumIsCustom,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            if (_model.dialogMovementTypeValue ==
+                                'RECEIVED') ...[
+                              const SizedBox(height: 18.0),
+                              _dialogFieldLabel(
+                                label: 'Received from (supplier / origin)',
+                                icon: Icons.local_shipping_outlined,
+                                required_: false,
+                                theme: theme,
+                              ),
+                              const SizedBox(height: 8.0),
+                              TextFormField(
+                                controller: _model.dialogFromTextController ??=
+                                    TextEditingController(),
+                                focusNode: _model.dialogFromFocusNode ??=
+                                    FocusNode(),
+                                decoration: _dialogInputDecoration(
+                                  theme,
+                                  hint: 'e.g. MediSupply Ltd',
+                                  valid: true,
+                                ),
+                                style: theme.bodyMedium.override(
+                                  fontFamily: theme.bodyMediumFamily,
+                                  letterSpacing: 0.0,
+                                  useGoogleFonts:
+                                      !theme.bodyMediumIsCustom,
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 18.0),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -2559,6 +2533,47 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                             'Your workspace is not ready yet.');
                                       }
 
+                                      // Compose the reason with the
+                                      // transfer/receipt route so the
+                                      // ledger answers "from where, to
+                                      // where". Formats (parsed by the
+                                      // table's Source / Destination
+                                      // column):
+                                      //   TRANSFERRED: "From A to B — note"
+                                      //   RECEIVED:    "From A — note"
+                                      final routeFrom = _model
+                                          .dialogFromTextController?.text
+                                          .trim();
+                                      final routeTo = _model
+                                          .dialogToTextController?.text
+                                          .trim();
+                                      final note = _model
+                                          .dialogReasonTextController?.text
+                                          .trim();
+                                      String reason = note ?? '';
+                                      if (_model.dialogMovementTypeValue ==
+                                          'TRANSFERRED') {
+                                        final parts = <String>[
+                                          if ((routeFrom ?? '').isNotEmpty)
+                                            'From $routeFrom',
+                                          if ((routeTo ?? '').isNotEmpty)
+                                            'to $routeTo',
+                                        ];
+                                        if (parts.isNotEmpty) {
+                                          reason = (note ?? '').isEmpty
+                                              ? parts.join(' ')
+                                              : '${parts.join(' ')} — $note';
+                                        }
+                                      } else if (_model
+                                              .dialogMovementTypeValue ==
+                                          'RECEIVED') {
+                                        if ((routeFrom ?? '').isNotEmpty) {
+                                          reason = (note ?? '').isEmpty
+                                              ? 'From $routeFrom'
+                                              : 'From $routeFrom — $note';
+                                        }
+                                      }
+
                                       await StockMovementRecord.createDoc(
                                               ownerRef)
                                           .set(createStockMovementRecordData(
@@ -2571,8 +2586,7 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                             0,
                                         movementType:
                                             _model.dialogMovementTypeValue,
-                                        reason: _model
-                                            .dialogReasonTextController?.text,
+                                        reason: reason,
                                         movementReference: _model
                                             .dialogReferenceTextController
                                             ?.text,
@@ -2584,6 +2598,8 @@ class _StockMovementsWidgetState extends State<StockMovementsWidget> {
                                           ?.clear();
                                       _model.dialogReferenceTextController
                                           ?.clear();
+                                      _model.dialogFromTextController?.clear();
+                                      _model.dialogToTextController?.clear();
                                       _model.currentPage = 1;
                                       if (!mounted) return;
                                       Navigator.pop(dialogContext);
