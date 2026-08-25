@@ -118,7 +118,12 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                   },
                 ),
                 // ─── Point Of Sale (RBAC: pharmacy users with posView permission) ───
-                if (_canSee(NavItem.pointOfSale))
+                // FIX: gated on NavItem.pointOfSale, which no role has in
+                // roleNavItems — the button was invisible to everyone. The
+                // destination is the same SalesVMI page the sidebar's
+                // "Sales & Dispensing" (salesDispensing) opens, so gate on
+                // that item instead.
+                if (_canSee(NavItem.salesDispensing))
                 AuthUserStreamWidget(
                   builder: (context) {
                     if (!_hasPermission(Permission.posView)) {
@@ -333,43 +338,10 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
-                // VMI Dashboard (RBAC)
-                if (_canSee(NavItem.vmiDashboard))
-                FlutterFlowIconButton(
-                  borderColor: Colors.transparent,
-                  borderRadius: 30.0,
-                  borderWidth: 1.0,
-                  buttonSize: 50.0,
-                  icon: Icon(
-                    Icons.dashboard_customize_outlined,
-                    color: valueOrDefault<Color>(
-                      FFAppState().SelectedPage == 'VMI Dashboard'
-                          ? FlutterFlowTheme.of(context).primary
-                          : FlutterFlowTheme.of(context).secondaryText,
-                      FlutterFlowTheme.of(context).secondaryText,
-                    ),
-                    size: 24.0,
-                  ),
-                  onPressed: () async {
-                    logFirebaseEvent(
-                        'MOBILE_NAVBAR_vmi_dashboard_ICN_ON_TAP');
-                    logFirebaseEvent('IconButton_update_app_state');
-                    FFAppState().SelectedPage = 'VMI Dashboard';
-                    safeSetState(() {});
-                    logFirebaseEvent('IconButton_navigate_to');
-
-                    context.goNamed(
-                      VMIDashboardWidget.routeName,
-                      extra: <String, dynamic>{
-                        '__transition_info__': TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 0),
-                        ),
-                      },
-                    );
-                  },
-                ),
+                // NOTE: a VMI Dashboard quick button used to live here,
+                // gated on NavItem.vmiDashboard — an item no role has,
+                // so the button never rendered for anyone. Removed with
+                // the dead enum value (see roles.dart).
                 // Expiry Tracking (RBAC)
                 if (_canSee(NavItem.expiryTracking))
                 FlutterFlowIconButton(

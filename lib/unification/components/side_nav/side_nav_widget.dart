@@ -304,7 +304,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
     final hasOperations = _hasAnyNav([
       NavItem.goodsReceived,
       NavItem.salesDispensing,
-      NavItem.pointOfSale,
     ]);
     final hasMonitoring = _hasAnyNav([
       NavItem.batchesExpiry,

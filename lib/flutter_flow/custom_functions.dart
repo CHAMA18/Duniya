@@ -118,8 +118,11 @@ int totalPrice(
   int quantity,
   double price,
 ) {
-  // quantity of products multipled by the number of products
-  return quantity * price.toInt();
+  // quantity of products multipled by the price per product.
+  // FIX: multiply FIRST, truncate LAST — the old `price.toInt()`
+  // truncated the unit price before multiplying, so 3 × 24.99
+  // returned 72 instead of 74 (cents lost on every line).
+  return (quantity * price).toInt();
 }
 
 DateTime newDate(
