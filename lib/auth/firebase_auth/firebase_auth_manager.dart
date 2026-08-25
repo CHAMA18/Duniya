@@ -7,7 +7,6 @@ import '../auth_manager.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
 
 import '/backend/backend.dart';
-import '/app_state.dart';
 import 'anonymous_auth.dart';
 import 'apple_auth.dart';
 import 'email_auth.dart';
@@ -24,6 +23,7 @@ export '../base_auth_user_provider.dart';
 // must open the deployed app directly (pharmaaid.page.link is dead).
 export '../email_action_urls.dart';
 import '../email_action_urls.dart';
+import '../auth_session_preferences.dart';
 
 class FirebasePhoneAuthManager extends ChangeNotifier {
   bool? _triggerOnCodeSent;
@@ -64,7 +64,7 @@ class FirebaseAuthManager extends AuthManager
   FirebasePhoneAuthManager phoneAuthManager = FirebasePhoneAuthManager();
 
   @override
-  Future signOut() {
+  Future signOut() async {
     logFirebaseEvent("SIGN_OUT");
     // Clear any cached app state (cart, search filters, selected pharmacy,
     // BMI/gender, etc.) so it doesn't leak across users on a shared terminal.
@@ -76,7 +76,8 @@ class FirebaseAuthManager extends AuthManager
     } catch (_) {
       // FFAppState may not be initialized in some test contexts — ignore.
     }
-    return FirebaseAuth.instance.signOut();
+    await AuthSessionPreferences.instance.clear();
+    await FirebaseAuth.instance.signOut();
   }
 
   @override

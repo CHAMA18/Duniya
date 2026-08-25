@@ -58,7 +58,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModelPurchaseOrders;
   late SidebarLinkModel sidebarLinkModelPrescription;
   late SidebarLinkModel sidebarLinkModelInsurance;
-  late SidebarLinkModel sidebarLinkModelColdChain;
   late SidebarLinkModel sidebarLinkModelPatientRecords;
   // Model for the Sales Analytics SidebarLink component.
   late SidebarLinkModel sidebarLinkModelSalesAnalytics;
@@ -98,7 +97,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModelPrescription =
         createModel(context, () => SidebarLinkModel());
     sidebarLinkModelInsurance = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelColdChain = createModel(context, () => SidebarLinkModel());
     sidebarLinkModelPatientRecords =
         createModel(context, () => SidebarLinkModel());
     sidebarLinkModelSalesAnalytics =
@@ -134,7 +132,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModelPurchaseOrders.dispose();
     sidebarLinkModelPrescription.dispose();
     sidebarLinkModelInsurance.dispose();
-    sidebarLinkModelColdChain.dispose();
     sidebarLinkModelPatientRecords.dispose();
     sidebarLinkModelSalesAnalytics.dispose();
   }

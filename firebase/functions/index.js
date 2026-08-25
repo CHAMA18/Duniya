@@ -1870,7 +1870,11 @@ exports.dispatchGoodsToPharmacy = functions
     const pharmacyRef = firestore.doc(pharmacyPath);
     const pharmacySnapshot = await pharmacyRef.get();
     const pharmacy = pharmacySnapshot.data() || {};
-    if (!pharmacySnapshot.exists || pharmacy.NetworkStatus !== "active" || !pharmacy.UserID) {
+    // Records created before network approval was introduced have no
+    // NetworkStatus field. The client and schema treat those legacy records
+    // as active, so the callable must apply the same rule.
+    const networkStatus = String(pharmacy.NetworkStatus || "active").toLowerCase();
+    if (!pharmacySnapshot.exists || pharmacy.deleted || networkStatus !== "active" || !pharmacy.UserID) {
       throw new functions.https.HttpsError(
         "failed-precondition",
         "Goods can only be dispatched to an approved active pharmacy."

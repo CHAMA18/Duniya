@@ -9,9 +9,7 @@ import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
-import 'package:collection/collection.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'goods_received_detail_model.dart';
@@ -93,33 +91,44 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
   String get _workflowName =>
       _isPulseUser ? 'Goods Dispatched' : 'Goods Received';
 
-  Future<List<PharmacyRecord>> _availablePharmacies() {
-    return queryPharmacyRecordOnce(
+  Future<List<PharmacyRecord>> _availablePharmacies() async {
+    // Do not filter by NetworkStatus in Firestore. Older approved pharmacy
+    // records predate that field; PharmacyRecord correctly treats a missing
+    // value as active, but a Firestore equality query would exclude them.
+    final pharmacies = await queryPharmacyRecordOnce(
       parent: _isPulseUser ? null : _receiptScopeParent(),
-      queryBuilder: (pharmacyRecord) => _isPulseUser
-          ? pharmacyRecord.where('NetworkStatus', isEqualTo: 'active')
-          : pharmacyRecord,
     );
+
+    final available = _isPulseUser
+        ? pharmacies
+            .where((pharmacy) =>
+                !pharmacy.deleted &&
+                pharmacy.networkStatus.toLowerCase() == 'active' &&
+                pharmacy.userID != null)
+            .toList()
+        : pharmacies;
+    available.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return available;
   }
 
-  Future<PharmacyRecord?> _resolvePharmacyByName(String? pharmacyName) async {
-    final name = pharmacyName?.trim() ?? '';
-    if (name.isEmpty) {
+  Future<PharmacyRecord?> _resolveSelectedPharmacy(
+      String? pharmacyPath) async {
+    final path = pharmacyPath?.trim() ?? '';
+    if (!RegExp(r'^User/[^/]+/Pharmacy/[^/]+$').hasMatch(path)) {
       return null;
     }
 
-    final pharmacies = await queryPharmacyRecordOnce(
-      parent: _isPulseUser ? null : _receiptScopeParent(),
-      queryBuilder: (pharmacyRecord) {
-        var query = pharmacyRecord.where('Name', isEqualTo: name);
-        if (_isPulseUser) {
-          query = query.where('NetworkStatus', isEqualTo: 'active');
-        }
-        return query;
-      },
-      singleRecord: true,
-    );
-    return pharmacies.firstOrNull;
+    final snapshot = await FirebaseFirestore.instance.doc(path).get();
+    if (!snapshot.exists) return null;
+
+    final pharmacy = PharmacyRecord.fromSnapshot(snapshot);
+    if (_isPulseUser &&
+        (pharmacy.deleted ||
+            pharmacy.networkStatus.toLowerCase() != 'active' ||
+            pharmacy.userID == null)) {
+      return null;
+    }
+    return pharmacy;
   }
 
   @override
@@ -161,10 +170,10 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             final pharmacyName = pharmacyData['Name'] as String? ?? '';
             if (pharmacyName.isNotEmpty) {
               safeSetState(() {
-                _model.pharmacyValue = pharmacyName;
+                _model.pharmacyValue = outletRef.path;
                 _model.pharmacyValueController ??=
-                    FormFieldController<String>(pharmacyName);
-                _model.pharmacyValueController!.value = pharmacyName;
+                    FormFieldController<String>(outletRef.path);
+                _model.pharmacyValueController!.value = outletRef.path;
               });
             }
           }
@@ -784,7 +793,12 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
             child: FlutterFlowDropDown<String>(
               controller: _model.pharmacyValueController ??=
                   FormFieldController<String>(null),
-              options: snapshot.data!.map((p) => p.name).toList(),
+              options: snapshot.data!.map((p) => p.reference.path).toList(),
+              optionLabels: snapshot.data!
+                  .map((p) => p.address.trim().isEmpty
+                      ? p.name
+                      : '${p.name} · ${p.address}')
+                  .toList(),
               onChanged: (val) =>
                   safeSetState(() => _model.pharmacyValue = val),
               width: double.infinity,
@@ -2449,7 +2463,8 @@ class _GoodsReceivedDetailWidgetState extends State<GoodsReceivedDetailWidget> {
     }
 
     final ownerRef = _receiptScopeParent()!;
-    final selectedPharmacy = await _resolvePharmacyByName(_model.pharmacyValue);
+    final selectedPharmacy =
+        await _resolveSelectedPharmacy(_model.pharmacyValue);
     if (selectedPharmacy == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

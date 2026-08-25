@@ -15,6 +15,7 @@ class LoginUniModel extends FlutterFlowModel<LoginUniWidget> {
   FocusNode? passwordFocusNode;
   TextEditingController? passwordTextController;
   late bool passwordVisibility;
+  bool rememberMe = false;
   String? Function(BuildContext, String?)? passwordTextControllerValidator;
   // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
   StaffRecord? tuk;

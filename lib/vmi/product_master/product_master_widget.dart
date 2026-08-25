@@ -75,7 +75,6 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   Color get _outlineVariant =>
       _isDark ? const Color(0xFF3B3B4F) : Color(0xFFC3C5D9);
   static const Color _errorColor = Color(0xFFBA1A1A);
-  static const Color _errorContainer = Color(0xFFFFDAD6);
   static const Color _primaryFixed = Color(0xFFF3E8FF);
 
   // Category filter state
@@ -359,13 +358,12 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
   /// Builds a single product card (glass-panel style)
   Widget _buildProductCard(ProductMasterRecord product) {
-    // Determine stock status
-    final minStock = product.minimumStockLevel;
-    final isLowStock = minStock > 0 && minStock <= 10;
-    final stockLabel =
-        isLowStock ? 'Low: $minStock left' : '$minStock in stock';
-    final stockBgColor = isLowStock ? _errorContainer : _surfaceContainerHigh;
-    final stockTextColor = isLowStock ? _errorColor : _pulsePurple;
+    // ProductMaster stores catalogue metadata, including the low-stock
+    // threshold. It does not store an on-hand quantity, so its threshold must
+    // never be presented as a low-stock status or as items "left". Live stock
+    // status belongs to the Stock / StockBalance views.
+    final minimumStockLevel = product.minimumStockLevel;
+    final hasMinimumStockLevel = minimumStockLevel > 0;
 
     return Container(
       decoration: BoxDecoration(
@@ -393,7 +391,7 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Stock badge (top-right)
+                // Catalogue threshold badge (top-right)
                 Stack(
                   children: [
                     // Product icon area
@@ -419,30 +417,32 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                         ),
                       ),
                     ),
-                    // Stock badge
-                    Positioned(
-                      top: 4.0,
-                      right: 4.0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 2.0),
-                        decoration: BoxDecoration(
-                          color: stockBgColor,
-                          borderRadius: BorderRadius.circular(9999.0),
-                        ),
-                        child: Text(
-                          stockLabel,
-                          style: TextStyle(
-                            fontFamily: kAppFontFamily,
-                            fontSize: 11.0,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.01,
-                            height: 1.0,
-                            color: stockTextColor,
+                    // Threshold badge. This is deliberately informational,
+                    // not a live stock-status indicator.
+                    if (hasMinimumStockLevel)
+                      Positioned(
+                        top: 4.0,
+                        right: 4.0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 2.0),
+                          decoration: BoxDecoration(
+                            color: _surfaceContainerHigh,
+                            borderRadius: BorderRadius.circular(9999.0),
+                          ),
+                          child: Text(
+                            'Min. stock: $minimumStockLevel',
+                            style: TextStyle(
+                              fontFamily: kAppFontFamily,
+                              fontSize: 11.0,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.01,
+                              height: 1.0,
+                              color: _pulsePurple,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                     if (_canEditCatalogue || _canDeleteCatalogue)
                       Positioned(
                         top: 2.0,

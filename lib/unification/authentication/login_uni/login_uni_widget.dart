@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/auth/firebase_auth/google_auth.dart' as google_auth;
+import '/auth/auth_session_preferences.dart';
 import '/backend/backend.dart';
 import '/rbac/rbac.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -7,6 +8,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
 import '/components/pulse_logo_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:webviewx_plus/webviewx_plus.dart';
@@ -135,6 +138,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
     _model.passwordTextController ??= TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
 
+    _restoreRememberedLogin();
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
 
     // Ambient heartbeat film — muted, looping, resilient to failure.
@@ -150,6 +154,54 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
     }).catchError((_) {
       // Film unavailable — deep-ink gradient fallback remains.
     });
+  }
+
+  Future<void> _restoreRememberedLogin() async {
+    final preferences = AuthSessionPreferences.instance;
+    await preferences.initialize();
+    if (!mounted || !preferences.rememberSession) return;
+
+    final email = preferences.rememberedEmail;
+    final mode = preferences.rememberedLoginMode;
+    safeSetState(() {
+      _model.rememberMe = true;
+      if (email.isNotEmpty) {
+        _model.emailAddressTextController?.text = email;
+      }
+      _selectedMode = mode == 1 ? 1 : 0;
+    });
+  }
+
+  /// Firebase Auth provides LOCAL and SESSION persistence on web. Native
+  /// clients are cleared on the next cold start in main.dart when the user
+  /// did not opt in to being remembered.
+  Future<bool> _applySessionPersistence() async {
+    if (!kIsWeb) return true;
+
+    try {
+      await FirebaseAuth.instance.setPersistence(
+        _model.rememberMe ? Persistence.LOCAL : Persistence.SESSION,
+      );
+      return true;
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to set the requested session preference.'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return false;
+    }
+  }
+
+  Future<void> _saveSessionPreference(String email) {
+    return AuthSessionPreferences.instance.save(
+      rememberSession: _model.rememberMe,
+      email: email,
+      loginMode: _selectedMode,
+    );
   }
 
   @override
@@ -510,10 +562,51 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                               .asValidator(context),
                         ),
                       ),
-                      const SizedBox(height: 12.0),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
+                      const SizedBox(height: 8.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            borderRadius: BorderRadius.circular(8.0),
+                            onTap: () => safeSetState(
+                              () => _model.rememberMe = !_model.rememberMe,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                                horizontal: 2.0,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Checkbox(
+                                    value: _model.rememberMe,
+                                    onChanged: (value) => safeSetState(
+                                      () => _model.rememberMe = value ?? false,
+                                    ),
+                                    activeColor: _primary,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  const SizedBox(width: 4.0),
+                                  Text(
+                                    'Remember me',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: FlutterFlowTheme.of(context)
+                                              .bodyMediumFamily,
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: const Color(0xFF4B5563),
+                                          useGoogleFonts: !FlutterFlowTheme.of(context)
+                                              .bodyMediumIsCustom,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
                           splashColor: Colors.transparent,
                           focusColor: Colors.transparent,
                           hoverColor: Colors.transparent,
@@ -548,7 +641,8 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                   ),
                             ),
                           ),
-                        ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 12.0),
                       SizedBox(
@@ -618,6 +712,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             }
 
                             logFirebaseEvent('Button_auth');
+                            if (!await _applySessionPersistence()) return;
                             GoRouter.of(context).prepareAuthEvent();
                             final user = await authManager.signInWithEmail(
                               context,
@@ -737,6 +832,8 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                   '[login_uni] Account type check failed: $e');
                             }
 
+                            await _saveSessionPreference(user.email ?? emailInput);
+
                             logFirebaseEvent('Button_navigate_to');
                             context.goNamedAuth(
                               HomeWidget.routeName,
@@ -812,6 +909,7 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                             logFirebaseEvent(
                                 'LOGIN_UNI_GOOGLE_SIGN_IN_BTN_ON_TAP');
                             logFirebaseEvent('Button_auth');
+                            if (!await _applySessionPersistence()) return;
                             GoRouter.of(context).prepareAuthEvent();
                             try {
                               final userCredential =
@@ -897,6 +995,8 @@ class _LoginUniWidgetState extends State<LoginUniWidget> {
                                       return;
                                     }
                                   }
+
+                                  await _saveSessionPreference(user.email ?? '');
 
                                   if (context.mounted) {
                                     context.goNamedAuth(WelcomeWidget.routeName,

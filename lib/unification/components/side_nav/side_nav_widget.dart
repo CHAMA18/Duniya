@@ -310,7 +310,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
       NavItem.expiryTracking,
       NavItem.lowStockAlerts,
       NavItem.replenishment,
-      NavItem.coldChain,
     ]);
     final hasClinical = !isPulseNetwork &&
         _hasAnyNav([
@@ -1444,56 +1443,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             ),
-                          // Cold Chain (RBAC)
-                          if (_canSee(NavItem.coldChain))
-                            Tooltip(
-                              message: 'Cold Chain',
-                              preferBelow: false,
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  logFirebaseEvent(
-                                      'SIDE_NAV_COMP_Cold_Chain_ON_TAP');
-                                  logFirebaseEvent('SidebarLink_navigate_to');
-                                  context.goNamed(
-                                    ColdChainWidget.routeName,
-                                    extra: <String, dynamic>{
-                                      '__transition_info__': TransitionInfo(
-                                        hasTransition: true,
-                                        transitionType: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 0),
-                                      ),
-                                    },
-                                  );
-                                  logFirebaseEvent(
-                                      'SidebarLink_update_app_state');
-                                  FFAppState().SelectedPage = 'Cold Chain';
-                                },
-                                child: wrapWithModel(
-                                  model: _model.sidebarLinkModelColdChain,
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: SidebarLinkWidget(
-                                    linkText: 'Cold Chain',
-                                    activeIcon: Icon(
-                                      Icons.ac_unit,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                    ),
-                                    inactiveIcon: Icon(
-                                      Icons.ac_unit_outlined,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                    ),
-                                    isActive: FFAppState().SelectedPage ==
-                                        'Cold Chain',
-                                  ),
-                                ),
-                              ),
-                            ),
-
                           // ─── Divider ───
                           if (hasMonitoring && hasClinical) _buildDivider(),
 

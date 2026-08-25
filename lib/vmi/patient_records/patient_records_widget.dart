@@ -14,7 +14,7 @@ export 'patient_records_model.dart';
 // Track patient medication histories, adherence, and dispensing events
 // ═══════════════════════════════════════════════════════════════════════
 
-// ── Mock data models ──
+// ── Patient record view models ──
 
 class DispensingEvent {
   final DateTime date;
@@ -90,8 +90,10 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
   static const Color _dangerBg = Color(0xFFFEE2E2);
   static const Color _dangerText = Color(0xFF991B1B);
 
-  // ── Mock Patient Data (15+ patients) ──
-  late List<PatientRecord> _patients;
+  // This page currently has no patient-record collection wired to it. Keep
+  // the directory empty rather than seeding clinical-looking demonstration
+  // records that could be mistaken for real patient data.
+  final List<PatientRecord> _patients = [];
 
   @override
   void initState() {
@@ -101,7 +103,6 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
         parameters: {'screen_name': 'PatientRecords'});
     _model.searchTextController ??= TextEditingController();
     _model.searchFocusNode ??= FocusNode();
-    _patients = _buildMockPatients();
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
@@ -112,9 +113,12 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
   }
 
   // ═══════════════════════════════════════════════════════════════════════
-  // MOCK DATA
+  // LEGACY PREVIEW DATA
   // ═══════════════════════════════════════════════════════════════════════
 
+  // Kept only as a migration reference while the patient-record Firestore
+  // schema is introduced. It is intentionally never used by the screen.
+  // ignore: unused_element
   List<PatientRecord> _buildMockPatients() {
     return [
       PatientRecord(
@@ -653,7 +657,7 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
   int get _totalPatients => _patients.length;
   int get _activeMedications =>
       _patients.fold(0, (sum, p) => sum + p.activeMeds);
-  int get _refillsDueThisWeek => 8; // mock
+  int get _refillsDueThisWeek => 0;
   double get _avgAdherence {
     if (_patients.isEmpty) return 0;
     return _patients.map((p) => p.adherencePercent).reduce((a, b) => a + b) /
@@ -1151,14 +1155,23 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
                         size: 56.0,
                         color: _textSecondary.withValues(alpha: 0.4)),
                     const SizedBox(height: 16.0),
-                    Text('No patients found',
+                    Text(
+                        (_model.searchTextController?.text.trim().isNotEmpty ??
+                                false)
+                            ? 'No patients match your search'
+                            : 'No patient records yet',
                         style: TextStyle(
                             fontFamily: kAppFontFamily,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                             color: _textSecondary)),
                     const SizedBox(height: 8.0),
-                    Text('Try a different search term',
+                    Text(
+                        (_model.searchTextController?.text.trim().isNotEmpty ??
+                                false)
+                            ? 'Try a different search term'
+                            : 'Patient records will appear here once they are connected to the directory.',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: kAppFontFamily,
                             fontSize: 13.0,
@@ -1684,27 +1697,15 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             ),
             ElevatedButton(
               onPressed: () {
-                // Mock: add patient to list
                 final name = _model.nameTextController?.text.trim() ?? '';
                 if (name.isEmpty) return;
-                final now = DateTime.now();
-                final age = _model.dobDate != null
-                    ? now.year - _model.dobDate!.year
-                    : 0;
-                final newPatient = PatientRecord(
-                  name: name,
-                  patientId:
-                      'PATG-${(1000 + _patients.length).toString().padLeft(4, '0')}',
-                  age: age,
-                  phone: _model.phoneTextController?.text.trim(),
-                  address: _model.addressTextController?.text.trim(),
-                  medicalAid: _model.medicalAidTextController?.text.trim(),
-                  activeMeds: 0,
-                  lastVisit: 'Today',
-                  adherencePercent: 100,
-                  dispensingHistory: [],
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Patient record creation is not available until the patient directory is connected.'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
                 );
-                safeSetState(() => _patients.insert(0, newPatient));
                 Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
@@ -1809,22 +1810,13 @@ class _PatientRecordsWidgetState extends State<PatientRecordsWidget>
             ),
             ElevatedButton(
               onPressed: () {
-                // Mock: update patient in list
-                final idx = _patients.indexOf(patient);
-                if (idx == -1) return;
-                final updated = PatientRecord(
-                  name: _model.nameTextController?.text.trim() ?? patient.name,
-                  patientId: patient.patientId,
-                  age: patient.age,
-                  phone: _model.phoneTextController?.text.trim(),
-                  address: _model.addressTextController?.text.trim(),
-                  medicalAid: _model.medicalAidTextController?.text.trim(),
-                  activeMeds: patient.activeMeds,
-                  lastVisit: patient.lastVisit,
-                  adherencePercent: patient.adherencePercent,
-                  dispensingHistory: patient.dispensingHistory,
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Patient record editing is not available until the patient directory is connected.'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
                 );
-                safeSetState(() => _patients[idx] = updated);
                 Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(

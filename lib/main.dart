@@ -18,6 +18,7 @@ import 'flutter_flow/revenue_cat_util.dart' as revenue_cat;
 
 import '/backend/firebase_dynamic_links/firebase_dynamic_links.dart';
 import '/auth/email_action_handler.dart';
+import '/auth/auth_session_preferences.dart';
 import '/offline/offline_connectivity_service.dart';
 import '/offline/offline_indicator_banner.dart';
 import '/offline/offline_sync_service.dart';
@@ -59,6 +60,14 @@ void main() async {
 
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
+
+  // A session survives a cold start only when the user explicitly selected
+  // "Remember me". This complements Firebase's web persistence settings and
+  // gives native clients the same shared-device behaviour.
+  await AuthSessionPreferences.instance.initialize();
+  if (!AuthSessionPreferences.instance.rememberSession) {
+    await authManager.signOut();
+  }
 
   await revenue_cat.initialize(
     "appl_DiZrRubhavetCoHsHXPmUTMAIlk",
