@@ -425,12 +425,26 @@ class TemplateButton extends StatelessWidget {
     this.label = 'Template',
     this.icon = Icons.download_rounded,
     this.variant = TemplateButtonVariant.outlined,
+    this.foreground,
+    this.background,
+    this.borderColor,
   });
 
   final ReconciliationConfig config;
   final String label;
   final IconData icon;
   final TemplateButtonVariant variant;
+
+  /// Overrides the icon + label color (e.g. Colors.white on purple heroes —
+  /// the default [FlutterFlowTheme.secondaryText] grey is nearly invisible
+  /// on gradient backgrounds).
+  final Color? foreground;
+
+  /// Fills the button (e.g. Colors.white for a high-contrast primary look).
+  final Color? background;
+
+  /// Overrides the outline color for the outlined variant.
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -442,8 +456,13 @@ class TemplateButton extends StatelessWidget {
     final isPrimary = variant == TemplateButtonVariant.primary;
     final isOutlined = variant == TemplateButtonVariant.outlined;
 
+    final fg = foreground ?? (isPrimary ? Colors.white : theme.secondaryText);
+    final bg = background ?? (isPrimary ? theme.primary : Colors.transparent);
+    final border = borderColor ??
+        (isPrimary ? null : theme.secondaryText.withAlpha(140));
+
     return Material(
-      color: isPrimary ? theme.primary : Colors.transparent,
+      color: bg,
       borderRadius: BorderRadius.circular(10.0),
       child: InkWell(
         onTap: () => _showFormatMenu(context),
@@ -453,9 +472,8 @@ class TemplateButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            border: isOutlined
-                ? Border.all(
-                    color: theme.secondaryText.withAlpha(140), width: 1.0)
+            border: isOutlined && border != null
+                ? Border.all(color: border, width: 1.0)
                 : null,
           ),
           child: Row(
@@ -464,14 +482,14 @@ class TemplateButton extends StatelessWidget {
               Icon(
                 icon,
                 size: 16.0,
-                color: isPrimary ? Colors.white : theme.secondaryText,
+                color: fg,
               ),
               const SizedBox(width: 8.0),
               Text(
                 label,
                 style: theme.titleSmall.override(
                   fontFamily: theme.titleSmallFamily,
-                  color: isPrimary ? Colors.white : theme.secondaryText,
+                  color: fg,
                   fontSize: 13.0,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.0,
@@ -482,9 +500,7 @@ class TemplateButton extends StatelessWidget {
               Icon(
                 Icons.arrow_drop_down_rounded,
                 size: 18.0,
-                color: isPrimary
-                    ? Colors.white.withAlpha(180)
-                    : theme.secondaryText.withAlpha(180),
+                color: fg.withAlpha(180),
               ),
             ],
           ),

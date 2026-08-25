@@ -133,6 +133,7 @@ class _ImportInventoryDialogWidgetState
         final docRef = StockRecord.createDoc(parentRef);
         final data = createStockRecordData(
           name: row.name,
+          description: row.description,
           category: row.category,
           manufacturer: row.manufacturer,
           quantity: row.quantity ?? 0,
@@ -159,6 +160,7 @@ class _ImportInventoryDialogWidgetState
             final docRef = StockRecord.createDoc(parentRef);
             await docRef.set(createStockRecordData(
               name: row.name,
+              description: row.description,
               category: row.category,
               manufacturer: row.manufacturer,
               quantity: row.quantity ?? 0,
@@ -548,7 +550,7 @@ class _ImportInventoryDialogWidgetState
                   icon: Icons.table_chart_outlined,
                   title: 'Required Columns',
                   body:
-                      'At minimum include a "Name" column. Optional columns are auto-detected.',
+                      'At minimum include a "Name" column. Both the stock-sheet and the Product Catalogue formats are accepted.',
                   onSurface: onSurface,
                   onSurfaceVariant: onSurfaceVariant,
                   outline: outline,
@@ -615,11 +617,23 @@ class _ImportInventoryDialogWidgetState
                     _fieldChip('BatchNumber'),
                     _fieldChip('ExpiryDate'),
                     _fieldChip('LimitNotice'),
+                    _fieldChip('GenericName'),
+                    _fieldChip('BrandName'),
+                    _fieldChip('Strength'),
+                    _fieldChip('DosageForm'),
+                    _fieldChip('PackSize'),
+                    _fieldChip('UnitOfMeasure'),
+                    _fieldChip('SKU'),
+                    _fieldChip('Supplier'),
+                    _fieldChip('CostPrice'),
+                    _fieldChip('SellingPrice'),
+                    _fieldChip('MinimumStockLevel'),
+                    _fieldChip('ReorderLevel'),
                   ],
                 ),
                 const SizedBox(height: 10.0),
                 Text(
-                  'Aliases are accepted — e.g. "Qty" → Quantity, "Unit Price" → Price, "Expiry" → ExpiryDate.',
+                  'Aliases are accepted — e.g. "Qty" → Quantity, "Unit Price" → Price, "Expiry" → ExpiryDate. Product Catalogue files (GenericName / BrandName / Strength / DosageForm / PackSize / UnitOfMeasure / SKU / Supplier / CostPrice / SellingPrice / MinimumStockLevel / ReorderLevel) import natively: prices map to Price & CostOfGoods, Supplier to Manufacturer, ReorderLevel to the low-stock alert, and the remaining attributes are saved into the product description.',
                   style: TextStyle(
                     fontFamily: kAppFontFamily,
                     fontSize: 12.0,

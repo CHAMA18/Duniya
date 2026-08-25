@@ -1,5 +1,6 @@
 import '/backend/backend.dart';
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/email/email_service.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/rbac/rbac.dart';
@@ -54,6 +55,214 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   String? _selectedSupplier;
   List<_PoLineItem> _lineItems = [];
 
+  // ── PO EMAIL ──
+  // Recipient field for emailing the purchase order after creation;
+  // pre-filled from the selected supplier's record when known.
+  final TextEditingController _poEmailController = TextEditingController();
+  Map<String, String> _supplierEmails = {};
+  bool _isSendingPoEmail = false;
+
+  /// Minimal email-address sanity check for the PO recipient field.
+  static final RegExp _emailPattern = RegExp(
+      r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
+  bool get _poEmailIsValid =>
+      _emailPattern.hasMatch(_poEmailController.text.trim());
+
+  // ── PO EMAIL (send) ──
+  /// Email the purchase order as a branded HTML document through the
+  /// configured Resend delivery pipeline (EmailService → Cloud Function).
+  Future<void> _emailPurchaseOrder(
+    _PurchaseOrder po,
+    List<({String product, int quantity, double unitPrice})> lines,
+    String recipient,
+  ) async {
+    safeSetState(() => _isSendingPoEmail = true);
+    try {
+      final result = await EmailService.sendEmail(
+        to: recipient,
+        subject: 'Purchase Order ${po.poNumber} — ${po.supplier}',
+        html: _poEmailHtml(po, lines),
+        text: _poEmailText(po, lines),
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.success
+              ? 'Purchase order ${po.poNumber} emailed to $recipient.'
+              : 'Could not email the PO: ${result.error ?? "unknown error"}'),
+          backgroundColor:
+              result.success ? const Color(0xFF059669) : const Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0)),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not email the PO: $e'),
+          backgroundColor: const Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0)),
+        ),
+      );
+    } finally {
+      if (mounted) safeSetState(() => _isSendingPoEmail = false);
+    }
+  }
+
+  /// Plain-text fallback body for the PO email.
+  String _poEmailText(
+    _PurchaseOrder po,
+    List<({String product, int quantity, double unitPrice})> lines,
+  ) {
+    final buffer = StringBuffer()
+      ..writeln('PURCHASE ORDER ${po.poNumber}')
+      ..writeln('Supplier: ${po.supplier}')
+      ..writeln('Date: ${_formatPoDate(po.createdDate)}')
+      ..writeln('')
+      ..writeln('Items:');
+    for (final line in lines) {
+      buffer.writeln(
+          '  - ${line.product} x${line.quantity} @ ZMK ${line.unitPrice.toStringAsFixed(2)}');
+    }
+    buffer
+      ..writeln('')
+      ..writeln('Total: ZMK ${po.totalValue.toStringAsFixed(2)}')
+      ..writeln('')
+      ..writeln(
+          'Please confirm receipt of this order. Sent via Pulse — Pharmacy Management.');
+    return buffer.toString();
+  }
+
+  /// Branded HTML body for the PO email — matches the Pulse email design
+  /// system (purple gradient hero, Inter, rounded stat cards, line-item
+  /// table, gradient CTA) used by the other transactional emails.
+  String _poEmailHtml(
+    _PurchaseOrder po,
+    List<({String product, int quantity, double unitPrice})> lines,
+  ) {
+    final rows = lines
+        .map((line) => '''
+                      <tr style="border-bottom:1px solid #F1F5F9;">
+                        <td style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:#0B1C30;font-weight:600;">${_escapeHtml(line.product)}</td>
+                        <td style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:#434656;text-align:center;">${line.quantity}</td>
+                        <td style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:#434656;text-align:right;">ZMK ${line.unitPrice.toStringAsFixed(2)}</td>
+                        <td style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:#0B1C30;font-weight:700;text-align:right;">ZMK ${(line.quantity * line.unitPrice).toStringAsFixed(2)}</td>
+                      </tr>''')
+        .join('');
+
+    return '''<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F1F5F9;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#F1F5F9;padding:32px 12px;">
+    <tr><td align="center">
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="640" style="max-width:640px;background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(11,28,48,0.08);">
+        <!-- Gradient header -->
+        <tr>
+          <td style="padding:0 0 2px;background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:20px 20px 0 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+              <tr>
+                <td style="padding:32px 40px 28px;text-align:center;">
+                  <div style="display:inline-block;width:52px;height:52px;line-height:52px;border-radius:14px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.35);font-family:'Inter',sans-serif;font-size:24px;color:#FFFFFF;font-weight:700;">P</div>
+                  <h1 style="margin:14px 0 6px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;letter-spacing:-0.3px;">Purchase Order</h1>
+                  <p style="margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:rgba(255,255,255,0.85);">${_escapeHtml(po.poNumber)} &nbsp;•&nbsp; ${_formatPoDate(po.createdDate)}</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Supplier + summary stat cards -->
+        <tr>
+          <td style="padding:28px 40px 8px;">
+            <p style="margin:0 0 4px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:12px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1.2px;">Supplier</p>
+            <p style="margin:0 0 18px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:18px;font-weight:700;color:#0B1C30;">${_escapeHtml(po.supplier)}</p>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+              <tr>
+                <td style="width:33%;padding:6px;">
+                  <div style="background:#F3F0FF;border:1px solid #E9D5FF;border-radius:14px;padding:14px 16px;text-align:center;">
+                    <p style="margin:0;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:0.8px;">Items</p>
+                    <p style="margin:4px 0 0;font-family:'Inter',sans-serif;font-size:20px;font-weight:800;color:#0B1C30;">${po.itemCount}</p>
+                  </div>
+                </td>
+                <td style="width:34%;padding:6px;">
+                  <div style="background:#F3F0FF;border:1px solid #E9D5FF;border-radius:14px;padding:14px 16px;text-align:center;">
+                    <p style="margin:0;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:0.8px;">Status</p>
+                    <p style="margin:4px 0 0;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;color:#0B1C30;">${_escapeHtml(po.status)}</p>
+                  </div>
+                </td>
+                <td style="width:33%;padding:6px;">
+                  <div style="background:linear-gradient(135deg,#7C3AED 0%,#9900FF 100%);border-radius:14px;padding:14px 16px;text-align:center;">
+                    <p style="margin:0;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:0.8px;">Total</p>
+                    <p style="margin:4px 0 0;font-family:'Inter',sans-serif;font-size:20px;font-weight:800;color:#FFFFFF;">ZMK ${po.totalValue.toStringAsFixed(2)}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Line items table -->
+        <tr>
+          <td style="padding:18px 40px 8px;">
+            <p style="margin:0 0 8px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:12px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1.2px;">Order Lines</p>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;">
+              <tr style="background:#F8F9FF;">
+                <th align="left" style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:11px;font-weight:700;color:#434656;text-transform:uppercase;letter-spacing:0.8px;">Product</th>
+                <th align="center" style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:11px;font-weight:700;color:#434656;text-transform:uppercase;letter-spacing:0.8px;">Qty</th>
+                <th align="right" style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:11px;font-weight:700;color:#434656;text-transform:uppercase;letter-spacing:0.8px;">Unit Price</th>
+                <th align="right" style="padding:12px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:11px;font-weight:700;color:#434656;text-transform:uppercase;letter-spacing:0.8px;">Amount</th>
+              </tr>
+              $rows
+              <tr style="background:#F8F9FF;">
+                <td colspan="3" align="right" style="padding:14px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;font-weight:700;color:#0B1C30;">Total</td>
+                <td align="right" style="padding:14px 16px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;font-weight:800;color:#7C3AED;">ZMK ${po.totalValue.toStringAsFixed(2)}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Note -->
+        <tr>
+          <td style="padding:20px 40px 28px;">
+            <div style="background:#F8F9FF;border-left:4px solid #9900FF;border-radius:0 12px 12px 0;padding:14px 18px;">
+              <p style="margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:#434656;line-height:1.6;">Please confirm receipt of this purchase order and reply with your expected delivery date. We look forward to fulfilling this order together.</p>
+            </div>
+          </td>
+        </tr>
+        <!-- Gradient footer -->
+        <tr>
+          <td style="padding:0 0 2px;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:linear-gradient(135deg,#7C3AED 0%,#9900FF 40%,#6D28D9 100%);border-radius:0 0 20px 20px;">
+              <tr>
+                <td style="padding:20px 40px;text-align:center;">
+                  <p style="margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:12px;color:rgba(255,255,255,0.85);">This purchase order was generated and sent with <strong style="color:#FFFFFF;">Pulse</strong> — Pharmacy Management</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>''';
+  }
+
+  /// HTML-escape dynamic values before embedding them in the email body.
+  String _escapeHtml(String input) => input
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+
+  String _formatPoDate(DateTime date) =>
+      '${date.day}/${date.month}/${date.year}';
+
   /// Real dropdown options, loaded from Firestore in [_loadCatalogOptions]
   /// — replaces the previous hardcoded demo suppliers/products.
   List<String> _supplierOptions = [];
@@ -73,6 +282,10 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
         for (final s in suppliers) {
           final n = s.name.trim();
           if (n.isNotEmpty) supplierNames.add(n);
+          // Remember supplier emails so the Create-PO email field can be
+          // pre-filled when the supplier is picked.
+          final e = (s.email ?? '').trim();
+          if (n.isNotEmpty && e.isNotEmpty) _supplierEmails[n] = e;
         }
       } catch (_) {
         // Supplier collection unavailable — product-master suppliers
@@ -138,6 +351,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
   @override
   void dispose() {
     _model.dispose();
+    _poEmailController.dispose();
     _progressAnimController.dispose();
     super.dispose();
   }
@@ -480,6 +694,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     _lineItems.clear();
     _selectedSupplier = null;
     _editingIndex = null;
+    _poEmailController.clear();
   }
 
   Future<void> _openCreatePoDialog({int? editingIndex}) async {
@@ -565,7 +780,7 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     return total;
   }
 
-  void _savePo({bool submit = false}) {
+  Future<void> _savePo({bool submit = false, bool email = false}) async {
     if (_selectedSupplier == null || _selectedSupplier!.isEmpty) {
       _showToast('Please select a supplier', isError: true);
       return;
@@ -574,7 +789,26 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
       _showToast('Add at least one line item', isError: true);
       return;
     }
+    final recipient = _poEmailController.text.trim();
+    if (email && !_poEmailIsValid) {
+      _showToast('Enter a valid email address to send the PO to',
+          isError: true);
+      return;
+    }
     final total = _calculateLineTotal();
+    // Snapshot the line items BEFORE the form is cleared — the email body
+    // is composed from these values after the dialog has closed.
+    final emailLines = <({String product, int quantity, double unitPrice})>[
+      for (var i = 0; i < _lineItems.length; i++)
+        (
+          product: _lineItems[i].product.isEmpty
+              ? 'Item'
+              : _lineItems[i].product,
+          quantity: int.tryParse(_model.lineQtyControllers[i].text) ?? 1,
+          unitPrice:
+              double.tryParse(_model.linePriceControllers[i].text) ?? 0.0,
+        ),
+    ];
     final updatedPo = _PurchaseOrder(
       poNumber: _editingIndex == null
           ? 'PO-2024-${0049 + _purchaseOrders.length}'
@@ -606,6 +840,11 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
     Navigator.of(context).pop();
     _showToast(
         submit ? 'PO created and submitted for approval' : 'Draft PO saved');
+
+    // Email the freshly created PO when requested.
+    if (email && recipient.isNotEmpty) {
+      await _emailPurchaseOrder(updatedPo, emailLines, recipient);
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -1579,8 +1818,18 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                                 child: Text(s),
                               ))
                           .toList(),
-                      onChanged: (val) =>
-                          safeSetState(() => _selectedSupplier = val),
+                      onChanged: (val) {
+                        safeSetState(() => _selectedSupplier = val);
+                        // Pre-fill the PO email recipient with the
+                        // selected supplier's email when we have it on
+                        // file (user can still edit before sending).
+                        final knownEmail =
+                            val == null ? null : _supplierEmails[val];
+                        if (knownEmail != null &&
+                            _poEmailController.text.trim().isEmpty) {
+                          _poEmailController.text = knownEmail;
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -1830,8 +2079,108 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                     ),
                   ),
                   const SizedBox(height: 16.0),
+                  // ── EMAIL PO SECTION ──
+                  // Recipient for emailing the purchase order the moment
+                  // it is created. Pre-filled from the supplier record
+                  // when known; sending is one tap on 'Create & Email'.
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3F0FF).withAlpha(120),
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                        color: _poEmailController.text.trim().isEmpty
+                            ? const Color(0xFF9900FF).withAlpha(60)
+                            : _poEmailIsValid
+                                ? const Color(0xFF059669).withAlpha(120)
+                                : const Color(0xFFDC2626).withAlpha(120),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.mark_email_read_outlined,
+                                color: Color(0xFF9900FF), size: 18.0),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Email this purchase order',
+                              style: theme.bodySmall.override(
+                                fontFamily: theme.bodySmallFamily,
+                                fontWeight: FontWeight.w700,
+                                color: theme.primaryText,
+                                letterSpacing: 0.0,
+                                useGoogleFonts: !theme.bodySmallIsCustom,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4.0),
+                        Text(
+                          'The supplier receives the full PO — line items, quantities and totals — as a branded email.',
+                          style: theme.bodySmall.override(
+                            fontFamily: theme.bodySmallFamily,
+                            color: theme.secondaryText,
+                            fontSize: 11.0,
+                            letterSpacing: 0.0,
+                            useGoogleFonts: !theme.bodySmallIsCustom,
+                          ),
+                        ),
+                        const SizedBox(height: 10.0),
+                        TextField(
+                          controller: _poEmailController,
+                          keyboardType: TextInputType.emailAddress,
+                          onChanged: (_) => safeSetState(() {}),
+                          decoration: InputDecoration(
+                            hintText:
+                                'supplier@example.com (pre-filled from the supplier record when available)',
+                            hintStyle: theme.bodySmall.override(
+                              fontFamily: theme.bodySmallFamily,
+                              color: theme.secondaryText,
+                              fontSize: 12.0,
+                              letterSpacing: 0.0,
+                              useGoogleFonts: !theme.bodySmallIsCustom,
+                            ),
+                            prefixIcon: const Icon(Icons.alternate_email_rounded,
+                                size: 18.0, color: Color(0xFF9900FF)),
+                            filled: true,
+                            fillColor: theme.primaryBackground,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 10.0),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide:
+                                  BorderSide(color: theme.alternate),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: const BorderSide(
+                                  color: Color(0xFF9900FF), width: 1.4),
+                            ),
+                            errorText: _poEmailController.text.trim().isEmpty
+                                ? null
+                                : (_poEmailIsValid
+                                    ? null
+                                    : 'Enter a valid email address'),
+                            errorStyle: const TextStyle(fontSize: 11.0),
+                          ),
+                          style: theme.bodySmall.override(
+                            fontFamily: theme.bodySmallFamily,
+                            letterSpacing: 0.0,
+                            useGoogleFonts: !theme.bodySmallIsCustom,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
                   // Action buttons
-                  Row(
+                  Wrap(
+                    spacing: 12.0,
+                    runSpacing: 8.0,
                     children: [
                       ElevatedButton.icon(
                         onPressed: () => _savePo(submit: true),
@@ -1849,7 +2198,40 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                               fontSize: 14, fontWeight: FontWeight.w600),
                         ),
                       ),
-                      const SizedBox(width: 12.0),
+                      // Create + email the PO to the entered recipient.
+                      _isSendingPoEmail
+                          ? const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 12.0),
+                              child: SizedBox(
+                                width: 22.0,
+                                height: 22.0,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 2.4),
+                              ),
+                            )
+                          : ElevatedButton.icon(
+                              onPressed: (_selectedSupplier == null ||
+                                      _selectedSupplier!.isEmpty ||
+                                      _lineItems.isEmpty ||
+                                      !_poEmailIsValid)
+                                  ? null
+                                  : () => _savePo(submit: true, email: true),
+                              icon: const Icon(Icons.mark_email_read_outlined,
+                                  size: 16.0),
+                              label: const Text('Create & Email PO'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF059669),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 12.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                textStyle: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                            ),
                       OutlinedButton.icon(
                         onPressed: () => _savePo(submit: false),
                         icon: const Icon(Icons.save_rounded, size: 16.0),
@@ -1866,7 +2248,6 @@ class _PurchaseOrdersWidgetState extends State<PurchaseOrdersWidget>
                               fontSize: 14, fontWeight: FontWeight.w600),
                         ),
                       ),
-                      const SizedBox(width: 12.0),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
                         child: Text(

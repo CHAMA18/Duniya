@@ -6,12 +6,17 @@ import 'import_wizard_widget.dart';
 import 'reconciliation_engine.dart';
 
 /// A reusable "Import" button that:
-///   1. Verifies the current user is a pharmacy owner
-///      ([AccessControl.isOwner]); hidden for non-owners.
+///   1. Verifies the current user may import stock
+///      ([AccessControl.isOwner]); hidden otherwise.
 ///   2. Opens the [ImportWizard] modal with the provided [config].
 ///
 /// Drop into the header row of any section (Stock Balances / Movements /
 /// Counts) and pass the matching config.
+///
+/// Styling: by default the outlined variant paints in [FlutterFlowTheme.primary]
+/// — perfect on light surfaces but INVISIBLE on the purple gradient heroes.
+/// When placing the button on a colored hero pass [foreground] (and optionally
+/// [background] / [borderColor]) so it renders in the hero's glass style.
 class ImportButton extends StatelessWidget {
   const ImportButton({
     super.key,
@@ -19,12 +24,24 @@ class ImportButton extends StatelessWidget {
     this.label = 'Import',
     this.icon = Icons.upload_file_rounded,
     this.variant = ImportButtonVariant.outlined,
+    this.foreground,
+    this.background,
+    this.borderColor,
   });
 
   final ReconciliationConfig config;
   final String label;
   final IconData icon;
   final ImportButtonVariant variant;
+
+  /// Overrides the icon + label color (e.g. Colors.white on purple heroes).
+  final Color? foreground;
+
+  /// Fills the button (e.g. Colors.white for a high-contrast primary look).
+  final Color? background;
+
+  /// Overrides the outline color for the outlined variant.
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +52,14 @@ class ImportButton extends StatelessWidget {
     final isPrimary = variant == ImportButtonVariant.primary;
     final isOutlined = variant == ImportButtonVariant.outlined;
 
+    final fg = foreground ?? (isPrimary ? Colors.white : theme.primary);
+    final bg = background ?? (isPrimary ? theme.primary : Colors.transparent);
+    final border = borderColor ?? (isPrimary ? null : theme.primary.withAlpha(140));
+
     return Material(
-      color: isPrimary ? theme.primary : Colors.transparent,
+      color: bg,
       borderRadius: BorderRadius.circular(10.0),
-      elevation: isPrimary ? 0.0 : 0.0,
+      elevation: 0.0,
       child: InkWell(
         onTap: () => ImportWizard.openDialog(context, config: config),
         borderRadius: BorderRadius.circular(10.0),
@@ -47,9 +68,8 @@ class ImportButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            border: isOutlined
-                ? Border.all(
-                    color: theme.primary.withAlpha(140), width: 1.0)
+            border: isOutlined && border != null
+                ? Border.all(color: border, width: 1.0)
                 : null,
           ),
           child: Row(
@@ -58,14 +78,14 @@ class ImportButton extends StatelessWidget {
               Icon(
                 icon,
                 size: 16.0,
-                color: isPrimary ? Colors.white : theme.primary,
+                color: fg,
               ),
               const SizedBox(width: 8.0),
               Text(
                 label,
                 style: theme.titleSmall.override(
                   fontFamily: theme.titleSmallFamily,
-                  color: isPrimary ? Colors.white : theme.primary,
+                  color: fg,
                   fontSize: 13.0,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.0,

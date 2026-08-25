@@ -80,6 +80,169 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
   // Category filter state
   String _selectedCategory = 'All Products';
 
+  // ── BULK SELECTION (multi-delete) ──
+  // Selection mode is toggled from the header; while active every card
+  // shows a check bubble and tapping toggles selection instead of opening
+  // the product detail dialog.
+  bool _selectionMode = false;
+  bool _isBulkDeleting = false;
+  final Set<String> _selectedProductIds = {};
+
+  /// Delete every selected catalogue product in chunked Firestore batches
+  /// (400 ops per batch), then exit selection mode.
+  Future<void> _deleteSelectedProducts() async {
+    if (_selectedProductIds.isEmpty) return;
+
+    final count = _selectedProductIds.length;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.delete_forever_rounded,
+                color: _errorColor, size: 26),
+            const SizedBox(width: 10),
+            Expanded(child: Text('Delete $count ${count == 1 ? 'product' : 'products'}?')),
+          ],
+        ),
+        content: Text(
+          'The selected ${count == 1 ? 'product will be permanently removed from' : 'products will be permanently removed from'} '
+          'the Product Catalogue. This cannot be undone.',
+          style: const TextStyle(fontSize: 14, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: _errorColor,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            icon: const Icon(Icons.delete_outline, size: 18),
+            label: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    safeSetState(() => _isBulkDeleting = true);
+    try {
+      final ids = _selectedProductIds.toList();
+      const chunkSize = 400;
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final chunk = ids.sublist(i, (i + chunkSize).clamp(0, ids.length));
+        final batch = FirebaseFirestore.instance.batch();
+        for (final id in chunk) {
+          batch.delete(FirebaseFirestore.instance.doc(id));
+        }
+        await batch.commit();
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(count == 1
+              ? 'Deleted 1 product from the catalogue.'
+              : 'Deleted $count products from the catalogue.'),
+          backgroundColor: const Color(0xFF059669),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16.0),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        ),
+      );
+      safeSetState(() {
+        _selectedProductIds.clear();
+        _selectionMode = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Some products could not be deleted: $e'),
+          backgroundColor: _errorColor,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16.0),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        ),
+      );
+    } finally {
+      if (mounted) safeSetState(() => _isBulkDeleting = false);
+    }
+  }
+
+  /// Bulk-selection action bar — shown in selection mode while rows are
+  /// ticked: live count, destructive bulk delete, and exit-selection.
+  Widget _buildBulkSelectionBar() {
+    final selectedCount = _selectedProductIds.length;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      decoration: BoxDecoration(
+        color: _pulsePurple.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: _pulsePurple.withValues(alpha: 0.35), width: 1.2),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.checklist_rounded, color: _pulsePurple, size: 20.0),
+          const SizedBox(width: 10.0),
+          Text(
+            '$selectedCount selected',
+            style: TextStyle(
+              fontFamily: kAppFontFamily,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+              color: _onSurface,
+            ),
+          ),
+          const Spacer(),
+          _isBulkDeleting
+              ? const SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: CircularProgressIndicator(strokeWidth: 2.4),
+                )
+              : FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: _errorColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 10.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                  ),
+                  onPressed: _selectedProductIds.isEmpty
+                      ? null
+                      : _deleteSelectedProducts,
+                  icon: const Icon(Icons.delete_outline, size: 18.0),
+                  label: Text(_selectedProductIds.isEmpty
+                      ? 'Select products below'
+                      : 'Delete Selected'),
+                ),
+          const SizedBox(width: 8.0),
+          TextButton.icon(
+            onPressed: () => safeSetState(() {
+              _selectionMode = false;
+              _selectedProductIds.clear();
+            }),
+            icon: const Icon(Icons.close_rounded, size: 18.0),
+            label: const Text('Done'),
+            style: TextButton.styleFrom(
+              foregroundColor: _onSurfaceVariant,
+              textStyle: const TextStyle(
+                  fontFamily: kAppFontFamily, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   final List<Map<String, String>> _categories = [
     {'label': 'All Products', 'icon': 'category'},
     {'label': 'Prescription (Rx)', 'icon': 'prescriptions'},
@@ -365,11 +528,19 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
     final minimumStockLevel = product.minimumStockLevel;
     final hasMinimumStockLevel = minimumStockLevel > 0;
 
+    // Bulk-selection state for this card.
+    final isSelected = _selectedProductIds.contains(product.reference.path);
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.0),
+        border: Border.all(
+          color: _selectionMode && isSelected
+              ? _pulsePurple
+              : const Color(0xFFE2E8F0),
+          width: _selectionMode && isSelected ? 2.0 : 1.0,
+        ),
         boxShadow: [
           BoxShadow(
             color: _navy900.withValues(alpha: 0.05),
@@ -383,6 +554,18 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
         child: InkWell(
           borderRadius: BorderRadius.circular(12.0),
           onTap: () {
+            if (_selectionMode) {
+              // Selection mode: tapping toggles the bulk-selection tick
+              // instead of opening the product detail dialog.
+              safeSetState(() {
+                if (isSelected) {
+                  _selectedProductIds.remove(product.reference.path);
+                } else {
+                  _selectedProductIds.add(product.reference.path);
+                }
+              });
+              return;
+            }
             // Navigate to product detail or show detail dialog
             _showProductDetailDialog(context, product);
           },
@@ -443,7 +626,50 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                           ),
                         ),
                       ),
-                    if (_canEditCatalogue || _canDeleteCatalogue)
+                    if (_selectionMode)
+                      // Selection-mode check bubble (replaces the
+                      // more-menu while bulk-selecting).
+                      Positioned(
+                        top: 4.0,
+                        left: 4.0,
+                        child: GestureDetector(
+                          onTap: () => safeSetState(() {
+                            if (isSelected) {
+                              _selectedProductIds
+                                  .remove(product.reference.path);
+                            } else {
+                              _selectedProductIds
+                                  .add(product.reference.path);
+                            }
+                          }),
+                          child: Container(
+                            width: 26.0,
+                            height: 26.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isSelected
+                                  ? _pulsePurple
+                                  : Colors.white.withValues(alpha: 0.92),
+                              border: Border.all(
+                                color:
+                                    isSelected ? _pulsePurple : _outlineVariant,
+                                width: 1.6,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                            ),
+                            child: isSelected
+                                ? const Icon(Icons.check_rounded,
+                                    color: Colors.white, size: 18.0)
+                                : null,
+                          ),
+                        ),
+                      )
+                    else if (_canEditCatalogue || _canDeleteCatalogue)
                       Positioned(
                         top: 2.0,
                         left: 2.0,
@@ -687,6 +913,54 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        // Select toggle — enters the
+                                        // multi-select mode that powers
+                                        // bulk deletion of products.
+                                        if (_canDeleteCatalogue) ...[
+                                          OutlinedButton.icon(
+                                            onPressed: () =>
+                                                safeSetState(() => _selectionMode =
+                                                    !_selectionMode),
+                                            icon: Icon(
+                                              _selectionMode
+                                                  ? Icons.close_rounded
+                                                  : Icons.checklist_rounded,
+                                              size: 18.0,
+                                            ),
+                                            label: Text(
+                                              _selectionMode
+                                                  ? 'Cancel Selection'
+                                                  : 'Select',
+                                              style: const TextStyle(
+                                                fontFamily: kAppFontFamily,
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            style: OutlinedButton.styleFrom(
+                                              foregroundColor: _selectionMode
+                                                  ? _errorColor
+                                                  : _pulsePurple,
+                                              side: BorderSide(
+                                                color: (_selectionMode
+                                                        ? _errorColor
+                                                        : _pulsePurple)
+                                                    .withValues(alpha: 0.4),
+                                                width: 1.4,
+                                              ),
+                                              elevation: 0,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 18.0,
+                                                      vertical: 12.0),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12.0),
+                                        ],
                                         // Download the Product Catalogue
                                         // schema. This is intentionally not
                                         // the stock inventory template.
@@ -786,6 +1060,11 @@ class _ProductMasterWidgetState extends State<ProductMasterWidget> {
 
                                 // Search & Filter bar (glass-panel)
                                 _buildSearchFilterBar(),
+                                // Bulk-selection action bar (selection mode)
+                                if (_selectionMode) ...[
+                                  const SizedBox(height: 16.0),
+                                  _buildBulkSelectionBar(),
+                                ],
                                 const SizedBox(height: 16.0),
 
                                 // Product Grid

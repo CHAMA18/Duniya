@@ -597,17 +597,26 @@ class _StockBalancesWidgetState extends State<StockBalancesWidget>
                   // Owner-only Import button — opens the Import Wizard
                   // (smart-detect → reconcile → owner sign-off → write).
                   // Hidden for non-owners via ImportButton's role check.
+                  // Solid white fill + purple glyph: the default outlined
+                  // purple-on-purple styling was INVISIBLE on this gradient
+                  // hero — now it is the most prominent secondary action.
                   ImportButton(
                     config: StockBalanceImportConfig(),
                     label: 'Import',
                     icon: Icons.upload_file_rounded,
+                    background: Colors.white,
+                    foreground: const Color(0xFF9900FF),
                   ),
                   // Owner-only Template button — downloads a pre-formatted
                   // .xlsx or .csv template with the correct column headers.
                   // Hidden for non-owners, consistent with ImportButton.
+                  // White glass style matching Export/Refresh so it reads
+                  // clearly on the purple gradient.
                   TemplateButton(
                     config: StockBalanceImportConfig(),
                     label: 'Template',
+                    foreground: Colors.white,
+                    borderColor: Colors.white.withAlpha(50),
                   ),
                   _HeroActionButton(
                     icon: Icons.add_rounded,

@@ -30,6 +30,105 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _searchController = TextEditingController();
 
+  // ── BULK SELECTION ──
+  // Document ids of the stock rows ticked for a bulk delete. Kept as ids
+  // (not references) so pagination/searching never orphans a selection.
+  final Set<String> _selectedStockIds = {};
+  bool _isBulkDeleting = false;
+
+  bool get _canDeleteStock =>
+      AccessControl.hasPermission(context, Permission.inventoryDelete);
+
+  /// Delete every selected stock row in chunked Firestore batches (400
+  /// ops per batch — safely under the 500-op limit), then clear the
+  /// selection. Guarded by a destructive-action confirmation dialog.
+  Future<void> _deleteSelectedStock() async {
+    if (_selectedStockIds.isEmpty) return;
+
+    final count = _selectedStockIds.length;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.delete_forever_rounded,
+                color: Color(0xFFDC2626), size: 26),
+            const SizedBox(width: 10),
+            Expanded(
+                child: Text('Delete $count '
+                    '${count == 1 ? 'item' : 'items'}?')),
+          ],
+        ),
+        content: Text(
+          'The selected ${count == 1 ? 'product entry will be permanently removed'
+              : 'product entries will be permanently removed'} '
+          'from your store inventory. This cannot be undone.',
+          style: const TextStyle(fontSize: 14, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFDC2626),
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            icon: const Icon(Icons.delete_outline, size: 18),
+            label: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    safeSetState(() => _isBulkDeleting = true);
+    try {
+      final ids = _selectedStockIds.toList();
+      const chunkSize = 400;
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final chunk = ids.sublist(
+            i, (i + chunkSize).clamp(0, ids.length));
+        final batch = FirebaseFirestore.instance.batch();
+        for (final id in chunk) {
+          batch.delete(FirebaseFirestore.instance.doc(id));
+        }
+        await batch.commit();
+      }
+      if (!mounted) return;
+      _selectedStockIds.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(count == 1
+              ? 'Deleted 1 item from your inventory.'
+              : 'Deleted $count items from your inventory.'),
+          backgroundColor: const Color(0xFF059669),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0)),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Some items could not be deleted: $e'),
+          backgroundColor: const Color(0xFFDC2626),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0)),
+        ),
+      );
+    } finally {
+      if (mounted) safeSetState(() => _isBulkDeleting = false);
+    }
+  }
+
   // Category filter options
   final List<String> _categories = [
     'All Categories',
@@ -642,6 +741,24 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
                                       cardBg,
                                     ),
                                     const SizedBox(height: 24.0),
+
+                                    // ===== BULK SELECTION ACTION BAR =====
+                                    // Appears only while at least one row is
+                                    // ticked — offers select-all-page and
+                                    // the destructive bulk delete.
+                                    if (_canDeleteStock &&
+                                        _selectedStockIds.isNotEmpty)
+                                      _buildBulkActionBar(
+                                        context,
+                                        pageStock,
+                                        primaryBlue,
+                                        onSurface,
+                                        outlineVariant,
+                                        cardBg,
+                                      ),
+                                    if (_canDeleteStock &&
+                                        _selectedStockIds.isNotEmpty)
+                                      const SizedBox(height: 16.0),
 
                                     // ===== DATA TABLE =====
                                     _buildDataTable(
@@ -1432,7 +1549,112 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
     );
   }
 
-  // ===== DATA TABLE =====
+  // ===== BULK SELECTION ACTION BAR =====
+  // Shown while rows are ticked: select-all-page toggle, live count,
+  // destructive bulk delete and clear-selection.
+  Widget _buildBulkActionBar(
+    BuildContext context,
+    List<StockRecord> pageStock,
+    Color primaryBlue,
+    Color onSurface,
+    Color outlineVariant,
+    Color cardBg,
+  ) {
+    final allPageSelected =
+        pageStock.isNotEmpty && pageStock.every((s) => _selectedStockIds.contains(s.reference.path));
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      decoration: BoxDecoration(
+        color: primaryBlue.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: primaryBlue.withValues(alpha: 0.35), width: 1.2),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.checklist_rounded, color: primaryBlue, size: 20.0),
+          const SizedBox(width: 10.0),
+          Text(
+            '${_selectedStockIds.length} selected',
+            style: TextStyle(
+              fontFamily: kAppFontFamily,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+              color: onSurface,
+            ),
+          ),
+          const SizedBox(width: 6.0),
+          Text(
+            'across all pages',
+            style: TextStyle(
+              fontFamily: kAppFontFamily,
+              fontSize: 12.0,
+              color: onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+          const Spacer(),
+          // Select-all-page toggle
+          TextButton.icon(
+            onPressed: () {
+              safeSetState(() {
+                if (allPageSelected) {
+                  for (final s in pageStock) {
+                    _selectedStockIds.remove(s.reference.path);
+                  }
+                } else {
+                  for (final s in pageStock) {
+                    _selectedStockIds.add(s.reference.path);
+                  }
+                }
+              });
+            },
+            icon: Icon(
+              allPageSelected
+                  ? Icons.deselect_rounded
+                  : Icons.select_all_rounded,
+              size: 18.0,
+            ),
+            label: Text(allPageSelected
+                ? 'Deselect page'
+                : 'Select page (${pageStock.length})'),
+            style: TextButton.styleFrom(
+              foregroundColor: primaryBlue,
+              textStyle: const TextStyle(
+                  fontFamily: kAppFontFamily, fontWeight: FontWeight.w600),
+            ),
+          ),
+          const SizedBox(width: 8.0),
+          // Bulk delete
+          _isBulkDeleting
+              ? const SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: CircularProgressIndicator(strokeWidth: 2.4),
+                )
+              : FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFFDC2626),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 10.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                  ),
+                  onPressed: _deleteSelectedStock,
+                  icon: const Icon(Icons.delete_outline, size: 18.0),
+                  label: const Text('Delete Selected'),
+                ),
+          const SizedBox(width: 8.0),
+          IconButton(
+            tooltip: 'Clear selection',
+            onPressed: () => safeSetState(() => _selectedStockIds.clear()),
+            icon: Icon(Icons.close_rounded,
+                color: onSurface.withValues(alpha: 0.6), size: 20.0),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDataTable(
     BuildContext context,
     List<StockRecord> pageStock,
@@ -1477,6 +1699,47 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
               ),
               child: Row(
                 children: [
+                  // Bulk-select checkbox column (only for users who may
+                  // delete — the column powers the multi-delete flow).
+                  if (_canDeleteStock)
+                    SizedBox(
+                      width: 56.0,
+                      child: Center(
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Transform.scale(
+                            scale: 0.9,
+                            child: Checkbox(
+                              value: pageStock.isNotEmpty &&
+                                  pageStock.every((s) => _selectedStockIds
+                                      .contains(s.reference.path)),
+                              tristate: false,
+                              onChanged: (checked) {
+                                safeSetState(() {
+                                  if (checked == true) {
+                                    for (final s in pageStock) {
+                                      _selectedStockIds
+                                          .add(s.reference.path);
+                                    }
+                                  } else {
+                                    for (final s in pageStock) {
+                                      _selectedStockIds
+                                          .remove(s.reference.path);
+                                    }
+                                  }
+                                });
+                              },
+                              activeColor: primaryBlue,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Expanded(
                     flex: 3,
                     child: Padding(
@@ -1686,6 +1949,37 @@ class _StoreInventoryWidgetState extends State<StoreInventoryWidget> {
         ),
         child: Row(
           children: [
+            // Row checkbox for bulk selection
+            if (_canDeleteStock)
+              SizedBox(
+                width: 56.0,
+                child: Center(
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Transform.scale(
+                      scale: 0.9,
+                      child: Checkbox(
+                        value:
+                            _selectedStockIds.contains(stock.reference.path),
+                        onChanged: (checked) {
+                          safeSetState(() {
+                            if (checked == true) {
+                              _selectedStockIds.add(stock.reference.path);
+                            } else {
+                              _selectedStockIds.remove(stock.reference.path);
+                            }
+                          });
+                        },
+                        activeColor: primaryBlue,
+                        materialTapTargetSize:
+                            MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             // Product & Manufacturer
             Expanded(
               flex: 3,

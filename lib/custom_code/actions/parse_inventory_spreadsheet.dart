@@ -28,6 +28,22 @@ class ParsedInventoryRow {
   final String? batchNumber;
   final DateTime? expiryDate;
   final int? limitNotice;
+
+  // ── Product Catalogue format (Pulse_Product_Catalogue_Import) ──
+  // The Store Inventory import accepts BOTH the classic stock format
+  // (Name/Category/Manufacturer/Quantity/Price/…) and the full Product
+  // Catalogue format (GenericName/BrandName/Strength/DosageForm/PackSize/
+  // UnitOfMeasure/SKU/…). The catalogue attributes are composed into a
+  // rich [description] so nothing from the file is dropped.
+  final String? genericName;
+  final String? brandName;
+  final String? strength;
+  final String? dosageForm;
+  final String? packSize;
+  final String? unitOfMeasure;
+  final String? sku;
+  final String? description;
+
   final bool isValid;
   final String? errorReason;
 
@@ -42,6 +58,14 @@ class ParsedInventoryRow {
     this.batchNumber,
     this.expiryDate,
     this.limitNotice,
+    this.genericName,
+    this.brandName,
+    this.strength,
+    this.dosageForm,
+    this.packSize,
+    this.unitOfMeasure,
+    this.sku,
+    this.description,
     required this.isValid,
     this.errorReason,
   });
@@ -57,6 +81,14 @@ class ParsedInventoryRow {
         'batchNumber': batchNumber,
         'expiryDate': expiryDate?.toIso8601String(),
         'limitNotice': limitNotice,
+        'genericName': genericName,
+        'brandName': brandName,
+        'strength': strength,
+        'dosageForm': dosageForm,
+        'packSize': packSize,
+        'unitOfMeasure': unitOfMeasure,
+        'sku': sku,
+        'description': description,
         'isValid': isValid,
         'errorReason': errorReason,
       };
@@ -97,24 +129,147 @@ const _kCanonicalFields = <String>[
   'batchNumber',
   'expiryDate',
   'limitNotice',
+  // Product Catalogue format fields.
+  'genericName',
+  'brandName',
+  'strength',
+  'dosageForm',
+  'packSize',
+  'unitOfMeasure',
+  'sku',
+  'reorderLevel',
+  'minimumStockLevel',
 ];
 
 /// Header aliases — case-insensitive match against any of these
 /// maps the spreadsheet column to the canonical field.
+///
+/// Covers BOTH supported input formats:
+///   • Classic stock sheet — Name, Category, Manufacturer, Quantity, Price,
+///     CostOfGoods, BatchNumber, ExpiryDate, LimitNotice (+ friendly aliases).
+///   • Product Catalogue sheet (Pulse_Product_Catalogue_Import__VMI) —
+///     Name, GenericName, BrandName, Strength, DosageForm, PackSize,
+///     UnitOfMeasure, SKU, Category, Supplier, CostPrice, SellingPrice,
+///     MinimumStockLevel, ReorderLevel.
 const Map<String, List<String>> _kHeaderAliases = {
   'name': ['name', 'product name', 'productname', 'product', 'item name', 'item', 'drug name', 'medicine name', 'description name'],
   'category': ['category', 'product category', 'type', 'product type'],
   'manufacturer': ['manufacturer', 'brand', 'supplier', 'vendor', 'company', 'producer'],
   'quantity': ['quantity', 'qty', 'stock', 'stock level', 'units', 'count', 'on hand', 'quantity in stock'],
-  'price': ['price', 'unit price', 'selling price', 'sale price', 'retail price', 'sell price', 'price per unit'],
-  'costOfGoods': ['cost', 'cost of goods', 'costofgoods', 'cogs', 'cost price', 'purchase price', 'unit cost', 'buy price'],
+  'price': ['price', 'unit price', 'selling price', 'sellingprice', 'sale price', 'retail price', 'sell price', 'price per unit'],
+  'costOfGoods': ['cost', 'cost of goods', 'costofgoods', 'cogs', 'cost price', 'costprice', 'purchase price', 'unit cost', 'buy price'],
   'batchNumber': ['batch number', 'batchnumber', 'batch', 'batch no', 'batch #', 'lot', 'lot number', 'lot no'],
   'expiryDate': ['expiry date', 'expirydate', 'expiry', 'expiration date', 'expiration', 'exp date', 'exp', 'expires', 'best before'],
-  'limitNotice': ['limit notice', 'limitnotice', 'reorder level', 'reorder', 'low stock threshold', 'low stock alert', 'min stock', 'minimum stock', 'alert at'],
+  'limitNotice': ['limit notice', 'limitnotice', 'reorder', 'low stock threshold', 'low stock alert', 'alert at'],
+  'reorderLevel': ['reorder level', 'reorderlevel', 're-order level'],
+  'minimumStockLevel': ['minimum stock level', 'minimumstocklevel', 'minimum stock', 'min stock', 'minstocklevel', 'minimumstock'],
+  // Product Catalogue format fields.
+  'genericName': ['generic name', 'genericname', 'generic', 'inn'],
+  'brandName': ['brand name', 'brandname', 'label'],
+  'strength': ['strength', 'concentration', 'potency'],
+  'dosageForm': ['dosage form', 'dosageform', 'form', 'dose form'],
+  'packSize': ['pack size', 'packsize', 'packaging', 'pack'],
+  'unitOfMeasure': ['unit of measure', 'unitofmeasure', 'uom', 'unit', 'units of measure'],
+  'sku': ['sku', 'item code', 'product code', 'code', 'barcode'],
 };
 
+/// The exact column set of the Product Catalogue import format — used to
+/// detect (and surface in the preview) that a catalogue file was uploaded.
+const kProductCatalogueHeaders = <String>{
+  'Name',
+  'GenericName',
+  'BrandName',
+  'Strength',
+  'DosageForm',
+  'PackSize',
+  'UnitOfMeasure',
+  'SKU',
+  'Category',
+  'Supplier',
+  'CostPrice',
+  'SellingPrice',
+  'MinimumStockLevel',
+  'ReorderLevel',
+};
+
+/// True when the parsed header row is the Product Catalogue format.
+bool isProductCatalogueSheet(List<String> detectedHeaders) {
+  final normalized =
+      detectedHeaders.map((h) => h.trim().toLowerCase()).toSet();
+  // The catalogue format is unambiguous when the two format-exclusive
+  // columns are present; Name/Category/Supplier alone are ambiguous.
+  return normalized.containsAll({'genericname', 'sellingprice'}) ||
+      normalized.containsAll({'genericname', 'dosageform'}) ||
+      normalized.containsAll({'sku', 'sellingprice'});
+}
+
+/// Pure header-mapping function (unit-tested): maps a spreadsheet header
+/// row to canonical Stock fields, e.g. 'SellingPrice' → 'price'.
+Map<String, String> mapSpreadsheetHeaders(List<String> headerRow) {
+  final mapping = <String, String>{};
+  for (final cell in headerRow) {
+    final headerText = (cell).trim();
+    final normalized = headerText.toLowerCase().trim();
+    if (normalized.isEmpty) continue;
+    for (final entry in _kHeaderAliases.entries) {
+      if (entry.value.contains(normalized)) {
+        mapping[headerText] = entry.key;
+        break;
+      }
+    }
+  }
+  return mapping;
+}
+
+/// Compose the Stock record [Description] from the Product Catalogue
+/// attributes so no information from the imported file is dropped, e.g.
+/// 'Acyclovir • herpizyg • 200 mg • Tablet • 100 tablets • SKU: ACY-0002'.
+String? composeStockDescription({
+  String? genericName,
+  String? brandName,
+  String? strength,
+  String? dosageForm,
+  String? packSize,
+  String? unitOfMeasure,
+  String? sku,
+}) {
+  final parts = <String>[
+    if ((genericName ?? '').trim().isNotEmpty) genericName!.trim(),
+    if ((brandName ?? '').trim().isNotEmpty) brandName!.trim(),
+    if ((strength ?? '').trim().isNotEmpty &&
+        (strength ?? '').trim().toLowerCase() != 'nil')
+      strength!.trim(),
+    if ((dosageForm ?? '').trim().isNotEmpty &&
+        (dosageForm ?? '').trim().toLowerCase() != 'nil')
+      dosageForm!.trim(),
+    if ((packSize ?? '').trim().isNotEmpty &&
+        (packSize ?? '').trim().toLowerCase() != 'nil')
+      packSize!.trim(),
+    if ((unitOfMeasure ?? '').trim().isNotEmpty &&
+        (unitOfMeasure ?? '').trim().toLowerCase() != 'nil' &&
+        (packSize ?? '').trim().toLowerCase() != (unitOfMeasure ?? '').trim().toLowerCase())
+      unitOfMeasure!.trim(),
+  ];
+  if (parts.isEmpty && (sku ?? '').trim().isEmpty) return null;
+  final body = parts.join(' • ');
+  final skuPart = (sku ?? '').trim().isEmpty ? '' : ' • SKU: ${sku!.trim()}';
+  final composed = '$body$skuPart'.trim();
+  // When only the SKU survived (everything else was 'Nil'/empty), strip
+  // the leading bullet so the description reads 'SKU: ACY-0001'.
+  if (composed.startsWith('• ')) return composed.substring(2);
+  return composed.isEmpty ? null : composed;
+}
+
+/// Resolve the low-stock alert threshold from the catalogue columns:
+/// ReorderLevel wins when present (it is the actionable trigger),
+/// otherwise MinimumStockLevel, otherwise the classic LimitNotice.
+int resolveLimitNotice({int? reorderLevel, int? minimumStockLevel, int? limitNotice}) {
+  return reorderLevel ?? minimumStockLevel ?? limitNotice ?? 0;
+}
+
 /// Pick a spreadsheet file from disk and parse it into Stock record field maps.
-/// Supports .xlsx, .xls, and .csv files.
+/// Supports .xlsx, .xls, and .csv files — in BOTH the classic stock-sheet
+/// format and the Product Catalogue format.
 /// Returns null if the user cancels the picker.
 Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
   try {
@@ -183,24 +338,13 @@ Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
     }
 
     // First row is header
-    final headerRow = dataRows.first;
-    final detectedHeaders = <String>[];
-    final headerMapping = <String, String>{};
-
-    for (final cell in headerRow) {
-      final headerText = (cell?.toString() ?? '').trim();
-      detectedHeaders.add(headerText);
-      final normalized = headerText.toLowerCase().trim();
-      if (normalized.isEmpty) continue;
-
-      // Find matching canonical field
-      for (final entry in _kHeaderAliases.entries) {
-        if (entry.value.contains(normalized)) {
-          headerMapping[headerText] = entry.key;
-          break;
-        }
-      }
-    }
+    final headerRow =
+        dataRows.first.map((c) => c?.toString() ?? '').toList();
+    final detectedHeaders = headerRow
+        .map((h) => h.trim())
+        .where((h) => h.isNotEmpty)
+        .toList();
+    final headerMapping = mapSpreadsheetHeaders(headerRow);
 
     // Parse data rows
     final parsedRows = <ParsedInventoryRow>[];
@@ -221,7 +365,8 @@ Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
       final fieldValues = <String, dynamic>{};
 
       for (var j = 0; j < headerRow.length; j++) {
-        final headerText = detectedHeaders[j];
+        final headerText = headerRow[j].trim();
+        if (headerText.isEmpty) continue;
         final cellValue = j < row.length ? row[j] : null;
         final cellString = (cellValue?.toString() ?? '').trim();
         rawCells[headerText] = cellString;
@@ -288,6 +433,20 @@ Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
         }
       }
 
+      // Low-stock threshold: catalogue ReorderLevel / MinimumStockLevel
+      // take precedence over the classic LimitNotice column.
+      int? reorderLevel;
+      final reorderRaw = fieldValues['reorderLevel'] as String?;
+      if (reorderRaw != null && reorderRaw.isNotEmpty) {
+        reorderLevel =
+            int.tryParse(reorderRaw.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+      }
+      int? minimumStockLevel;
+      final minStockRaw = fieldValues['minimumStockLevel'] as String?;
+      if (minStockRaw != null && minStockRaw.isNotEmpty) {
+        minimumStockLevel =
+            int.tryParse(minStockRaw.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+      }
       int? limitNotice;
       if (errorReason == null) {
         final limitRaw = fieldValues['limitNotice'] as String?;
@@ -298,6 +457,11 @@ Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
           limitNotice = 0;
         }
       }
+      final resolvedLimit = resolveLimitNotice(
+        reorderLevel: reorderLevel,
+        minimumStockLevel: minimumStockLevel,
+        limitNotice: limitNotice,
+      );
 
       DateTime? expiryDate;
       if (errorReason == null) {
@@ -309,6 +473,32 @@ Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
           }
         }
       }
+
+      // Product Catalogue attributes.
+      final genericName = fieldValues['genericName'] as String?;
+      final brandName = fieldValues['brandName'] as String?;
+      final strength = fieldValues['strength'] as String?;
+      final dosageForm = fieldValues['dosageForm'] as String?;
+      final packSize = fieldValues['packSize'] as String?;
+      final unitOfMeasure = fieldValues['unitOfMeasure'] as String?;
+      final sku = fieldValues['sku'] as String?;
+      final description = composeStockDescription(
+        genericName: genericName,
+        brandName: brandName,
+        strength: strength,
+        dosageForm: dosageForm,
+        packSize: packSize,
+        unitOfMeasure: unitOfMeasure,
+        sku: sku,
+      );
+
+      // Manufacturer: prefer an explicit Manufacturer/Supplier column,
+      // fall back to the catalogue BrandName so the maker is still
+      // captured when only the catalogue format was provided.
+      final manufacturerRaw = fieldValues['manufacturer'] as String?;
+      final manufacturer = (manufacturerRaw ?? '').trim().isNotEmpty
+          ? manufacturerRaw
+          : ((brandName ?? '').trim().isNotEmpty ? brandName : null);
 
       final isValid = errorReason == null;
       if (isValid) {
@@ -323,13 +513,21 @@ Future<SpreadsheetParseResult?> parseInventorySpreadsheet() async {
         category: (fieldValues['category'] as String?)?.isNotEmpty == true
             ? fieldValues['category'] as String
             : 'Medicine',
-        manufacturer: fieldValues['manufacturer'] as String?,
+        manufacturer: manufacturer,
         quantity: quantity,
         price: price,
         costOfGoods: costOfGoods,
         batchNumber: fieldValues['batchNumber'] as String?,
         expiryDate: expiryDate,
-        limitNotice: limitNotice,
+        limitNotice: resolvedLimit,
+        genericName: genericName,
+        brandName: brandName,
+        strength: strength,
+        dosageForm: dosageForm,
+        packSize: packSize,
+        unitOfMeasure: unitOfMeasure,
+        sku: sku,
+        description: description,
         isValid: isValid,
         errorReason: errorReason,
       ));
