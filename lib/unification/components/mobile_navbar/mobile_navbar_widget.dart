@@ -370,43 +370,6 @@ class _MobileNavbarWidgetState extends State<MobileNavbarWidget> {
                     );
                   },
                 ),
-                // Drug Interactions (RBAC)
-                if (_canSee(NavItem.drugInteractions))
-                FlutterFlowIconButton(
-                  borderColor: Colors.transparent,
-                  borderRadius: 30.0,
-                  borderWidth: 1.0,
-                  buttonSize: 50.0,
-                  icon: Icon(
-                    Icons.medication_outlined,
-                    color: valueOrDefault<Color>(
-                      FFAppState().SelectedPage == 'Drug Interactions'
-                          ? FlutterFlowTheme.of(context).primary
-                          : FlutterFlowTheme.of(context).secondaryText,
-                      FlutterFlowTheme.of(context).secondaryText,
-                    ),
-                    size: 24.0,
-                  ),
-                  onPressed: () async {
-                    logFirebaseEvent(
-                        'MOBILE_NAVBAR_drug_interactions_ICN_ON_TAP');
-                    logFirebaseEvent('IconButton_update_app_state');
-                    FFAppState().SelectedPage = 'Drug Interactions';
-                    safeSetState(() {});
-                    logFirebaseEvent('IconButton_navigate_to');
-
-                    context.goNamed(
-                      DrugInteractionsWidget.routeName,
-                      extra: <String, dynamic>{
-                        '__transition_info__': TransitionInfo(
-                          hasTransition: true,
-                          transitionType: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 0),
-                        ),
-                      },
-                    );
-                  },
-                ),
                 // Expiry Tracking (RBAC)
                 if (_canSee(NavItem.expiryTracking))
                 FlutterFlowIconButton(

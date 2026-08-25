@@ -167,7 +167,7 @@ class _OnboardingRequestsWidgetState extends State<OnboardingRequestsWidget> {
     <p style="font-size:15px;color:#555;line-height:1.6">Great news! <strong>$pharmacyName</strong> has been approved on the <strong>Pulse</strong> network.</p>
     <p style="font-size:15px;color:#555;line-height:1.6">You can now log in and start managing your pharmacy inventory, sales, and more.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td align="center">
-      <a href="https://thestackone.com/app.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#9900FF,#7C3AED);color:#fff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px">Open Pulse →</a>
+      <a href="https://pulse.duniyahealthcare.com/app.html" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#9900FF,#7C3AED);color:#fff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px">Open Pulse →</a>
     </td></tr></table>
     <p style="font-size:15px;color:#555;line-height:1.6">If you have any questions, our support team is here to help.</p>
   </div>

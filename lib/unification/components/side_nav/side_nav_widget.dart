@@ -318,7 +318,6 @@ class _SideNavWidgetState extends State<SideNavWidget> {
           NavItem.prescriptions,
           NavItem.insurance,
           NavItem.patientRecords,
-          NavItem.drugInteractions,
         ]);
     final hasProcurement =
         !isPulseNetwork && _hasAnyNav([NavItem.purchaseOrders]);
@@ -1651,58 +1650,9 @@ class _SideNavWidgetState extends State<SideNavWidget> {
                                 ),
                               ),
                             ),
-                          // Drug Interactions (RBAC)
-                          if (_canSee(NavItem.drugInteractions))
-                            Tooltip(
-                              message: 'Drug Interactions',
-                              preferBelow: false,
-                              child: InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  logFirebaseEvent(
-                                      'SIDE_NAV_COMP_Drug_Interactions_ON_TAP');
-                                  logFirebaseEvent('SidebarLink_navigate_to');
-                                  context.goNamed(
-                                    DrugInteractionsWidget.routeName,
-                                    extra: <String, dynamic>{
-                                      '__transition_info__': TransitionInfo(
-                                        hasTransition: true,
-                                        transitionType: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 0),
-                                      ),
-                                    },
-                                  );
-                                  logFirebaseEvent(
-                                      'SidebarLink_update_app_state');
-                                  FFAppState().SelectedPage =
-                                      'Drug Interactions';
-                                },
-                                child: wrapWithModel(
-                                  model:
-                                      _model.sidebarLinkModelDrugInteractions,
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: SidebarLinkWidget(
-                                    linkText: 'Drug Interactions',
-                                    activeIcon: Icon(
-                                      Icons.medication,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                    ),
-                                    inactiveIcon: Icon(
-                                      Icons.medication_outlined,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                    ),
-                                    isActive: FFAppState().SelectedPage ==
-                                        'Drug Interactions',
-                                  ),
-                                ),
-                              ),
-                            ),
-
+                          // NOTE: Drug Interactions page removed from the
+                          // product (2026-08). The CLINICAL section now has
+                          // Prescriptions, Insurance and Patient Records.
                           // ─── Divider ───
                           if (hasClinical && hasProcurement) _buildDivider(),
 

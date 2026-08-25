@@ -54,7 +54,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
   late SidebarLinkModel sidebarLinkModel16dup;
   late SidebarLinkModel sidebarLinkModel17dup;
   // New feature models
-  late SidebarLinkModel sidebarLinkModelDrugInteractions;
   late SidebarLinkModel sidebarLinkModelExpiryTracking;
   late SidebarLinkModel sidebarLinkModelPurchaseOrders;
   late SidebarLinkModel sidebarLinkModelPrescription;
@@ -92,8 +91,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15dup = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel16dup = createModel(context, () => SidebarLinkModel());
     sidebarLinkModel17dup = createModel(context, () => SidebarLinkModel());
-    sidebarLinkModelDrugInteractions =
-        createModel(context, () => SidebarLinkModel());
     sidebarLinkModelExpiryTracking =
         createModel(context, () => SidebarLinkModel());
     sidebarLinkModelPurchaseOrders =
@@ -133,7 +130,6 @@ class SideNavModel extends FlutterFlowModel<SideNavWidget> {
     sidebarLinkModel15dup.dispose();
     sidebarLinkModel16dup.dispose();
     sidebarLinkModel17dup.dispose();
-    sidebarLinkModelDrugInteractions.dispose();
     sidebarLinkModelExpiryTracking.dispose();
     sidebarLinkModelPurchaseOrders.dispose();
     sidebarLinkModelPrescription.dispose();

@@ -51,7 +51,7 @@ class _EmailTestWidgetState extends State<EmailTestWidget> {
       case 'password_reset':
         result = await EmailService.sendPasswordResetEmail(
           to: email,
-          resetLink: 'https://thestackone.com/reset?token=test123',
+          resetLink: 'https://pulse.duniyahealthcare.com/setNewPassword?token=test123',
         );
         break;
       case 'low_stock':

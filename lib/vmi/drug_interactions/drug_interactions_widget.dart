@@ -1,11 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/rbac/rbac.dart';
 import '/unification/components/side_nav/side_nav_widget.dart';
 import '/unification/components/top_nav/top_nav_widget.dart';
 import '/unification/components/mobile_navbar/mobile_navbar_widget.dart';
+import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'drug_interactions_model.dart';
@@ -82,7 +82,6 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
   // ── Pulse Purple design tokens ──
   static const Color _pulsePurple = Color(0xFF9900FF);
   static const Color _pulsePurpleLight = Color(0xFFF3F0FF);
-  static const Color _pulsePurpleDark = Color(0xFF7C3AED);
   static const Color _bgColor = Color(0xFFF8F9FF);
   static const Color _surfaceColor = Colors.white;
   static const Color _textPrimary = Color(0xFF0B1C30);
@@ -121,6 +120,14 @@ class _DrugInteractionsWidgetState extends State<DrugInteractionsWidget>
     _model = createModel(context, () => DrugInteractionsModel());
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'DrugInteractions'});
+    // Page retired from the product (2026-08): the sidebar and mobile
+    // nav no longer link here. Anyone arriving via a stale bookmark or
+    // browser history is sent to Home. The route stays registered so
+    // old links resolve cleanly instead of 404-ing.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.goNamed(HomeWidget.routeName);
+    });
     _model.drugATextController ??= TextEditingController();
     _model.drugAFocusNode ??= FocusNode();
     _model.drugBTextController ??= TextEditingController();

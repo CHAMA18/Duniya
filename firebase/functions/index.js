@@ -94,7 +94,7 @@ exports.sendEmail = functions
 
     // Build the request payload
     const payload = {
-      from: from || "Pulse <noreply@thestackone.com>",
+      from: from || getConfiguredResendFrom(),
       to: Array.isArray(to) ? to : [to],
       subject,
       ...(html && { html }),
@@ -203,7 +203,7 @@ exports.sendBatchEmails = functions
       }
 
       const payload = {
-        from: from || "Pulse <noreply@thestackone.com>",
+        from: from || getConfiguredResendFrom(),
         to: Array.isArray(to) ? to : [to],
         subject,
         ...(html && { html }),
@@ -396,7 +396,7 @@ async function sendEmailWithResend({ to, subject, html, text, from }) {
   }
 
   const payload = {
-    from: from || "Pulse <noreply@thestackone.com>",
+    from: from || getConfiguredResendFrom(),
     to: Array.isArray(to) ? to : [to],
     subject,
     ...(html && { html }),
