@@ -1094,7 +1094,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   gradient: LinearGradient(
                     colors: [
                       FlutterFlowTheme.of(context).primary,
-                      const Color(0xFF1D4ED8),
+                      const Color(0xFF7C3AED),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(999),
@@ -1107,14 +1107,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               value: _formatCurrency(data.totalGrossProfit),
               subtitle: 'Network-wide gross performance',
               icon: Icons.trending_up_rounded,
-              iconBackground: const Color(0xFFE8FAF1),
-              iconColor: const Color(0xFF10B981),
+              iconBackground: const Color(0xFFF3E8FF),
+              iconColor: FlutterFlowTheme.of(context).primary,
               footer: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.stacked_line_chart_rounded,
-                    color: FlutterFlowTheme.of(context).success,
+                    color: FlutterFlowTheme.of(context).primary,
                     size: 13,
                   ),
                   const SizedBox(width: 3),
@@ -1123,7 +1123,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).bodySmallFamily,
-                          color: FlutterFlowTheme.of(context).success,
+                          color: FlutterFlowTheme.of(context).primary,
                           fontWeight: FontWeight.w600,
                           fontSize: 11,
                           useGoogleFonts:
@@ -1139,13 +1139,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               value: _formatCurrency(data.totalNetProfit),
               subtitle: 'After operating costs',
               icon: Icons.savings_rounded,
-              iconBackground: const Color(0xFFE0E7FF),
-              iconColor: const Color(0xFF4F46E5),
+              iconBackground: const Color(0xFFF3E8FF),
+              iconColor: FlutterFlowTheme.of(context).primary,
               footer: Container(
                 height: 6,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF4F46E5).withValues(alpha: 0.15),
+                  color:
+                      FlutterFlowTheme.of(context).primary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -1156,13 +1157,14 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               value: _formatCurrency(data.totalCostOfGoods),
               subtitle: 'Inventory spend across the network',
               icon: Icons.receipt_long_rounded,
-              iconBackground: const Color(0xFFFDE7E9),
-              iconColor: const Color(0xFFEF4444),
+              iconBackground: const Color(0xFFF3E8FF),
+              iconColor: FlutterFlowTheme.of(context).primary,
               footer: Container(
                 height: 6,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withValues(alpha: 0.15),
+                  color:
+                      FlutterFlowTheme.of(context).primary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -1196,7 +1198,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                             FlutterFlowTheme.of(context)
                                 .primary
                                 .withValues(alpha: 0.98),
-                            const Color(0xFF1D4ED8),
+                            const Color(0xFF7C3AED),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -1390,7 +1392,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       FlutterFlowTheme.of(context).primary.withValues(
                             alpha: 0.12,
                           ),
-                      const Color(0xFF1D4ED8).withValues(alpha: 0.12),
+                      const Color(0xFF7C3AED).withValues(alpha: 0.12),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -1446,7 +1448,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withValues(alpha: 0.12),
+                    color: FlutterFlowTheme.of(context)
+                        .primary
+                        .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: FittedBox(
@@ -1458,7 +1462,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       style: FlutterFlowTheme.of(context).labelMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).labelMediumFamily,
-                            color: const Color(0xFF059669),
+                            color: FlutterFlowTheme.of(context).primary,
                             fontWeight: FontWeight.w600,
                             useGoogleFonts: !FlutterFlowTheme.of(context)
                                 .labelMediumIsCustom,
@@ -1469,6 +1473,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               ),
             ],
           );
+          // All pills share the Pulse purple tint — the Network Finances
+          // section is uniformly branded (previously a rainbow of
+          // green/indigo/red per metric).
           final financePills = [
             _buildFinancePill(
               context,
@@ -1480,19 +1487,19 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               context,
               label: 'Gross Profit',
               value: _formatCurrency(snapshot.grossProfit),
-              tint: const Color(0xFF10B981),
+              tint: FlutterFlowTheme.of(context).primary,
             ),
             _buildFinancePill(
               context,
               label: 'Net Profit',
               value: _formatCurrency(snapshot.netProfit),
-              tint: const Color(0xFF4F46E5),
+              tint: FlutterFlowTheme.of(context).primary,
             ),
             _buildFinancePill(
               context,
               label: 'Cost of Goods',
               value: _formatCurrency(snapshot.costOfGoods),
-              tint: const Color(0xFFEF4444),
+              tint: FlutterFlowTheme.of(context).primary,
             ),
           ];
 
