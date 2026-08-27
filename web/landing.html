@@ -223,7 +223,9 @@
     /* ── Hero film — cinematic heartbeat background ─────────────── */
     .hero-film {
       position: absolute; inset: 0; z-index: 1; overflow: hidden;
-      background: var(--bg-deep); /* poster paints here while video loads */
+      /* Poster paints here while the video loads (and stays as the
+         built-in fallback if the video can never load). */
+      background: var(--bg-deep) url('pulse-hero-bg.jpg') center / cover no-repeat;
     }
     .hero-film video {
       width: 100%; height: 100%; object-fit: cover; display: block;
@@ -287,12 +289,7 @@
       max-width: 640px; margin: 0 auto 40px;
     }
 
-    .hero-ctas { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
-    .hero-ctas .btn { font-size: 16px; padding: 15px 30px; border-radius: 14px; }
     .btn-lg { padding: 15px 32px !important; font-size: 16px !important; }
-    .btn-demo { padding: 15px 24px !important; font-size: 15.5px !important; }
-    .btn-demo .play { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.14); display: inline-flex; align-items: center; justify-content: center; transition: transform 0.3s var(--spring); }
-    .btn-demo:hover .play { transform: scale(1.12); }
 
     /* ── Platform downloads ─────────────────────────────────────── */
     .platforms { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
@@ -696,8 +693,6 @@
       .nav-links, .nav-actions .btn-ghost { display: none; }
       .burger { display: flex; }
       .hero { padding-top: calc(var(--nav-h) + 34px); }
-      .hero-ctas { flex-direction: column; width: 100%; max-width: 360px; margin: 0 auto; }
-      .hero-ctas .btn { width: 100%; }
       .mock-body { grid-template-columns: 1fr; }
       .mock-side { display: none; }
       .hero-stats { grid-template-columns: repeat(2, 1fr); }
@@ -767,17 +762,6 @@
       </div>
       <h1 class="reveal d1">Pharmacy Intelligence,<br><em>Delivered.</em></h1>
       <p class="hero-sub reveal d2">The operating system for modern pharmacies. Real-time inventory across every outlet, smart dispensing with safety checks, expiry intelligence and cold-chain monitoring — engineered for the realities of African healthcare.</p>
-
-      <div class="hero-ctas reveal d3">
-        <a class="btn btn-primary btn-lg" data-app-entry href="/app.html?route=%2FregisterUni">
-          Start Free Trial
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </a>
-        <a class="btn btn-ghost btn-demo" href="#product">
-          <span class="play" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2 1l6 4-6 4V1z"/></svg></span>
-          Watch Demo
-        </a>
-      </div>
 
       <!-- Platform downloads -->
       <div class="platforms reveal d4" id="download">
@@ -1230,9 +1214,56 @@
           film.classList.add('film-live');
           hero.classList.add('film-live');
         }
+
+        /* RACE FIX: the <video> sits near the top of the document with
+           preload="auto" while this script runs at the end of <body>.
+           When the film is served from the browser cache (repeat
+           visits) or over a fast link, `loadeddata` fires BEFORE this
+           listener is attached — goLive() then never ran and the film
+           stayed at opacity:0 (flat background) for the whole session.
+           Attach listeners FIRST, then check readyState synchronously;
+           whichever path wins, the film goes live exactly once. */
         film.addEventListener('loadeddata', goLive, { once: true });
-        var p = film.play();
-        if (p && p.catch) p.catch(function () { /* autoplay blocked — poster remains */ });
+        film.addEventListener('canplay', goLive, { once: true });
+        if (film.readyState >= 2 /* HAVE_CURRENT_DATA */) goLive();
+
+        /* AUTOPLAY FIX: some browsers (battery saver, strict autoplay
+           policy) reject the initial muted play() — the film then sat
+           frozen. Arm a one-shot gesture unlock so the very first
+           tap/keypress/scroll-click resumes playback. */
+        function tryPlay() {
+          var p = film.play();
+          if (p && p.then) {
+            p.then(function () {
+              if (film.readyState >= 2) goLive();
+            }).catch(function () {
+              function unlock() {
+                document.removeEventListener('pointerdown', unlock, true);
+                document.removeEventListener('keydown', unlock, true);
+                document.removeEventListener('touchstart', unlock, true);
+                film.play().then(function () {
+                  if (film.readyState >= 2) goLive();
+                }).catch(function () { /* still blocked — poster remains */ });
+              }
+              document.addEventListener('pointerdown', unlock, true);
+              document.addEventListener('keydown', unlock, true);
+              document.addEventListener('touchstart', unlock, true);
+            });
+          }
+        }
+        tryPlay();
+
+        /* FALLBACK FIX: if every source fails (network drop, CDN
+           hiccup), paint the poster image on the film host so the hero
+           keeps its cinematic look instead of a flat panel. */
+        function posterFallback() {
+          var host = film.parentElement; /* .hero-film */
+          if (host) host.style.background = '#07070B url("pulse-hero-bg.jpg") center / cover no-repeat';
+        }
+        var sources = film.querySelectorAll('source');
+        var lastSource = sources[sources.length - 1];
+        if (lastSource) lastSource.addEventListener('error', posterFallback);
+        film.addEventListener('error', posterFallback);
 
         if ('IntersectionObserver' in window) {
           var fo = new IntersectionObserver(function (entries) {
