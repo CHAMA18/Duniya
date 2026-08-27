@@ -518,22 +518,6 @@ class _InventoryDetailsWidgetState extends State<InventoryDetailsWidget>
   }) {
     final specs = <_ActionButtonSpec>[
       _ActionButtonSpec(
-        label: 'Edit Product',
-        icon: Icons.edit_rounded,
-        variant: _ButtonVariant.primary,
-        onPressed: () async {
-          logFirebaseEvent('INVENTORY_DETAILS_edit_product_btn');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Edit Product form coming soon'),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: FlutterFlowTheme.of(context).primary,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        },
-      ),
-      _ActionButtonSpec(
         label: 'Switch Pharmacy',
         icon: Icons.swap_horiz_rounded,
         variant: _ButtonVariant.outlined,
