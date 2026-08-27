@@ -289,7 +289,6 @@
       max-width: 640px; margin: 0 auto 40px;
     }
 
-    .btn-lg { padding: 15px 32px !important; font-size: 16px !important; }
 
     /* ── Platform downloads ─────────────────────────────────────── */
     .platforms { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
@@ -638,19 +637,8 @@
     .faq-a p { padding: 0 22px 22px; color: var(--text-2); font-size: 14.5px; line-height: 1.7; }
 
     /* ══════════════════════════════════════════════════════════════
-       CTA + FOOTER
+       FOOTER
        ══════════════════════════════════════════════════════════════ */
-    .cta-panel {
-      position: relative; overflow: hidden; border-radius: var(--radius-xl); padding: 84px 30px; text-align: center;
-      background: linear-gradient(135deg, rgba(153,0,255,0.16), rgba(76,0,200,0.08));
-      border: 1px solid rgba(153,0,255,0.35);
-    }
-    .cta-panel::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% -10%, rgba(153,0,255,0.4), transparent 70%); }
-    .cta-panel .inner { position: relative; z-index: 1; }
-    .cta-panel h2 { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5vw, 54px); letter-spacing: -0.03em; margin-bottom: 16px; }
-    .cta-panel p { color: var(--text-2); font-size: 17px; max-width: 540px; margin: 0 auto 34px; }
-    .cta-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
-    .cta-panel .dl-btn { background: rgba(255,255,255,0.06); }
 
     .footer { border-top: 1px solid var(--line); padding: 60px 0 40px; margin-top: 110px; }
     .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
@@ -1077,29 +1065,6 @@
         <div class="faq-item">
           <button class="faq-q">Can I migrate from my current system?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span></button>
           <div class="faq-a"><p>Yes — import stock, suppliers and product data from Excel or CSV. Our onboarding team helps with data migration on Growth and Enterprise plans.</p></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════ CTA ══════════════════ -->
-  <section class="sec" style="padding-top:0;">
-    <div class="wrap">
-      <div class="cta-panel reveal">
-        <div class="inner">
-          <h2>Ready to run a smarter pharmacy?</h2>
-          <p>Join 500+ pharmacies already managing inventory, dispensing and patients with Pulse. Free to start — live in under an hour.</p>
-          <div class="cta-actions">
-            <a class="btn btn-primary btn-lg" data-app-entry href="/app.html?route=%2FregisterUni">Start Free Trial</a>
-            <a class="dl-btn" data-download="windows" href="/downloads/Pulse-Windows.zip" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.55L24 0v11.4H10.949V1.899zM0 12.6h9.75v9.451L0 20.699V12.6zm10.949 0H24v11.4l-12.9-1.75V12.6z"/></svg>
-              <span class="dl-body"><span class="dl-name">Windows</span><span class="dl-meta"><span class="v" data-version-for="windows">latest</span></span></span>
-            </a>
-            <a class="dl-btn" data-download="macos" href="/downloads/Pulse-macOS.zip" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M18.71 19.5c-.83 1.24-1.71 2.44-2.62 3.6-.81.95-1.56 1.63-2.26 2.02-.42.24-.83.24-1.25 0-.7-.39-1.45-1.07-2.26-2.02a46.4 46.4 0 01-2.62-3.6c-.61-.95-1.13-1.87-1.56-2.77-.42-.88-.74-1.7-.96-2.46C4.76 13.46 4.62 12.75 4.62 12c0-2.07.66-3.79 1.98-5.17C7.92 5.44 9.73 4.75 12 4.75s4.08.69 5.4 2.08C18.72 8.21 19.38 9.93 19.38 12c0 .75-.14 1.46-.41 2.17-.22.76-.54 1.58-.96 2.46-.43.9-.95 1.82-1.56 2.77l.26.1z"/></svg>
-              <span class="dl-body"><span class="dl-name">macOS</span><span class="dl-meta"><span class="v" data-version-for="macos">latest</span></span></span>
-            </a>
-          </div>
         </div>
       </div>
     </div>
